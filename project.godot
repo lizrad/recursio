@@ -11,7 +11,12 @@ config_version=4
 [application]
 
 config/name="recursio"
+run/main_scene="res://World.tscn"
 config/icon="res://icon.png"
+
+[autoload]
+
+Server="*res://Global/Server.gd"
 
 [physics]
 
