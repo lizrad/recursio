@@ -26,6 +26,8 @@ multirun/window_distance=1270
 multirun/add_custom_args=false
 multirun/first_window_args=""
 multirun/other_window_args=""
+multirun/window_distance_x=256
+multirun/window_distance_y=64
 
 [editor_plugins]
 
