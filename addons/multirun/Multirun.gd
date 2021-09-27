@@ -17,9 +17,9 @@ func _enter_tree():
 	
 	_add_setting("debug/multirun/number_of_windows", TYPE_INT, 2)
 	_add_setting("debug/multirun/window_distance", TYPE_INT, 1270)
-	_add_setting("debug/multirun/add_custom_args", TYPE_BOOL, true)
-	_add_setting("debug/multirun/first_window_args", TYPE_STRING, "listen")
-	_add_setting("debug/multirun/other_window_args", TYPE_STRING, "join")
+	_add_setting("debug/multirun/add_custom_args", TYPE_BOOL, false)
+	_add_setting("debug/multirun/first_window_args", TYPE_STRING, "")
+	_add_setting("debug/multirun/other_window_args", TYPE_STRING, "")
 
 func _multirun_pressed():
 	var window_count : int = ProjectSettings.get_setting("debug/multirun/number_of_windows")
