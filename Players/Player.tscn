@@ -1,0 +1,14 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://Players/CharacterBase.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Players/Player.gd" type="Script" id=2]
+
+[sub_resource type="CapsuleMesh" id=1]
+
+[node name="Player" instance=ExtResource( 1 )]
+script = ExtResource( 2 )
+
+[node name="MeshInstance" type="MeshInstance" parent="." index="1"]
+transform = Transform( 0.75, 0.000108929, 0.00015581, 0.000116805, 0.000285584, -1, -0.000108985, 0.75, 0.00038075, 0, 0, 0 )
+mesh = SubResource( 1 )
+material/0 = null
