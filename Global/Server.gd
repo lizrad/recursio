@@ -6,6 +6,7 @@ var ip = "127.0.0.1"
 var port = 1909
 
 signal successfully_connected
+signal spawning_enemy(enemy_id,spawn_point)
 signal spawning_player(spawn_point)
 
 func _ready():
@@ -30,3 +31,6 @@ func _on_connection_succeeded():
 
 remote func spawn_player(spawn_point):
 	emit_signal("spawning_player", spawn_point)
+
+remote func spawn_enemy(enemy_id,spawn_point):
+	emit_signal("spawning_enemy",enemy_id,spawn_point)
