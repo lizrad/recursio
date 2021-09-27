@@ -5,17 +5,19 @@ var network = NetworkedMultiplayerENet.new()
 var ip = "127.0.0.1"
 var port = 1909
 
+signal successfully_connected
+signal spawning_player
 
 func _ready():
 	connect_to_server()
 
 
 func connect_to_server():
+	print("Connecting to server...")
 	network.create_client(ip, port)
 	get_tree().set_network_peer(network)
-	
-	network.connect("connection_failed", self, "_on_connection_failed")
-	network.connect("connection_succeeded", self, "_on_connection_succeeded")
+	get_tree().connect("connection_failed", self, "_on_connection_failed")
+	get_tree().connect("connected_to_server", self, "_on_connection_succeeded")
 
 
 func _on_connection_failed():
@@ -24,3 +26,7 @@ func _on_connection_failed():
 
 func _on_connection_succeeded():
 	print("Successfully connected")
+	emit_signal("successfully_connected")
+
+remote func spawn_player():
+	emit_signal("spawning_player")
