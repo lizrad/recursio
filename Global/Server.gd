@@ -5,6 +5,13 @@ var network = NetworkedMultiplayerENet.new()
 var ip = "127.0.0.1"
 var port = 1909
 
+# Simulated latency in miliseconds
+export(float) var latency = 80.0
+# Simulated package loss in percentage
+export(float) var package_loss = 10.0
+var latency_delta : float = 0.0
+var last_time_data_sent : float = 0.0
+
 signal successfully_connected
 signal spawning_enemy(enemy_id,spawn_point)
 signal despawning_enemy(enemy_id)
@@ -13,6 +20,7 @@ signal world_state_received(world_state)
 
 func _ready():
 	connect_to_server()
+	last_time_data_sent = OS.get_system_time_msecs()
 
 
 func connect_to_server():
@@ -36,6 +44,16 @@ func get_server_time():
 	return OS.get_system_time_msecs()
 
 func send_player_state(player_state):
+	# DEBUG: Network simulation code
+	var time = OS.get_system_time_msecs()
+	latency_delta += time - last_time_data_sent
+	last_time_data_sent = time
+	if latency_delta < latency:
+		return
+	latency_delta -= latency
+	if package_loss / 100.0 >= randf():
+		return
+	
 	rpc_unreliable_id(1, "receive_player_state",player_state)
 
 remote func spawn_player(player_id, spawn_point):
