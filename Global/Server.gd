@@ -6,7 +6,7 @@ var ip = "127.0.0.1"
 var port = 1909
 
 signal successfully_connected
-signal spawning_player
+signal spawning_player(spawn_point)
 
 func _ready():
 	connect_to_server()
@@ -28,5 +28,5 @@ func _on_connection_succeeded():
 	print("Successfully connected")
 	emit_signal("successfully_connected")
 
-remote func spawn_player():
-	emit_signal("spawning_player")
+remote func spawn_player(spawn_point):
+	emit_signal("spawning_player", spawn_point)
