@@ -10,6 +10,11 @@ var move_acceleration := Constants.move_acceleration
 
 var _last_rotation = 0.0
 var rotation_velocity := 0.0
+
+var past_frames = {}
+var last_server_position
+var last_server_time
+
 var velocity := Vector3.ZERO
 var acceleration := Vector3.ZERO
 
@@ -61,11 +66,34 @@ func get_normalized_input(type, outer_deadzone, inner_deadzone, min_length = 0.0
 	return input
 
 
+func handle_network_update(position, time):
+	last_server_position = position
+	last_server_time = time
+	
+	if not past_frames.has(time):
+		# TODO: Need to handle this?
+		return
+	
+	# Get value we had at that time
+	var position_diff = position - past_frames[time].position
+	
+	#print(position_diff.length())
+	
+	# If the difference is too large, correct it
+	if position_diff.length() > 0.1:
+		# TODO: Lerp there rather than setting it outright
+		transform.origin += position_diff
+
+
 func _physics_process(delta):
 	var rotation_velocity = (rotation.y-_last_rotation)/delta
 	_last_rotation=rotation.y
 	if _input_enabled:
 		_handle_user_input()
+	
+	var frame = MovementFrame.new()
+	frame.position = transform.origin
+	past_frames[Server.get_server_time()] = frame
 
 
 func _handle_user_input():

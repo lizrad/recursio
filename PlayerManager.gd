@@ -70,7 +70,14 @@ func update_enemy_positions(world_state):
 		
 		# deleting the own player 
 		# TODO should also be adjusted to server state in case of cheating etc.
-		enemy_states.erase(id)
+		# handle own player
+		if enemy_states.has(id):
+			var server_player = enemy_states[id]
+			
+			player.handle_network_update(server_player["P"], server_player["T"])
+		
+			enemy_states.erase(id)
+		
 		for enemy_id in enemy_states:
 			if enemies.has(enemy_id):
 				var enemy = enemies[enemy_id]
