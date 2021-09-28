@@ -13,11 +13,9 @@ var current_target_velocity := Vector3.ZERO
 var _rotate_input_vector := Vector3.ZERO
 var _input_enabled := true # disable user input in rewind
 
-# dashing
-var time_since_dash_start := 0.0
-var initial_dash_burst := Constants.dash_impulse
-var dash_exponent := Constants.dash_exponent
-var dash_cooldown := 1.0
+onready var _action_manager := get_node("ActionManager")
+
+
 
 func get_normalized_input(type, outer_deadzone, inner_deadzone, min_length = 0.0):
 	var input = Vector2(Input.get_action_strength(type + "_up") - 
@@ -80,37 +78,14 @@ func _handle_user_input():
 	var move_direction_scale = (3.0 + movement_input_vector.dot(rotate_input_vector)) / 4.0 \
 			if Constants.scale_movement_to_view_direction else 1.0
 
-	if Input.is_action_pressed("player_dash"):
-		var e_section = max(
-			exp(log(initial_dash_burst - 1 / dash_exponent * time_since_dash_start)),
-			0.0
-		)
-		velocity += movement_input_vector * e_section
-		if time_since_dash_start == 0: 
-			print("TODO: play dash sound...")
-			#$DashSound.play()
-		time_since_dash_start += delta
-	else:
-		if time_since_dash_start > dash_cooldown:
-			time_since_dash_start = 0.0
-		elif time_since_dash_start != 0.0:
-			time_since_dash_start += delta
-	# TODO: dash ui
-	#var progress = time_since_dash_start / dash_cooldown
-	#_player_hud.set_dash_progress(1.0 if progress == 0.0 else progress)
-
 	apply_acceleration(movement_input_vector * move_acceleration * move_direction_scale)
 
 	move_and_slide(velocity)
 	transform.origin.y = 0
 
-	# shoot, dash, select robot, ...
-	if Input.is_action_pressed("player_shoot"):
-		# TODO: check ammo, call weapon system, maybe reduce move_speed (for wall placement)
-		print("TODO: implement shoot...")
-
-	if Input.is_action_pressed("player_melee"):
-		print("TODO: implement melee attack...")
+	# shoot, place wall, dash, melee, ...
+	_action_manager.handle_input()
+	
 
 	# TODO: only allow switch in prep phase
 	if Input.is_action_pressed("player_switch"):
