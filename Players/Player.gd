@@ -1,6 +1,5 @@
 extends CharacterBase
 
-
 export(float) var inner_deadzone := 0.2
 export(float) var outer_deadzone := 0.8
 export(float) var rotate_threshold := 0.0
@@ -21,18 +20,16 @@ var acceleration := Vector3.ZERO
 var current_target_velocity := Vector3.ZERO
 
 var _rotate_input_vector := Vector3.ZERO
-var _input_enabled := true # disable user input in rewind
+var _input_enabled := true  # disable user input in rewind
 
 onready var _action_manager := get_node("ActionManager")
 
 
-
-
 func get_normalized_input(type, outer_deadzone, inner_deadzone, min_length = 0.0):
-	var input = Vector2(Input.get_action_strength(type + "_up") - 
-						Input.get_action_strength(type + "_down"),
-						Input.get_action_strength(type + "_right") - 
-						Input.get_action_strength(type + "_left"))
+	var input = Vector2(
+		Input.get_action_strength(type + "_up") - Input.get_action_strength(type + "_down"),
+		Input.get_action_strength(type + "_right") - Input.get_action_strength(type + "_left")
+	)
 
 	# Remove signs to reduce the number of cases
 	var signs = Vector2(sign(input.x), sign(input.y))
@@ -69,16 +66,16 @@ func get_normalized_input(type, outer_deadzone, inner_deadzone, min_length = 0.0
 func handle_network_update(position, time):
 	last_server_position = position
 	last_server_time = time
-	
+
 	if not past_frames.has(time):
 		# TODO: Need to handle this?
 		return
-	
+
 	# Get value we had at that time
 	var position_diff = position - past_frames[time].position
-	
+
 	#print(position_diff.length())
-	
+
 	# If the difference is too large, correct it
 	if position_diff.length() > 0.1:
 		# TODO: Lerp there rather than setting it outright
@@ -86,11 +83,11 @@ func handle_network_update(position, time):
 
 
 func _physics_process(delta):
-	var rotation_velocity = (rotation.y-_last_rotation)/delta
-	_last_rotation=rotation.y
+	var rotation_velocity = (rotation.y - _last_rotation) / delta
+	_last_rotation = rotation.y
 	if _input_enabled:
 		_handle_user_input()
-	
+
 	var frame = MovementFrame.new()
 	frame.position = transform.origin
 	past_frames[Server.get_server_time()] = frame
@@ -109,17 +106,19 @@ func _handle_user_input():
 			_rotate_input_vector = rotate_input_vector
 			look_at(rotate_input_vector + global_transform.origin, Vector3.UP)
 
-	var move_direction_scale = (3.0 + movement_input_vector.dot(rotate_input_vector)) / 4.0 \
-			if Constants.scale_movement_to_view_direction else 1.0
+	var move_direction_scale = (
+		(3.0 + movement_input_vector.dot(rotate_input_vector)) / 4.0
+		if Constants.scale_movement_to_view_direction
+		else 1.0
+	)
 
 	apply_acceleration(movement_input_vector * move_acceleration * move_direction_scale)
-	
+
 	move_and_slide(velocity)
 	transform.origin.y = 0
 
 	# shoot, place wall, dash, melee, ...
 	_action_manager.handle_input()
-	
 
 	# TODO: only allow switch in prep phase
 	if Input.is_action_pressed("player_switch"):
@@ -128,7 +127,7 @@ func _handle_user_input():
 
 func apply_acceleration(new_acceleration):
 	acceleration = new_acceleration
-	
+
 	# First drag, then add the new acceleration
 	# For drag: Lerp towards the target velocity
 	# This is usually 0, unless we're on something that's moving, in which case it is that object's

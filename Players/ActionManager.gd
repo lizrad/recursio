@@ -3,11 +3,12 @@ extends Node
 enum ActionType { SHOOT, DASH, MELEE }
 
 var _actions = {}
-var _map_input = { 
-					"player_shoot": ActionType.SHOOT,
-					"player_melee": ActionType.MELEE, 
-					"player_dash": ActionType.DASH,
-				 }
+var _map_input = {
+	"player_shoot": ActionType.SHOOT,
+	"player_melee": ActionType.MELEE,
+	"player_dash": ActionType.DASH,
+}
+
 
 func _ready():
 	# TEST: ActionType(ammo, cd, recharge):
@@ -22,12 +23,11 @@ func _ready():
 
 
 # TODO: forward signal with action type
-func _on_ammu_changed(ammo : int):
+func _on_ammu_changed(ammo: int):
 	print("ammunition changed to ", ammo)
 
 
 func handle_input() -> void:
-
 	for input in _map_input:
 		if Input.is_action_pressed(input):
 			if _actions.has(_map_input[input]):
