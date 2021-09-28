@@ -43,17 +43,21 @@ func get_server_time():
 	#TODO: add clock synchro here
 	return OS.get_system_time_msecs()
 
-func send_player_state(player_state):
-	# DEBUG: Network simulation code
+func _simulate_lag() -> bool:
 	var time = OS.get_system_time_msecs()
 	latency_delta += time - last_time_data_sent
 	last_time_data_sent = time
 	if latency_delta < latency:
-		return
+		return true
 	latency_delta -= latency
 	if package_loss / 100.0 >= randf():
+		return true
+	return false
+
+func send_player_state(player_state):
+	# DEBUG: Network simulation code
+	if _simulate_lag():
 		return
-	
 	rpc_unreliable_id(1, "receive_player_state",player_state)
 
 remote func spawn_player(player_id, spawn_point):
