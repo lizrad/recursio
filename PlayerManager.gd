@@ -92,8 +92,6 @@ func _process(delta):
 	var tick_progress = time_since_last_server_update / server_delta
 	tick_progress = min(tick_progress, 1)
 	
-	print(tick_progress)
-	
 	for enemy in enemies.values():
 		if not enemy.server_position:
 			# No known server state yet
