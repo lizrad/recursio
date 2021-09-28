@@ -64,7 +64,7 @@ func get_normalized_input(type, outer_deadzone, inner_deadzone, min_length = 0.0
 
 
 func _physics_process(delta):
-	var rotation_velocity = (_last_rotation-rotation.y)/delta
+	var rotation_velocity = (rotation.y-_last_rotation)/delta
 	_last_rotation=rotation.y
 	if _input_enabled:
 		_handle_user_input()
