@@ -68,9 +68,7 @@ func update_enemy_positions(world_state):
 		
 		var enemy_states = world_state["S"]
 		
-		# deleting the own player 
-		# TODO should also be adjusted to server state in case of cheating etc.
-		# handle own player
+		# Handle own player
 		if enemy_states.has(id):
 			var server_player = enemy_states[id]
 			
