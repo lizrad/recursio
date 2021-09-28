@@ -1,19 +1,25 @@
-extends "res://Players/CharacterBase.gd"
+extends CharacterBase
+
 
 export(float) var inner_deadzone := 0.2
 export(float) var outer_deadzone := 0.8
 export(float) var rotate_threshold := 0.0
 
-
 var drag := Constants.move_drag
 var move_acceleration := Constants.move_acceleration
+
+var _last_rotation = 0.0
+var rotation_velocity := 0.0
 var velocity := Vector3.ZERO
+var acceleration := Vector3.ZERO
+
 var current_target_velocity := Vector3.ZERO
 
 var _rotate_input_vector := Vector3.ZERO
 var _input_enabled := true # disable user input in rewind
 
 onready var _action_manager := get_node("ActionManager")
+
 
 
 
@@ -56,13 +62,13 @@ func get_normalized_input(type, outer_deadzone, inner_deadzone, min_length = 0.0
 
 
 func _physics_process(delta):
-
+	var rotation_velocity = (rotation.y-_last_rotation)/delta
+	_last_rotation=rotation.y
 	if _input_enabled:
 		_handle_user_input()
 
 
 func _handle_user_input():
-
 	# movement and aiming
 	var delta = get_physics_process_delta_time()
 	var input = get_normalized_input("player_move", outer_deadzone, inner_deadzone)
@@ -79,7 +85,7 @@ func _handle_user_input():
 			if Constants.scale_movement_to_view_direction else 1.0
 
 	apply_acceleration(movement_input_vector * move_acceleration * move_direction_scale)
-
+	
 	move_and_slide(velocity)
 	transform.origin.y = 0
 
@@ -92,7 +98,9 @@ func _handle_user_input():
 		print("TODO: implement switching robots...")
 
 
-func apply_acceleration(acceleration):
+func apply_acceleration(new_acceleration):
+	acceleration = new_acceleration
+	
 	# First drag, then add the new acceleration
 	# For drag: Lerp towards the target velocity
 	# This is usually 0, unless we're on something that's moving, in which case it is that object's

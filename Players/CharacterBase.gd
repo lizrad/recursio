@@ -1,4 +1,2 @@
 extends KinematicBody
-
-
-
+class_name CharacterBase
