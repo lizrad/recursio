@@ -8,14 +8,6 @@ var port = 1909
 
 var tickrate = 30
 
-# For Simulated Lag
-# Simulated latency in miliseconds
-export(float) var simulated_latency = 80.0
-# Simulated package loss in percentage
-export(float) var simulated_package_loss = 10.0
-var simulated_latency_delta : float = 0.0
-var simulated_last_time_data_sent : float = 0.0
-
 # For Clock Synchronization
 var latency :int = 0
 var server_clock :int = 0
@@ -32,7 +24,7 @@ signal world_state_received(world_state)
 func _ready():
 	set_physics_process(false)
 	connect_to_server()
-	simulated_last_time_data_sent = OS.get_system_time_msecs()
+
 
 func _physics_process(delta):
 	_run_server_clock(delta)
@@ -80,14 +72,6 @@ func get_server_time():
 
 
 func send_player_state(player_state):
-	# DEBUG: Network simulation code
-	if simulated_latency>0:
-		yield(get_tree().create_timer(simulated_latency*2/1000.0),"timeout") 
-	if simulated_package_loss>0:
-		if simulated_package_loss / 100.0 >= randf():
-			return 
-	
-	
 	rpc_unreliable_id(1, "receive_player_state",player_state)
 
 remote func spawn_player(player_id, spawn_point):
@@ -103,20 +87,12 @@ remote func receive_world_state(world_state):
 	emit_signal("world_state_received", world_state);
 
 remote func receive_server_time(server_time, player_time):
-	# DEBUG: Network simulation code
-	if simulated_latency>0:
-		yield(get_tree().create_timer(simulated_latency*2/1000.0),"timeout") 
-	
 	latency = (OS.get_system_time_msecs()-player_time) / 2
 	server_clock = server_time + latency
 	set_physics_process(true)
 
 
 remote func receive_latency(player_time):
-	# DEBUG: Network simulation code
-	if simulated_latency>0:
-		yield(get_tree().create_timer(simulated_latency*2/1000.0),"timeout") 
-	
 	latency_array.append((OS.get_system_time_msecs() - player_time)/2)
 	var max_latency_count = 9
 	if latency_array.size() == max_latency_count:
