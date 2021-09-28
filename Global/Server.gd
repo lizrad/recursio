@@ -5,10 +5,12 @@ var network = NetworkedMultiplayerENet.new()
 var ip = "127.0.0.1"
 var port = 1909
 
+var tickrate = 30
+
 # Simulated latency in miliseconds
-export(float) var latency = 80.0
+export(float) var latency = 0.0
 # Simulated package loss in percentage
-export(float) var package_loss = 10.0
+export(float) var package_loss = 00.0
 var latency_delta : float = 0.0
 var last_time_data_sent : float = 0.0
 
@@ -66,4 +68,4 @@ remote func despawn_enemy(enemy_id):
 	emit_signal("despawning_enemy",enemy_id)
 
 remote func receive_world_state(world_state):
-	emit_signal("world_state_received",world_state);
+	emit_signal("world_state_received", world_state);

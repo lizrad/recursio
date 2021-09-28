@@ -8,6 +8,16 @@
 
 config_version=4
 
+_global_script_classes=[ {
+"base": "KinematicBody",
+"class": "CharacterBase",
+"language": "GDScript",
+"path": "res://Players/CharacterBase.gd"
+} ]
+_global_script_class_icons={
+"CharacterBase": ""
+}
+
 [application]
 
 config/name="recursio"
@@ -28,6 +38,10 @@ multirun/first_window_args=""
 multirun/other_window_args=""
 multirun/window_distance_x=256
 multirun/window_distance_y=64
+
+[display]
+
+window/vsync/use_vsync=false
 
 [editor_plugins]
 

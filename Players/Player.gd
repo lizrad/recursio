@@ -1,15 +1,19 @@
-extends "res://Players/CharacterBase.gd"
+extends CharacterBase
+
 
 export(float) var inner_deadzone := 0.2
 export(float) var outer_deadzone := 0.8
 export(float) var rotate_threshold := 0.0
 
-
 var drag := Constants.move_drag
 var move_acceleration := Constants.move_acceleration
+
 var velocity := Vector3.ZERO
+var acceleration := Vector3.ZERO
+
 var current_target_velocity := Vector3.ZERO
 var _rotate_input_vector:= Vector3.ZERO
+
 
 func get_normalized_input(type, outer_deadzone, inner_deadzone, min_length = 0.0):
 	var input = Vector2(Input.get_action_strength(type + "_up") - 
@@ -48,8 +52,8 @@ func get_normalized_input(type, outer_deadzone, inner_deadzone, min_length = 0.0
 	
 	return input
 
+
 func _physics_process(delta):
-	
 	var input = get_normalized_input("player_move", outer_deadzone, inner_deadzone)
 	var movement_input_vector = Vector3(input.y, 0.0, -input.x)
 		
@@ -64,11 +68,14 @@ func _physics_process(delta):
 			if Constants.scale_movement_to_view_direction else 1.0
 
 	apply_acceleration(movement_input_vector * move_acceleration * move_direction_scale)
-		
+	
 	move_and_slide(velocity)
 	transform.origin.y = 0
 
-func apply_acceleration(acceleration):
+
+func apply_acceleration(new_acceleration):
+	acceleration = new_acceleration
+	
 	# First drag, then add the new acceleration
 	# For drag: Lerp towards the target velocity
 	# This is usually 0, unless we're on something that's moving, in which case it is that object's
