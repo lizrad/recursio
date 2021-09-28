@@ -8,6 +8,8 @@ export(float) var rotate_threshold := 0.0
 var drag := Constants.move_drag
 var move_acceleration := Constants.move_acceleration
 
+var _last_rotation = 0.0
+var rotation_velocity := 0.0
 var velocity := Vector3.ZERO
 var acceleration := Vector3.ZERO
 
@@ -62,6 +64,8 @@ func get_normalized_input(type, outer_deadzone, inner_deadzone, min_length = 0.0
 
 
 func _physics_process(delta):
+	var rotation_velocity = (_last_rotation-rotation.y)/delta
+	_last_rotation=rotation.y
 	if _input_enabled:
 		_handle_user_input()
 

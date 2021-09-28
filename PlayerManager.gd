@@ -29,7 +29,9 @@ func _define_player_state():
 		"T": Server.get_server_time(),
 		"P": player.translation,
 		"V": player.velocity,
-		"A": player.acceleration
+		"A": player.acceleration,
+		"R": player.rotation.y,
+		"H": player.rotation_velocity
 	}
 	Server.send_player_state(player_state)
 
