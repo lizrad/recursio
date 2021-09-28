@@ -59,8 +59,6 @@ func get_normalized_input(type, outer_deadzone, inner_deadzone, min_length = 0.0
 
 func _physics_process(delta):
 
-	print("delta: ", delta)
-	print("physics: ", get_physics_process_delta_time())
 	if _input_enabled:
 		_handle_user_input()
 
@@ -68,6 +66,7 @@ func _physics_process(delta):
 func _handle_user_input():
 
 	# movement and aiming
+	var delta = get_physics_process_delta_time()
 	var input = get_normalized_input("player_move", outer_deadzone, inner_deadzone)
 	var movement_input_vector = Vector3(input.y, 0.0, -input.x)
 
@@ -90,12 +89,12 @@ func _handle_user_input():
 		if time_since_dash_start == 0: 
 			print("TODO: play dash sound...")
 			#$DashSound.play()
-		time_since_dash_start += get_physics_process_delta_time()
+		time_since_dash_start += delta
 	else:
 		if time_since_dash_start > dash_cooldown:
 			time_since_dash_start = 0.0
 		elif time_since_dash_start != 0.0:
-			time_since_dash_start += get_physics_process_delta_time()
+			time_since_dash_start += delta
 	# TODO: dash ui
 	#var progress = time_since_dash_start / dash_cooldown
 	#_player_hud.set_dash_progress(1.0 if progress == 0.0 else progress)
