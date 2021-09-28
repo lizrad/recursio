@@ -5,12 +5,20 @@ var network = NetworkedMultiplayerENet.new()
 var ip = "127.0.0.1"
 var port = 1909
 
+# For Simulated Lag
 # Simulated latency in miliseconds
-export(float) var latency = 80.0
+export(float) var simulated_latency = 80.0
 # Simulated package loss in percentage
-export(float) var package_loss = 10.0
-var latency_delta : float = 0.0
-var last_time_data_sent : float = 0.0
+export(float) var simulated_package_loss = 10.0
+var simulated_latency_delta : float = 0.0
+var simulated_last_time_data_sent : float = 0.0
+
+# For Clock Synchronization
+var latency :int = 0
+var server_clock :int = 0
+var delta_latency :int = 0
+var decimal_collector :float = 0.0
+var latency_array = []
 
 signal successfully_connected
 signal spawning_enemy(enemy_id,spawn_point)
@@ -19,8 +27,12 @@ signal spawning_player(player_id, spawn_point)
 signal world_state_received(world_state)
 
 func _ready():
+	set_physics_process(false)
 	connect_to_server()
-	last_time_data_sent = OS.get_system_time_msecs()
+	simulated_last_time_data_sent = OS.get_system_time_msecs()
+
+func _physics_process(delta):
+	_run_server_clock(delta)
 
 
 func connect_to_server():
@@ -38,26 +50,41 @@ func _on_connection_failed(err):
 func _on_connection_succeeded():
 	print("Successfully connected")
 	emit_signal("successfully_connected")
+	_start_clock_synchronization()
+
+func _start_clock_synchronization():
+	rpc_id(1,"fetch_server_time", OS.get_system_time_msecs())
+	var timer = Timer.new()
+	var clock_update_per_seconds = 2.0
+	timer.wait_time = (1.0/clock_update_per_seconds)
+	timer.autostart = true
+	timer.connect("timeout", self, "_determine_latency")
+	self.add_child(timer)
+
+func _run_server_clock(delta):
+	server_clock += int(delta*1000) + delta_latency
+	delta_latency = 0
+	decimal_collector += (delta*1000)-int(delta*1000)
+	if decimal_collector >=1.0:
+		server_clock += 1
+		decimal_collector -= 1.0
+
+func _determine_latency ():
+	rpc_id(1, "determine_latency", OS.get_system_time_msecs())
 
 func get_server_time():
-	#TODO: add clock synchro here
-	return OS.get_system_time_msecs()
+	return server_clock
 
-func _simulate_lag() -> bool:
-	var time = OS.get_system_time_msecs()
-	latency_delta += time - last_time_data_sent
-	last_time_data_sent = time
-	if latency_delta < latency:
-		return true
-	latency_delta -= latency
-	if package_loss / 100.0 >= randf():
-		return true
-	return false
 
 func send_player_state(player_state):
 	# DEBUG: Network simulation code
-	if _simulate_lag():
-		return
+	if simulated_latency>0:
+		yield(get_tree().create_timer(simulated_latency*2/1000.0),"timeout") 
+	if simulated_package_loss>0:
+		if simulated_package_loss / 100.0 >= randf():
+			return 
+	
+	
 	rpc_unreliable_id(1, "receive_player_state",player_state)
 
 remote func spawn_player(player_id, spawn_point):
@@ -71,3 +98,38 @@ remote func despawn_enemy(enemy_id):
 
 remote func receive_world_state(world_state):
 	emit_signal("world_state_received",world_state);
+
+remote func receive_server_time(server_time, player_time):
+	# DEBUG: Network simulation code
+	if simulated_latency>0:
+		yield(get_tree().create_timer(simulated_latency*2/1000.0),"timeout") 
+	
+	latency = (OS.get_system_time_msecs()-player_time) / 2
+	server_clock = server_time + latency
+	set_physics_process(true)
+
+
+remote func receive_latency(player_time):
+	# DEBUG: Network simulation code
+	if simulated_latency>0:
+		yield(get_tree().create_timer(simulated_latency*2/1000.0),"timeout") 
+	
+	latency_array.append((OS.get_system_time_msecs() - player_time)/2)
+	var max_latency_count = 9
+	if latency_array.size() == max_latency_count:
+		var total_latency = 0
+		latency_array.sort()
+		var mid_point = latency_array[max_latency_count/2]
+		var min_latency_outlier_size
+		var relevant_latency_count = 0
+		for i in range(latency_array.size()-1,-1,-1):
+			if latency_array[i]>(2*mid_point) and latency_array[i] >28:
+				pass
+			else:
+				total_latency += latency_array[i]
+				relevant_latency_count+=1
+		var new_latency = total_latency/relevant_latency_count
+		# DEBUG: Network simulation code
+		delta_latency = (new_latency)-latency
+		latency = new_latency
+		latency_array.clear()
