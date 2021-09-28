@@ -9,12 +9,18 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "Spatial",
+"class": "Action",
+"language": "GDScript",
+"path": "res://Players/Action.gd"
+}, {
 "base": "KinematicBody",
 "class": "CharacterBase",
 "language": "GDScript",
 "path": "res://Players/CharacterBase.gd"
 } ]
 _global_script_class_icons={
+"Action": "",
 "CharacterBase": ""
 }
 
@@ -28,6 +34,10 @@ config/icon="res://icon.png"
 
 Server="*res://Global/Server.gd"
 Constants="*res://Global/Constants.gd"
+
+[config]
+
+icon="res://icon.png"
 
 [debug]
 
@@ -106,11 +116,13 @@ player_shoot={
 player_switch={
 "deadzone": 0.5,
 "events": [ Object(InputEventJoypadButton,"resource_local_to_scene":false,"resource_name":"","device":0,"button_index":4,"pressure":0.0,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"resource_local_to_scene":false,"resource_name":"","device":0,"button_index":6,"pressure":0.0,"pressed":false,"script":null)
  ]
 }
 player_dash={
 "deadzone": 0.5,
 "events": [ Object(InputEventJoypadButton,"resource_local_to_scene":false,"resource_name":"","device":0,"button_index":5,"pressure":0.0,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"resource_local_to_scene":false,"resource_name":"","device":0,"button_index":7,"pressure":0.0,"pressed":false,"script":null)
  ]
 }
 
@@ -121,3 +133,11 @@ common/enable_pause_aware_picking=true
 [rendering]
 
 environment/default_environment="res://default_env.tres"
+
+[run]
+
+main_scene="res://World.tscn"
+
+[}[application]
+
+config]name="recursio"

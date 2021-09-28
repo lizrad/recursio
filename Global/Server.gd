@@ -38,8 +38,9 @@ func connect_to_server():
 	get_tree().connect("connected_to_server", self, "_on_connection_succeeded")
 
 
-func _on_connection_failed(err):
-	print("Failed to connect with error: "+err)
+func _on_connection_failed():
+	print("Failed to connect to server")
+	# TODO: reconnect (call create_client again and connect signals?) or shutdown...
 
 
 func _on_connection_succeeded():
