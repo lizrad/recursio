@@ -3,11 +3,12 @@ extends Node
 enum ActionType { SHOOT, DASH, MELEE }
 
 var _actions = {}
-var _map_input = { 
-					"player_shoot": ActionType.SHOOT,
-					"player_melee": ActionType.MELEE, 
-					"player_dash": ActionType.DASH,
-				 }
+var _map_input = {
+	"player_shoot": ActionType.SHOOT,
+	"player_melee": ActionType.MELEE,
+	"player_dash": ActionType.DASH,
+}
+
 
 var _dash_start := 0.0
 
@@ -56,7 +57,6 @@ func _on_action_released(type : int):
 			player.dash_start = 0
 
 func handle_input() -> void:
-
 	for input in _map_input:
 		if _actions.has(_map_input[input]):
 			var action = _actions[_map_input[input]] as Action

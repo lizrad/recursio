@@ -24,9 +24,9 @@ export var activation_max: int # max time in ticks where action can be applied
 #export var move_while_charging: float
 #export var rotate_while_charging: float
 
-export (AudioStreamSample) var sound
-export (StreamTexture) var img_bullet
-export (PackedScene) var player_accessory
+export(AudioStreamSample) var sound
+export(StreamTexture) var img_bullet
+export(PackedScene) var player_accessory
 
 # dashing -> TODO: move to implementing class for interface
 var time_since_dash_start := 0.0
@@ -69,7 +69,7 @@ func set_active(value : bool) -> void:
 
 	# block spaming
 	blocked = true
-	
+
 	if sound:
 		print("TODO: play attached action sound...")
 	
