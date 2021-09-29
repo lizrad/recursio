@@ -13,14 +13,16 @@ var rotation_velocity := 0.0
 var velocity := Vector3.ZERO
 var acceleration := Vector3.ZERO
 
+# TODO: set per property?
+var dash_start := 0 # ticks, used to determine dash intensity
+var _time_since_dash_start := 0.0 # ms
+
 var current_target_velocity := Vector3.ZERO
 
 var _rotate_input_vector := Vector3.ZERO
 var _input_enabled := true # disable user input in rewind
 
 onready var _action_manager := get_node("ActionManager")
-
-
 
 
 func get_normalized_input(type, outer_deadzone, inner_deadzone, min_length = 0.0):
@@ -86,12 +88,24 @@ func _handle_user_input():
 
 	apply_acceleration(movement_input_vector * move_acceleration * move_direction_scale)
 	
+	# apply dash
+	if dash_start > 0:
+		#var time_since_dash_start = OS.get_ticks_msec() - dash_start
+		var e_section = max(
+			exp(log(Constants.dash_impulse - 1 / Constants.dash_exponent * _time_since_dash_start)),
+			0.0
+		)
+		#print("Adding e_section with: ", e_section, " for time since dash start: ", _time_since_dash_start)
+		velocity += movement_input_vector * e_section
+		_time_since_dash_start += delta
+	else:
+		_time_since_dash_start = 0.0
+	
 	move_and_slide(velocity)
 	transform.origin.y = 0
 
 	# shoot, place wall, dash, melee, ...
 	_action_manager.handle_input()
-	
 
 	# TODO: only allow switch in prep phase
 	if Input.is_action_pressed("player_switch"):
@@ -99,6 +113,7 @@ func _handle_user_input():
 
 
 func apply_acceleration(new_acceleration):
+
 	acceleration = new_acceleration
 	
 	# First drag, then add the new acceleration
