@@ -43,8 +43,14 @@ func _on_action_triggered(type : int):
 		var action = _actions[type] as Action
 		print("action triggered for type: ", type, " on time: ", action.activation_time)
 
+		# TODO: define common struct for Actions
 		if type == ActionType.DASH:
 			player.dash_start = action.activation_time
+			var dash_state = {
+				"T": Server.get_server_time(),
+				"S": 1
+			}
+			Server.send_dash_state(dash_state)
 
 
 func _on_action_released(type : int):
@@ -55,6 +61,11 @@ func _on_action_released(type : int):
 
 		if type == ActionType.DASH:
 			player.dash_start = 0
+			var dash_state = {
+				"T": Server.get_server_time(),
+				"S": 0
+			}
+			Server.send_dash_state(dash_state)
 
 func handle_input() -> void:
 	for input in _map_input:

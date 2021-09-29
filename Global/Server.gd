@@ -79,6 +79,10 @@ func send_player_state(player_state):
 	rpc_unreliable_id(1, "receive_player_state", player_state)
 
 
+func send_dash_state(dash_state):
+	rpc_id(1, "receive_dash_state", dash_state)
+
+
 remote func spawn_player(player_id, spawn_point):
 	emit_signal("spawning_player", player_id, spawn_point)
 
