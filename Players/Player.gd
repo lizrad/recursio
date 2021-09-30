@@ -4,8 +4,8 @@ export(float) var inner_deadzone := 0.2
 export(float) var outer_deadzone := 0.8
 export(float) var rotate_threshold := 0.0
 
-var drag := Constants.move_drag
-var move_acceleration := Constants.move_acceleration
+var drag = Constants.get_value("movement", "drag")
+var move_acceleration = Constants.get_value("movement", "acceleration")
 
 var _last_rotation = 0.0
 var rotation_velocity := 0.0
@@ -128,7 +128,7 @@ func _handle_user_input():
 
 	var move_direction_scale = (
 		(3.0 + movement_input_vector.dot(rotate_input_vector)) / 4.0
-		if Constants.scale_movement_to_view_direction
+		if Constants.get_value("movement", "scale_to_view_direction")
 		else 1.0
 	)
 
@@ -137,7 +137,7 @@ func _handle_user_input():
 	# apply dash
 	if dash_start > 0:
 		var e_section = max(
-			exp(log(Constants.dash_impulse - 1 / Constants.dash_exponent * _time_since_dash_start)),
+			exp(log(Constants.get_value("dash", "impulse") - 1 / Constants.get_value("dash", "exponent") * _time_since_dash_start)),
 			0.0
 		)
 		
@@ -145,7 +145,7 @@ func _handle_user_input():
 		_time_since_dash_start += delta
 	else:
 		_time_since_dash_start = 0.0
-
+	
 	move_and_slide(velocity)
 	transform.origin.y = 0
 

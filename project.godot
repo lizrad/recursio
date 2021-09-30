@@ -33,12 +33,8 @@ config/icon="res://icon.png"
 [autoload]
 
 Logger="*res://Shared/Logger.gd"
+Constants="*res://Shared/Constants.gd"
 Server="*res://Global/Server.gd"
-Constants="*res://Global/Constants.gd"
-
-[config]
-
-icon="res://icon.png"
 
 [debug]
 

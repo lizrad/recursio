@@ -30,8 +30,8 @@ export(PackedScene) var player_accessory
 
 # dashing -> TODO: move to implementing class for interface
 var time_since_dash_start := 0.0
-var initial_dash_burst := Constants.dash_impulse
-var dash_exponent := Constants.dash_exponent
+var initial_dash_burst = Constants.get_value("dash", "impulse")
+var dash_exponent = Constants.get_value("dash", "exponent")
 
 signal ammunition_changed
 signal action_triggered
