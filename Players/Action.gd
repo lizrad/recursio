@@ -49,7 +49,8 @@ func _init(ammo : int, cd : float, charge : float, act_max : int):
 
 func set_active(value : bool) -> void:
 
-	#print("set activate for value: ", value)
+	Logger.debug("Action set active for value: " + str(value), "actions")
+	
 	if not value:
 		activation_time = 0
 		emit_signal("action_released")
@@ -59,19 +60,20 @@ func set_active(value : bool) -> void:
 		return
 
 	if ammunition < 0:
-		#print("activate Action without ammo")
+		# This action does not use ammo
 		pass
 	elif ammunition > 0:
-		print("activate Action with remaining ammo: ", ammunition)
+		Logger.info("Activate Action with remaining ammo: " + str(ammunition), "actions")
 	else:
-		#print("no remaining ammunition")
+		# No ammo left
 		return
 
 	# block spaming
 	blocked = true
 
 	if sound:
-		print("TODO: play attached action sound...")
+		# TODO: play attached action sound...
+		pass
 	
 	activation_time = OS.get_ticks_msec()
 	# fire actual action -> TODO: maybe as class hierarchy?

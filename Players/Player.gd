@@ -13,6 +13,7 @@ var rotation_velocity := 0.0
 var position_at_frame_begin := Vector3.ZERO
 
 var past_frames = {}
+var _just_corrected = false
 var last_server_position
 var last_server_time
 
@@ -86,10 +87,13 @@ func handle_network_update(position, time):
 		var before = transform.origin
 		transform.origin += position_diff
 		
-		print("Corrected from " + str(before) + " to " + str(transform.origin) + " (should be at " + str(position) + " according to server)")
+		Logger.info("Corrected from " + str(before) + " to " + str(transform.origin) \
+				+ " (should be at " + str(position) + " according to server)", "network-validation")
 		
 		# Hotfix for overcompensation - we could also fix all following past states, but is that required?
 		past_frames.clear()
+		
+		_just_corrected = true
 
 
 func _physics_process(delta):
@@ -100,9 +104,13 @@ func _physics_process(delta):
 	if _input_enabled:
 		_handle_user_input()
 
-	var frame = MovementFrame.new()
-	frame.position = transform.origin
-	past_frames[Server.get_server_time()] = frame
+	if _just_corrected:
+		past_frames.clear()
+		_just_corrected = false
+	else:
+		var frame = MovementFrame.new()
+		frame.position = transform.origin
+		past_frames[Server.get_server_time()] = frame
 
 
 func _handle_user_input():
@@ -128,12 +136,11 @@ func _handle_user_input():
 
 	# apply dash
 	if dash_start > 0:
-		#var time_since_dash_start = OS.get_ticks_msec() - dash_start
 		var e_section = max(
 			exp(log(Constants.dash_impulse - 1 / Constants.dash_exponent * _time_since_dash_start)),
 			0.0
 		)
-		#print("Adding e_section with: ", e_section, " for time since dash start: ", _time_since_dash_start)
+		
 		velocity += movement_input_vector * e_section
 		_time_since_dash_start += delta
 	else:
@@ -147,7 +154,8 @@ func _handle_user_input():
 
 	# TODO: only allow switch in prep phase
 	if Input.is_action_pressed("player_switch"):
-		print("TODO: implement switching robots...")
+		# TODO: implement switching robots...
+		pass
 
 
 func apply_acceleration(new_acceleration):

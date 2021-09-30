@@ -30,7 +30,7 @@ func _physics_process(delta):
 
 
 func connect_to_server():
-	print("Connecting to server...")
+	Logger.info("Connecting to server...", "connection")
 	network.create_client(ip, port)
 	get_tree().set_network_peer(network)
 	get_tree().connect("connection_failed", self, "_on_connection_failed")
@@ -38,12 +38,12 @@ func connect_to_server():
 
 
 func _on_connection_failed():
-	print("Failed to connect to server")
+	Logger.info("Failed to connect to server", "connection")
 	# TODO: reconnect (call create_client again and connect signals?) or shutdown...
 
 
 func _on_connection_succeeded():
-	print("Successfully connected")
+	Logger.info("Successfully connected", "connection")
 	emit_signal("successfully_connected")
 	_start_clock_synchronization()
 
