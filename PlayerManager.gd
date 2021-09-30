@@ -10,8 +10,12 @@ var enemies = {}
 var time_of_last_world_state = -1
 var time_since_last_server_update = 0
 
+var time_of_last_world_state_send = -1
+
 
 func _ready():
+	time_of_last_world_state_send = Server.get_server_time()
+	
 	Server.connect("spawning_player", self, "spawn_player")
 	Server.connect("spawning_enemy", self, "spawn_enemy")
 	Server.connect("despawning_enemy", self, "despawn_enemy")
@@ -25,14 +29,17 @@ func _physics_process(delta):
 
 func _define_player_state():
 	var player_state = {
-		"T": Server.get_server_time(),
-		"P": player.translation,
+		"T": time_of_last_world_state_send,
+		"P": player.transform.origin,
 		"V": player.velocity,
 		"A": player.acceleration,
 		"R": player.rotation.y,
 		"H": player.rotation_velocity
 	}
 	Server.send_player_state(player_state)
+	
+	# This fixes sync issues - maybe because of unexpected order-of-execution of physics_process? 
+	time_of_last_world_state_send = Server.get_server_time()
 
 
 func spawn_player(player_id, spawn_point):

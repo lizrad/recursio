@@ -10,6 +10,8 @@ var move_acceleration := Constants.move_acceleration
 var _last_rotation = 0.0
 var rotation_velocity := 0.0
 
+var position_at_frame_begin := Vector3.ZERO
+
 var past_frames = {}
 var last_server_position
 var last_server_time
@@ -78,15 +80,21 @@ func handle_network_update(position, time):
 	# Get value we had at that time
 	var position_diff = position - past_frames[time].position
 
-	#print(position_diff.length())
-
 	# If the difference is too large, correct it
 	if position_diff.length() > 0.1:
 		# TODO: Lerp there rather than setting it outright
+		var before = transform.origin
 		transform.origin += position_diff
+		
+		print("Corrected from " + str(before) + " to " + str(transform.origin) + " (should be at " + str(position) + " according to server)")
+		
+		# Hotfix for overcompensation - we could also fix all following past states, but is that required?
+		past_frames.clear()
 
 
 func _physics_process(delta):
+	position_at_frame_begin = transform.origin
+	
 	var rotation_velocity = (rotation.y - _last_rotation) / delta
 	_last_rotation = rotation.y
 	if _input_enabled:
