@@ -39,7 +39,11 @@ func _define_player_state():
 	}
 	Server.send_player_state(player_state)
 	packet_id+=1
-	#loop around so number does not grow uncontrolled
+	#loop around so number does not grow uncontrolled 
+	#and because we only really need to know the difference 
+	#between 2 packets so it does not matter if ids dont 
+	#continually increase as long as we account for the loop
+	#while calculating the difference on the server
 	packet_id%=Constants.get_value("network", "max_packet_id")
 	# This fixes sync issues - maybe because of unexpected order-of-execution of physics_process? 
 	time_of_last_world_state_send = Server.get_server_time()
