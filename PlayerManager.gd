@@ -26,7 +26,7 @@ func _ready():
 func _physics_process(delta):
 	_define_player_state()
 
-
+var packet_id = 0
 func _define_player_state():
 	var player_state = {
 		"T": time_of_last_world_state_send,
@@ -34,10 +34,13 @@ func _define_player_state():
 		"V": player.velocity,
 		"A": player.acceleration,
 		"R": player.rotation.y,
-		"H": player.rotation_velocity
+		"H": player.rotation_velocity,
+		"I": packet_id
 	}
 	Server.send_player_state(player_state)
-	
+	packet_id+=1
+	#loop around so number does not grow uncontrolled
+	packet_id%=Constants.get_value("network", "max_packet_id")
 	# This fixes sync issues - maybe because of unexpected order-of-execution of physics_process? 
 	time_of_last_world_state_send = Server.get_server_time()
 
