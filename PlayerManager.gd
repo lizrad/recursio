@@ -26,13 +26,15 @@ func _ready():
 	Server.connect("ghost_record_received", self, "create_ghost")
 	set_physics_process(false)
 
+
 func create_ghost(gameplay_record):
-	Logger.info("Ghost record received with start time of "+str(gameplay_record["T"]), "ghost")
+	Logger.info("Ghost record received with start time of " + str(gameplay_record["T"]), "ghost")
 	var ghost = _ghost_scene.instance()
 	ghost.init(gameplay_record)
 	_my_ghosts.append(ghost)
 	add_child(ghost)
 	ghost.start_replay()
+
 
 func _physics_process(delta):
 	_define_player_state()
@@ -74,13 +76,13 @@ func spawn_enemy(enemy_id, spawn_point):
 	var enemy = spawn_character(_enemy_scene, spawn_point)
 	enemy.set_name(str(enemy_id))
 	enemies[enemy_id] = enemy
-	_enemy_ghosts[enemy_id]=[]
+	_enemy_ghosts[enemy_id] = []
 
 
 func despawn_enemy(enemy_id):
 	enemies[enemy_id].queue_free()
 	enemies.erase(enemy_id)
-	for i in range (_enemy_ghosts[enemy_id].size()):
+	for i in range(_enemy_ghosts[enemy_id].size()):
 		_enemy_ghosts[enemy_id][i].queue_free()
 	_enemy_ghosts.erase(enemy_id)
 
