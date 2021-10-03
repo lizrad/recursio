@@ -22,7 +22,7 @@ _global_script_classes=[ {
 "base": "CharacterBase",
 "class": "Ghost",
 "language": "GDScript",
-"path": "res://Players/Ghost.gd"
+"path": "res://Shared/Ghost.gd"
 } ]
 _global_script_class_icons={
 "Action": "",
