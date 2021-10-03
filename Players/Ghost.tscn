@@ -11,7 +11,6 @@ albedo_color = Color( 0.592157, 0.454902, 0.454902, 1 )
 [sub_resource type="CubeMesh" id=3]
 
 [sub_resource type="SpatialMaterial" id=4]
-albedo_color = Color( 1, 0, 0, 1 )
 
 [node name="Ghost" instance=ExtResource( 1 )]
 script = ExtResource( 2 )

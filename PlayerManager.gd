@@ -23,18 +23,29 @@ func _ready():
 	Server.connect("spawning_enemy", self, "spawn_enemy")
 	Server.connect("despawning_enemy", self, "despawn_enemy")
 	Server.connect("world_state_received", self, "update_enemy_positions")
-	Server.connect("ghost_record_received", self, "create_ghost")
+	Server.connect("own_ghost_record_received", self, "create_own_ghost")
+	Server.connect("enemy_ghost_record_received", self, "create_enemy_ghost")
 	set_physics_process(false)
 
-
-func create_ghost(gameplay_record):
-	Logger.info("Ghost record received with start time of " + str(gameplay_record["T"]), "ghost")
-	var ghost = _ghost_scene.instance()
-	ghost.init(gameplay_record)
+func create_enemy_ghost(enemy_id, gameplay_record):
+	Logger.info("Enemy ("+str(enemy_id)+") ghost record received with start time of " + str(gameplay_record["T"]), "ghost")
+	var ghost = _create_ghost(gameplay_record)
+	_enemy_ghosts[enemy_id].append(ghost)
+	#TODO: move this to an appropriate place
+	ghost.start_replay()
+	
+func create_own_ghost(gameplay_record):
+	Logger.info("Own ghost record received with start time of " + str(gameplay_record["T"]), "ghost")
+	var ghost = _create_ghost(gameplay_record)
 	_my_ghosts.append(ghost)
-	add_child(ghost)
+	#TODO: move this to an appropriate place
 	ghost.start_replay()
 
+func _create_ghost(gameplay_record):
+	var ghost = _ghost_scene.instance()
+	ghost.init(gameplay_record)
+	add_child(ghost)
+	return ghost
 
 func _physics_process(delta):
 	_define_player_state()

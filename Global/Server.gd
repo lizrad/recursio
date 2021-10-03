@@ -18,7 +18,8 @@ signal spawning_enemy(enemy_id, spawn_point)
 signal despawning_enemy(enemy_id)
 signal spawning_player(player_id, spawn_point)
 signal world_state_received(world_state)
-signal ghost_record_received(gameplay_record)
+signal own_ghost_record_received(gameplay_record)
+signal enemy_ghost_record_received(enemy_id, gameplay_record)
 
 
 func _ready():
@@ -130,5 +131,8 @@ remote func receive_latency(player_time):
 		latency_array.clear()
 
 
-remote func receive_ghost_record(gameplay_record):
-	emit_signal("ghost_record_received", gameplay_record)
+remote func receive_own_ghost_record(gameplay_record):
+	emit_signal("own_ghost_record_received", gameplay_record)
+
+remote func receive_enemy_ghost_record(enemy_id, gameplay_record):
+	emit_signal("enemy_ghost_record_received",enemy_id, gameplay_record)
