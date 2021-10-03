@@ -9,8 +9,8 @@ export var cooldown: float
 export var recharge_time: float
 export var enabled: bool
 export var blocked: bool
-export var activation_time: int # ts in ticks when the action was initially triggered
-export var activation_max: int # max time in ticks where action can be applied
+export var activation_time: int  # ts in ticks when the action was initially triggered
+export var activation_max: int  # max time in ticks where action can be applied
 
 # TODO: move into attack type
 #export var attack_range: float
@@ -38,8 +38,7 @@ signal action_triggered
 signal action_released
 
 
-func _init(ammo : int, cd : float, charge : float, act_max : int):
-
+func _init(ammo: int, cd: float, charge: float, act_max: int):
 	ammunition = ammo
 	max_ammo = ammunition
 	cooldown = cd
@@ -47,10 +46,9 @@ func _init(ammo : int, cd : float, charge : float, act_max : int):
 	activation_max = act_max
 
 
-func set_active(value : bool) -> void:
-
+func set_active(value: bool) -> void:
 	Logger.debug("Action set active for value: " + str(value), "actions")
-	
+
 	if not value:
 		activation_time = 0
 		emit_signal("action_released")
@@ -74,7 +72,7 @@ func set_active(value : bool) -> void:
 	if sound:
 		# TODO: play attached action sound...
 		pass
-	
+
 	activation_time = OS.get_ticks_msec()
 	# fire actual action -> TODO: maybe as class hierarchy?
 	emit_signal("action_triggered")

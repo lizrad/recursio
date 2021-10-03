@@ -15,7 +15,7 @@ var time_of_last_world_state_send = -1
 
 func _ready():
 	time_of_last_world_state_send = Server.get_server_time()
-	
+
 	Server.connect("spawning_player", self, "spawn_player")
 	Server.connect("spawning_enemy", self, "spawn_enemy")
 	Server.connect("despawning_enemy", self, "despawn_enemy")
@@ -26,7 +26,10 @@ func _ready():
 func _physics_process(delta):
 	_define_player_state()
 
+
 var packet_id = 0
+
+
 func _define_player_state():
 	var player_state = {
 		"T": time_of_last_world_state_send,
@@ -38,14 +41,14 @@ func _define_player_state():
 		"I": packet_id
 	}
 	Server.send_player_state(player_state)
-	packet_id+=1
-	#loop around so number does not grow uncontrolled 
-	#and because we only really need to know the difference 
-	#between 2 packets so it does not matter if ids dont 
+	packet_id += 1
+	#loop around so number does not grow uncontrolled
+	#and because we only really need to know the difference
+	#between 2 packets so it does not matter if ids dont
 	#continually increase as long as we account for the loop
 	#while calculating the difference on the server
-	packet_id%=Constants.get_value("network", "max_packet_id")
-	# This fixes sync issues - maybe because of unexpected order-of-execution of physics_process? 
+	packet_id %= Constants.get_value("network", "max_packet_id")
+	# This fixes sync issues - maybe because of unexpected order-of-execution of physics_process?
 	time_of_last_world_state_send = Server.get_server_time()
 
 

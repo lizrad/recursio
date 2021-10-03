@@ -21,8 +21,8 @@ var velocity := Vector3.ZERO
 var acceleration := Vector3.ZERO
 
 # TODO: set per property?
-var dash_start := 0 # ticks, used to determine dash intensity
-var _time_since_dash_start := 0.0 # ms
+var dash_start := 0  # ticks, used to determine dash intensity
+var _time_since_dash_start := 0.0  # ms
 
 var current_target_velocity := Vector3.ZERO
 
@@ -86,19 +86,29 @@ func handle_network_update(position, time):
 		# TODO: Lerp there rather than setting it outright
 		var before = transform.origin
 		transform.origin += position_diff
-		
-		Logger.info("Corrected from " + str(before) + " to " + str(transform.origin) \
-				+ " (should be at " + str(position) + " according to server)", "network-validation")
-		
+
+		Logger.info(
+			(
+				"Corrected from "
+				+ str(before)
+				+ " to "
+				+ str(transform.origin)
+				+ " (should be at "
+				+ str(position)
+				+ " according to server)"
+			),
+			"network-validation"
+		)
+
 		# Hotfix for overcompensation - we could also fix all following past states, but is that required?
 		past_frames.clear()
-		
+
 		_just_corrected = true
 
 
 func _physics_process(delta):
 	position_at_frame_begin = transform.origin
-	
+
 	var rotation_velocity = (rotation.y - _last_rotation) / delta
 	_last_rotation = rotation.y
 	if _input_enabled:
@@ -137,15 +147,22 @@ func _handle_user_input():
 	# apply dash
 	if dash_start > 0:
 		var e_section = max(
-			exp(log(Constants.get_value("dash", "impulse") - 1 / Constants.get_value("dash", "exponent") * _time_since_dash_start)),
+			exp(
+				log(
+					(
+						Constants.get_value("dash", "impulse")
+						- 1 / Constants.get_value("dash", "exponent") * _time_since_dash_start
+					)
+				)
+			),
 			0.0
 		)
-		
+
 		velocity += movement_input_vector * e_section
 		_time_since_dash_start += delta
 	else:
 		_time_since_dash_start = 0.0
-	
+
 	move_and_slide(velocity)
 	transform.origin.y = 0
 
@@ -159,7 +176,6 @@ func _handle_user_input():
 
 
 func apply_acceleration(new_acceleration):
-
 	acceleration = new_acceleration
 
 	# First drag, then add the new acceleration
