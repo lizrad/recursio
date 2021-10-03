@@ -18,9 +18,11 @@ signal spawning_enemy(enemy_id, spawn_point)
 signal despawning_enemy(enemy_id)
 signal spawning_player(player_id, spawn_point)
 signal world_state_received(world_state)
-
+signal ghost_record_received(gameplay_record)
 
 func _ready():
+	#TODO: put this where it makes more sense
+	Logger.load_config()
 	set_physics_process(false)
 	connect_to_server()
 
@@ -125,3 +127,6 @@ remote func receive_latency(player_time):
 		delta_latency = (new_latency) - latency
 		latency = new_latency
 		latency_array.clear()
+
+remote func receive_ghost_record(gameplay_record):
+	emit_signal("ghost_record_received",gameplay_record)
