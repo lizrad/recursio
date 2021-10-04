@@ -99,10 +99,6 @@ remote func despawn_enemy(enemy_id):
 	emit_signal("despawning_enemy", enemy_id)
 
 
-remote func receive_world_state(world_state):
-	emit_signal("world_state_received", world_state)
-
-
 remote func receive_server_time(server_time, player_time):
 	latency = (OS.get_system_time_msecs() - player_time) / 2
 	server_clock = server_time + latency
@@ -136,3 +132,26 @@ remote func receive_own_ghost_record(gameplay_record):
 
 remote func receive_enemy_ghost_record(enemy_id, gameplay_record):
 	emit_signal("enemy_ghost_record_received",enemy_id, gameplay_record)
+
+
+# Receives the current world state of the players room
+remote func receive_world_state(world_state):
+	emit_signal("world_state_received", world_state)
+
+
+# Receives the start of a round with the server time
+remote func receive_round_start(round_index, warm_up, server_time):
+	# Delay to counteract latency
+	var warm_up_with_delay = warm_up - ((get_server_time() - server_time) / 1000.0)
+	# Wait for warm up
+	yield(get_tree().create_timer(warm_up_with_delay), "timeout")
+	for i in range (3, 0, -1):
+		Logger.info("Round " + str(round_index) + " starts in " + str(i), "gameplay")
+		yield (get_tree().create_timer(1), "timeout")
+
+
+# Receives the end of a round
+remote func receive_round_end(round_index):
+	Logger.info("Round " + str(round_index) + " has ended", "gameplay")
+
+
