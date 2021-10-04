@@ -63,7 +63,7 @@ func _on_action_released(type: int):
 		Logger.debug("action released for type: " + str(type), "actions")
 
 		if type == ActionType.DASH:
-			print("dash released")
+			Logger.info("dash released", "actions")
 			player.dash_start = 0
 			var dash_state = {"T": Server.get_server_time(), "S": 0}
 			Server.send_dash_state(dash_state)
