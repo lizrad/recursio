@@ -19,33 +19,65 @@ var time_of_last_world_state_send = -1
 func _ready():
 	time_of_last_world_state_send = Server.get_server_time()
 
-	Server.connect("spawning_player", self, "spawn_player")
-	Server.connect("spawning_enemy", self, "spawn_enemy")
-	Server.connect("despawning_enemy", self, "despawn_enemy")
-	Server.connect("world_state_received", self, "update_enemy_positions")
-	Server.connect("own_ghost_record_received", self, "create_own_ghost")
-	Server.connect("enemy_ghost_record_received", self, "create_enemy_ghost")
+	Server.connect("spawning_player", self, "_spawn_player")
+	Server.connect("spawning_enemy", self, "_spawn_enemy")
+	Server.connect("despawning_enemy", self, "_despawn_enemy")
+	Server.connect("world_state_received", self, "_update_enemy_positions")
+	Server.connect("own_ghost_record_received", self, "_create_own_ghost")
+	Server.connect("enemy_ghost_record_received", self, "_create_enemy_ghost")
+	Server.connect("round_start_received",self, "_on_round_start_received")
+	Server.connect("round_end_received", self, "_on_round_ended_received")
 	set_physics_process(false)
 
-func create_enemy_ghost(enemy_id, gameplay_record):
+func _on_round_ended_received(round_index):
+	_disable_ghosts()
+	
+func _on_round_start_received(round_index, warm_up, server_time):
+	var time_diff = (Server.get_server_time() - server_time)
+	# Delay to counteract latency
+	var warm_up_with_delay = warm_up - (time_diff  / 1000.0)
+	# Wait for warm up
+	yield(get_tree().create_timer(warm_up_with_delay), "timeout")
+	_restart_ghosts(server_time)
+
+func _create_enemy_ghost(enemy_id, gameplay_record):
 	Logger.info("Enemy ("+str(enemy_id)+") ghost record received with start time of " + str(gameplay_record["T"]), "ghost")
 	var ghost = _create_ghost(gameplay_record)
-	_enemy_ghosts[enemy_id].append(ghost)
-	#TODO: move this to an appropriate place
-	ghost.start_replay()
+	if _enemy_ghosts[enemy_id].size()<3:
+		_enemy_ghosts[enemy_id].append(ghost)
+	else:
+		_enemy_ghosts[enemy_id][gameplay_record["G"]] = ghost
 	
-func create_own_ghost(gameplay_record):
+func _create_own_ghost(gameplay_record):
 	Logger.info("Own ghost record received with start time of " + str(gameplay_record["T"]), "ghost")
 	var ghost = _create_ghost(gameplay_record)
-	_my_ghosts.append(ghost)
-	#TODO: move this to an appropriate place
-	ghost.start_replay()
+	if _my_ghosts.size()<3:
+		_my_ghosts.append(ghost)
+	else:
+		_my_ghosts[gameplay_record["G"]] = ghost
+
 
 func _create_ghost(gameplay_record):
 	var ghost = _ghost_scene.instance()
 	ghost.init(gameplay_record)
-	add_child(ghost)
 	return ghost
+
+func _disable_ghosts()->void:
+	for i in _enemy_ghosts:
+		for ghost in _enemy_ghosts[i]:
+			remove_child(ghost)
+	for ghost in _my_ghosts:
+		remove_child(ghost)
+
+func _restart_ghosts(start_time)->void:
+	for i in _enemy_ghosts:
+		for ghost in _enemy_ghosts[i]:
+			add_child(ghost)
+			ghost.start_replay(start_time)
+	for ghost in _my_ghosts:
+		add_child(ghost)
+		ghost.start_replay(start_time)
+
 
 func _physics_process(delta):
 	_define_player_state()
@@ -76,21 +108,21 @@ func _define_player_state():
 	time_of_last_world_state_send = Server.get_server_time()
 
 
-func spawn_player(player_id, spawn_point):
+func _spawn_player(player_id, spawn_point):
 	set_physics_process(true)
-	player = spawn_character(_player_scene, spawn_point)
+	player = _spawn_character(_player_scene, spawn_point)
 	player.set_name(str(player_id))
 	id = player_id
 
 
-func spawn_enemy(enemy_id, spawn_point):
-	var enemy = spawn_character(_enemy_scene, spawn_point)
+func _spawn_enemy(enemy_id, spawn_point):
+	var enemy = _spawn_character(_enemy_scene, spawn_point)
 	enemy.set_name(str(enemy_id))
 	enemies[enemy_id] = enemy
 	_enemy_ghosts[enemy_id] = []
 
 
-func despawn_enemy(enemy_id):
+func _despawn_enemy(enemy_id):
 	enemies[enemy_id].queue_free()
 	enemies.erase(enemy_id)
 	for i in range(_enemy_ghosts[enemy_id].size()):
@@ -98,14 +130,14 @@ func despawn_enemy(enemy_id):
 	_enemy_ghosts.erase(enemy_id)
 
 
-func spawn_character(character_scene, spawn_point):
+func _spawn_character(character_scene, spawn_point):
 	var character = character_scene.instance()
 	character.transform.origin = spawn_point
 	add_child(character)
 	return character
 
 
-func update_enemy_positions(world_state):
+func _update_enemy_positions(world_state):
 	if time_of_last_world_state < world_state["T"]:
 		time_of_last_world_state = world_state["T"]
 		time_since_last_server_update = 0
