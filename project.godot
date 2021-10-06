@@ -34,6 +34,7 @@ _global_script_class_icons={
 
 config/name="recursio"
 run/main_scene="res://World.tscn"
+boot_splash/image="res://lizrad_logo.png"
 config/icon="res://icon.png"
 
 [autoload]
