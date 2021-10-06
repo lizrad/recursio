@@ -20,6 +20,8 @@ signal spawning_player(player_id, spawn_point)
 signal world_state_received(world_state)
 signal own_ghost_record_received(gameplay_record)
 signal enemy_ghost_record_received(enemy_id, gameplay_record)
+signal round_start_received(round_index, warm_up, server_time)
+signal round_end_received(round_index)
 
 
 func _ready():
@@ -141,17 +143,14 @@ remote func receive_world_state(world_state):
 
 # Receives the start of a round with the server time
 remote func receive_round_start(round_index, warm_up, server_time):
-	# Delay to counteract latency
-	var warm_up_with_delay = warm_up - ((get_server_time() - server_time) / 1000.0)
-	# Wait for warm up
-	yield(get_tree().create_timer(warm_up_with_delay), "timeout")
-	for i in range (3, 0, -1):
-		Logger.info("Round " + str(round_index) + " starts in " + str(i), "gameplay")
-		yield (get_tree().create_timer(1), "timeout")
+	emit_signal("round_start_received", round_index, warm_up, server_time)
+
+	
 
 
 # Receives the end of a round
 remote func receive_round_end(round_index):
 	Logger.info("Round " + str(round_index) + " has ended", "gameplay")
+	emit_signal("round_end_received", round_index)
 
 
