@@ -19,7 +19,7 @@ func _ready():
 	# TODO: set from outside, add selected weapon type per configuration ingame
 	var action = Action.new(10, 0.5, -1, 0)
 	_actions[ActionType.SHOOT] = action
-	_actions[ActionType.DASH] = Action.new(2, 0.5, 5, 1000)
+	_actions[ActionType.DASH] = Action.new(2, 0.5, 5, 500)
 	_actions[ActionType.MELEE] = Action.new(-1, 0.5, -1, 0)
 
 	for key in _actions:
