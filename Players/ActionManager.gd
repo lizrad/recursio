@@ -12,7 +12,7 @@ var _map_input = {
 var _dash_start := 0.0
 
 onready var player = get_parent()
-
+onready var hud = player.get_node("HUD")
 
 func _ready():
 	# TEST: Action(ammo, cd, recharge, activation_max)
@@ -34,6 +34,8 @@ func _ready():
 func _on_ammu_changed(ammo: int, type: int):
 	assert(type in ActionType.values(), "_on_ammu_changed argument is expected to be an ActionType")
 	Logger.debug("ammunition for type: " + str(type) + " changed to: " + str(ammo), "actions")
+
+	hud.do_stuff()
 
 
 func _on_action_triggered(type: int):
