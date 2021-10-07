@@ -9,8 +9,10 @@ var _map_input = {
 	"player_dash": ActionType.DASH,
 }
 
-var _dash_start := 0.0
+onready var _shot_scene = preload("res://Shared/Attacks/Shots/HitscanShot.tscn")
+onready var _melee_scene = preload("res://Shared/Attacks/Melee/Melee.tscn")
 
+# provide player and hud for up communication of signals
 onready var player = get_parent()
 onready var hud = player.get_node("HUD")
 
@@ -18,9 +20,15 @@ func _ready():
 	# TEST: Action(ammo, cd, recharge, activation_max)
 	# TODO: set from outside, add selected weapon type per configuration ingame
 	var action = Action.new(10, 0.5, -1, 0)
+	action.attack = _shot_scene
 	_actions[ActionType.SHOOT] = action
-	_actions[ActionType.DASH] = Action.new(2, 0.5, 5, 500)
-	_actions[ActionType.MELEE] = Action.new(-1, 0.5, -1, 0)
+	
+	action = Action.new(2, 0.5, 5, 500)
+	_actions[ActionType.DASH] = action
+	
+	action = Action.new(-1, 0.5, -1, 0)
+	action.attack = _melee_scene
+	_actions[ActionType.MELEE] = action
 
 	for key in _actions:
 		_actions[key].connect("ammunition_changed", self, "_on_ammu_changed", [key])
