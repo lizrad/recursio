@@ -3,6 +3,7 @@ extends Spatial
 var _player_scene = preload("res://Players/Player.tscn")
 var _ghost_scene = preload("res://Players/Ghost.tscn")
 var _enemy_scene = preload("res://Players/Enemy.tscn")
+
 var _my_ghosts = []
 var _enemy_ghosts = {}
 
@@ -33,6 +34,8 @@ func _on_round_ended_received(round_index):
 	_disable_ghosts()
 	
 func _on_round_start_received(round_index, warm_up, server_time):
+	player.HUD.round_start(round_index, server_time)
+	player.HUD.prep_phase_start(round_index, server_time)
 	Logger.info("Round "+str(round_index)+" started", "gameplay")
 	var time_diff = (Server.get_server_time() - server_time)
 	# Delay to counteract latency
@@ -40,6 +43,7 @@ func _on_round_start_received(round_index, warm_up, server_time):
 	Logger.debug("Time difference of "+str(time_diff/1000.0),"gameplay")
 	# Wait for warm up
 	yield(get_tree().create_timer(warm_up_with_delay), "timeout")
+	player.HUD.game_phase_start(round_index, Server.get_server_time())
 	Logger.info("Prep phase "+str(round_index)+" over", "gameplay")
 	_enable_ghosts()
 	_restart_ghosts(Server.get_server_time())
