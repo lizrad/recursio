@@ -235,8 +235,9 @@ func _spawn_player(player_id, spawn_point):
 	# Apply visibility mask to all entities which have been here before the player
 	for enemy in enemies.values():
 		_apply_visibility_mask(enemy)
-	for ghost in _enemy_ghosts_dic.values():
-		_apply_visibility_mask(ghost)
+	for ghosts in _enemy_ghosts_dic.values():
+		for ghost in ghosts:
+			_apply_visibility_mask(ghost)
 
 
 func _spawn_enemy(enemy_id, spawn_point):
