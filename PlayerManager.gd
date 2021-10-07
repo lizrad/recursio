@@ -93,17 +93,16 @@ func _on_round_start_received(round_index, latency_delay, server_time):
 	Logger.debug("Time difference of "+str(time_diff/1000.0),"gameplay")
 	# Wait for warm up
 	yield(get_tree().create_timer(delay), "timeout")
-	player.HUD.game_phase_start(round_index, Server.get_server_time())
-
-	Logger.info("Prep phase "+str(round_index)+" over", "gameplay")
 	
 	# Add ghosts to scene and set their start position
 	_enable_ghosts()
 	_move_ghosts_to_spawn()
 	
 	# Wait for preparation phase
-	# TODO: Start HUD timer
 	yield(get_tree().create_timer(_prep_phase_time), "timeout")
+	Logger.info("Prep phase "+str(round_index)+" over", "gameplay")
+	
+	player.HUD.game_phase_start(round_index, Server.get_server_time())
 	_restart_ghosts(Server.get_server_time())
 
 func _create_enemy_ghost(enemy_id, gameplay_record):
