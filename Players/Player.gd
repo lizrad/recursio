@@ -1,8 +1,13 @@
 extends CharacterBase
+class_name Player
 
 export(float) var inner_deadzone := 0.2
 export(float) var outer_deadzone := 0.8
 export(float) var rotate_threshold := 0.0
+
+onready var HUD = get_node("HUD")
+
+var spawn_point := Vector3.ZERO
 
 var drag = Constants.get_value("movement", "drag")
 var move_acceleration = Constants.get_value("movement", "acceleration")
@@ -162,7 +167,7 @@ func _handle_user_input():
 		_time_since_dash_start += delta
 	else:
 		_time_since_dash_start = 0.0
-
+	
 	move_and_slide(velocity)
 	transform.origin.y = 0
 
