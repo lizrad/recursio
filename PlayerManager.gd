@@ -125,9 +125,18 @@ func _on_round_start_received(round_index, latency_delay, server_time):
 	player.HUD.game_phase_start(round_index, Server.get_server_time())
 	_restart_ghosts(Server.get_server_time())
 
+
+func _apply_visibility_mask(character):
+	if player:
+		character.get_node("Mesh_Body").material_override.set_shader_param("visibility_mask", player.get_visibility_mask())
+		character.get_node("Mesh_Body/Mesh_Eyes").material_override.set_shader_param("visibility_mask", player.get_visibility_mask())
+
 func _create_enemy_ghost(enemy_id, gameplay_record):
 	Logger.info("Enemy ("+str(enemy_id)+") ghost record received with start time of " + str(gameplay_record["T"]), "ghost")
+	
 	var ghost = _create_ghost(gameplay_record)
+	ghost.add_to_group("Enemy")
+	
 	if _enemy_ghosts_dic[enemy_id].size()<=Constants.get_value("ghosts", "max_amount"):
 		_enemy_ghosts_dic[enemy_id].append(ghost)
 	else:
@@ -163,6 +172,9 @@ func _disable_ghosts()->void:
 func _enable_ghosts() ->void:
 	for i in _enemy_ghosts_dic:
 		for ghost in _enemy_ghosts_dic[i]:
+			# Apply the visibility mask for enemy ghosts only (friendly ones are always visible)
+			_apply_visibility_mask(ghost)
+			
 			add_child(ghost)
 	for ghost in _my_ghosts:
 		add_child(ghost)
@@ -219,11 +231,18 @@ func _spawn_player(player_id, spawn_point):
 	player.spawn_point = spawn_point
 	player.set_name(str(player_id))
 	id = player_id
+	
+	# Apply visibility mask to all entities which have been here before the player
+	for enemy in enemies.values():
+		_apply_visibility_mask(enemy)
+	for ghost in _enemy_ghosts_dic.values():
+		_apply_visibility_mask(ghost)
 
 
 func _spawn_enemy(enemy_id, spawn_point):
 	var enemy = _spawn_character(_enemy_scene, spawn_point)
 	enemy.set_name(str(enemy_id))
+	_apply_visibility_mask(enemy)
 	enemies[enemy_id] = enemy
 	_enemy_ghosts_dic[enemy_id] = []
 

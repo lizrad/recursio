@@ -1,14 +1,46 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://Players/CharacterBase.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Players/Enemy.gd" type="Script" id=2]
+[ext_resource path="res://Players/VisibilityMaterial.tres" type="Material" id=3]
 
-[sub_resource type="CapsuleMesh" id=1]
+[sub_resource type="Shader" id=1]
+resource_local_to_scene = true
+code = "shader_type spatial;
+render_mode unshaded;
 
-[sub_resource type="CubeMesh" id=2]
+uniform sampler2D visibility_mask;
+uniform vec4 color: hint_color = vec4(1.0, 0.0, 0.0, 1.0);
+uniform float visibility_threshold = 0.1;
+uniform float camera_size = 70;
 
-[sub_resource type="SpatialMaterial" id=3]
-albedo_color = Color( 0, 0.462745, 1, 1 )
+varying vec3 world_vertex;
+
+void vertex() {
+	world_vertex = (WORLD_MATRIX * vec4(VERTEX, 1.0)).xyz;
+}
+
+void fragment() {
+	vec2 uv = world_vertex.xz;
+	uv += vec2(camera_size / 2.0, camera_size / 2.0);
+	uv /= camera_size;
+	uv.y = 1.0 - uv.y;
+	
+	ALPHA = float(length(texture(visibility_mask, uv).rgb) > visibility_threshold);
+	ALBEDO = color.rgb;
+	//ALBEDO = vec3(uv.x);
+}"
+
+[sub_resource type="ShaderMaterial" id=7]
+resource_local_to_scene = true
+shader = SubResource( 1 )
+shader_param/color = Color( 0, 0.12549, 0.623529, 1 )
+shader_param/visibility_threshold = 0.2
+shader_param/camera_size = 70.0
+
+[sub_resource type="CapsuleMesh" id=6]
+
+[sub_resource type="CubeMesh" id=4]
 
 [node name="Enemy" groups=[
 "Enemy",
@@ -17,10 +49,12 @@ script = ExtResource( 2 )
 
 [node name="Mesh_Body" type="MeshInstance" parent="." index="1"]
 transform = Transform( 0.75, 0.000108929, 0.00015581, 0.000116805, 0.000285584, -1, -0.000108985, 0.75, 0.00038075, 0, 0, 0 )
-mesh = SubResource( 1 )
+material_override = SubResource( 7 )
+mesh = SubResource( 6 )
 material/0 = null
 
 [node name="Mesh_Eyes" type="MeshInstance" parent="Mesh_Body" index="0"]
 transform = Transform( 0.771661, 6.9802e-05, 0.000103439, 6.98096e-05, 0.29105, 8.79994e-06, 5.8179e-05, 4.95015e-06, 0.273746, -1.45519e-11, -0.739, -0.665 )
-mesh = SubResource( 2 )
-material/0 = SubResource( 3 )
+material_override = SubResource( 7 )
+mesh = SubResource( 4 )
+material/0 = ExtResource( 3 )
