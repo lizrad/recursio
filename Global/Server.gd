@@ -22,7 +22,10 @@ signal own_ghost_record_received(gameplay_record)
 signal enemy_ghost_record_received(enemy_id, gameplay_record)
 signal round_start_received(round_index, warm_up, server_time)
 signal round_end_received(round_index)
-
+signal capture_point_captured(capturing_player_id, capture_point)
+signal capture_point_team_changed(capturing_player_id, capture_point)
+signal capture_point_status_changed(capturing_player_id, capture_point, capture_progress)
+signal capture_point_capture_lost(capturing_player_id, capture_point)
 
 func _ready():
 	#TODO: put this where it makes more sense
@@ -89,6 +92,10 @@ func send_dash_state(dash_state):
 	rpc_id(1, "receive_dash_state", dash_state)
 
 
+func send_action_trigger(action):
+	rpc_id(1, "receive_action_trigger", action)
+
+
 remote func spawn_player(player_id, spawn_point):
 	emit_signal("spawning_player", player_id, spawn_point)
 
@@ -132,6 +139,7 @@ remote func receive_latency(player_time):
 remote func receive_own_ghost_record(gameplay_record):
 	emit_signal("own_ghost_record_received", gameplay_record)
 
+
 remote func receive_enemy_ghost_record(enemy_id, gameplay_record):
 	emit_signal("enemy_ghost_record_received",enemy_id, gameplay_record)
 
@@ -142,10 +150,8 @@ remote func receive_world_state(world_state):
 
 
 # Receives the start of a round with the server time
-remote func receive_round_start(round_index, warm_up, server_time):
-	emit_signal("round_start_received", round_index, warm_up, server_time)
-
-	
+remote func receive_round_start(round_index, latency_delay, server_time):
+	emit_signal("round_start_received", round_index, latency_delay, server_time)
 
 
 # Receives the end of a round
@@ -154,3 +160,18 @@ remote func receive_round_end(round_index):
 	emit_signal("round_end_received", round_index)
 
 
+remote func receive_capture_point_captured(capturing_player_id, capture_point):
+	Logger.info("Capture point captured received", "connection")
+	emit_signal("capture_point_captured", capturing_player_id, capture_point)
+
+remote func receive_capture_point_team_changed( capturing_player_id, capture_point ):
+	Logger.info("Capture point team changed received", "connection")
+	emit_signal("capture_point_team_changed", capturing_player_id, capture_point)
+
+remote func receive_capture_point_status_changed( capturing_player_id, capture_point, capture_progress ):
+	Logger.info("Capture point status changed received", "connection")
+	emit_signal("capture_point_status_changed", capturing_player_id, capture_point, capture_progress)
+
+remote func receive_capture_point_capture_lost( capturing_player_id, capture_point ):
+	Logger.info("Capture point capture lost received", "connection")
+	emit_signal("capture_point_capture_lost", capturing_player_id, capture_point)

@@ -5,7 +5,8 @@ var _ghost_scene = preload("res://Players/Ghost.tscn")
 var _enemy_scene = preload("res://Players/Enemy.tscn")
 
 var _my_ghosts = []
-var _enemy_ghosts = {}
+# Key: Player ID | Value: List of ghosts
+var _enemy_ghosts_dic = {}
 
 var player
 var id
@@ -16,6 +17,10 @@ var time_since_last_server_update = 0
 
 var time_of_last_world_state_send = -1
 
+export var level_path: NodePath
+onready var level = get_node(level_path)
+
+onready var _prep_phase_time: float = Constants.get_value("gameplay", "prep_phase_time")
 
 func _ready():
 	time_of_last_world_state_send = Server.get_server_time()
@@ -28,35 +33,106 @@ func _ready():
 	Server.connect("enemy_ghost_record_received", self, "_create_enemy_ghost")
 	Server.connect("round_start_received",self, "_on_round_start_received")
 	Server.connect("round_end_received", self, "_on_round_ended_received")
+	Server.connect("capture_point_captured", self, "_on_capture_point_captured" )
+	Server.connect("capture_point_team_changed", self, "_on_capture_point_team_changed" )
+	Server.connect("capture_point_status_changed", self, "_on_capture_point_status_changed" )
+	Server.connect("capture_point_capture_lost", self, "_on_capture_point_capture_lost" )
 	set_physics_process(false)
+
+
+func _on_capture_point_captured(capturing_player_id, capture_point):
+	level.get_capture_points()[capture_point].capture(capturing_player_id)
+	
+func _on_capture_point_team_changed(capturing_player_id, capture_point):
+	level.get_capture_points()[capture_point].set_capturing_player(capturing_player_id)
+	
+func _on_capture_point_status_changed(capturing_player_id, capture_point, capture_progress):
+	level.get_capture_points()[capture_point].set_capture_status(capturing_player_id, capture_progress)
+	
+func _on_capture_point_capture_lost(capturing_player_id, capture_point):
+	level.get_capture_points()[capture_point].capture_lost(capturing_player_id)
+
+
+func _process(delta):
+	time_since_last_server_update += delta
+	var server_delta = 1.0 / Server.tickrate
+
+	# Goes from 0 to 1 for each network tick
+	var tick_progress = time_since_last_server_update / server_delta
+	tick_progress = min(tick_progress, 1)
+
+	for enemy in enemies.values():
+		if not enemy.server_position:
+			# No known server state yet
+			continue
+
+		enemy.velocity = (
+			enemy.last_velocity
+			+ (enemy.server_velocity - enemy.last_velocity) * tick_progress
+		)
+
+		var projected_from_start = (
+			enemy.last_position
+			+ enemy.velocity * time_since_last_server_update
+			+ (
+				enemy.server_acceleration
+				* 0.5
+				* time_since_last_server_update
+				* time_since_last_server_update
+			)
+		)
+
+		var projected_from_last_known = (
+			enemy.server_position
+			+ enemy.server_velocity * time_since_last_server_update
+			+ (
+				enemy.server_acceleration
+				* 0.5
+				* time_since_last_server_update
+				* time_since_last_server_update
+			)
+		)
+
+		enemy.transform.origin = (
+			projected_from_start
+			+ (projected_from_last_known - projected_from_start) * tick_progress
+		)
+
+
 
 func _on_round_ended_received(round_index):
 	_disable_ghosts()
 	
-func _on_round_start_received(round_index, warm_up, server_time):
+func _on_round_start_received(round_index, latency_delay, server_time):
 	player.HUD.round_start(round_index, server_time)
 	player.HUD.prep_phase_start(round_index, server_time)
 	Logger.info("Round "+str(round_index)+" started", "gameplay")
 	var time_diff = (Server.get_server_time() - server_time)
 	# Delay to counteract latency
-	var warm_up_with_delay = warm_up - (time_diff  / 1000.0)
+	var delay = latency_delay - (time_diff  / 1000.0)
 	Logger.debug("Time difference of "+str(time_diff/1000.0),"gameplay")
 	# Wait for warm up
-	yield(get_tree().create_timer(warm_up_with_delay), "timeout")
-	player.HUD.game_phase_start(round_index, Server.get_server_time())
-	Logger.info("Prep phase "+str(round_index)+" over", "gameplay")
+	yield(get_tree().create_timer(delay), "timeout")
+	
+	# Add ghosts to scene and set their start position
 	_enable_ghosts()
+	_move_ghosts_to_spawn()
+	
+	# Wait for preparation phase
+	yield(get_tree().create_timer(_prep_phase_time), "timeout")
+	Logger.info("Prep phase "+str(round_index)+" over", "gameplay")
+	
+	player.HUD.game_phase_start(round_index, Server.get_server_time())
 	_restart_ghosts(Server.get_server_time())
 
 func _create_enemy_ghost(enemy_id, gameplay_record):
 	Logger.info("Enemy ("+str(enemy_id)+") ghost record received with start time of " + str(gameplay_record["T"]), "ghost")
 	var ghost = _create_ghost(gameplay_record)
-	ghost.add_to_group("Enemy")
-	if _enemy_ghosts[enemy_id].size()<=Constants.get_value("ghosts", "max_amount"):
-		_enemy_ghosts[enemy_id].append(ghost)
+	if _enemy_ghosts_dic[enemy_id].size()<=Constants.get_value("ghosts", "max_amount"):
+		_enemy_ghosts_dic[enemy_id].append(ghost)
 	else:
-		var old_ghost = _enemy_ghosts[enemy_id][gameplay_record["G"]]
-		_enemy_ghosts[enemy_id][gameplay_record["G"]] = ghost
+		var old_ghost = _enemy_ghosts_dic[enemy_id][gameplay_record["G"]]
+		_enemy_ghosts_dic[enemy_id][gameplay_record["G"]] = ghost
 		old_ghost.queue_free()
 	
 func _create_own_ghost(gameplay_record):
@@ -77,24 +153,30 @@ func _create_ghost(gameplay_record):
 	return ghost
 
 func _disable_ghosts()->void:
-	for i in _enemy_ghosts:
-		for ghost in _enemy_ghosts[i]:
+	for i in _enemy_ghosts_dic:
+		for ghost in _enemy_ghosts_dic[i]:
 			remove_child(ghost)
 	for ghost in _my_ghosts:
 		remove_child(ghost)
 
 
 func _enable_ghosts() ->void:
-	for i in _enemy_ghosts:
-		for ghost in _enemy_ghosts[i]:
+	for i in _enemy_ghosts_dic:
+		for ghost in _enemy_ghosts_dic[i]:
 			add_child(ghost)
 	for ghost in _my_ghosts:
 		add_child(ghost)
 
 
+func _move_ghosts_to_spawn() -> void:
+	for player_id in _enemy_ghosts_dic:
+		for ghost in _enemy_ghosts_dic[player_id]:
+			ghost.move_to_start_position()
+
+
 func _restart_ghosts(start_time)->void:
-	for i in _enemy_ghosts:
-		for ghost in _enemy_ghosts[i]:
+	for i in _enemy_ghosts_dic:
+		for ghost in _enemy_ghosts_dic[i]:
 			ghost.start_replay(start_time)
 	for ghost in _my_ghosts:
 		ghost.start_replay(start_time)
@@ -143,15 +225,15 @@ func _spawn_enemy(enemy_id, spawn_point):
 	var enemy = _spawn_character(_enemy_scene, spawn_point)
 	enemy.set_name(str(enemy_id))
 	enemies[enemy_id] = enemy
-	_enemy_ghosts[enemy_id] = []
+	_enemy_ghosts_dic[enemy_id] = []
 
 
 func _despawn_enemy(enemy_id):
 	enemies[enemy_id].queue_free()
 	enemies.erase(enemy_id)
-	for i in range(_enemy_ghosts[enemy_id].size()):
-		_enemy_ghosts[enemy_id][i].queue_free()
-	_enemy_ghosts.erase(enemy_id)
+	for i in range(_enemy_ghosts_dic[enemy_id].size()):
+		_enemy_ghosts_dic[enemy_id][i].queue_free()
+	_enemy_ghosts_dic.erase(enemy_id)
 
 
 func _spawn_character(character_scene, spawn_point):
@@ -189,47 +271,3 @@ func _update_enemy_positions(world_state):
 				enemy.server_acceleration = enemy_states[enemy_id]["A"]
 
 
-func _process(delta):
-	time_since_last_server_update += delta
-	var server_delta = 1.0 / Server.tickrate
-
-	# Goes from 0 to 1 for each network tick
-	var tick_progress = time_since_last_server_update / server_delta
-	tick_progress = min(tick_progress, 1)
-
-	for enemy in enemies.values():
-		if not enemy.server_position:
-			# No known server state yet
-			continue
-
-		enemy.velocity = (
-			enemy.last_velocity
-			+ (enemy.server_velocity - enemy.last_velocity) * tick_progress
-		)
-
-		var projected_from_start = (
-			enemy.last_position
-			+ enemy.velocity * time_since_last_server_update
-			+ (
-				enemy.server_acceleration
-				* 0.5
-				* time_since_last_server_update
-				* time_since_last_server_update
-			)
-		)
-
-		var projected_from_last_known = (
-			enemy.server_position
-			+ enemy.server_velocity * time_since_last_server_update
-			+ (
-				enemy.server_acceleration
-				* 0.5
-				* time_since_last_server_update
-				* time_since_last_server_update
-			)
-		)
-
-		enemy.transform.origin = (
-			projected_from_start
-			+ (projected_from_last_known - projected_from_start) * tick_progress
-		)
