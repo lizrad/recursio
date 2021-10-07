@@ -10,16 +10,16 @@ func _ready():
 
 
 func _on_body_entered(body):
-	if body is Player:
+	if body.is_in_group("Friend"):
 		_current_alignment += 1
-	elif body is Enemy:
+	elif body.is_in_group("Enemy"):
 		_current_alignment -= 1
 
 
 func _on_body_exited(body):
-	if body is Player:
+	if body.is_in_group("Friend"):
 		_current_alignment -= 1
-	elif body is Enemy:
+	elif body.is_in_group("Enemy"):
 		_current_alignment += 1
 
 

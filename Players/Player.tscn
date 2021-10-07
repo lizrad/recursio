@@ -12,7 +12,9 @@
 [sub_resource type="SpatialMaterial" id=3]
 albedo_color = Color( 1, 0, 0, 1 )
 
-[node name="Player" instance=ExtResource( 1 )]
+[node name="Player" groups=[
+"Friend",
+] instance=ExtResource( 1 )]
 script = ExtResource( 2 )
 
 [node name="Mesh_Body" type="MeshInstance" parent="." index="1"]
