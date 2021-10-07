@@ -1,16 +1,16 @@
 extends Node
 
-enum ActionType { SHOOT, DASH, MELEE }
-
 var _actions = {}
 var _map_input = {
-	"player_shoot": ActionType.SHOOT,
-	"player_melee": ActionType.MELEE,
-	"player_dash": ActionType.DASH,
+	"player_shoot": Constants.ActionType.SHOOT,
+	"player_melee": Constants.ActionType.MELEE,
+	"player_dash": Constants.ActionType.DASH,
 }
 
-var _dash_start := 0.0
+onready var _shot_scene = preload("res://Shared/Attacks/Shots/HitscanShot.tscn")
+onready var _melee_scene = preload("res://Shared/Attacks/Melee/Melee.tscn")
 
+# provide player and hud for up communication of signals
 onready var player = get_parent()
 onready var hud = player.get_node("HUD")
 
@@ -18,9 +18,15 @@ func _ready():
 	# TEST: Action(ammo, cd, recharge, activation_max)
 	# TODO: set from outside, add selected weapon type per configuration ingame
 	var action = Action.new(10, 0.5, -1, 0)
-	_actions[ActionType.SHOOT] = action
-	_actions[ActionType.DASH] = Action.new(2, 0.5, 5, 500)
-	_actions[ActionType.MELEE] = Action.new(-1, 0.5, -1, 0)
+	action.attack = _shot_scene
+	_actions[Constants.ActionType.SHOOT] = action
+	
+	action = Action.new(2, 0.5, 5, 500)
+	_actions[Constants.ActionType.DASH] = action
+	
+	action = Action.new(-1, 0.5, -1, 0)
+	action.attack = _melee_scene
+	_actions[Constants.ActionType.MELEE] = action
 
 	for key in _actions:
 		_actions[key].connect("ammunition_changed", self, "_on_ammu_changed", [key])
@@ -32,16 +38,14 @@ func _ready():
 
 # TODO: forward signal to ui
 func _on_ammu_changed(ammo: int, type: int):
-	assert(type in ActionType.values(), "_on_ammu_changed argument is expected to be an ActionType")
+	assert(type in Constants.ActionType.values(), "_on_ammu_changed argument is expected to be an ActionType")
 	Logger.debug("ammunition for type: " + str(type) + " changed to: " + str(ammo), "actions")
 
 	hud.do_stuff()
 
 
 func _on_action_triggered(type: int):
-	assert(
-		type in ActionType.values(), "_on_action_triggered argument is expected to be an ActionType"
-	)
+	assert(type in Constants.ActionType.values(), "_on_action_triggered argument is expected to be an ActionType")
 	if _actions.has(type):
 		var action = _actions[type] as Action
 		Logger.debug(
@@ -50,21 +54,22 @@ func _on_action_triggered(type: int):
 		)
 
 		# TODO: define common struct for Actions
-		if type == ActionType.DASH:
+		if type == Constants.ActionType.DASH:
 			player.dash_start = action.activation_time
 			var dash_state = {"T": Server.get_server_time(), "S": 1}
 			Server.send_dash_state(dash_state)
+		elif type == Constants.ActionType.SHOOT or type == Constants.ActionType.MELEE:
+			var action_trigger = {"A": type, "T": Server.get_server_time()}
+			Server.send_action_trigger(action_trigger)
 
 
 func _on_action_released(type: int):
-	assert(
-		type in ActionType.values(), "_on_action_released argument is expected to be an ActionType"
-	)
+	assert(type in Constants.ActionType.values(), "_on_action_released argument is expected to be an ActionType")
 	if _actions.has(type):
 		var action = _actions[type] as Action
 		Logger.debug("action released for type: " + str(type), "actions")
 
-		if type == ActionType.DASH:
+		if type == Constants.ActionType.DASH:
 			Logger.info("dash released", "actions")
 			player.dash_start = 0
 			var dash_state = {"T": Server.get_server_time(), "S": 0}

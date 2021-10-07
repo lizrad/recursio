@@ -28,6 +28,8 @@ export(AudioStreamSample) var sound
 export(StreamTexture) var img_bullet
 export(PackedScene) var player_accessory
 
+export var attack: PackedScene
+
 # dashing -> TODO: move to implementing class for interface
 var time_since_dash_start := 0.0
 var initial_dash_burst = Constants.get_value("dash", "impulse")
@@ -75,6 +77,18 @@ func set_active(value: bool) -> void:
 
 	activation_time = OS.get_ticks_msec()
 	# fire actual action -> TODO: maybe as class hierarchy?
+	if attack:
+		Logger.info("instancing new attack", "actions")
+		var player = get_parent().player
+		var spawn = attack.instance()
+		spawn.initialize(player)
+		#spawn.global_transform = global_transform
+		spawn.global_transform.origin = player.global_transform.origin
+		#player.add_child(spawn)
+		get_tree().get_root().add_child(spawn);
+
+		# TODO: if has recoil configured -> apply on player
+
 	emit_signal("action_triggered")
 
 	if ammunition > 0:
