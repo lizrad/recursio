@@ -33,13 +33,16 @@ func _on_round_ended_received(round_index):
 	_disable_ghosts()
 	
 func _on_round_start_received(round_index, warm_up, server_time):
+	Logger.info("Round "+str(round_index)+" started", "gameplay")
 	var time_diff = (Server.get_server_time() - server_time)
 	# Delay to counteract latency
 	var warm_up_with_delay = warm_up - (time_diff  / 1000.0)
+	Logger.debug("Time difference of "+str(time_diff/1000.0),"gameplay")
 	# Wait for warm up
 	yield(get_tree().create_timer(warm_up_with_delay), "timeout")
+	Logger.info("Prep phase "+str(round_index)+" over", "gameplay")
 	_enable_ghosts()
-	_restart_ghosts(server_time)
+	_restart_ghosts(Server.get_server_time())
 
 func _create_enemy_ghost(enemy_id, gameplay_record):
 	Logger.info("Enemy ("+str(enemy_id)+") ghost record received with start time of " + str(gameplay_record["T"]), "ghost")
