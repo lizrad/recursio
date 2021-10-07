@@ -38,23 +38,28 @@ func _on_round_start_received(round_index, warm_up, server_time):
 	var warm_up_with_delay = warm_up - (time_diff  / 1000.0)
 	# Wait for warm up
 	yield(get_tree().create_timer(warm_up_with_delay), "timeout")
+	_enable_ghosts()
 	_restart_ghosts(server_time)
 
 func _create_enemy_ghost(enemy_id, gameplay_record):
 	Logger.info("Enemy ("+str(enemy_id)+") ghost record received with start time of " + str(gameplay_record["T"]), "ghost")
 	var ghost = _create_ghost(gameplay_record)
-	if _enemy_ghosts[enemy_id].size()<3:
+	if _enemy_ghosts[enemy_id].size()<=2:
 		_enemy_ghosts[enemy_id].append(ghost)
 	else:
+		var old_ghost = _enemy_ghosts[enemy_id][gameplay_record["G"]]
 		_enemy_ghosts[enemy_id][gameplay_record["G"]] = ghost
+		old_ghost.queue_free()
 	
 func _create_own_ghost(gameplay_record):
 	Logger.info("Own ghost record received with start time of " + str(gameplay_record["T"]), "ghost")
 	var ghost = _create_ghost(gameplay_record)
-	if _my_ghosts.size()<3:
+	if _my_ghosts.size()<=2:
 		_my_ghosts.append(ghost)
 	else:
+		var old_ghost = _my_ghosts[gameplay_record["G"]]
 		_my_ghosts[gameplay_record["G"]] = ghost
+		old_ghost.queue_free()
 
 
 func _create_ghost(gameplay_record):
@@ -69,13 +74,20 @@ func _disable_ghosts()->void:
 	for ghost in _my_ghosts:
 		remove_child(ghost)
 
-func _restart_ghosts(start_time)->void:
+
+func _enable_ghosts() ->void:
 	for i in _enemy_ghosts:
 		for ghost in _enemy_ghosts[i]:
 			add_child(ghost)
-			ghost.start_replay(start_time)
 	for ghost in _my_ghosts:
 		add_child(ghost)
+
+
+func _restart_ghosts(start_time)->void:
+	for i in _enemy_ghosts:
+		for ghost in _enemy_ghosts[i]:
+			ghost.start_replay(start_time)
+	for ghost in _my_ghosts:
 		ghost.start_replay(start_time)
 
 
@@ -107,10 +119,13 @@ func _define_player_state():
 	# This fixes sync issues - maybe because of unexpected order-of-execution of physics_process?
 	time_of_last_world_state_send = Server.get_server_time()
 
+func _reset_spawnpoints()->void:
+	player.transform.origin = player.spawn_point
 
 func _spawn_player(player_id, spawn_point):
 	set_physics_process(true)
 	player = _spawn_character(_player_scene, spawn_point)
+	player.spawn_point = spawn_point
 	player.set_name(str(player_id))
 	id = player_id
 
