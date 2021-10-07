@@ -44,7 +44,7 @@ func _on_round_start_received(round_index, warm_up, server_time):
 func _create_enemy_ghost(enemy_id, gameplay_record):
 	Logger.info("Enemy ("+str(enemy_id)+") ghost record received with start time of " + str(gameplay_record["T"]), "ghost")
 	var ghost = _create_ghost(gameplay_record)
-	if _enemy_ghosts[enemy_id].size()<=2:
+	if _enemy_ghosts[enemy_id].size()<=Constants.get_value("ghosts", "max_amount"):
 		_enemy_ghosts[enemy_id].append(ghost)
 	else:
 		var old_ghost = _enemy_ghosts[enemy_id][gameplay_record["G"]]
@@ -54,7 +54,7 @@ func _create_enemy_ghost(enemy_id, gameplay_record):
 func _create_own_ghost(gameplay_record):
 	Logger.info("Own ghost record received with start time of " + str(gameplay_record["T"]), "ghost")
 	var ghost = _create_ghost(gameplay_record)
-	if _my_ghosts.size()<=2:
+	if _my_ghosts.size()<=Constants.get_value("ghosts", "max_amount"):
 		_my_ghosts.append(ghost)
 	else:
 		var old_ghost = _my_ghosts[gameplay_record["G"]]
