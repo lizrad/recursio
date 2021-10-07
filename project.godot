@@ -20,14 +20,26 @@ _global_script_classes=[ {
 "path": "res://Players/CharacterBase.gd"
 }, {
 "base": "CharacterBase",
+"class": "Enemy",
+"language": "GDScript",
+"path": "res://Players/Enemy.gd"
+}, {
+"base": "CharacterBase",
 "class": "Ghost",
 "language": "GDScript",
 "path": "res://Shared/Ghost.gd"
+}, {
+"base": "CharacterBase",
+"class": "Player",
+"language": "GDScript",
+"path": "res://Players/Player.gd"
 } ]
 _global_script_class_icons={
 "Action": "",
 "CharacterBase": "",
-"Ghost": ""
+"Enemy": "",
+"Ghost": "",
+"Player": ""
 }
 
 [application]
