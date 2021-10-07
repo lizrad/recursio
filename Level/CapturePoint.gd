@@ -12,6 +12,7 @@ var _local_enemy_inside := false
 var _capture_speed
 var _release_speed
 var _recapture_speed
+var _capture_time
 
 func _ready():
 	player_id = get_tree().get_network_unique_id()
@@ -21,6 +22,7 @@ func _ready():
 	_capture_speed = Constants.get_value("capture", "capture_speed")
 	_release_speed = Constants.get_value("capture", "release_speed")
 	_recapture_speed = Constants.get_value("capture", "recapture_speed")
+	_capture_time = Constants.get_value("capture", "capture_time")
 
 
 func _on_body_entered(body):
@@ -37,16 +39,17 @@ func _on_body_exited(body):
 		_local_enemy_inside = false
 
 func _process(delta):
+	var adjusted_delta = delta / _capture_time
 	if _local_player_inside:
 		if _capturing_team == -1:
 			set_capturing_player(player_id)
 		elif _capturing_team == player_id:
 			#cannot reach 1 on client only
-			_capture_progress = min(0.95, _capture_progress + delta * _capture_speed)
+			_capture_progress = min(0.95, _capture_progress + adjusted_delta * _capture_speed)
 			pass
 		else:
 			#cannot reach 0 on client only
-			_capture_progress = max(0.5, _capture_progress - delta * _recapture_speed)
+			_capture_progress = max(0.5, _capture_progress - adjusted_delta * _recapture_speed)
 			pass
 	
 	if _local_enemy_inside:
@@ -55,16 +58,16 @@ func _process(delta):
 			set_capturing_player(player_id+1)
 		elif _capturing_team != player_id:
 			#cannot reach 1 on client only
-			_capture_progress = min(0.95, _capture_progress + delta * _capture_speed)
+			_capture_progress = min(0.95, _capture_progress + adjusted_delta * _capture_speed)
 			pass
 		else:
 			#cannot reach 0 on client only
-			_capture_progress = max(0.5, _capture_progress - delta * _recapture_speed)
+			_capture_progress = max(0.5, _capture_progress - adjusted_delta * _recapture_speed)
 			pass
 			
 	if not _local_player_inside and not _local_enemy_inside:
 		#cannot reach 0 on client only
-		_capture_progress = max(0, _capture_progress - delta * _release_speed)
+		_capture_progress = max(0, _capture_progress - adjusted_delta * _release_speed)
 		pass
 
 func capture(capturing_player_id):
