@@ -1,6 +1,6 @@
 extends Control
 
-onready var timer = get_node("Timer")
+onready var timer = get_node("Background/Timer")
 onready var phase = get_node("Phase")
 enum {
 	Latency_Delay,
@@ -20,11 +20,12 @@ func _process(delta):
 	timer.text = _calculate_current_time()
 
 func _calculate_current_time() -> String:
-	if _max_time<0 or _start_time<0:
-		return ""
-	var time_diff = (Server.get_server_time()-_start_time)/1000.0
+	if _max_time < 0 or _start_time < 0:
+		return "0:00"
+	var time_diff = (Server.get_server_time() - _start_time) / 1000.0
 	var time = max(_max_time - time_diff,0)
-	return ("%.2f" % time)
+	# Give seconds a zero as padding if below 10 sekonds
+	return ("%d:%0*d" % [floor(time/60), 2, time])
 
 func round_start(round_index, start_time) ->void:
 	phase.text = "Round "+str(round_index)+" starting..."
