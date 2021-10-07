@@ -17,6 +17,9 @@ var time_since_last_server_update = 0
 
 var time_of_last_world_state_send = -1
 
+export var level_path: NodePath
+onready var level = get_node(level_path)
+
 onready var _prep_phase_time: float = Constants.get_value("gameplay", "prep_phase_time")
 
 func _ready():
@@ -30,7 +33,24 @@ func _ready():
 	Server.connect("enemy_ghost_record_received", self, "_create_enemy_ghost")
 	Server.connect("round_start_received",self, "_on_round_start_received")
 	Server.connect("round_end_received", self, "_on_round_ended_received")
+	Server.connect("capture_point_captured", self, "_on_capture_point_captured" )
+	Server.connect("capture_point_team_changed", self, "_on_capture_point_team_changed" )
+	Server.connect("capture_point_status_changed", self, "_on_capture_point_status_changed" )
+	Server.connect("capture_point_capture_lost", self, "_on_capture_point_capture_lost" )
 	set_physics_process(false)
+
+
+func _on_capture_point_captured(capturing_player_id, capture_point):
+	level.get_capture_points()[capture_point].capture(capturing_player_id)
+	
+func _on_capture_point_team_changed(capturing_player_id, capture_point):
+	level.get_capture_points()[capture_point].set_capturing_player(capturing_player_id)
+	
+func _on_capture_point_status_changed(capturing_player_id, capture_point, capture_progress):
+	level.get_capture_points()[capture_point].set_capture_status(capturing_player_id, capture_progress)
+	
+func _on_capture_point_capture_lost(capturing_player_id, capture_point):
+	level.get_capture_points()[capture_point].capture_lost(capturing_player_id)
 
 
 func _process(delta):
