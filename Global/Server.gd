@@ -147,8 +147,8 @@ remote func receive_world_state(world_state):
 
 
 # Receives the start of a round with the server time
-remote func receive_round_start(round_index, warm_up, server_time):
-	emit_signal("round_start_received", round_index, warm_up, server_time)
+remote func receive_round_start(round_index, latency_delay, server_time):
+	emit_signal("round_start_received", round_index, latency_delay, server_time)
 
 
 # Receives the end of a round
