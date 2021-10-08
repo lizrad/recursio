@@ -101,3 +101,9 @@ func capture_lost(capturing_player_id):
 	else:
 		$MeshInstance.material_override.albedo_color = Color.red
 		Logger.info("Enemy captured a point", "capture point")
+
+func get_capture_progress():
+	return _capture_progress
+
+func get_capture_team():
+	return _capturing_team

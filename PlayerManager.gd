@@ -9,7 +9,7 @@ var _my_ghosts = []
 var _enemy_ghosts_dic = {}
 
 # The player reference
-var player :Player
+var player
 
 # The player id (rpc id)
 var id
@@ -42,6 +42,9 @@ func _ready():
 	Server.connect("capture_point_status_changed", self, "_on_capture_point_status_changed" )
 	Server.connect("capture_point_capture_lost", self, "_on_capture_point_capture_lost" )
 	Server.connect("game_result", self, "_on_game_result" )
+	
+	
+	
 	set_physics_process(false)
 
 
@@ -54,8 +57,6 @@ func _on_game_result(winning_player_id):
 
 func _on_capture_point_captured(capturing_player_id, capture_point):
 	level.get_capture_points()[capture_point].capture(capturing_player_id)
-	# Update player HUD
-	player.HUD
 	
 func _on_capture_point_team_changed(capturing_player_id, capture_point):
 	level.get_capture_points()[capture_point].set_capturing_player(capturing_player_id)
@@ -111,6 +112,13 @@ func _process(delta):
 			projected_from_start
 			+ (projected_from_last_known - projected_from_start) * tick_progress
 		)
+	
+	# Update capture points in HUD
+	if player != null:
+		var index: int = 0
+		for capture_point in level.get_capture_points():
+			player.hud.update_capture_point(index, capture_point.get_capture_progress(), capture_point.get_capture_team())
+			index += 1
 
 
 
@@ -118,8 +126,8 @@ func _on_round_ended_received(round_index):
 	_disable_ghosts()
 	
 func _on_round_start_received(round_index, latency_delay, server_time):
-	player.HUD.round_start(round_index, server_time)
-	player.HUD.prep_phase_start(round_index, server_time)
+	player.hud.round_start(round_index, server_time)
+	player.hud.prep_phase_start(round_index, server_time)
 	Logger.info("Round "+str(round_index)+" started", "gameplay")
 	var time_diff = (Server.get_server_time() - server_time)
 	# Delay to counteract latency
@@ -136,7 +144,7 @@ func _on_round_start_received(round_index, latency_delay, server_time):
 	yield(get_tree().create_timer(_prep_phase_time), "timeout")
 	Logger.info("Prep phase "+str(round_index)+" over", "gameplay")
 	
-	player.HUD.game_phase_start(round_index, Server.get_server_time())
+	player.hud.game_phase_start(round_index, Server.get_server_time())
 	_restart_ghosts(Server.get_server_time())
 
 
@@ -252,6 +260,14 @@ func _spawn_player(player_id, spawn_point):
 	for ghosts in _enemy_ghosts_dic.values():
 		for ghost in ghosts:
 			_apply_visibility_mask(ghost)
+	
+	
+	# Initialize capture point HUD for current level
+	for i in range(level.get_capture_points().size()):
+		player.hud.add_capture_point()
+	
+	# Update the player id for the HUD
+	player.hud.set_player_id(player_id)
 
 
 func _spawn_enemy(enemy_id, spawn_point):

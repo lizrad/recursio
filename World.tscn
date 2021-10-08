@@ -6,9 +6,9 @@
 
 [node name="World" type="Spatial"]
 
+[node name="LevelH" parent="." instance=ExtResource( 2 )]
+capture_point_scene = ExtResource( 3 )
+
 [node name="PlayerManager" type="Spatial" parent="."]
 script = ExtResource( 1 )
 level_path = NodePath("../LevelH")
-
-[node name="LevelH" parent="." instance=ExtResource( 2 )]
-capture_point_scene = ExtResource( 3 )
