@@ -36,6 +36,8 @@ var _input_enabled := true  # disable user input in rewind
 
 onready var _action_manager := get_node("ActionManager")
 
+var block_weapon_swap = false
+
 
 func get_normalized_input(type, outer_deadzone, inner_deadzone, min_length = 0.0):
 	var input = Vector2(
@@ -177,7 +179,11 @@ func _handle_user_input():
 	# TODO: only allow switch in prep phase
 	if Input.is_action_pressed("player_switch"):
 		# TODO: implement switching robots...
-		pass
+		if block_weapon_swap == false:
+			_action_manager.swap_weapon_type()
+			block_weapon_swap = true
+			yield(get_tree().create_timer(1), "timeout")
+			block_weapon_swap = false
 
 
 func get_visibility_mask():

@@ -24,32 +24,28 @@ export var activation_max: int  # max time in ticks where action can be applied
 #export var move_while_charging: float
 #export var rotate_while_charging: float
 
-export(AudioStreamSample) var sound
-export(StreamTexture) var img_bullet
-export(PackedScene) var player_accessory
-
+export var sound: AudioStreamSample
+export var img_bullet: StreamTexture
+export var player_accessory: PackedScene
 export var attack: PackedScene
-
-# dashing -> TODO: move to implementing class for interface
-var time_since_dash_start := 0.0
-var initial_dash_burst = Constants.get_value("dash", "impulse")
-var dash_exponent = Constants.get_value("dash", "exponent")
 
 signal ammunition_changed
 signal action_triggered
 signal action_released
 
 
-func _init(ammo: int, cd: float, charge: float, act_max: int):
+func _init(act_name: String, ammo: int, cd: float, charge: float, act_max: int, act_scene: PackedScene):
+	name = act_name
 	ammunition = ammo
 	max_ammo = ammunition
 	cooldown = cd
 	recharge_time = charge
 	activation_max = act_max
+	attack = act_scene
 
 
 func set_active(value: bool) -> void:
-	Logger.debug("Action set active for value: " + str(value), "actions")
+	Logger.debug("Action " + name + " set active for value: " + str(value), "actions")
 
 	if not value:
 		activation_time = 0
@@ -82,6 +78,7 @@ func set_active(value: bool) -> void:
 		var player = get_parent().player
 		var spawn = attack.instance()
 		spawn.initialize(player)
+		# TODO: decide where to add child; adapt current player rotation
 		#spawn.global_transform = global_transform
 		spawn.global_transform.origin = player.global_transform.origin
 		#player.add_child(spawn)
