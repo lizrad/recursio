@@ -5,7 +5,7 @@ export(float) var inner_deadzone := 0.2
 export(float) var outer_deadzone := 0.8
 export(float) var rotate_threshold := 0.0
 
-onready var HUD = get_node("HUD")
+onready var hud :HUD = get_node("HUD")
 
 var spawn_point := Vector3.ZERO
 
@@ -36,6 +36,8 @@ var _input_enabled := true  # disable user input in rewind
 
 onready var _action_manager := get_node("ActionManager")
 
+var block_weapon_swap = false
+
 func reset():
 	_last_rotation = 0.0
 	rotation_velocity = 0.0
@@ -50,6 +52,7 @@ func reset():
 	current_target_velocity = Vector3.ZERO
 	_rotate_input_vector = Vector3.ZERO
 	_input_enabled = true  
+	block_weapon_swap = false
 
 func get_normalized_input(type, outer_deadzone, inner_deadzone, min_length = 0.0):
 	var input = Vector2(
@@ -106,18 +109,8 @@ func handle_network_update(position, time):
 		var before = transform.origin
 		transform.origin += position_diff
 
-		Logger.info(
-			(
-				"Corrected from "
-				+ str(before)
-				+ " to "
-				+ str(transform.origin)
-				+ " (should be at "
-				+ str(position)
-				+ " according to server)"
-			),
-			"network-validation"
-		)
+		Logger.info(("Corrected from " + str(before) + " to " + str(transform.origin)
+			+ " (should be at " + str(position) + " according to server)"), "network-validation")
 
 		# Hotfix for overcompensation - we could also fix all following past states, but is that required?
 		past_frames.clear()
@@ -191,7 +184,11 @@ func _handle_user_input():
 	# TODO: only allow switch in prep phase
 	if Input.is_action_pressed("player_switch"):
 		# TODO: implement switching robots...
-		pass
+		if block_weapon_swap == false:
+			_action_manager.swap_weapon_type()
+			block_weapon_swap = true
+			yield(get_tree().create_timer(1), "timeout")
+			block_weapon_swap = false
 
 
 func get_visibility_mask():

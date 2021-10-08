@@ -1,6 +1,5 @@
 extends Node
 
-var _actions = {}
 var _map_input = {
 	"player_shoot": Constants.ActionType.SHOOT,
 	"player_melee": Constants.ActionType.MELEE,
@@ -8,50 +7,73 @@ var _map_input = {
 }
 
 onready var _shot_scene = preload("res://Shared/Attacks/Shots/HitscanShot.tscn")
+onready var _wall_scene = preload("res://Shared/Attacks/Shots/Wall.tscn")
 onready var _melee_scene = preload("res://Shared/Attacks/Melee/Melee.tscn")
+
+# preconfigured actions
+# Action(ammo, cd, recharge, activation_max, action_scene)
+# TODO: - unify ms/s input params
+onready var _action_shot = Action.new("hitscan", 10, 0.5, -1, 0, _shot_scene)
+onready var _action_wall = Action.new("wall", 3, 0.5, -1, 0, _wall_scene)
+onready var _action_dash = Action.new("dash", 2, 0.5, 5, 500, null)
+onready var _action_melee = Action.new("melee", -1, 0.5, -1, 0, _melee_scene)
+onready var _all_actions = [ _action_shot, _action_wall, _action_melee, _action_dash ]
+	
+# TODO: - set from outside
+#		- add selected weapon type per configuration ingame
+onready var _actions = { 
+	Constants.ActionType.SHOOT: _action_shot, 
+	Constants.ActionType.MELEE: _action_melee, 
+	Constants.ActionType.DASH: _action_dash
+}
+onready var _current_weapon = _action_shot
 
 # provide player and hud for up communication of signals
 onready var player = get_parent()
 onready var hud = player.get_node("HUD")
 
 func _ready():
-	# TEST: Action(ammo, cd, recharge, activation_max)
-	# TODO: set from outside, add selected weapon type per configuration ingame
-	var action = Action.new(10, 0.5, -1, 0)
-	action.attack = _shot_scene
-	_actions[Constants.ActionType.SHOOT] = action
-	
-	action = Action.new(2, 0.5, 5, 500)
-	_actions[Constants.ActionType.DASH] = action
-	
-	action = Action.new(-1, 0.5, -1, 0)
-	action.attack = _melee_scene
-	_actions[Constants.ActionType.MELEE] = action
 
 	for key in _actions:
+		Logger.info("connecting key " + str(key) + " to events...", "actions")
 		_actions[key].connect("ammunition_changed", self, "_on_ammu_changed", [key])
 		_actions[key].connect("action_triggered", self, "_on_action_triggered", [key])
 		_actions[key].connect("action_released", self, "_on_action_released", [key])
-		# need to add actions to scene tree to be able to install a timer
-		add_child(_actions[key])
+
+	# need to add actions to scene tree to be able to install a timer
+	for action in _all_actions:
+		add_child(action)
+
+	# TODO: move to outer action initialization
+	hud.update_ammo(Constants.ActionType.SHOOT, _actions[Constants.ActionType.SHOOT].max_ammo)
+	hud.update_ammo(Constants.ActionType.DASH, _actions[Constants.ActionType.DASH].max_ammo)
+
+
+# TODO: remove, only for testing purposes!
+# later weapon selection will be set from server depending on current round
+# and/or pre-setup configuration
+func swap_weapon_type() -> void:
+	_actions[Constants.ActionType.SHOOT] = _action_shot if _current_weapon == _action_wall else _action_wall
+	_current_weapon = _actions[Constants.ActionType.SHOOT]
+	Logger.info("weapon selected: " + _current_weapon.name, "actions")
+	hud.update_ammo(Constants.ActionType.SHOOT, _actions[Constants.ActionType.SHOOT].ammunition)
 
 
 # TODO: forward signal to ui
-func _on_ammu_changed(ammo: int, type: int):
+# 	- selected weapon ammo
+# 	- dash ammo
+func _on_ammu_changed(ammo: int, type: int) -> void:
 	assert(type in Constants.ActionType.values(), "_on_ammu_changed argument is expected to be an ActionType")
 	Logger.debug("ammunition for type: " + str(type) + " changed to: " + str(ammo), "actions")
 
-	hud.do_stuff()
+	hud.update_ammo(type, ammo)
 
 
-func _on_action_triggered(type: int):
+func _on_action_triggered(type: int) -> void:
 	assert(type in Constants.ActionType.values(), "_on_action_triggered argument is expected to be an ActionType")
 	if _actions.has(type):
 		var action = _actions[type] as Action
-		Logger.debug(
-			"action triggered for type: " + str(type) + " on time: " + str(action.activation_time),
-			"actions"
-		)
+		Logger.debug("action triggered for type: " + str(type) + " on time: " + str(action.activation_time), "actions")
 
 		# TODO: define common struct for Actions
 		if type == Constants.ActionType.DASH:
@@ -63,7 +85,7 @@ func _on_action_triggered(type: int):
 			Server.send_action_trigger(action_trigger)
 
 
-func _on_action_released(type: int):
+func _on_action_released(type: int) -> void:
 	assert(type in Constants.ActionType.values(), "_on_action_released argument is expected to be an ActionType")
 	if _actions.has(type):
 		var action = _actions[type] as Action
@@ -88,36 +110,13 @@ func handle_input() -> void:
 				)
 
 				Logger.debug(
-					(
-						"activation for "
-						+ str(input)
-						+ " with max: "
-						+ str(action.activation_max)
-						+ " act_time: "
-						+ str(action.activation_time)
-						+ " for OS.ticks: "
-						+ str(OS.get_ticks_msec())
-						+ " -> triggered: "
-						+ str(activate)
-					),
-					"actions"
-				)
+					("activation for " + str(input) + " with max: " + str(action.activation_max) + " act_time: " + str(action.activation_time)
+					+ " for OS.ticks: " + str(OS.get_ticks_msec()) + " -> triggered: " + str(activate)), "actions")
 
 				action.set_active(activate)
 			elif action.activation_time > 0:
 				Logger.debug(
-					(
-						"activation for "
-						+ str(input)
-						+ " with max: "
-						+ str(action.activation_max)
-						+ " act_time: "
-						+ str(action.activation_time)
-						+ " for OS.ticks: "
-						+ str(OS.get_ticks_msec())
-						+ " -> triggered: False"
-					),
-					"actions"
-				)
+					("activation for " + str(input) + " with max: " + str(action.activation_max) + " act_time: " + str(action.activation_time)
+					+ " for OS.ticks: " + str(OS.get_ticks_msec()) + " -> triggered: False"), "actions")
 
 				action.set_active(false)
