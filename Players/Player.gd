@@ -180,6 +180,10 @@ func _handle_user_input():
 		pass
 
 
+func get_visibility_mask():
+	return $LightViewport.get_texture()
+
+
 func apply_acceleration(new_acceleration):
 	acceleration = new_acceleration
 

@@ -17,6 +17,9 @@ var time_since_last_server_update = 0
 
 var time_of_last_world_state_send = -1
 
+export var level_path: NodePath
+onready var level = get_node(level_path)
+
 onready var _prep_phase_time: float = Constants.get_value("gameplay", "prep_phase_time")
 
 func _ready():
@@ -30,7 +33,32 @@ func _ready():
 	Server.connect("enemy_ghost_record_received", self, "_create_enemy_ghost")
 	Server.connect("round_start_received",self, "_on_round_start_received")
 	Server.connect("round_end_received", self, "_on_round_ended_received")
+	Server.connect("capture_point_captured", self, "_on_capture_point_captured" )
+	Server.connect("capture_point_team_changed", self, "_on_capture_point_team_changed" )
+	Server.connect("capture_point_status_changed", self, "_on_capture_point_status_changed" )
+	Server.connect("capture_point_capture_lost", self, "_on_capture_point_capture_lost" )
+	Server.connect("game_result", self, "_on_game_result" )
 	set_physics_process(false)
+
+
+func _on_game_result(winning_player_id):
+	var player_id = get_tree().get_network_unique_id()
+	if winning_player_id == player_id:
+		Logger.info("I won!", "gameplay")
+	else:
+		Logger.info("I lost!", "gameplay")
+
+func _on_capture_point_captured(capturing_player_id, capture_point):
+	level.get_capture_points()[capture_point].capture(capturing_player_id)
+	
+func _on_capture_point_team_changed(capturing_player_id, capture_point):
+	level.get_capture_points()[capture_point].set_capturing_player(capturing_player_id)
+	
+func _on_capture_point_status_changed(capturing_player_id, capture_point, capture_progress):
+	level.get_capture_points()[capture_point].set_capture_status(capturing_player_id, capture_progress)
+	
+func _on_capture_point_capture_lost(capturing_player_id, capture_point):
+	level.get_capture_points()[capture_point].capture_lost(capturing_player_id)
 
 
 func _process(delta):
@@ -93,22 +121,30 @@ func _on_round_start_received(round_index, latency_delay, server_time):
 	Logger.debug("Time difference of "+str(time_diff/1000.0),"gameplay")
 	# Wait for warm up
 	yield(get_tree().create_timer(delay), "timeout")
-	player.HUD.game_phase_start(round_index, Server.get_server_time())
-
-	Logger.info("Prep phase "+str(round_index)+" over", "gameplay")
 	
 	# Add ghosts to scene and set their start position
 	_enable_ghosts()
 	_move_ghosts_to_spawn()
 	
 	# Wait for preparation phase
-	# TODO: Start HUD timer
 	yield(get_tree().create_timer(_prep_phase_time), "timeout")
+	Logger.info("Prep phase "+str(round_index)+" over", "gameplay")
+	
+	player.HUD.game_phase_start(round_index, Server.get_server_time())
 	_restart_ghosts(Server.get_server_time())
+
+
+func _apply_visibility_mask(character):
+	if player:
+		character.get_node("Mesh_Body").material_override.set_shader_param("visibility_mask", player.get_visibility_mask())
+		character.get_node("Mesh_Body/Mesh_Eyes").material_override.set_shader_param("visibility_mask", player.get_visibility_mask())
 
 func _create_enemy_ghost(enemy_id, gameplay_record):
 	Logger.info("Enemy ("+str(enemy_id)+") ghost record received with start time of " + str(gameplay_record["T"]), "ghost")
+	
 	var ghost = _create_ghost(gameplay_record)
+	ghost.add_to_group("Enemy")
+	
 	if _enemy_ghosts_dic[enemy_id].size()<=Constants.get_value("ghosts", "max_amount"):
 		_enemy_ghosts_dic[enemy_id].append(ghost)
 	else:
@@ -119,6 +155,7 @@ func _create_enemy_ghost(enemy_id, gameplay_record):
 func _create_own_ghost(gameplay_record):
 	Logger.info("Own ghost record received with start time of " + str(gameplay_record["T"]), "ghost")
 	var ghost = _create_ghost(gameplay_record)
+	ghost.add_to_group("Friend")
 	if _my_ghosts.size()<=Constants.get_value("ghosts", "max_amount"):
 		_my_ghosts.append(ghost)
 	else:
@@ -143,6 +180,9 @@ func _disable_ghosts()->void:
 func _enable_ghosts() ->void:
 	for i in _enemy_ghosts_dic:
 		for ghost in _enemy_ghosts_dic[i]:
+			# Apply the visibility mask for enemy ghosts only (friendly ones are always visible)
+			_apply_visibility_mask(ghost)
+			
 			add_child(ghost)
 	for ghost in _my_ghosts:
 		add_child(ghost)
@@ -199,11 +239,19 @@ func _spawn_player(player_id, spawn_point):
 	player.spawn_point = spawn_point
 	player.set_name(str(player_id))
 	id = player_id
+	
+	# Apply visibility mask to all entities which have been here before the player
+	for enemy in enemies.values():
+		_apply_visibility_mask(enemy)
+	for ghosts in _enemy_ghosts_dic.values():
+		for ghost in ghosts:
+			_apply_visibility_mask(ghost)
 
 
 func _spawn_enemy(enemy_id, spawn_point):
 	var enemy = _spawn_character(_enemy_scene, spawn_point)
 	enemy.set_name(str(enemy_id))
+	_apply_visibility_mask(enemy)
 	enemies[enemy_id] = enemy
 	_enemy_ghosts_dic[enemy_id] = []
 
