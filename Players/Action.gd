@@ -45,7 +45,7 @@ func _init(act_name: String, ammo: int, cd: float, charge: float, act_max: int, 
 
 
 func set_active(value: bool) -> void:
-	Logger.debug("Action " + name + " set active for value: " + str(value), "actions")
+	Logger.info("Action " + name + " set active for value: " + str(value), "actions")
 
 	if not value:
 		activation_time = 0

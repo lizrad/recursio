@@ -94,18 +94,8 @@ func handle_network_update(position, time):
 		var before = transform.origin
 		transform.origin += position_diff
 
-		Logger.info(
-			(
-				"Corrected from "
-				+ str(before)
-				+ " to "
-				+ str(transform.origin)
-				+ " (should be at "
-				+ str(position)
-				+ " according to server)"
-			),
-			"network-validation"
-		)
+		Logger.info(("Corrected from " + str(before) + " to " + str(transform.origin)
+			+ " (should be at " + str(position) + " according to server)"), "network-validation")
 
 		# Hotfix for overcompensation - we could also fix all following past states, but is that required?
 		past_frames.clear()

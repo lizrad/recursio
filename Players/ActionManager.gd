@@ -33,15 +33,20 @@ onready var player = get_parent()
 onready var hud = player.get_node("HUD")
 
 func _ready():
-	
+
 	for key in _actions:
-		_all_actions[key].connect("ammunition_changed", self, "_on_ammu_changed", [key])
-		_all_actions[key].connect("action_triggered", self, "_on_action_triggered", [key])
-		_all_actions[key].connect("action_released", self, "_on_action_released", [key])
+		Logger.info("connecting key " + str(key) + " to events...", "actions")
+		_actions[key].connect("ammunition_changed", self, "_on_ammu_changed", [key])
+		_actions[key].connect("action_triggered", self, "_on_action_triggered", [key])
+		_actions[key].connect("action_released", self, "_on_action_released", [key])
 
 	# need to add actions to scene tree to be able to install a timer
 	for action in _all_actions:
 		add_child(action)
+
+	# TODO: move to outer action initialization
+	hud.update_ammo(Constants.ActionType.SHOOT, _actions[Constants.ActionType.SHOOT].max_ammo)
+	hud.update_ammo(Constants.ActionType.DASH, _actions[Constants.ActionType.DASH].max_ammo)
 
 
 # TODO: remove, only for testing purposes!
@@ -51,6 +56,7 @@ func swap_weapon_type() -> void:
 	_actions[Constants.ActionType.SHOOT] = _action_shot if _current_weapon == _action_wall else _action_wall
 	_current_weapon = _actions[Constants.ActionType.SHOOT]
 	Logger.info("weapon selected: " + _current_weapon.name, "actions")
+	hud.update_ammo(Constants.ActionType.SHOOT, _actions[Constants.ActionType.SHOOT].ammunition)
 
 
 # TODO: forward signal to ui
@@ -60,17 +66,14 @@ func _on_ammu_changed(ammo: int, type: int) -> void:
 	assert(type in Constants.ActionType.values(), "_on_ammu_changed argument is expected to be an ActionType")
 	Logger.debug("ammunition for type: " + str(type) + " changed to: " + str(ammo), "actions")
 
-	hud.do_stuff()
+	hud.update_ammo(type, ammo)
 
 
 func _on_action_triggered(type: int) -> void:
 	assert(type in Constants.ActionType.values(), "_on_action_triggered argument is expected to be an ActionType")
 	if _actions.has(type):
 		var action = _actions[type] as Action
-		Logger.debug(
-			"action triggered for type: " + str(type) + " on time: " + str(action.activation_time),
-			"actions"
-		)
+		Logger.debug("action triggered for type: " + str(type) + " on time: " + str(action.activation_time), "actions")
 
 		# TODO: define common struct for Actions
 		if type == Constants.ActionType.DASH:
@@ -107,36 +110,13 @@ func handle_input() -> void:
 				)
 
 				Logger.debug(
-					(
-						"activation for "
-						+ str(input)
-						+ " with max: "
-						+ str(action.activation_max)
-						+ " act_time: "
-						+ str(action.activation_time)
-						+ " for OS.ticks: "
-						+ str(OS.get_ticks_msec())
-						+ " -> triggered: "
-						+ str(activate)
-					),
-					"actions"
-				)
+					("activation for " + str(input) + " with max: " + str(action.activation_max) + " act_time: " + str(action.activation_time)
+					+ " for OS.ticks: " + str(OS.get_ticks_msec()) + " -> triggered: " + str(activate)), "actions")
 
 				action.set_active(activate)
 			elif action.activation_time > 0:
 				Logger.debug(
-					(
-						"activation for "
-						+ str(input)
-						+ " with max: "
-						+ str(action.activation_max)
-						+ " act_time: "
-						+ str(action.activation_time)
-						+ " for OS.ticks: "
-						+ str(OS.get_ticks_msec())
-						+ " -> triggered: False"
-					),
-					"actions"
-				)
+					("activation for " + str(input) + " with max: " + str(action.activation_max) + " act_time: " + str(action.activation_time)
+					+ " for OS.ticks: " + str(OS.get_ticks_msec()) + " -> triggered: False"), "actions")
 
 				action.set_active(false)
