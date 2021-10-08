@@ -40,6 +40,21 @@ func _ready():
 	Server.connect("game_result", self, "_on_game_result" )
 	set_physics_process(false)
 
+func _reset():
+	player.reset()
+	for enemy_id in enemies:
+		enemies[enemy_id].reset()
+	for ghost in _my_ghosts:
+		ghost.queue_free()
+	_my_ghosts.clear()
+	for enemy_id in _enemy_ghosts_dic:
+		for ghost in _enemy_ghosts_dic[enemy_id]:
+			ghost.queue_free()
+		_enemy_ghosts_dic[enemy_id].clear()
+	_enemy_ghosts_dic.clear()
+	time_of_last_world_state = -1
+	time_since_last_server_update = 0
+	time_of_last_world_state_send = -1
 
 func _on_game_result(winning_player_id):
 	var player_id = get_tree().get_network_unique_id()
@@ -47,6 +62,7 @@ func _on_game_result(winning_player_id):
 		Logger.info("I won!", "gameplay")
 	else:
 		Logger.info("I lost!", "gameplay")
+	#_reset()
 
 func _on_capture_point_captured(capturing_player_id, capture_point):
 	level.get_capture_points()[capture_point].capture(capturing_player_id)

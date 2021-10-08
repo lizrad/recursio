@@ -1,7 +1,5 @@
 extends Spatial
 
-
-var _current_alignment = 0
 var _capture_progress = 0
 var _capturing_team = -1
 var _captured_by = -1
@@ -24,7 +22,15 @@ func _ready():
 	_recapture_speed = Constants.get_value("capture", "recapture_speed")
 	_capture_time = Constants.get_value("capture", "capture_time")
 
-
+func reset():
+	_capture_progress = 0
+	_capturing_team = -1
+	_captured_by = -1
+	player_id =-1
+	_local_player_inside = false
+	_local_enemy_inside = false
+	
+	
 func _on_body_entered(body):
 	if body is Player:
 		_local_player_inside = true

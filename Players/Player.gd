@@ -36,6 +36,20 @@ var _input_enabled := true  # disable user input in rewind
 
 onready var _action_manager := get_node("ActionManager")
 
+func reset():
+	_last_rotation = 0.0
+	rotation_velocity = 0.0
+	past_frames.clear()
+	_just_corrected = false
+	last_server_position = Vector3.ZERO
+	last_server_time = 0
+	velocity = Vector3.ZERO
+	acceleration = Vector3.ZERO
+	dash_start = 0  
+	_time_since_dash_start = 0.0  
+	current_target_velocity = Vector3.ZERO
+	_rotate_input_vector = Vector3.ZERO
+	_input_enabled = true  
 
 func get_normalized_input(type, outer_deadzone, inner_deadzone, min_length = 0.0):
 	var input = Vector2(
