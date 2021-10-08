@@ -26,6 +26,7 @@ signal capture_point_captured(capturing_player_id, capture_point)
 signal capture_point_team_changed(capturing_player_id, capture_point)
 signal capture_point_status_changed(capturing_player_id, capture_point, capture_progress)
 signal capture_point_capture_lost(capturing_player_id, capture_point)
+signal game_result(winning_player_id)
 
 func _ready():
 	#TODO: put this where it makes more sense
@@ -175,3 +176,7 @@ remote func receive_capture_point_status_changed( capturing_player_id, capture_p
 remote func receive_capture_point_capture_lost( capturing_player_id, capture_point ):
 	Logger.info("Capture point capture lost received", "connection")
 	emit_signal("capture_point_capture_lost", capturing_player_id, capture_point)
+
+remote func receive_game_result(winning_player_id):
+	Logger.info("Game results received", "connection")
+	emit_signal("game_result", winning_player_id)

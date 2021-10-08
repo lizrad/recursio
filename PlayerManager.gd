@@ -37,8 +37,16 @@ func _ready():
 	Server.connect("capture_point_team_changed", self, "_on_capture_point_team_changed" )
 	Server.connect("capture_point_status_changed", self, "_on_capture_point_status_changed" )
 	Server.connect("capture_point_capture_lost", self, "_on_capture_point_capture_lost" )
+	Server.connect("game_result", self, "_on_game_result" )
 	set_physics_process(false)
 
+
+func _on_game_result(winning_player_id):
+	var player_id = get_tree().get_network_unique_id()
+	if winning_player_id == player_id:
+		Logger.info("I won!", "gameplay")
+	else:
+		Logger.info("I lost!", "gameplay")
 
 func _on_capture_point_captured(capturing_player_id, capture_point):
 	level.get_capture_points()[capture_point].capture(capturing_player_id)
