@@ -1,4 +1,5 @@
 extends Control
+class_name HUD
 
 onready var timer = get_node("Background/Timer")
 onready var phase = get_node("Phase")
@@ -47,6 +48,7 @@ func rewind_phase_start(round_index, start_time) ->void:
 	_max_time = Constants.get_value("gameplay", "rewind_phase_time")
 	_start_time = start_time
 
+
 func update_ammo(action_type: int, amount: int) ->void:
 	Logger.info("update ammo for type: %s - %s" %[action_type, amount], "HUD")
 	assert(action_type in Constants.ActionType.values(), "update_ammo argument is expected to be an ActionType")
@@ -54,3 +56,6 @@ func update_ammo(action_type: int, amount: int) ->void:
 		ammo.text = str(amount)
 	elif action_type == Constants.ActionType.DASH and dash:
 		dash.text = str(amount)
+
+func set_capture_point_progress(capture_point_id, progress):
+	pass

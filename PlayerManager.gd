@@ -8,8 +8,12 @@ var _my_ghosts = []
 # Key: Player ID | Value: List of ghosts
 var _enemy_ghosts_dic = {}
 
-var player
+# The player reference
+var player :Player
+
+# The player id (rpc id)
 var id
+
 var enemies = {}
 
 var time_of_last_world_state = -1
@@ -50,6 +54,8 @@ func _on_game_result(winning_player_id):
 
 func _on_capture_point_captured(capturing_player_id, capture_point):
 	level.get_capture_points()[capture_point].capture(capturing_player_id)
+	# Update player HUD
+	player.HUD
 	
 func _on_capture_point_team_changed(capturing_player_id, capture_point):
 	level.get_capture_points()[capture_point].set_capturing_player(capturing_player_id)
