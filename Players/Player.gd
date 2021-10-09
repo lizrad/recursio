@@ -215,3 +215,9 @@ func apply_acceleration(new_acceleration):
 	#  velocity
 	velocity = lerp(velocity, current_target_velocity, drag)
 	velocity += acceleration
+
+
+func receive_hit():
+	Logger.info("Own player was hit!", "attacking")
+	# TODO: Do we need to move to the spawn point? Not really - the position will be corrected anyways
+	# Maybe just do something visually?

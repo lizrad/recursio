@@ -45,7 +45,7 @@ func _init(act_name: String, ammo: int, cd: float, charge: float, act_max: int, 
 
 
 func set_active(value: bool) -> void:
-	Logger.info("Action " + name + " set active for value: " + str(value), "actions")
+	Logger.debug("Action " + name + " set active for value: " + str(value), "actions")
 
 	if not value:
 		activation_time = 0
@@ -80,7 +80,7 @@ func set_active(value: bool) -> void:
 		spawn.initialize(player)
 		# TODO: decide where to add child; adapt current player rotation
 		#spawn.global_transform = global_transform
-		spawn.global_transform.origin = player.global_transform.origin
+		spawn.global_transform = player.global_transform
 		#player.add_child(spawn)
 		get_tree().get_root().add_child(spawn);
 
