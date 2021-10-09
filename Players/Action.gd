@@ -80,7 +80,7 @@ func set_active(value: bool) -> void:
 		spawn.initialize(player)
 		# TODO: decide where to add child; adapt current player rotation
 		#spawn.global_transform = global_transform
-		spawn.global_transform.origin = player.global_transform.origin
+		spawn.global_transform = player.global_transform
 		#player.add_child(spawn)
 		get_tree().get_root().add_child(spawn);
 
