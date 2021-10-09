@@ -8,7 +8,6 @@ export(float) var rotate_threshold := 0.0
 onready var hud :HUD = get_node("HUD")
 var game_id := -1
 var player_id := -1
-var spawn_point := Vector3.ZERO
 
 var drag = Constants.get_value("movement", "drag")
 var move_acceleration = Constants.get_value("movement", "acceleration")
