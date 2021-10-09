@@ -66,6 +66,7 @@ config/icon="res://icon.png"
 Logger="*res://Shared/Logger.gd"
 Constants="*res://Shared/Constants.gd"
 Server="*res://Global/Server.gd"
+Enums="*res://Shared/Enums.gd"
 
 [debug]
 

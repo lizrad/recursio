@@ -74,10 +74,10 @@ func rewind_phase_start(round_index, start_time) ->void:
 
 func update_ammo(action_type: int, amount: int) ->void:
 	Logger.info("update ammo for type: %s - %s" %[action_type, amount], "HUD")
-	assert(action_type in Constants.ActionType.values(), "update_ammo argument is expected to be an ActionType")
-	if action_type == Constants.ActionType.SHOOT and ammo:
+	assert(action_type in Enums.ActionType.values(), "update_ammo argument is expected to be an ActionType")
+	if action_type == Enums.ActionType.SHOOT and ammo:
 		ammo.text = str(amount)
-	elif action_type == Constants.ActionType.DASH and dash:
+	elif action_type == Enums.ActionType.DASH and dash:
 		dash.text = str(amount)
 
 
