@@ -355,5 +355,4 @@ func _on_player_hit(hit_player_id):
 
 
 func _on_ghost_hit(hit_ghost_id):
-	# TODO: sort ghosts by ID and set the ghost with the corresponding ID to inactive
-	pass
+	_my_ghosts[hit_ghost_id].receive_hit()
