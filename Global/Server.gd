@@ -97,8 +97,8 @@ func send_action_trigger(action):
 	rpc_id(1, "receive_action_trigger", action)
 
 
-remote func spawn_player(player_id, spawn_point):
-	emit_signal("spawning_player", player_id, spawn_point)
+remote func spawn_player(player_id, spawn_point, game_id):
+	emit_signal("spawning_player", player_id, spawn_point, game_id)
 
 
 remote func spawn_enemy(enemy_id, spawn_point):

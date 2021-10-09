@@ -27,6 +27,8 @@ onready var level = get_node(level_path)
 
 onready var _prep_phase_time: float = Constants.get_value("gameplay", "prep_phase_time")
 
+var _game_phase_in_progress = false
+
 func _ready():
 	game_result_screen.visible = false
 	time_of_last_world_state_send = Server.get_server_time()
@@ -34,7 +36,7 @@ func _ready():
 	Server.connect("spawning_player", self, "_spawn_player")
 	Server.connect("spawning_enemy", self, "_spawn_enemy")
 	Server.connect("despawning_enemy", self, "_despawn_enemy")
-	Server.connect("world_state_received", self, "_update_enemy_positions")
+	Server.connect("world_state_received", self, "_update_character_positions")
 	Server.connect("own_ghost_record_received", self, "_create_own_ghost")
 	Server.connect("enemy_ghost_record_received", self, "_create_enemy_ghost")
 	Server.connect("round_start_received",self, "_on_round_start_received")
@@ -52,6 +54,8 @@ func _ready():
 func _reset():
 	Logger.info("Full reset triggered.","gameplay")
 	player.reset()
+	player.spawn_point = _get_spawn_point(player.game_id, 0)
+	player.move_back_to_spawnpoint()
 	for enemy_id in enemies:
 		enemies[enemy_id].reset()
 	for ghost in _my_ghosts:
@@ -142,9 +146,10 @@ func _process(delta):
 			player.hud.update_capture_point(index, capture_point.get_capture_progress(), capture_point.get_capture_team())
 			index += 1
 
-
-
 func _on_round_ended_received(round_index):
+	_game_phase_in_progress = false
+	player.game_in_progress = false
+	player.move_back_to_spawnpoint()
 	_disable_ghosts()
 	level.reset()
 	level.toggle_capture_points(false)
@@ -161,17 +166,36 @@ func _on_round_start_received(round_index, latency_delay, server_time):
 	# Wait for warm up
 	yield(get_tree().create_timer(delay), "timeout")
 	
+	var ghost_index = min(round_index-1,Constants.get_value("ghosts", "max_amount"))
+	move_player_to_spawnpoint(ghost_index)
+	#TODO: add player picking here
+	var my_replaced_ghost_index = ghost_index
+	var enemies_replaced_ghost_indices = {}
+	for enemy_id in enemies:
+		enemies_replaced_ghost_indices[enemy_id] = ghost_index
+		
 	# Add ghosts to scene and set their start position
-	_enable_ghosts()
-	_move_ghosts_to_spawn()
+	_enable_ghosts(my_replaced_ghost_index, enemies_replaced_ghost_indices)
+	_move_ghosts_to_spawn(my_replaced_ghost_index, enemies_replaced_ghost_indices)
 	
 	# Wait for preparation phase
 	yield(get_tree().create_timer(_prep_phase_time), "timeout")
+	_game_phase_in_progress = true
 	Logger.info("Prep phase "+str(round_index)+" over", "gameplay")
+	player.game_in_progress = true
 	level.toggle_capture_points(true)
 	player.hud.game_phase_start(round_index, Server.get_server_time())
-	_restart_ghosts(Server.get_server_time())
+	_restart_ghosts(Server.get_server_time(),my_replaced_ghost_index, enemies_replaced_ghost_indices)
+	
+func move_player_to_spawnpoint(ghost_index:int)->void:
+	Logger.info("Moving player to spawnpoint "+str(ghost_index), "spawnpoints")
+	player.transform.origin = _get_spawn_point(player.game_id, ghost_index)
+	player.spawn_point = _get_spawn_point(player.game_id, ghost_index)
 
+func _get_spawn_point(game_id, ghost_index):
+	var player_number = game_id + 1
+	var spawn_point = level.get_spawn_points(player_number)[ghost_index]
+	return spawn_point
 
 func _apply_visibility_mask(character):
 	if player:
@@ -202,7 +226,6 @@ func _create_own_ghost(gameplay_record):
 		_my_ghosts[gameplay_record["G"]] = ghost
 		old_ghost.queue_free()
 
-
 func _create_ghost(gameplay_record):
 	var ghost = _ghost_scene.instance()
 	ghost.init(gameplay_record)
@@ -215,30 +238,35 @@ func _disable_ghosts()->void:
 	for ghost in _my_ghosts:
 		remove_child(ghost)
 
+func _enable_ghosts(my_replaced_ghost_index:int, enemies_replaced_ghost_indices:Dictionary) ->void:
+	for enemy_id in _enemy_ghosts_dic:
+		for i in range(_enemy_ghosts_dic[enemy_id].size()):
+			if i != enemies_replaced_ghost_indices[enemy_id]:
+				# Apply the visibility mask for enemy ghosts only (friendly ones are always visible)
+				_apply_visibility_mask(_enemy_ghosts_dic[enemy_id][i])
+				add_child(_enemy_ghosts_dic[enemy_id][i])
+	for i in range(_my_ghosts.size()):
+		if i != my_replaced_ghost_index:
+			add_child(_my_ghosts[i])
 
-func _enable_ghosts() ->void:
-	for i in _enemy_ghosts_dic:
-		for ghost in _enemy_ghosts_dic[i]:
-			# Apply the visibility mask for enemy ghosts only (friendly ones are always visible)
-			_apply_visibility_mask(ghost)
-			
-			add_child(ghost)
-	for ghost in _my_ghosts:
-		add_child(ghost)
+func _move_ghosts_to_spawn(my_replaced_ghost_index:int, enemies_replaced_ghost_indices:Dictionary) -> void:
+	for enemy_id in _enemy_ghosts_dic:
+		for i in range(_enemy_ghosts_dic[enemy_id].size()):
+			if i != enemies_replaced_ghost_indices[enemy_id]:
+				_enemy_ghosts_dic[enemy_id][i].move_to_start_position()
+	for i in range(_my_ghosts.size()):
+		if i != my_replaced_ghost_index:
+			_my_ghosts[i].move_to_start_position()
 
 
-func _move_ghosts_to_spawn() -> void:
-	for player_id in _enemy_ghosts_dic:
-		for ghost in _enemy_ghosts_dic[player_id]:
-			ghost.move_to_start_position()
-
-
-func _restart_ghosts(start_time)->void:
-	for i in _enemy_ghosts_dic:
-		for ghost in _enemy_ghosts_dic[i]:
-			ghost.start_replay(start_time)
-	for ghost in _my_ghosts:
-		ghost.start_replay(start_time)
+func _restart_ghosts(start_time, my_replaced_ghost_index:int, enemies_replaced_ghost_indices:Dictionary)->void:
+	for enemy_id in _enemy_ghosts_dic:
+		for i in range(_enemy_ghosts_dic[enemy_id].size()):
+			if i != enemies_replaced_ghost_indices[enemy_id]:
+				_enemy_ghosts_dic[enemy_id][i].start_replay(start_time)
+	for i in range(_my_ghosts.size()):
+		if i != my_replaced_ghost_index:
+			_my_ghosts[i].start_replay(start_time)
 
 
 func _physics_process(delta):
@@ -269,13 +297,13 @@ func _define_player_state():
 	# This fixes sync issues - maybe because of unexpected order-of-execution of physics_process?
 	time_of_last_world_state_send = Server.get_server_time()
 
-func _reset_spawnpoints()->void:
-	player.transform.origin = player.spawn_point
 
-func _spawn_player(player_id, spawn_point):
+func _spawn_player(player_id, spawn_point, game_id):
 	set_physics_process(true)
 	player = _spawn_character(_player_scene, spawn_point)
 	player.spawn_point = spawn_point
+	player.game_id =game_id
+	player.player_id = player_id
 	player.set_name(str(player_id))
 	id = player_id
 	
@@ -318,7 +346,9 @@ func _spawn_character(character_scene, spawn_point):
 	return character
 
 
-func _update_enemy_positions(world_state):
+func _update_character_positions(world_state):
+	if not _game_phase_in_progress:
+		return
 	if time_of_last_world_state < world_state["T"]:
 		time_of_last_world_state = world_state["T"]
 		time_since_last_server_update = 0

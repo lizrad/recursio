@@ -6,7 +6,8 @@ export(float) var outer_deadzone := 0.8
 export(float) var rotate_threshold := 0.0
 
 onready var hud :HUD = get_node("HUD")
-
+var game_id := -1
+var player_id := -1
 var spawn_point := Vector3.ZERO
 
 var drag = Constants.get_value("movement", "drag")
@@ -38,6 +39,8 @@ onready var _action_manager := get_node("ActionManager")
 
 var block_weapon_swap = false
 
+
+var game_in_progress:= false
 func reset():
 	_last_rotation = 0.0
 	rotation_velocity = 0.0
@@ -53,7 +56,12 @@ func reset():
 	_rotate_input_vector = Vector3.ZERO
 	_input_enabled = true  
 	block_weapon_swap = false
+	game_in_progress = false
 	hud.reset()
+
+func move_back_to_spawnpoint():
+	Logger.info("Moving player back to spawnpoint at "+str(spawn_point),"spawnpoints")
+	transform.origin = spawn_point
 
 func get_normalized_input(type, outer_deadzone, inner_deadzone, min_length = 0.0):
 	var input = Vector2(
@@ -120,6 +128,8 @@ func handle_network_update(position, time):
 
 
 func _physics_process(delta):
+	if not game_in_progress:
+		return
 	position_at_frame_begin = transform.origin
 
 	var rotation_velocity = (rotation.y - _last_rotation) / delta
