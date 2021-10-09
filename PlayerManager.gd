@@ -206,6 +206,8 @@ func _create_enemy_ghost(enemy_id, gameplay_record):
 	Logger.info("Enemy ("+str(enemy_id)+") ghost record received with start time of " + str(gameplay_record["T"]), "ghost")
 	
 	var ghost = _create_ghost(gameplay_record)
+	#Low Priority TODO: this works for two player only
+	ghost.spawn_point = _get_spawn_point(1-player.game_id,gameplay_record["G"])
 	ghost.add_to_group("Enemy")
 	
 	if _enemy_ghosts_dic[enemy_id].size()<=Constants.get_value("ghosts", "max_amount"):
@@ -218,6 +220,7 @@ func _create_enemy_ghost(enemy_id, gameplay_record):
 func _create_own_ghost(gameplay_record):
 	Logger.info("Own ghost record received with start time of " + str(gameplay_record["T"]), "ghost")
 	var ghost = _create_ghost(gameplay_record)
+	ghost.spawn_point = _get_spawn_point(player.game_id,gameplay_record["G"])
 	ghost.add_to_group("Friend")
 	if _my_ghosts.size()<=Constants.get_value("ghosts", "max_amount"):
 		_my_ghosts.append(ghost)
@@ -230,6 +233,13 @@ func _create_ghost(gameplay_record):
 	var ghost = _ghost_scene.instance()
 	ghost.init(gameplay_record)
 	return ghost
+
+func _stop_ghosts()->void:
+	for enemy_id in _enemy_ghosts_dic:
+		for i in range(_enemy_ghosts_dic[enemy_id].size()):
+			_enemy_ghosts_dic[enemy_id][i].stop_replay()
+	for i in range(_my_ghosts.size()):
+		_my_ghosts[i].stop_replay()
 
 func _disable_ghosts()->void:
 	for i in _enemy_ghosts_dic:
@@ -253,10 +263,10 @@ func _move_ghosts_to_spawn(my_replaced_ghost_index:int, enemies_replaced_ghost_i
 	for enemy_id in _enemy_ghosts_dic:
 		for i in range(_enemy_ghosts_dic[enemy_id].size()):
 			if i != enemies_replaced_ghost_indices[enemy_id]:
-				_enemy_ghosts_dic[enemy_id][i].move_to_start_position()
+				_enemy_ghosts_dic[enemy_id][i].move_to_spawn_position()
 	for i in range(_my_ghosts.size()):
 		if i != my_replaced_ghost_index:
-			_my_ghosts[i].move_to_start_position()
+			_my_ghosts[i].move_to_spawn_position()
 
 
 func _restart_ghosts(start_time, my_replaced_ghost_index:int, enemies_replaced_ghost_indices:Dictionary)->void:
