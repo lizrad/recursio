@@ -28,7 +28,7 @@ signal capture_point_status_changed(capturing_player_id, capture_point, capture_
 signal capture_point_capture_lost(capturing_player_id, capture_point)
 signal game_result(winning_player_id)
 signal player_hit(hit_player_id)
-signal ghost_hit(hit_ghost_id)
+signal ghost_hit(hit_ghost_player_owner, hit_ghost_id)
 
 func _ready():
 	#TODO: put this where it makes more sense
@@ -187,6 +187,6 @@ remote func receive_player_hit(hit_player_id):
 	Logger.info("Player hit received: " + str(hit_player_id), "connection")
 	emit_signal("player_hit", hit_player_id)
 
-remote func receive_ghost_hit(hit_ghost_id):
-	Logger.info("Ghost hit received: " + str(hit_ghost_id), "connection")
-	emit_signal("ghost_hit", hit_ghost_id)
+remote func receive_ghost_hit(hit_ghost_player_owner, hit_ghost_id):
+	Logger.info("Ghost hit received: " + str(hit_ghost_id) + " of player " + str(hit_ghost_player_owner), "connection")
+	emit_signal("ghost_hit", hit_ghost_player_owner, hit_ghost_id)

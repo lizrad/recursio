@@ -394,5 +394,8 @@ func _on_player_hit(hit_player_id):
 		enemies[hit_player_id].receive_hit()
 
 
-func _on_ghost_hit(hit_ghost_id):
-	_my_ghosts[hit_ghost_id].receive_hit()
+func _on_ghost_hit(hit_ghost_player_owner, hit_ghost_id):
+	if hit_ghost_player_owner == id:
+		_my_ghosts[hit_ghost_id].receive_hit()
+	else:
+		_enemy_ghosts_dic[hit_ghost_player_owner][hit_ghost_id].receive_hit()
