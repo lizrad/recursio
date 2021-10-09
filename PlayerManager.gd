@@ -150,6 +150,7 @@ func _on_round_ended_received(round_index):
 	_game_phase_in_progress = false
 	player.game_in_progress = false
 	player.move_back_to_spawnpoint()
+	_stop_ghosts()
 	_disable_ghosts()
 	level.reset()
 	level.toggle_capture_points(false)
