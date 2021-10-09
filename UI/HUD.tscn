@@ -5,7 +5,7 @@
 [ext_resource path="res://Resources/Fonts/Roboto-Thin.ttf" type="DynamicFontData" id=3]
 [ext_resource path="res://Resources/Icons/round_timer_1024x256.png" type="Texture" id=5]
 
-[sub_resource type="DynamicFont" id=2]
+[sub_resource type="DynamicFont" id=1]
 size = 15
 font_data = ExtResource( 3 )
 
@@ -28,8 +28,8 @@ anchor_right = 0.7
 anchor_bottom = 1.0
 margin_left = -0.200012
 margin_right = 0.200012
-custom_fonts/font = SubResource( 2 )
-text = "Preparation Phase 1"
+custom_fonts/font = SubResource( 1 )
+text = "Waiting for Server..."
 align = 1
 valign = 1
 __meta__ = {

@@ -53,6 +53,7 @@ func reset():
 	_rotate_input_vector = Vector3.ZERO
 	_input_enabled = true  
 	block_weapon_swap = false
+	hud.reset()
 
 func get_normalized_input(type, outer_deadzone, inner_deadzone, min_length = 0.0):
 	var input = Vector2(

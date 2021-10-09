@@ -25,7 +25,13 @@ var _max_time := -1.0
 var _start_time := -1.0
 
 func _ready() -> void:
-	pass
+	reset()
+
+func reset():
+	phase.text = "Waiting for Server..."
+	round_state = Latency_Delay
+	_max_time = -1.0
+	_start_time = -1.0
 
 func _process(delta):
 	timer_pb.value = _calculate_progress()

@@ -21,12 +21,14 @@ var time_since_last_server_update = 0
 
 var time_of_last_world_state_send = -1
 
+onready var game_result_screen = get_node("../GameResultScreen")
 export var level_path: NodePath
 onready var level = get_node(level_path)
 
 onready var _prep_phase_time: float = Constants.get_value("gameplay", "prep_phase_time")
 
 func _ready():
+	game_result_screen.visible = false
 	time_of_last_world_state_send = Server.get_server_time()
 
 	Server.connect("spawning_player", self, "_spawn_player")
@@ -48,6 +50,7 @@ func _ready():
 	set_physics_process(false)
 
 func _reset():
+	Logger.info("Full reset triggered.","gameplay")
 	player.reset()
 	for enemy_id in enemies:
 		enemies[enemy_id].reset()
@@ -58,18 +61,21 @@ func _reset():
 		for ghost in _enemy_ghosts_dic[enemy_id]:
 			ghost.queue_free()
 		_enemy_ghosts_dic[enemy_id].clear()
-	_enemy_ghosts_dic.clear()
 	time_of_last_world_state = -1
 	time_since_last_server_update = 0
 	time_of_last_world_state_send = -1
+	level.reset()
 
 func _on_game_result(winning_player_id):
 	var player_id = get_tree().get_network_unique_id()
 	if winning_player_id == player_id:
 		Logger.info("I won!", "gameplay")
+		game_result_screen.get_node("ResultText").text = "You Won!"
 	else:
 		Logger.info("I lost!", "gameplay")
-	#_reset()
+		game_result_screen.get_node("ResultText").text = "You Lost!"
+	_reset()
+	game_result_screen.visible = true
 
 func _on_capture_point_captured(capturing_player_id, capture_point):
 	level.get_capture_points()[capture_point].capture(capturing_player_id)
@@ -144,6 +150,7 @@ func _on_round_ended_received(round_index):
 	level.toggle_capture_points(false)
 	
 func _on_round_start_received(round_index, latency_delay, server_time):
+	game_result_screen.visible = false
 	player.hud.round_start(round_index, server_time)
 	player.hud.prep_phase_start(round_index, server_time)
 	Logger.info("Round "+str(round_index)+" started", "gameplay")
