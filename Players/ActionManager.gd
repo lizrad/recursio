@@ -1,9 +1,9 @@
 extends Node
 
 var _map_input = {
-	"player_shoot": Constants.ActionType.SHOOT,
-	"player_melee": Constants.ActionType.MELEE,
-	"player_dash": Constants.ActionType.DASH,
+	"player_shoot": Enums.ActionType.SHOOT,
+	"player_melee": Enums.ActionType.MELEE,
+	"player_dash": Enums.ActionType.DASH,
 }
 
 onready var _shot_scene = preload("res://Shared/Attacks/Shots/HitscanShot.tscn")
@@ -22,9 +22,9 @@ onready var _all_actions = [ _action_shot, _action_wall, _action_melee, _action_
 # TODO: - set from outside
 #		- add selected weapon type per configuration ingame
 onready var _actions = { 
-	Constants.ActionType.SHOOT: _action_shot, 
-	Constants.ActionType.MELEE: _action_melee, 
-	Constants.ActionType.DASH: _action_dash
+	Enums.ActionType.SHOOT: _action_shot, 
+	Enums.ActionType.MELEE: _action_melee, 
+	Enums.ActionType.DASH: _action_dash
 }
 onready var _current_weapon = _action_shot
 
@@ -45,53 +45,53 @@ func _ready():
 		add_child(action)
 
 	# TODO: move to outer action initialization
-	hud.update_ammo(Constants.ActionType.SHOOT, _actions[Constants.ActionType.SHOOT].max_ammo)
-	hud.update_ammo(Constants.ActionType.DASH, _actions[Constants.ActionType.DASH].max_ammo)
+	hud.update_ammo(Enums.ActionType.SHOOT, _actions[Enums.ActionType.SHOOT].max_ammo)
+	hud.update_ammo(Enums.ActionType.DASH, _actions[Enums.ActionType.DASH].max_ammo)
 
 
 # TODO: remove, only for testing purposes!
 # later weapon selection will be set from server depending on current round
 # and/or pre-setup configuration
 func swap_weapon_type() -> void:
-	_actions[Constants.ActionType.SHOOT] = _action_shot if _current_weapon == _action_wall else _action_wall
-	_current_weapon = _actions[Constants.ActionType.SHOOT]
+	_actions[Enums.ActionType.SHOOT] = _action_shot if _current_weapon == _action_wall else _action_wall
+	_current_weapon = _actions[Enums.ActionType.SHOOT]
 	Logger.info("weapon selected: " + _current_weapon.name, "actions")
-	hud.update_ammo(Constants.ActionType.SHOOT, _actions[Constants.ActionType.SHOOT].ammunition)
+	hud.update_ammo(Enums.ActionType.SHOOT, _actions[Enums.ActionType.SHOOT].ammunition)
 
 
 # TODO: forward signal to ui
 # 	- selected weapon ammo
 # 	- dash ammo
 func _on_ammu_changed(ammo: int, type: int) -> void:
-	assert(type in Constants.ActionType.values(), "_on_ammu_changed argument is expected to be an ActionType")
+	assert(type in Enums.ActionType.values(), "_on_ammu_changed argument is expected to be an ActionType")
 	Logger.debug("ammunition for type: " + str(type) + " changed to: " + str(ammo), "actions")
 
 	hud.update_ammo(type, ammo)
 
 
 func _on_action_triggered(type: int) -> void:
-	assert(type in Constants.ActionType.values(), "_on_action_triggered argument is expected to be an ActionType")
+	assert(type in Enums.ActionType.values(), "_on_action_triggered argument is expected to be an ActionType")
 	if _actions.has(type):
 		var action = _actions[type] as Action
 		Logger.debug("action triggered for type: " + str(type) + " on time: " + str(action.activation_time), "actions")
 
 		# TODO: define common struct for Actions
-		if type == Constants.ActionType.DASH:
+		if type == Enums.ActionType.DASH:
 			player.dash_start = action.activation_time
 			var dash_state = {"T": Server.get_server_time(), "S": 1}
 			Server.send_dash_state(dash_state)
-		elif type == Constants.ActionType.SHOOT or type == Constants.ActionType.MELEE:
+		elif type == Enums.ActionType.SHOOT or type == Enums.ActionType.MELEE:
 			var action_trigger = {"A": type, "T": Server.get_server_time()}
 			Server.send_action_trigger(action_trigger)
 
 
 func _on_action_released(type: int) -> void:
-	assert(type in Constants.ActionType.values(), "_on_action_released argument is expected to be an ActionType")
+	assert(type in Enums.ActionType.values(), "_on_action_released argument is expected to be an ActionType")
 	if _actions.has(type):
 		var action = _actions[type] as Action
 		Logger.debug("action released for type: " + str(type), "actions")
 
-		if type == Constants.ActionType.DASH:
+		if type == Enums.ActionType.DASH:
 			Logger.info("dash released", "actions")
 			player.dash_start = 0
 			var dash_state = {"T": Server.get_server_time(), "S": 0}
