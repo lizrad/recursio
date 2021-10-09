@@ -44,8 +44,8 @@ func _ready():
 	Server.connect("capture_point_status_changed", self, "_on_capture_point_status_changed" )
 	Server.connect("capture_point_capture_lost", self, "_on_capture_point_capture_lost" )
 	Server.connect("game_result", self, "_on_game_result" )
-	
-	
+	Server.connect("player_hit", self, "_on_player_hit")
+	Server.connect("ghost_hit", self, "_on_ghost_hit")
 	
 	set_physics_process(false)
 
@@ -346,3 +346,14 @@ func _update_enemy_positions(world_state):
 				enemy.server_acceleration = enemy_states[enemy_id]["A"]
 
 
+func _on_player_hit(hit_player_id):
+	if hit_player_id == id:
+		# Own player was hit
+		player.receive_hit()
+	else:
+		enemies[hit_player_id].receive_hit()
+
+
+func _on_ghost_hit(hit_ghost_id):
+	# TODO: sort ghosts by ID and set the ghost with the corresponding ID to inactive
+	pass

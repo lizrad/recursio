@@ -17,3 +17,9 @@ func reset():
 	server_position = Vector3.ZERO
 	server_velocity = Vector3.ZERO
 	server_acceleration = Vector3.ZERO
+
+
+func receive_hit():
+	Logger.info("Enemy player was hit!", "attacking")
+	# TODO: Do we need to move to the spawn point? Not really - the position will be corrected anyways
+	# Maybe just do something visually?
