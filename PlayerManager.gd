@@ -140,6 +140,8 @@ func _process(delta):
 
 func _on_round_ended_received(round_index):
 	_disable_ghosts()
+	level.reset()
+	level.toggle_capture_points(false)
 	
 func _on_round_start_received(round_index, latency_delay, server_time):
 	player.hud.round_start(round_index, server_time)
@@ -159,7 +161,7 @@ func _on_round_start_received(round_index, latency_delay, server_time):
 	# Wait for preparation phase
 	yield(get_tree().create_timer(_prep_phase_time), "timeout")
 	Logger.info("Prep phase "+str(round_index)+" over", "gameplay")
-	
+	level.toggle_capture_points(true)
 	player.hud.game_phase_start(round_index, Server.get_server_time())
 	_restart_ghosts(Server.get_server_time())
 

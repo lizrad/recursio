@@ -1,5 +1,6 @@
 extends Spatial
 
+var active = true
 var _capture_progress = 0
 var _capturing_team = -1
 var _captured_by = -1
@@ -24,10 +25,11 @@ func _ready():
 	_capture_time = Constants.get_value("capture", "capture_time")
 
 func reset():
+	$MeshInstance.material_override.albedo_color = Color.gray
+	active = false
 	_capture_progress = 0
 	_capturing_team = -1
 	_captured_by = -1
-	player_id =-1
 	_local_player_inside = false
 	_local_enemy_inside = false
 	_local_ghost_inside = false
@@ -52,8 +54,9 @@ func _on_body_exited(body):
 
 
 func _process(delta):
+	if not active:
+		return
 	var adjusted_delta = delta / _capture_time
-	
 	#cannot reach 1 on client only
 	var local_maxima = 0.95 if _capture_progress<=0.95 else _capture_progress
 	#cannot reach 0 on client only
