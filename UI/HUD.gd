@@ -28,7 +28,7 @@ func _ready() -> void:
 	reset()
 
 func reset():
-	phase.text = "Waiting for Server..."
+	phase.text = "Waiting for game to start..."
 	round_state = Latency_Delay
 	_max_time = -1.0
 	_start_time = -1.0
@@ -55,12 +55,22 @@ func round_start(round_index, start_time) ->void:
 	phase.text = "Round "+str(round_index)+" starting..."
 	_max_time = Constants.get_value("gameplay", "latency_delay")
 	_start_time = start_time
-	
+
+func latency_delay_phase_start(round_index, start_time, time_diff)->void:
+	phase.text = "Waiting for server..."
+	_max_time = Constants.get_value("gameplay", "latency_delay")-time_diff
+	_start_time = start_time
+
 func prep_phase_start(round_index, start_time) ->void:
 	phase.text = "Preparation Phase "+str(round_index)
 	_max_time = Constants.get_value("gameplay", "prep_phase_time")
 	_start_time = start_time
-	
+
+func countdown_phase_start(round_index, start_time) ->void:
+	phase.text = "Get ready!"
+	_max_time = Constants.get_value("gameplay", "countdown_phase_seconds")
+	_start_time = start_time
+
 func game_phase_start(round_index, start_time) ->void:
 	phase.text = "Game Phase "+str(round_index)
 	_max_time = Constants.get_value("gameplay", "game_phase_time")

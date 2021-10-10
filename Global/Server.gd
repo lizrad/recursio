@@ -29,6 +29,7 @@ signal capture_point_capture_lost(capturing_player_id, capture_point)
 signal game_result(winning_player_id)
 signal player_hit(hit_player_id)
 signal ghost_hit(hit_ghost_player_owner, hit_ghost_id)
+signal ghost_picks(player_pick, enemy_picks)
 
 func _ready():
 	#TODO: put this where it makes more sense
@@ -98,6 +99,9 @@ func send_dash_state(dash_state):
 func send_action_trigger(action):
 	rpc_id(1, "receive_action_trigger", action)
 
+func send_ghost_pick(ghost_index):
+	rpc_id(1, "receive_ghost_pick",ghost_index)
+
 
 remote func spawn_player(player_id, spawn_point, game_id):
 	emit_signal("spawning_player", player_id, spawn_point, game_id)
@@ -133,7 +137,6 @@ remote func receive_latency(player_time):
 				total_latency += latency_array[i]
 				relevant_latency_count += 1
 		var new_latency = total_latency / relevant_latency_count
-		# DEBUG: Network simulation code
 		delta_latency = (new_latency) - latency
 		latency = new_latency
 		latency_array.clear()
@@ -153,8 +156,8 @@ remote func receive_world_state(world_state):
 
 
 # Receives the start of a round with the server time
-remote func receive_round_start(round_index, latency_delay, server_time):
-	emit_signal("round_start_received", round_index, latency_delay, server_time)
+remote func receive_round_start(round_index, server_time):
+	emit_signal("round_start_received", round_index, server_time)
 
 
 # Receives the end of a round
@@ -190,3 +193,8 @@ remote func receive_player_hit(hit_player_id):
 remote func receive_ghost_hit(hit_ghost_player_owner, hit_ghost_id):
 	Logger.info("Ghost hit received: " + str(hit_ghost_id) + " of player " + str(hit_ghost_player_owner), "connection")
 	emit_signal("ghost_hit", hit_ghost_player_owner, hit_ghost_id)
+
+
+remote func receive_ghost_picks(player_pick, enemy_picks):
+	Logger.info("Ghost picks received", "connection")
+	emit_signal("ghost_picks",player_pick, enemy_picks)

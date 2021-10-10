@@ -52,8 +52,11 @@ func _ready():
 # TODO: remove, only for testing purposes!
 # later weapon selection will be set from server depending on current round
 # and/or pre-setup configuration
-func swap_weapon_type() -> void:
-	_actions[Enums.ActionType.SHOOT] = _action_shot if _current_weapon == _action_wall else _action_wall
+func swap_weapon_type(weapon_type) -> void:
+	if weapon_type == Enums.WeaponType.WALL:
+		_actions[Enums.ActionType.SHOOT] = _action_wall
+	else:
+		_actions[Enums.ActionType.SHOOT] = _action_shot
 	_current_weapon = _actions[Enums.ActionType.SHOOT]
 	Logger.info("weapon selected: " + _current_weapon.name, "actions")
 	hud.update_ammo(Enums.ActionType.SHOOT, _actions[Enums.ActionType.SHOOT].ammunition)

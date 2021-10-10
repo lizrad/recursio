@@ -191,14 +191,6 @@ func _handle_user_input():
 	# shoot, place wall, dash, melee, ...
 	_action_manager.handle_input()
 
-	# TODO: only allow switch in prep phase
-	if Input.is_action_pressed("player_switch"):
-		# TODO: implement switching robots...
-		if block_weapon_swap == false:
-			_action_manager.swap_weapon_type()
-			block_weapon_swap = true
-			yield(get_tree().create_timer(1), "timeout")
-			block_weapon_swap = false
 
 
 func get_visibility_mask():
@@ -215,7 +207,8 @@ func apply_acceleration(new_acceleration):
 	velocity = lerp(velocity, current_target_velocity, drag)
 	velocity += acceleration
 
-
+func swap_weapon_type(weapon_type):
+	_action_manager.swap_weapon_type(weapon_type)
 func receive_hit():
 	Logger.info("Own player was hit!", "attacking")
 	# TODO: Do we need to move to the spawn point? Not really - the position will be corrected anyways
