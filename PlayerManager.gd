@@ -63,7 +63,7 @@ func _reset():
 	for enemy_id in enemies:
 		enemies[enemy_id].reset()
 	for ghost in _my_ghosts:
-		ghost.queue_free()
+		_my_ghosts[ghost].queue_free()
 	_my_ghosts.clear()
 	for enemy_id in _enemy_ghosts_dic:
 		for ghost_index in _enemy_ghosts_dic[enemy_id]:
