@@ -38,7 +38,7 @@ func _process(delta):
 
 # Calculates the remaining time and maps it between 0 and 1
 func _calculate_progress() ->float:
-	if _max_time < 0 or _start_time < 0:
+	if _max_time <= 0 or _start_time <= 0:
 		return 0.0
 	return 1.0 - (((Server.get_server_time() - _start_time) / 1000.0) / _max_time)
 
