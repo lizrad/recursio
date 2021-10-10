@@ -6,27 +6,7 @@ var _map_input = {
 	"player_dash": Enums.ActionType.DASH,
 }
 
-onready var _shot_scene = preload("res://Shared/Attacks/Shots/HitscanShot.tscn")
-onready var _wall_scene = preload("res://Shared/Attacks/Shots/Wall.tscn")
-onready var _melee_scene = preload("res://Shared/Attacks/Melee/Melee.tscn")
-
-# preconfigured actions
-# Action(ammo, cd, recharge, activation_max, action_scene)
-# TODO: - unify ms/s input params
-onready var _action_shot = Action.new("hitscan", 10, 0.5, -1, 0, _shot_scene)
-onready var _action_wall = Action.new("wall", 3, 0.5, -1, 0, _wall_scene)
-onready var _action_dash = Action.new("dash", 2, 0.5, 5, 500, null)
-onready var _action_melee = Action.new("melee", -1, 0.5, -1, 0, _melee_scene)
-onready var _all_actions = [ _action_shot, _action_wall, _action_melee, _action_dash ]
-	
-# TODO: - set from outside
-#		- add selected weapon type per configuration ingame
-onready var _actions = { 
-	Enums.ActionType.SHOOT: _action_shot, 
-	Enums.ActionType.MELEE: _action_melee, 
-	Enums.ActionType.DASH: _action_dash
-}
-onready var _current_weapon = _action_shot
+onready var _current_weapon = Actions.shot
 
 # provide player and hud for up communication of signals
 onready var player = get_parent()
@@ -34,19 +14,19 @@ onready var hud = player.get_node("HUD")
 
 func _ready():
 
-	for key in _actions:
+	for key in Actions.types_to_actions:
 		Logger.info("connecting key " + str(key) + " to events...", "actions")
-		_actions[key].connect("ammunition_changed", self, "_on_ammu_changed", [key])
-		_actions[key].connect("action_triggered", self, "_on_action_triggered", [key])
-		_actions[key].connect("action_released", self, "_on_action_released", [key])
+		Actions.types_to_actions[key].connect("ammunition_changed", self, "_on_ammu_changed", [key])
+		Actions.types_to_actions[key].connect("action_triggered", self, "_on_action_triggered", [key])
+		Actions.types_to_actions[key].connect("action_released", self, "_on_action_released", [key])
 
 	# need to add actions to scene tree to be able to install a timer
-	for action in _all_actions:
+	for action in Actions.allActions.types_to_actions:
 		add_child(action)
 
 	# TODO: move to outer action initialization
-	hud.update_ammo(Enums.ActionType.SHOOT, _actions[Enums.ActionType.SHOOT].max_ammo)
-	hud.update_ammo(Enums.ActionType.DASH, _actions[Enums.ActionType.DASH].max_ammo)
+	hud.update_ammo(Enums.ActionType.SHOOT, Actions.types_to_actions[Enums.ActionType.SHOOT].max_ammo)
+	hud.update_ammo(Enums.ActionType.DASH, Actions.types_to_actions[Enums.ActionType.DASH].max_ammo)
 
 
 # TODO: remove, only for testing purposes!
@@ -54,12 +34,13 @@ func _ready():
 # and/or pre-setup configuration
 func swap_weapon_type(weapon_type) -> void:
 	if weapon_type == Enums.WeaponType.WALL:
-		_actions[Enums.ActionType.SHOOT] = _action_wall
+		Actions.types_to_actions[Enums.ActionType.SHOOT] = Actions.wall
 	else:
-		_actions[Enums.ActionType.SHOOT] = _action_shot
-	_current_weapon = _actions[Enums.ActionType.SHOOT]
+		Actions.types_to_actions[Enums.ActionType.SHOOT] = Actions.shot
+	
+	_current_weapon = Actions.types_to_actions[Enums.ActionType.SHOOT]
 	Logger.info("weapon selected: " + _current_weapon.name, "actions")
-	hud.update_ammo(Enums.ActionType.SHOOT, _actions[Enums.ActionType.SHOOT].ammunition)
+	hud.update_ammo(Enums.ActionType.SHOOT, Actions.types_to_actions[Enums.ActionType.SHOOT].ammunition)
 
 
 # TODO: forward signal to ui
@@ -74,8 +55,8 @@ func _on_ammu_changed(ammo: int, type: int) -> void:
 
 func _on_action_triggered(type: int) -> void:
 	assert(type in Enums.ActionType.values(), "_on_action_triggered argument is expected to be an ActionType")
-	if _actions.has(type):
-		var action = _actions[type] as Action
+	if Actions.types_to_actions.has(type):
+		var action = Actions.types_to_actions[type] as Action
 		Logger.debug("action triggered for type: " + str(type) + " on time: " + str(action.activation_time), "actions")
 
 		# TODO: define common struct for Actions
@@ -90,8 +71,8 @@ func _on_action_triggered(type: int) -> void:
 
 func _on_action_released(type: int) -> void:
 	assert(type in Enums.ActionType.values(), "_on_action_released argument is expected to be an ActionType")
-	if _actions.has(type):
-		var action = _actions[type] as Action
+	if Actions.types_to_actions.has(type):
+		var action = Actions.types_to_actions[type] as Action
 		Logger.debug("action released for type: " + str(type), "actions")
 
 		if type == Enums.ActionType.DASH:
@@ -103,8 +84,8 @@ func _on_action_released(type: int) -> void:
 
 func handle_input() -> void:
 	for input in _map_input:
-		if _actions.has(_map_input[input]):
-			var action = _actions[_map_input[input]] as Action
+		if Actions.types_to_actions.has(_map_input[input]):
+			var action = Actions.types_to_actions[_map_input[input]] as Action
 			if Input.is_action_pressed(input):
 				var activate = (
 					action.activation_max < 1

@@ -9,10 +9,10 @@
 config_version=4
 
 _global_script_classes=[ {
-"base": "Spatial",
+"base": "Resource",
 "class": "Action",
 "language": "GDScript",
-"path": "res://Players/Action.gd"
+"path": "res://Shared/Attacks/Action.gd"
 }, {
 "base": "Control",
 "class": "CapturePointHUD",
@@ -67,6 +67,7 @@ Logger="*res://Shared/Logger.gd"
 Constants="*res://Shared/Constants.gd"
 Server="*res://Global/Server.gd"
 Enums="*res://Shared/Enums.gd"
+Actions="*res://Shared/Attacks/Actions.gd"
 
 [debug]
 
