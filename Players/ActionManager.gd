@@ -20,10 +20,6 @@ func _ready():
 		Actions.types_to_actions[key].connect("action_triggered", self, "_on_action_triggered", [key])
 		Actions.types_to_actions[key].connect("action_released", self, "_on_action_released", [key])
 
-	# need to add actions to scene tree to be able to install a timer
-	for action in Actions.allActions.types_to_actions:
-		add_child(action)
-
 	# TODO: move to outer action initialization
 	hud.update_ammo(Enums.ActionType.SHOOT, Actions.types_to_actions[Enums.ActionType.SHOOT].max_ammo)
 	hud.update_ammo(Enums.ActionType.DASH, Actions.types_to_actions[Enums.ActionType.DASH].max_ammo)
