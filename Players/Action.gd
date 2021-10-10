@@ -1,8 +1,7 @@
 class_name Action
-# TODO: need Spatial dependency only for get_tree() -> could access in another way?
-#extends Resource
-extends Spatial
+extends Resource
 
+export var name: String
 export var ammunition: int
 export var max_ammo: int
 export var cooldown: float
@@ -44,7 +43,7 @@ func _init(act_name: String, ammo: int, cd: float, charge: float, act_max: int, 
 	attack = act_scene
 
 
-func set_active(value: bool) -> void:
+func set_active(value: bool, user: Spatial, scene_tree: SceneTree) -> void:
 	Logger.debug("Action " + name + " set active for value: " + str(value), "actions")
 
 	if not value:
@@ -75,14 +74,12 @@ func set_active(value: bool) -> void:
 	# fire actual action -> TODO: maybe as class hierarchy?
 	if attack:
 		Logger.info("instancing new attack", "actions")
-		var player = get_parent().player
 		var spawn = attack.instance()
-		spawn.initialize(player)
+		spawn.initialize(user)
 		# TODO: decide where to add child; adapt current player rotation
 		#spawn.global_transform = global_transform
-		spawn.global_transform = player.global_transform
-		#player.add_child(spawn)
-		get_tree().get_root().add_child(spawn);
+		spawn.global_transform = user.global_transform
+		scene_tree.get_root().add_child(spawn);
 
 		# TODO: if has recoil configured -> apply on player
 
@@ -94,11 +91,11 @@ func set_active(value: bool) -> void:
 
 	# re-enable
 	if cooldown > 0:
-		yield(get_tree().create_timer(cooldown), "timeout")
+		yield(scene_tree.create_timer(cooldown), "timeout")
 		blocked = false
 
 	# refill ammu
 	if recharge_time > 0 and ammunition < max_ammo:
-		yield(get_tree().create_timer(recharge_time), "timeout")
+		yield(scene_tree.create_timer(recharge_time), "timeout")
 		ammunition += 1
 		emit_signal("ammunition_changed", ammunition)
