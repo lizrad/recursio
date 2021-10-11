@@ -63,11 +63,11 @@ config/icon="res://icon.png"
 
 [autoload]
 
-Logger="*res://Shared/Logger.gd"
 Constants="*res://Shared/Constants.gd"
 Server="*res://Global/Server.gd"
 Enums="*res://Shared/Enums.gd"
 Actions="*res://Shared/Attacks/Actions.gd"
+Logger="*res://addons/recursio-loggerplugin/Logger.gd"
 
 [debug]
 
@@ -85,7 +85,7 @@ window/vsync/use_vsync=false
 
 [editor_plugins]
 
-enabled=PoolStringArray( "res://addons/multirun/plugin.cfg" )
+enabled=PoolStringArray( "res://addons/multirun/plugin.cfg", "res://addons/recursio-loggerplugin/plugin.cfg" )
 
 [global]
 
