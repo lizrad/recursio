@@ -93,10 +93,10 @@ func handle_input() -> void:
 					("activation for " + str(input) + " with max: " + str(action.activation_max) + " act_time: " + str(action.activation_time)
 					+ " for OS.ticks: " + str(OS.get_ticks_msec()) + " -> triggered: " + str(activate)), "actions")
 
-				action.set_active(activate, player, get_tree())
+				action.set_active(activate, player, get_tree(), get_tree().root)
 			elif action.activation_time > 0:
 				Logger.debug(
 					("activation for " + str(input) + " with max: " + str(action.activation_max) + " act_time: " + str(action.activation_time)
 					+ " for OS.ticks: " + str(OS.get_ticks_msec()) + " -> triggered: False"), "actions")
 
-				action.set_active(false, player, get_tree())
+				action.set_active(false, player, get_tree(), get_tree().root)
