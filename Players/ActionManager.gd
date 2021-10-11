@@ -29,14 +29,20 @@ func _ready():
 # later weapon selection will be set from server depending on current round
 # and/or pre-setup configuration
 func swap_weapon_type(weapon_type) -> void:
+	var shoot_key = Enums.ActionType.SHOOT
 	if weapon_type == Enums.WeaponType.WALL:
-		Actions.types_to_actions[Enums.ActionType.SHOOT] = Actions.wall
+		Actions.types_to_actions[shoot_key] = Actions.wall
 	else:
-		Actions.types_to_actions[Enums.ActionType.SHOOT] = Actions.shot
+		Actions.types_to_actions[shoot_key] = Actions.shot
 	
-	_current_weapon = Actions.types_to_actions[Enums.ActionType.SHOOT]
+	# Re-subscribe to signals
+	Actions.types_to_actions[shoot_key].connect("ammunition_changed", self, "_on_ammu_changed", [shoot_key])
+	Actions.types_to_actions[shoot_key].connect("action_triggered", self, "_on_action_triggered", [shoot_key])
+	
+	_current_weapon = Actions.types_to_actions[shoot_key]
 	Logger.info("weapon selected: " + _current_weapon.name, "actions")
 	hud.update_ammo(Enums.ActionType.SHOOT, Actions.types_to_actions[Enums.ActionType.SHOOT].ammunition)
+	hud.update_ammo(shoot_key, Actions.types_to_actions[shoot_key].ammunition)
 
 
 # TODO: forward signal to ui
