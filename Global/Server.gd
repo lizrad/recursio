@@ -32,8 +32,6 @@ signal ghost_hit(hit_ghost_player_owner, hit_ghost_id)
 signal ghost_picks(player_pick, enemy_picks)
 
 func _ready():
-	#TODO: put this where it makes more sense
-	Logger.load_config()
 	set_physics_process(false)
 	connect_to_server()
 
