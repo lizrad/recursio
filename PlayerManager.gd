@@ -52,6 +52,7 @@ func _ready():
 	Server.connect("player_hit", self, "_on_player_hit")
 	Server.connect("ghost_hit", self, "_on_ghost_hit")
 	Server.connect("ghost_picks", self, "_on_ghost_picks")
+	Server.connect("player_action", self, "_on_player_action")
 	
 	set_physics_process(false)
 
@@ -458,8 +459,17 @@ func _on_player_hit(hit_player_id):
 	else:
 		enemies[hit_player_id].receive_hit()
 
-func _on_ghost_hit(hit_ghost_id):
-	_my_ghosts[hit_ghost_id].receive_hit()
+func _on_ghost_hit(hit_ghost_player_owner, hit_ghost_id):
+	if hit_ghost_player_owner == id:
+		_my_ghosts[hit_ghost_id].receive_hit()
+	else:
+		_enemy_ghosts_dic[hit_ghost_player_owner][hit_ghost_id].receive_hit()
+
+
+func _on_player_action(player_id, action_type):
+	var player = enemies[player_id]
+	var action = ActionManager.get_action(action_type)
+	ActionManager.set_active(action, true, player, get_tree().root)
 
 func _on_capture_point_captured(capturing_player_id, capture_point):
 	level.get_capture_points()[capture_point].capture(capturing_player_id)

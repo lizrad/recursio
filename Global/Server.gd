@@ -30,6 +30,7 @@ signal game_result(winning_player_id)
 signal player_hit(hit_player_id)
 signal ghost_hit(hit_ghost_player_owner, hit_ghost_id)
 signal ghost_picks(player_pick, enemy_picks)
+signal player_action(player_id, action_type)
 
 func _ready():
 	set_physics_process(false)
@@ -192,6 +193,9 @@ remote func receive_ghost_hit(hit_ghost_player_owner, hit_ghost_id):
 	Logger.info("Ghost hit received: " + str(hit_ghost_id) + " of player " + str(hit_ghost_player_owner), "connection")
 	emit_signal("ghost_hit", hit_ghost_player_owner, hit_ghost_id)
 
+remote func receive_player_action(action_player_id, action_type):
+	Logger.info("Other player action received: " + str(action_type))
+	emit_signal("player_action", action_player_id, action_type)
 
 remote func receive_ghost_picks(player_pick, enemy_picks):
 	Logger.info("Ghost picks received", "connection")
