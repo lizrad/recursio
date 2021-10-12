@@ -19,9 +19,9 @@ onready var hud = player.get_node("HUD")
 
 
 func _ready():
-	setup_action_connections(_current_fire_action, GlobalActionManager.ActionType.HITSCAN)
-	setup_action_connections(_current_special_movement_action, GlobalActionManager.ActionType.DASH)
-	setup_action_connections(_current_default_attack_action, GlobalActionManager.ActionType.MELEE)
+	setup_action_connections(_current_fire_action, GlobalActionManager.Trigger.FIRE_START)
+	setup_action_connections(_current_special_movement_action, GlobalActionManager.Trigger.SPECIAL_MOVEMENT_START)
+	setup_action_connections(_current_default_attack_action, GlobalActionManager.Trigger.DEFAULT_ATTACK_START)
 
 	# TODO: move to outer action initialization
 	hud.update_ammo(GlobalActionManager.Trigger.FIRE_START, _current_fire_action.max_ammo)
@@ -61,7 +61,7 @@ func _on_action_triggered(action: Action, type: int) -> void:
 	Logger.debug("action triggered for name: " + str(action.name) + " on time: " + str(action.activation_time), "actions")
 
 	# TODO: define common struct for Actions
-	if type == GlobalActionManager.ActionType.DASH:
+	if type == GlobalActionManager.Trigger.SPECIAL_MOVEMENT_START:
 		player.dash_start = action.activation_time
 		var dash_state = {"T": Server.get_server_time(), "S": 1}
 		Server.send_dash_state(dash_state)
@@ -73,7 +73,7 @@ func _on_action_triggered(action: Action, type: int) -> void:
 func _on_action_released(action: Action, type: int) -> void:
 	Logger.debug("action released for type: " + str(type), "actions")
 
-	if type == GlobalActionManager.ActionType.DASH:
+	if type == GlobalActionManager.Trigger.SPECIAL_MOVEMENT_START:
 		Logger.info("dash released", "actions")
 		player.dash_start = 0
 		var dash_state = {"T": Server.get_server_time(), "S": 0}
