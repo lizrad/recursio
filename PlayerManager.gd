@@ -112,10 +112,9 @@ func _on_ghost_picks(player_pick, enemy_picks):
 	Logger.info("Received ghost picks from server","ghost_picking")
 	_disable_ghosts()
 	player.ghost_index = player_pick
-	if player_pick == Constants.get_value("ghosts", "wall_placing_ghost_index"):
-		player.swap_weapon_type(Enums.WeaponType.WALL)
-	else:
-		player.swap_weapon_type(Enums.WeaponType.SHOOT)
+	
+	player.swap_weapon_type(player_pick)
+	
 	for enemy_id in enemies:
 		enemies[enemy_id].ghost_index = enemy_picks[enemy_id]
 	_enable_ghosts()

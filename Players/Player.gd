@@ -206,8 +206,8 @@ func apply_acceleration(new_acceleration):
 	velocity = lerp(velocity, current_target_velocity, drag)
 	velocity += acceleration
 
-func swap_weapon_type(weapon_type):
-	_trigger_manager.swap_weapon_type(weapon_type)
+func swap_weapon_type(ghost_index):
+	_trigger_manager.swap_weapon_type(ghost_index)
 
 func receive_hit():
 	Logger.info("Own player was hit!", "attacking")
