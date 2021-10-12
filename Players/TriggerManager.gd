@@ -42,7 +42,8 @@ func swap_weapon_type(ghost_index) -> void:
 	_map_input["player_shoot"] = _current_fire_action
 	
 	# Re-subscribe to signals
-	_current_fire_action.connect("ammunition_changed", self, "_on_ammo_changed", [ActionManager.Trigger.FIRE_START])
+	setup_action_connections(_current_fire_action, ActionManager.Trigger.FIRE_START)
+	
 	Logger.info("weapon selected: " + _current_fire_action.name, "actions")
 	hud.update_ammo(ActionManager.Trigger.FIRE_START, _current_fire_action.ammunition)
 
@@ -50,7 +51,7 @@ func swap_weapon_type(ghost_index) -> void:
 # TODO: forward signal to ui
 # 	- selected weapon ammo
 # 	- dash ammo
-func _on_ammo_changed(ammo: int, type: int) -> void:
+func _on_ammo_changed(ammo: int, action: Action, type: int) -> void:
 	Logger.debug("ammunition for type: " + str(type) + " changed to: " + str(ammo), "actions")
 
 	hud.update_ammo(type, ammo)
