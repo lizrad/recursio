@@ -37,7 +37,6 @@ func swap_weapon_type(weapon_type) -> void:
 	
 	# Re-subscribe to signals
 	Actions.types_to_actions[shoot_key].connect("ammunition_changed", self, "_on_ammu_changed", [shoot_key])
-	Actions.types_to_actions[shoot_key].connect("action_triggered", self, "_on_action_triggered", [shoot_key])
 	
 	_current_weapon = Actions.types_to_actions[shoot_key]
 	Logger.info("weapon selected: " + _current_weapon.name, "actions")
@@ -66,7 +65,7 @@ func _on_action_triggered(type: int) -> void:
 			player.dash_start = action.activation_time
 			var dash_state = {"T": Server.get_server_time(), "S": 1}
 			Server.send_dash_state(dash_state)
-		elif type == Enums.ActionType.SHOOT or type == Enums.ActionType.MELEE:
+		elif type == Enums.ActionType.SHOOT or type == Enums.ActionType.MELEE or type == Enums.ActionType.WALL:
 			var action_trigger = {"A": type, "T": Server.get_server_time()}
 			Server.send_action_trigger(action_trigger)
 
