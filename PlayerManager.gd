@@ -189,6 +189,9 @@ func _on_round_ended_received(round_index):
 	level.reset()
 	level.toggle_capture_points(false)
 	
+	ActionManager.clear_action_instances()
+
+
 func _on_round_start_received(round_index, server_time):
 	
 	#===========
