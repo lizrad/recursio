@@ -34,7 +34,7 @@ var current_target_velocity := Vector3.ZERO
 var _rotate_input_vector := Vector3.ZERO
 var _input_enabled := true  # disable user input in rewind
 
-onready var _action_manager := get_node("ActionManager")
+onready var _trigger_manager := get_node("TriggerManager")
 
 var block_weapon_swap = false
 
@@ -189,8 +189,7 @@ func _handle_user_input():
 	transform.origin.y = 0
 
 	# shoot, place wall, dash, melee, ...
-	_action_manager.handle_input()
-
+	_trigger_manager.handle_input()
 
 
 func get_visibility_mask():
@@ -208,7 +207,8 @@ func apply_acceleration(new_acceleration):
 	velocity += acceleration
 
 func swap_weapon_type(weapon_type):
-	_action_manager.swap_weapon_type(weapon_type)
+	_trigger_manager.swap_weapon_type(weapon_type)
+
 func receive_hit():
 	Logger.info("Own player was hit!", "attacking")
 	# TODO: Do we need to move to the spawn point? Not really - the position will be corrected anyways

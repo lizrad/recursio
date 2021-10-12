@@ -1,5 +1,8 @@
 extends Node
 
+# Handles Triggers and starts the corresponding Actions, as well as sending the
+# triggers to the server.
+
 var _map_input = {
 	"player_shoot": Enums.ActionType.SHOOT,
 	"player_melee": Enums.ActionType.MELEE,
