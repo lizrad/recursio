@@ -30,33 +30,33 @@ void fragment() {
 	//ALBEDO = vec3(uv.x);
 }"
 
-[sub_resource type="ShaderMaterial" id=5]
+[sub_resource type="ShaderMaterial" id=2]
 resource_local_to_scene = true
 shader = SubResource( 1 )
 shader_param/color = Color( 0.443137, 0.443137, 0.443137, 1 )
 shader_param/visibility_threshold = 0.2
 shader_param/camera_size = 70.0
 
-[sub_resource type="CapsuleMesh" id=6]
-
-[sub_resource type="SpatialMaterial" id=2]
-albedo_color = Color( 0.592157, 0.454902, 0.454902, 1 )
-
-[sub_resource type="CubeMesh" id=3]
+[sub_resource type="CapsuleMesh" id=3]
 
 [sub_resource type="SpatialMaterial" id=4]
+albedo_color = Color( 0.592157, 0.454902, 0.454902, 1 )
+
+[sub_resource type="CubeMesh" id=5]
+
+[sub_resource type="SpatialMaterial" id=6]
 
 [node name="Ghost" instance=ExtResource( 1 )]
 script = ExtResource( 2 )
 
 [node name="Mesh_Body" type="MeshInstance" parent="." index="1"]
 transform = Transform( 0.75, 0.000108929, 0.00015581, 0.000116805, 0.000285584, -1, -0.000108985, 0.75, 0.00038075, 0, 0, 0 )
-material_override = SubResource( 5 )
-mesh = SubResource( 6 )
-material/0 = SubResource( 2 )
+material_override = SubResource( 2 )
+mesh = SubResource( 3 )
+material/0 = SubResource( 4 )
 
 [node name="Mesh_Eyes" type="MeshInstance" parent="Mesh_Body" index="0"]
 transform = Transform( 0.771661, 6.9802e-05, 0.000103439, 6.98096e-05, 0.29105, 8.79995e-06, 5.8179e-05, 4.95015e-06, 0.273746, 0, -0.739, -0.665 )
-material_override = SubResource( 5 )
-mesh = SubResource( 3 )
-material/0 = SubResource( 4 )
+material_override = SubResource( 2 )
+mesh = SubResource( 5 )
+material/0 = SubResource( 6 )

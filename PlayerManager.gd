@@ -2,6 +2,7 @@ extends Spatial
 
 var _player_scene = preload("res://Players/Player.tscn")
 var _ghost_scene = preload("res://Players/Ghost.tscn")
+var _player_ghost_scene = preload("res://Players/PlayerGhost.tscn")
 var _enemy_scene = preload("res://Players/Enemy.tscn")
 
 var _my_ghosts = {}
@@ -292,15 +293,15 @@ func _create_enemy_ghost(enemy_id, gameplay_record):
 	
 func _create_own_ghost(gameplay_record):
 	Logger.info("Own ghost record received with start time of " + str(gameplay_record["T"]), "ghost")
-	var ghost = _create_ghost(gameplay_record)
+	var ghost = _create_ghost(gameplay_record, true)
 	ghost.spawn_point = _get_spawn_point(player.game_id,gameplay_record["G"])
 	ghost.add_to_group("Friend")
 	if _my_ghosts.has([gameplay_record["G"]]):
 		_my_ghosts[gameplay_record["G"]] .queue_free()
 	_my_ghosts[gameplay_record["G"]] = ghost
 
-func _create_ghost(gameplay_record):
-	var ghost = _ghost_scene.instance()
+func _create_ghost(gameplay_record, friendly = false):
+	var ghost = _player_ghost_scene.instance() if friendly else _ghost_scene.instance()
 	ghost.action_manager = GlobalActionManager
 	ghost.init(gameplay_record)
 	return ghost
