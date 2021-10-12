@@ -84,9 +84,9 @@ func rewind_phase_start(round_index, start_time) ->void:
 
 func update_ammo(action_type: int, amount: int) ->void:
 	Logger.info("update ammo for type: %s - %s" %[action_type, amount], "HUD")
-	if action_type == ActionManager.Trigger.FIRE_START and ammo:
+	if action_type == GlobalActionManager.Trigger.FIRE_START and ammo:
 		ammo.text = str(amount)
-	elif action_type == ActionManager.Trigger.SPECIAL_MOVEMENT_START and dash:
+	elif action_type == GlobalActionManager.Trigger.SPECIAL_MOVEMENT_START and dash:
 		dash.text = str(amount)
 
 

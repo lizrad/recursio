@@ -3,9 +3,9 @@ extends Node
 # Handles Triggers and starts the corresponding Actions, as well as sending the
 # triggers to the server.
 
-var _current_fire_action = ActionManager.get_action(ActionManager.ActionType.HITSCAN)
-var _current_special_movement_action = ActionManager.get_action(ActionManager.ActionType.DASH)
-var _current_default_attack_action = ActionManager.get_action(ActionManager.ActionType.MELEE)
+var _current_fire_action = GlobalActionManager.get_action(GlobalActionManager.ActionType.HITSCAN)
+var _current_special_movement_action = GlobalActionManager.get_action(GlobalActionManager.ActionType.DASH)
+var _current_default_attack_action = GlobalActionManager.get_action(GlobalActionManager.ActionType.MELEE)
 
 var _map_input = {
 	"player_shoot": _current_fire_action,
@@ -19,13 +19,13 @@ onready var hud = player.get_node("HUD")
 
 
 func _ready():
-	setup_action_connections(_current_fire_action, ActionManager.ActionType.HITSCAN)
-	setup_action_connections(_current_special_movement_action, ActionManager.ActionType.DASH)
-	setup_action_connections(_current_default_attack_action, ActionManager.ActionType.MELEE)
+	setup_action_connections(_current_fire_action, GlobalActionManager.ActionType.HITSCAN)
+	setup_action_connections(_current_special_movement_action, GlobalActionManager.ActionType.DASH)
+	setup_action_connections(_current_default_attack_action, GlobalActionManager.ActionType.MELEE)
 
 	# TODO: move to outer action initialization
-	hud.update_ammo(ActionManager.Trigger.FIRE_START, _current_fire_action.max_ammo)
-	hud.update_ammo(ActionManager.Trigger.SPECIAL_MOVEMENT_START, _current_special_movement_action.max_ammo)
+	hud.update_ammo(GlobalActionManager.Trigger.FIRE_START, _current_fire_action.max_ammo)
+	hud.update_ammo(GlobalActionManager.Trigger.SPECIAL_MOVEMENT_START, _current_special_movement_action.max_ammo)
 
 
 func setup_action_connections(action, type):
@@ -36,16 +36,16 @@ func setup_action_connections(action, type):
 
 func swap_weapon_type(ghost_index) -> void:
 	_current_fire_action.disconnect("ammunition_changed", self, "_on_ammo_changed")
-	_current_fire_action = ActionManager.get_action_for_trigger(ActionManager.Trigger.FIRE_START, ghost_index)
+	_current_fire_action = GlobalActionManager.get_action_for_trigger(GlobalActionManager.Trigger.FIRE_START, ghost_index)
 	
 	# Workaround: not updated otherwise
 	_map_input["player_shoot"] = _current_fire_action
 	
 	# Re-subscribe to signals
-	setup_action_connections(_current_fire_action, ActionManager.Trigger.FIRE_START)
+	setup_action_connections(_current_fire_action, GlobalActionManager.Trigger.FIRE_START)
 	
 	Logger.info("weapon selected: " + _current_fire_action.name, "actions")
-	hud.update_ammo(ActionManager.Trigger.FIRE_START, _current_fire_action.ammunition)
+	hud.update_ammo(GlobalActionManager.Trigger.FIRE_START, _current_fire_action.ammunition)
 
 
 # TODO: forward signal to ui
@@ -61,7 +61,7 @@ func _on_action_triggered(action: Action, type: int) -> void:
 	Logger.debug("action triggered for name: " + str(action.name) + " on time: " + str(action.activation_time), "actions")
 
 	# TODO: define common struct for Actions
-	if type == ActionManager.ActionType.DASH:
+	if type == GlobalActionManager.ActionType.DASH:
 		player.dash_start = action.activation_time
 		var dash_state = {"T": Server.get_server_time(), "S": 1}
 		Server.send_dash_state(dash_state)
@@ -73,7 +73,7 @@ func _on_action_triggered(action: Action, type: int) -> void:
 func _on_action_released(action: Action, type: int) -> void:
 	Logger.debug("action released for type: " + str(type), "actions")
 
-	if type == ActionManager.ActionType.DASH:
+	if type == GlobalActionManager.ActionType.DASH:
 		Logger.info("dash released", "actions")
 		player.dash_start = 0
 		var dash_state = {"T": Server.get_server_time(), "S": 0}
@@ -96,10 +96,10 @@ func handle_input() -> void:
 					("activation for " + str(input) + " with max: " + str(action.activation_max) + " act_time: " + str(action.activation_time)
 					+ " for OS.ticks: " + str(OS.get_ticks_msec()) + " -> triggered: " + str(activate)), "actions")
 				
-				ActionManager.set_active(action, true, player, get_tree().root)
+				GlobalActionManager.set_active(action, true, player, get_tree().root)
 			elif action.activation_time > 0:
 				Logger.debug(
 					("activation for " + str(input) + " with max: " + str(action.activation_max) + " act_time: " + str(action.activation_time)
 					+ " for OS.ticks: " + str(OS.get_ticks_msec()) + " -> triggered: False"), "actions")
 
-				ActionManager.set_active(action, false, player, get_tree().root)
+				GlobalActionManager.set_active(action, false, player, get_tree().root)

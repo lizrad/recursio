@@ -189,7 +189,7 @@ func _on_round_ended_received(round_index):
 	level.reset()
 	level.toggle_capture_points(false)
 	
-	ActionManager.clear_action_instances()
+	GlobalActionManager.clear_action_instances()
 
 
 func _on_round_start_received(round_index, server_time):
@@ -301,6 +301,7 @@ func _create_own_ghost(gameplay_record):
 
 func _create_ghost(gameplay_record):
 	var ghost = _ghost_scene.instance()
+	ghost.action_manager = GlobalActionManager
 	ghost.init(gameplay_record)
 	return ghost
 
@@ -471,8 +472,8 @@ func _on_ghost_hit(hit_ghost_player_owner, hit_ghost_id):
 
 func _on_player_action(player_id, action_type):
 	var player = enemies[player_id]
-	var action = ActionManager.get_action(action_type)
-	ActionManager.set_active(action, true, player, get_tree().root)
+	var action = GlobalActionManager.get_action(action_type)
+	GlobalActionManager.set_active(action, true, player, get_tree().root)
 
 func _on_capture_point_captured(capturing_player_id, capture_point):
 	level.get_capture_points()[capture_point].capture(capturing_player_id)
