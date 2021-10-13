@@ -194,7 +194,6 @@ func _on_round_ended_received(round_index):
 
 
 func _on_round_start_received(round_index, server_time):
-	
 	#===========
 	#ROUND START
 	#===========
@@ -451,7 +450,7 @@ func _update_character_positions(world_state):
 				# Set parameters for interpolation
 				enemy.last_position = enemy.transform.origin
 				enemy.last_velocity = enemy.velocity
-
+				enemy.rotation.y = enemy_states[enemy_id]["R"]
 				enemy.server_position = enemy_states[enemy_id]["P"]
 				enemy.server_velocity = enemy_states[enemy_id]["V"]
 				enemy.server_acceleration = enemy_states[enemy_id]["A"]
