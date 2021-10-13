@@ -24,11 +24,13 @@ script = ExtResource( 2 )
 
 [node name="Mesh_Body" type="MeshInstance" parent="." index="1"]
 transform = Transform( 0.75, 0.000108929, 0.00015581, 0.000116805, 0.000285584, -1, -0.000108985, 0.75, 0.00038075, 0, 0, 0 )
+cast_shadow = 0
 mesh = SubResource( 1 )
 material/0 = null
 
 [node name="Mesh_Eyes" type="MeshInstance" parent="Mesh_Body" index="0"]
 transform = Transform( 0.771661, 6.9802e-05, 0.000103439, 6.98096e-05, 0.29105, 8.79995e-06, 5.8179e-05, 4.95015e-06, 0.273746, 0, -0.739, -0.665 )
+cast_shadow = 0
 mesh = SubResource( 2 )
 material/0 = SubResource( 3 )
 
