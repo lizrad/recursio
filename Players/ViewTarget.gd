@@ -9,6 +9,6 @@ onready var player = get_parent()
 
 func _process(delta):
 	# Add offset depending on velocity (counteract dash movement)
-	translation = Quat(player.global_transform.basis).inverse() * player.velocity * distance_factor
+	translation = player.global_transform.basis.get_rotation_quat().inverse() * player.velocity * distance_factor
 	# Add basic offset in eye direction
 	translation.z -= 0.5
