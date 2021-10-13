@@ -304,6 +304,7 @@ func _create_ghost(gameplay_record, friendly = false):
 	var ghost = _player_ghost_scene.instance() if friendly else _ghost_scene.instance()
 	ghost.action_manager = GlobalActionManager
 	ghost.init(gameplay_record)
+	ghost.connect("ghost_attack", self, "_on_ghost_attack")
 	return ghost
 
 func _stop_ghosts()->void:
@@ -328,10 +329,20 @@ func _enable_ghosts() ->void:
 			if i != enemies[enemy_id].ghost_index:
 				# Apply the visibility mask for enemy ghosts only (friendly ones are always visible)
 				_apply_visibility_mask(_enemy_ghosts_dic[enemy_id][i])
-				add_child(_enemy_ghosts_dic[enemy_id][i])
+				_add_ghost(_enemy_ghosts_dic[enemy_id][i])
 	for i in _my_ghosts:
 		if i != player.ghost_index:
-			add_child(_my_ghosts[i])
+			_add_ghost(_my_ghosts[i])
+
+
+func _add_ghost(ghost):
+	add_child(ghost)
+
+
+func _on_ghost_attack(attacker, trigger):
+	var action = GlobalActionManager.get_action_for_trigger(trigger, attacker.ghost_index)
+	GlobalActionManager.set_active(action, true, attacker, get_tree().get_root())
+
 
 func _move_ghosts_to_spawn() -> void:
 	for enemy_id in _enemy_ghosts_dic:
