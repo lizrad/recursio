@@ -75,6 +75,7 @@ func _reset():
 	time_since_last_server_update = 0
 	time_of_last_world_state_send = -1
 	level.reset()
+	GlobalActionManager.clear_action_instances()
 
 func _on_game_result(winning_player_id):
 	var player_id = get_tree().get_network_unique_id()
