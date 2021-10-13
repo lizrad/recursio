@@ -151,7 +151,7 @@ func _handle_user_input():
 	var input = get_normalized_input("player_move", outer_deadzone, inner_deadzone)
 	var movement_input_vector = Vector3(input.y, 0.0, -input.x)
 
-	var rotate_input = get_normalized_input("player_look", 1.0, 0.0, 0.2)
+	var rotate_input = get_normalized_input("player_look", 1.0, 0.0, 0.5)
 	var rotate_input_vector = Vector3(rotate_input.y, 0.0, -rotate_input.x)
 	if rotate_input_vector.distance_to(_rotate_input_vector) > rotate_threshold:
 		if rotate_input_vector != Vector3.ZERO:
