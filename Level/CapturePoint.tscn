@@ -4,11 +4,11 @@
 
 [sub_resource type="CylinderShape" id=1]
 
-[sub_resource type="SpatialMaterial" id=3]
+[sub_resource type="SpatialMaterial" id=2]
 resource_local_to_scene = true
 albedo_color = Color( 0, 1, 0.811765, 1 )
 
-[sub_resource type="CylinderMesh" id=2]
+[sub_resource type="CylinderMesh" id=3]
 height = 0.4
 
 [node name="CapturePoint" type="Spatial"]
@@ -21,6 +21,7 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0 )
 shape = SubResource( 1 )
 
 [node name="MeshInstance" type="MeshInstance" parent="."]
-material_override = SubResource( 3 )
-mesh = SubResource( 2 )
+layers = 33
+material_override = SubResource( 2 )
+mesh = SubResource( 3 )
 material/0 = null
