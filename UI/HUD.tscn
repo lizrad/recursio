@@ -42,6 +42,16 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="WeaponType" type="TextureRect" parent="."]
+margin_left = 46.0445
+margin_top = 0.749153
+margin_right = 86.0445
+margin_bottom = 40.7492
+expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="TimerProgressBar" type="TextureProgress" parent="."]
 anchor_left = 0.35
 anchor_right = 0.65

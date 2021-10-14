@@ -4,6 +4,7 @@ class_name HUD
 onready var timer_pb: TextureProgress = get_node("TimerProgressBar")
 onready var phase = get_node("Phase")
 onready var ammo = get_node("WeaponAmmo")
+onready var ammo_type = get_node("WeaponType")
 onready var dash = get_node("DashAmmo")
 
 onready var _capture_point_hb = get_node("TimerProgressBar/CapturePoints")
@@ -89,6 +90,10 @@ func update_ammo(action_type: int, amount: int) ->void:
 	elif action_type == GlobalActionManager.Trigger.SPECIAL_MOVEMENT_START and dash:
 		dash.text = str(amount)
 
+func update_ammo_type(tex: StreamTexture) ->void:
+	Logger.info("update ammo type", "HUD")
+	if ammo_type:
+		ammo_type.texture = load(tex.resource_path)
 
 # Sets the internal player id for the capture points
 func set_player_id(player_id):
