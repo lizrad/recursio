@@ -303,7 +303,7 @@ func _create_own_ghost(gameplay_record):
 func _create_ghost(gameplay_record, friendly = false):
 	var ghost = _player_ghost_scene.instance() if friendly else _ghost_scene.instance()
 	ghost.action_manager = GlobalActionManager
-	ghost.init(gameplay_record)
+	ghost.init(gameplay_record, Color.lightcoral if friendly else Color.lightblue)
 	ghost.connect("ghost_attack", self, "_on_ghost_attack")
 	return ghost
 
