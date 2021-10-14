@@ -1,6 +1,0 @@
-[submodule "Shared"]
-	path = Shared
-	url = https://github.com/lizrad/recursio-shared
-[submodule "addons/recursio-loggerplugin"]
-	path = addons/recursio-loggerplugin
-	url = https://github.com/lizrad/recursio-loggerplugin.git

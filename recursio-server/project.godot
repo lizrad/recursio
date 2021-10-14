@@ -1,0 +1,119 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=4
+
+_global_script_classes=[ {
+"base": "Resource",
+"class": "Action",
+"language": "GDScript",
+"path": "res://Shared/Actions/Action.gd"
+}, {
+"base": "Node",
+"class": "ActionManager",
+"language": "GDScript",
+"path": "res://Shared/Actions/ActionManager.gd"
+}, {
+"base": "Spatial",
+"class": "CapturePoint",
+"language": "GDScript",
+"path": "res://Level/CapturePoint.gd"
+}, {
+"base": "KinematicBody",
+"class": "CharacterBase",
+"language": "GDScript",
+"path": "res://Players/CharacterBase.gd"
+}, {
+"base": "Node",
+"class": "GameManager",
+"language": "GDScript",
+"path": "res://Room/GameManager.gd"
+}, {
+"base": "CharacterBase",
+"class": "Ghost",
+"language": "GDScript",
+"path": "res://Shared/Ghost.gd"
+}, {
+"base": "CharacterBase",
+"class": "Player",
+"language": "GDScript",
+"path": "res://Players/Player.gd"
+}, {
+"base": "Node",
+"class": "PlayerManager",
+"language": "GDScript",
+"path": "res://Room/PlayerManager.gd"
+}, {
+"base": "Viewport",
+"class": "Room",
+"language": "GDScript",
+"path": "res://Room/Room.gd"
+}, {
+"base": "Node",
+"class": "RoomManager",
+"language": "GDScript",
+"path": "res://Room/RoomManager.gd"
+}, {
+"base": "Node",
+"class": "Server",
+"language": "GDScript",
+"path": "res://Globals/Server.gd"
+}, {
+"base": "Node",
+"class": "WorldStateManager",
+"language": "GDScript",
+"path": "res://Room/WorldStateManager.gd"
+} ]
+_global_script_class_icons={
+"Action": "",
+"ActionManager": "",
+"CapturePoint": "",
+"CharacterBase": "",
+"GameManager": "",
+"Ghost": "",
+"Player": "",
+"PlayerManager": "",
+"Room": "",
+"RoomManager": "",
+"Server": "",
+"WorldStateManager": ""
+}
+
+[application]
+
+config/name="recursio-server"
+run/main_scene="res://Globals/Server.tscn"
+boot_splash/image="res://lizrad_logo.png"
+config/icon="res://icon.png"
+
+[autoload]
+
+Logger="*res://addons/recursio-loggerplugin/Logger.gd"
+Constants="*res://Shared/Constants.gd"
+
+[editor_plugins]
+
+enabled=PoolStringArray( "res://addons/recursio-loggerplugin/plugin.cfg" )
+
+[global]
+
+max=false
+limit=false
+
+[network]
+
+limits/debugger_stdout/max_chars_per_second=8192
+
+[physics]
+
+common/physics_fps=30
+common/enable_pause_aware_picking=true
+
+[rendering]
+
+environment/default_environment="res://default_env.tres"
