@@ -11,3 +11,6 @@ data_*/
 # Symbolic link ignores
 recursio-client/Shared
 recursio-server/Shared
+
+# Loggerplugin user-settings
+**/recursio-loggerplugin/loggerconfig.ini
