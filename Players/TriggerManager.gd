@@ -48,9 +48,6 @@ func swap_weapon_type(ghost_index) -> void:
 	hud.update_ammo(GlobalActionManager.Trigger.FIRE_START, _current_fire_action.ammunition)
 
 
-# TODO: forward signal to ui
-# 	- selected weapon ammo
-# 	- dash ammo
 func _on_ammo_changed(ammo: int, action: Action, type: int) -> void:
 	Logger.debug("ammunition for type: " + str(type) + " changed to: " + str(ammo), "actions")
 
@@ -60,7 +57,6 @@ func _on_ammo_changed(ammo: int, action: Action, type: int) -> void:
 func _on_action_triggered(action: Action, type: int) -> void:
 	Logger.debug("action triggered for name: " + str(action.name) + " on time: " + str(action.activation_time), "actions")
 
-	# TODO: define common struct for Actions
 	if type == GlobalActionManager.Trigger.SPECIAL_MOVEMENT_START:
 		player.dash_start = action.activation_time
 		var dash_state = {"T": Server.get_server_time(), "S": 1}
