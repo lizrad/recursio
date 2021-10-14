@@ -1,0 +1,11 @@
+[gd_resource type="Resource" load_steps=2 format=2]
+
+[ext_resource path="res://Shared/Actions/Action.gd" type="Script" id=1]
+
+[resource]
+script = ExtResource( 1 )
+name = "Dash"
+max_ammo = 2
+cooldown = 0.5
+recharge_time = 5.0
+activation_max = 500
