@@ -33,8 +33,8 @@ func reset():
 	_local_player_inside = false
 	_local_enemy_inside = false
 	_local_ghost_inside = false
-
-
+	
+	
 func _on_body_entered(body):
 	if body is Player:
 		_local_player_inside = true

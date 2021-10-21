@@ -120,9 +120,9 @@ func remove_ghost(ghost):
 
 func disable_ghosts()->void:
 	for player_id in ghosts:
-		for i in ghosts[player_id]:
-			if i != players[player_id].ghost_index:
-				remove_ghost(ghosts[player_id][i])
+			for i in ghosts[player_id]:
+				if i != players[player_id].ghost_index:
+					remove_ghost(ghosts[player_id][i])
 
 
 func set_players_can_move(can_move : bool) -> void:
@@ -138,7 +138,6 @@ func update_player_input_data(player_id, new_input_data: InputData):
 			&& new_input_data.timestamp - Server.get_server_time() < 25):  
 			
 			player_inputs[player_id] = new_input_data
-
 	else:
 		player_inputs[player_id] = new_input_data
 
