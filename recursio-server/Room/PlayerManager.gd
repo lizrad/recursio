@@ -6,7 +6,7 @@ var _player_scene = preload("res://Players/Player.tscn")
 var _ghost_scene = preload("res://Players/Ghost.tscn")
 var players = {}
 var ghosts = {}
-var player_states = {}
+var player_inputs = {}
 
 var level
 
@@ -14,19 +14,25 @@ onready var _game_manager = get_node("../GameManager")
 onready var _action_manager = get_node("../ActionManager")
 
 
+func _physics_process(delta):
+	for player_id in player_inputs:
+		if players.has(player_id):
+			players[player_id].apply_player_input_data(player_inputs[player_id], delta)
+			
+
 func reset():
 	stop_recording()
 	for player_id in ghosts:
 			for i in ghosts[player_id]:
 				ghosts[player_id][i].queue_free()
 			ghosts[player_id].clear()
-	player_states.clear()
+	player_inputs.clear()
 	for player_id in players:
 		players[player_id].reset()
 	reset_spawnpoints()
 
 func despawn_player(player_id):
-	player_states.erase(player_id)
+	player_inputs.erase(player_id)
 	for i in ghosts[player_id]:
 		ghosts[player_id][i].queue_free()
 	ghosts.erase(player_id)
@@ -124,6 +130,57 @@ func set_players_can_move(can_move : bool) -> void:
 		players[player_id].can_move = can_move
 
 
+func update_player_input_data(player_id, new_input_data: InputData):
+	if player_inputs.has(player_id):
+		# Player input data has to come in the correct order
+		# Clock on client can't run more than 25ms fast
+		if (player_inputs[player_id].timestamp < new_input_data.timestamp
+			&& new_input_data.timestamp - Server.get_server_time() < 25):  
+			
+			player_inputs[player_id] = new_input_data
+	else:
+		player_inputs[player_id] = new_input_data
+
+func update_dash_state(player_id, dash_state):
+	players[player_id].update_dash_state(dash_state)
+
+
+func handle_player_action(player_id, action_state):
+	# {"A": Constants.ActionType, "T": Server.get_server_time()}
+	Logger.info("Handling action of type " + str(action_state["A"]))
+	do_attack(players[player_id], action_state["A"])
+	
+	for any_player_id in players:
+		if any_player_id != player_id:
+			# Player is another player
+			var action_type = _action_manager.get_action_type_for_trigger(action_state["A"], players[player_id].ghost_index)
+			Server.send_player_action(any_player_id, player_id, action_type)
+
+
+func do_attack(attacker, trigger):
+	var action = _action_manager.get_action_for_trigger(trigger, attacker.ghost_index)
+	_action_manager.set_active(action, true, attacker, get_parent())
+	
+	if "action_last_frame" in attacker:
+		attacker.action_last_frame = trigger
+
+
+func set_ghost_index(player_id, ghost_index):
+	Logger.info("Setting ghost index for player "+str(player_id)+" to "+str(ghost_index),"ghost_picking")
+	players[player_id].ghost_index = ghost_index
+
+
+func propagate_player_picks():
+	Logger.info("Propagating ghost picks", "ghost_picking")
+	for player_id in players:
+		var player_pick = players[player_id].ghost_index
+		var enemy_picks = {}
+		for enemy_id in players:
+			if enemy_id!=player_id:
+				enemy_picks[enemy_id]=players[enemy_id].ghost_index
+		Server.send_ghost_pick(player_id, player_pick, enemy_picks)
+
+
 func _create_ghost_from_player(player)->void:
 	var ghost = _ghost_scene.instance()
 	ghost.init(player.gameplay_record)
@@ -150,47 +207,6 @@ func _get_spawn_point(game_id, ghost_index):
 	return spawn_point
 
 
-func update_player_state(player_id, player_state):
-	if player_states.has(player_id):
-		if (
-			player_states[player_id]["T"] < player_state["T"]  # playerstates have to come in the correct order
-			&& player_state["T"] - Server.get_server_time() < 25
-		):  # clock on client can't run more than 25ms fast
-			player_states[player_id] = player_state
-	else:
-		player_states[player_id] = player_state
-
-
-func handle_player_action(player_id, action_state):
-	# {"A": Constants.ActionType, "T": Server.get_server_time()}
-	Logger.info("Handling action of type " + str(action_state["A"]))
-	do_attack(players[player_id], action_state["A"])
-	
-	for any_player_id in players:
-		if any_player_id != player_id:
-			# Player is another player
-			var action_type = _action_manager.get_action_type_for_trigger(action_state["A"], players[player_id].ghost_index)
-			Server.send_player_action(any_player_id, player_id, action_type)
-
-
-func do_attack(attacker, trigger):
-	var action = _action_manager.get_action_for_trigger(trigger, attacker.ghost_index)
-	_action_manager.set_active(action, true, attacker, get_parent())
-	
-	if "action_last_frame" in attacker:
-		attacker.action_last_frame = trigger
-
-
-func update_dash_state(player_id, dash_state):
-	players[player_id].update_dash_state(dash_state)
-
-
-func _physics_process(delta):
-	for player_id in player_states:
-		if players.has(player_id):
-			players[player_id].apply_player_state(player_states[player_id], delta)
-
-
 func _on_player_hit(hit_player_id):
 	Logger.info("Player hit!", "attacking")
 	move_player_to_spawnpoint(hit_player_id)
@@ -204,16 +220,4 @@ func _on_ghost_hit(ghost_id, owning_player_id):
 	for player_id in players:
 		Server.send_ghost_hit(player_id, owning_player_id, ghost_id)
 
-func set_ghost_index(player_id, ghost_index):
-	Logger.info("Setting ghost index for player "+str(player_id)+" to "+str(ghost_index),"ghost_picking")
-	players[player_id].ghost_index = ghost_index
 
-func propagate_player_picks():
-	Logger.info("Propagating ghost picks", "ghost_picking")
-	for player_id in players:
-		var player_pick = players[player_id].ghost_index
-		var enemy_picks = {}
-		for enemy_id in players:
-			if enemy_id!=player_id:
-				enemy_picks[enemy_id]=players[enemy_id].ghost_index
-		Server.send_ghost_pick(player_id, player_pick, enemy_picks)

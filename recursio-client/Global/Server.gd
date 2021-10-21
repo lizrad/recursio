@@ -87,16 +87,9 @@ func get_server_time():
 	return server_clock
 
 
-func send_player_state(player_state):
-	rpc_unreliable_id(1, "receive_player_state", player_state)
+func send_player_input_data(input_data):
+	rpc_unreliable_id(1, "receive_player_input_data", input_data)
 
-
-func send_dash_state(dash_state):
-	rpc_id(1, "receive_dash_state", dash_state)
-
-
-func send_action_trigger(action):
-	rpc_id(1, "receive_action_trigger", action)
 
 func send_ghost_pick(ghost_index):
 	rpc_id(1, "receive_ghost_pick",ghost_index)

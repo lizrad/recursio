@@ -149,9 +149,13 @@ func _handle_user_input():
 	# movement and aiming
 	var delta = get_physics_process_delta_time()
 	var input = get_normalized_input("player_move", outer_deadzone, inner_deadzone)
+	InputManager.add_movement_to_input_frame(input)
+	
 	var movement_input_vector = Vector3(input.y, 0.0, -input.x)
 
 	var rotate_input = get_normalized_input("player_look", 1.0, 0.0, 0.5)
+	InputManager.add_rotation_to_input_frame(rotate_input)
+	
 	var rotate_input_vector = Vector3(rotate_input.y, 0.0, -rotate_input.x)
 	if rotate_input_vector.distance_to(_rotate_input_vector) > rotate_threshold:
 		if rotate_input_vector != Vector3.ZERO:

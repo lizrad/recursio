@@ -32,7 +32,7 @@ onready var _prep_phase_time: float = Constants.get_value("gameplay", "prep_phas
 var _prep_phase_in_progress = false
 var _game_phase_in_progress = false
 
-func _ready():
+func _ready():	
 	game_result_screen.visible = false
 	countdown_screen.visible = false
 	time_of_last_world_state_send = Server.get_server_time()
@@ -359,35 +359,6 @@ func _restart_ghosts(start_time)->void:
 	for i in _my_ghosts:
 		if i != player.ghost_index:
 			_my_ghosts[i].start_replay(start_time)
-
-
-func _physics_process(delta):
-	_define_player_state()
-
-
-var packet_id = 0
-
-
-func _define_player_state():
-	var player_state = {
-		"T": time_of_last_world_state_send,
-		"P": player.transform.origin,
-		"V": player.velocity,
-		"A": player.acceleration,
-		"R": player.rotation.y,
-		"H": player.rotation_velocity,
-		"I": packet_id
-	}
-	Server.send_player_state(player_state)
-	packet_id += 1
-	#loop around so number does not grow uncontrolled
-	#and because we only really need to know the difference
-	#between 2 packets so it does not matter if ids dont
-	#continually increase as long as we account for the loop
-	#while calculating the difference on the server
-	packet_id %= Constants.get_value("network", "max_packet_id")
-	# This fixes sync issues - maybe because of unexpected order-of-execution of physics_process?
-	time_of_last_world_state_send = Server.get_server_time()
 
 
 func _spawn_player(player_id, spawn_point, game_id):
