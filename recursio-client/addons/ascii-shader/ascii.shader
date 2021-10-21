@@ -41,7 +41,7 @@ void fragment() {
 	ALBEDO = color;
 	
 	// Get the greyscale value (or brightness) here
-	float grey = (color.x + color.y + color.z) / 3.0;
+	float grey = min((color.x + color.y + color.z) / 3.0, 1.0);
 
 	// Using this greyscale value, decide which character in the character_map to use
 	// The floor and division is to get integer values from 0 to 7 instead of floating points inbetween

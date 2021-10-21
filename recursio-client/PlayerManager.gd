@@ -221,6 +221,19 @@ func _on_round_start_received(round_index, server_time):
 	Logger.info("Prep phase "+str(round_index)+" started", "gameplay")
 	player.hud.prep_phase_start(round_index, Server.get_server_time())
 	_prep_phase_in_progress = true
+	# Display paths of my ghosts
+	for i in _my_ghosts:
+		var curve = Curve3D.new()
+		
+		var record = _my_ghosts[i].record
+		var data_array = record["F"]
+		for path_i in range(0, data_array.size(), 30):
+			curve.add_point(data_array[path_i]["P"])
+		
+		var path = preload("res://Players/GhostPath.tscn").instance()
+		path.set_curve(curve)
+		add_child(path)
+
 	
 	#Default ghost index
 	var default_ghost_index = min(round_index-1,Constants.get_value("ghosts", "max_amount"))

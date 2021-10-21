@@ -5,7 +5,7 @@
 [node name="VisibilityLight" type="SpotLight"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.285, 0.8 )
 layers = 2
-light_energy = 1000.0
+light_energy = 50.0
 light_specular = 0.0
 light_cull_mask = 4293918722
 shadow_enabled = true
@@ -19,9 +19,8 @@ light_energy = 1000.0
 light_specular = 0.0
 light_cull_mask = 4293918721
 shadow_enabled = true
-spot_range = 10.0
+spot_range = 12.0
 spot_attenuation = 8.63169e-05
-spot_angle = 35.0
 spot_angle_attenuation = 1e+06
 __meta__ = {
 "_editor_description_": ""
