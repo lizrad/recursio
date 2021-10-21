@@ -177,6 +177,8 @@ player_dash={
 
 3d_render/layer_1="Normal"
 3d_render/layer_2="Visibility"
+3d_render/layer_3="CapturePoints"
+3d_render/layer_6="Environment"
 
 [network]
 
