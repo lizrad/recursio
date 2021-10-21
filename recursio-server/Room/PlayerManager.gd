@@ -114,9 +114,9 @@ func remove_ghost(ghost):
 
 func disable_ghosts()->void:
 	for player_id in ghosts:
-			for i in ghosts[player_id]:
-				if i != players[player_id].ghost_index:
-					remove_ghost(ghosts[player_id][i])
+		for i in ghosts[player_id]:
+			if i != players[player_id].ghost_index:
+				remove_ghost(ghosts[player_id][i])
 
 
 func set_players_can_move(can_move : bool) -> void:
