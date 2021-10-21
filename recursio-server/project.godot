@@ -39,6 +39,16 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://Shared/Ghost.gd"
 }, {
+"base": "Object",
+"class": "InputData",
+"language": "GDScript",
+"path": "res://Shared/Input/InputData.gd"
+}, {
+"base": "Object",
+"class": "InputFrame",
+"language": "GDScript",
+"path": "res://Shared/Input/InputFrame.gd"
+}, {
 "base": "CharacterBase",
 "class": "Player",
 "language": "GDScript",
@@ -48,6 +58,11 @@ _global_script_classes=[ {
 "class": "PlayerManager",
 "language": "GDScript",
 "path": "res://Room/PlayerManager.gd"
+}, {
+"base": "Object",
+"class": "RingBuffer",
+"language": "GDScript",
+"path": "res://Shared/Input/Ringbuffer.gd"
 }, {
 "base": "Viewport",
 "class": "Room",
@@ -64,6 +79,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://Globals/Server.gd"
 }, {
+"base": "Object",
+"class": "StaticInput",
+"language": "GDScript",
+"path": "res://Shared/Input/StaticInput.gd"
+}, {
 "base": "Node",
 "class": "WorldStateManager",
 "language": "GDScript",
@@ -76,11 +96,15 @@ _global_script_class_icons={
 "CharacterBase": "",
 "GameManager": "",
 "Ghost": "",
+"InputData": "",
+"InputFrame": "",
 "Player": "",
 "PlayerManager": "",
+"RingBuffer": "",
 "Room": "",
 "RoomManager": "",
 "Server": "",
+"StaticInput": "",
 "WorldStateManager": ""
 }
 
