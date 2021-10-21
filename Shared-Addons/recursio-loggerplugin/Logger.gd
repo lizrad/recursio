@@ -443,7 +443,7 @@ func add_module(name, output_level = default_output_level, output_strategies = d
 func get_module(module = default_module_name):
 	"""Retrieve the given module if it exists; if not, it will be created."""
 	if not modules.has(module):
-		info("The requested module '%s' does not exist. It will be created with default values." % module, PLUGIN_NAME)
+		print("The requested module '%s' does not exist. It will be created with default values." % module)
 		add_module(module)
 	return modules[module]
 
