@@ -38,16 +38,18 @@ void fragment() {
 	// We use the clamped_uv here to make sure one character has one color
     vec3 color = textureLod(SCREEN_TEXTURE, clamped_uv, 0.0).rgb;
 	
-	// Get the greyscale value (or brightness) here
-	float grey = (color.x + color.y + color.z) / 3.0;
+	ALBEDO = color;
 	
+	// Get the greyscale value (or brightness) here
+	float grey = min((color.x + color.y + color.z) / 3.0, 1.0);
+
 	// Using this greyscale value, decide which character in the character_map to use
 	// The floor and division is to get integer values from 0 to 7 instead of floating points inbetween
 	vec2 offset = vec2(floor(grey * (number_of_characters - 1.0)) / number_of_characters, 0.0);
-	
+
 	// Stencil out the ASCII character by multiplying the color with its alpha
 	color *= texture(character_map, offset + character_uv * vec2(1.0 / number_of_characters, -1.0)).a;
-	
+
 	// Assign the result
 	ALBEDO = color;
 }

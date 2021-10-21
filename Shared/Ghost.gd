@@ -3,7 +3,8 @@ class_name Ghost
 
 onready var _collision_shape: CollisionShape = get_node("CollisionShape")
 
-var _record := {}
+var record := {}
+
 var _start_time := -1
 var _replaying = false
 var _current_frame = -1
@@ -14,7 +15,7 @@ var action_manager
 signal ghost_attack
 
 func init(gameplay_record: Dictionary, ghost_color: Color):
-	_record = gameplay_record.duplicate(true)
+	record = gameplay_record.duplicate(true)
 	ghost_index = gameplay_record["G"]
 	if $Mesh_Body and $Mesh_Body.material_override:
 		$Mesh_Body.material_override.set_shader_param("color", ghost_color)
@@ -34,12 +35,12 @@ func _physics_process(delta):
 	if not _replaying:
 		return
 
-	if _current_frame >= _record["F"].size():
+	if _current_frame >= record["F"].size():
 		return
 
-	var time_diff = _start_time - _record["T"]
-	while _current_frame<_record["F"].size() and _record["F"][_current_frame]["T"]+time_diff<=Server.get_server_time() :
-		_apply_frame(_record["F"][_current_frame])
+	var time_diff = _start_time - record["T"]
+	while _current_frame<record["F"].size() and record["F"][_current_frame]["T"]+time_diff<=Server.get_server_time() :
+		_apply_frame(record["F"][_current_frame])
 		_current_frame+=1
 
 

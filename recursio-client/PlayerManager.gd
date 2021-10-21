@@ -221,6 +221,19 @@ func _on_round_start_received(round_index, server_time):
 	Logger.info("Prep phase "+str(round_index)+" started", "gameplay")
 	player.hud.prep_phase_start(round_index, Server.get_server_time())
 	_prep_phase_in_progress = true
+	# Display paths of my ghosts
+	for i in _my_ghosts:
+		var curve = Curve3D.new()
+		
+		var record = _my_ghosts[i].record
+		var data_array = record["F"]
+		for path_i in range(0, data_array.size(), 30):
+			curve.add_point(data_array[path_i]["P"])
+		
+		var path = preload("res://Players/GhostPath.tscn").instance()
+		path.set_curve(curve)
+		add_child(path)
+
 	
 	#Default ghost index
 	var default_ghost_index = min(round_index-1,Constants.get_value("ghosts", "max_amount"))
@@ -278,7 +291,11 @@ func _get_spawn_point(game_id, ghost_index):
 func _apply_visibility_mask(character):
 	if player:
 		character.get_node("Mesh_Body").material_override.set_shader_param("visibility_mask", player.get_visibility_mask())
-		character.get_node("Mesh_Body/Mesh_Eyes").material_override.set_shader_param("visibility_mask", player.get_visibility_mask())
+
+
+func _apply_visibility_always(character):
+	character.get_node("Mesh_Body").material_override.set_shader_param("always_draw", true)
+
 
 func _create_enemy_ghost(enemy_id, gameplay_record):
 	Logger.info("Enemy ("+str(enemy_id)+") ghost record received with start time of " + str(gameplay_record["T"]), "ghost")
@@ -333,6 +350,7 @@ func _enable_ghosts() ->void:
 	for i in _my_ghosts:
 		if i != player.ghost_index:
 			_add_ghost(_my_ghosts[i])
+			_apply_visibility_always(_my_ghosts[i])
 
 
 func _add_ghost(ghost):

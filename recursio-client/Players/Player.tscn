@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://Players/CharacterBase.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Players/Player.gd" type="Script" id=2]
@@ -9,13 +9,9 @@
 [ext_resource path="res://Util/LerpedFollow.tscn" type="PackedScene" id=7]
 [ext_resource path="res://Players/ViewTarget.gd" type="Script" id=8]
 [ext_resource path="res://Players/VisibilityLight.tscn" type="PackedScene" id=9]
+[ext_resource path="res://addons/ascii-shader/AsciiRenderer.tscn" type="PackedScene" id=10]
 
-[sub_resource type="CapsuleMesh" id=1]
-
-[sub_resource type="CubeMesh" id=2]
-
-[sub_resource type="SpatialMaterial" id=3]
-albedo_color = Color( 1, 0, 0, 1 )
+[sub_resource type="PrismMesh" id=1]
 
 [node name="Player" groups=[
 "Friend",
@@ -23,16 +19,10 @@ albedo_color = Color( 1, 0, 0, 1 )
 script = ExtResource( 2 )
 
 [node name="Mesh_Body" type="MeshInstance" parent="." index="1"]
-transform = Transform( 0.75, 0.000108929, 0.00015581, 0.000116805, 0.000285584, -1, -0.000108985, 0.75, 0.00038075, 0, 0, 0 )
+transform = Transform( -0.75, -0.000108995, -0.00015581, 0.000116805, 0.000285584, -1, 0.000109051, -0.75, -0.00038075, 0, 0, 0 )
 cast_shadow = 0
 mesh = SubResource( 1 )
 material/0 = null
-
-[node name="Mesh_Eyes" type="MeshInstance" parent="Mesh_Body" index="0"]
-transform = Transform( 0.771661, 6.9802e-05, 0.000103439, 6.98096e-05, 0.29105, 8.79995e-06, 5.8179e-05, 4.95015e-06, 0.273746, 0, -0.739, -0.665 )
-cast_shadow = 0
-mesh = SubResource( 2 )
-material/0 = SubResource( 3 )
 
 [node name="TriggerManager" type="Node" parent="." index="2"]
 script = ExtResource( 3 )
@@ -41,26 +31,13 @@ script = ExtResource( 3 )
 
 [node name="VisibilityLight" parent="." index="4" instance=ExtResource( 9 )]
 
-[node name="SightLight" type="SpotLight" parent="." index="5"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.714694, -0.873099 )
-light_specular = 0.0
-light_cull_mask = 4293918721
-shadow_enabled = true
-spot_range = 9.0
-spot_attenuation = 8.63169e-05
-spot_angle = 35.0
-spot_angle_attenuation = 1e+06
-__meta__ = {
-"_editor_description_": ""
-}
-
-[node name="LightViewport" type="Viewport" parent="." index="6"]
+[node name="LightViewport" type="Viewport" parent="." index="5"]
 size = Vector2( 2048, 2048 )
 handle_input_locally = false
 hdr = false
 keep_3d_linear = true
 render_target_update_mode = 3
-shadow_atlas_size = 2048
+shadow_atlas_size = 4096
 
 [node name="LightCamera" type="Camera" parent="LightViewport" index="0"]
 transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 6, 0 )
@@ -70,7 +47,7 @@ projection = 1
 current = true
 size = 70.0
 
-[node name="TransformReset" type="Node" parent="." index="7"]
+[node name="TransformReset" type="Node" parent="." index="6"]
 
 [node name="LerpedFollow" parent="TransformReset" index="0" instance=ExtResource( 7 )]
 target_node = NodePath("../../ViewTarget")
@@ -79,6 +56,7 @@ lock_y_rotation = true
 
 [node name="Camera" type="Camera" parent="TransformReset/LerpedFollow" index="0"]
 transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 12, 0 )
+cull_mask = 1048573
 environment = ExtResource( 5 )
 current = true
 fov = 90.0
@@ -86,6 +64,9 @@ __meta__ = {
 "_editor_description_": ""
 }
 
-[node name="ViewTarget" type="Position3D" parent="." index="8"]
+[node name="AsciiRenderer" parent="TransformReset/LerpedFollow/Camera" index="0" instance=ExtResource( 10 )]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 5.24537e-07, -12 )
+
+[node name="ViewTarget" type="Position3D" parent="." index="7"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -6 )
 script = ExtResource( 8 )
