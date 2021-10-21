@@ -63,6 +63,10 @@ func move_back_to_spawnpoint():
 	transform.origin = spawn_point
 
 
+func set_overview_light_enabled(enabled):
+	$TransformReset/OverviewLight.enabled = enabled
+
+
 func move_camera_to_overview():
 	$TransformReset/LerpedFollow.target = $TransformReset/OverviewTarget
 

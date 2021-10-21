@@ -3,7 +3,7 @@ render_mode unshaded;
 
 uniform sampler2D visibility_mask;
 uniform vec4 color: hint_color = vec4(1.0, 0.0, 0.0, 1.0);
-uniform float visibility_threshold = 0.1;
+uniform float visibility_threshold = 0.05;
 uniform float camera_size = 70;
 uniform bool always_draw = false;
 

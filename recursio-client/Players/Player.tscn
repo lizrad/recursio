@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://Players/CharacterBase.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Players/Player.gd" type="Script" id=2]
@@ -10,6 +10,7 @@
 [ext_resource path="res://Players/ViewTarget.gd" type="Script" id=8]
 [ext_resource path="res://Players/VisibilityLight.tscn" type="PackedScene" id=9]
 [ext_resource path="res://addons/ascii-shader/AsciiRenderer.tscn" type="PackedScene" id=10]
+[ext_resource path="res://Players/OverviewLight.gd" type="Script" id=11]
 
 [sub_resource type="PrismMesh" id=1]
 
@@ -69,6 +70,51 @@ transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 5.24
 
 [node name="OverviewTarget" type="Position3D" parent="TransformReset" index="1"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10, 0 )
+
+[node name="OverviewLight" type="SpotLight" parent="TransformReset" index="2"]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0 )
+light_color = Color( 0.0392157, 0, 0.505882, 1 )
+light_energy = 50.0
+light_cull_mask = 4293918721
+spot_range = 500.0
+spot_attenuation = 0.000161073
+spot_angle = 80.0
+spot_angle_attenuation = 1e+06
+script = ExtResource( 11 )
+
+[node name="SpotLight" type="SpotLight" parent="TransformReset/OverviewLight" index="0"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -3 )
+light_color = Color( 0.0392157, 0, 0.505882, 1 )
+light_energy = 50.0
+light_negative = true
+light_cull_mask = 4293918721
+spot_range = 500.0
+spot_attenuation = 0.000150286
+spot_angle = 77.0
+spot_angle_attenuation = 1e+06
+
+[node name="OverviewVisibility" type="SpotLight" parent="TransformReset/OverviewLight" index="1"]
+layers = 2
+light_color = Color( 0.517647, 0.517647, 0.517647, 1 )
+light_energy = 50.0
+light_cull_mask = 4293918722
+spot_range = 500.0
+spot_attenuation = 0.000161073
+spot_angle = 80.0
+spot_angle_attenuation = 1e+06
+script = ExtResource( 11 )
+
+[node name="OverviewAntiVisibility" type="SpotLight" parent="TransformReset/OverviewLight/OverviewVisibility" index="0"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -3 )
+layers = 2
+light_color = Color( 0.517647, 0.517647, 0.517647, 1 )
+light_energy = 50.0
+light_negative = true
+light_cull_mask = 4293918722
+spot_range = 500.0
+spot_attenuation = 0.000150286
+spot_angle = 77.0
+spot_angle_attenuation = 1e+06
 
 [node name="ViewTarget" type="Position3D" parent="." index="7"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -6 )

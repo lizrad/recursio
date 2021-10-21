@@ -202,6 +202,9 @@ func _on_round_start_received(round_index, server_time):
 	game_result_screen.visible = false
 	player.hud.round_start(round_index, server_time)
 	
+	# We have to disable this here because otherwise, the light never sees the ghosts for some reason
+	player.set_overview_light_enabled(false)
+	
 	
 	#===================
 	#LATENCY DELAY PHASE
@@ -522,6 +525,10 @@ func _on_player_action(player_id, action_type):
 func _on_capture_point_captured(capturing_player_id, capture_point):
 	level.get_capture_points()[capture_point].capture(capturing_player_id)
 	
+	if capturing_player_id == id:
+		player.move_camera_to_overview()
+		player.set_overview_light_enabled(true)
+	
 func _on_capture_point_team_changed(capturing_player_id, capture_point):
 	level.get_capture_points()[capture_point].set_capturing_player(capturing_player_id)
 	
@@ -530,3 +537,7 @@ func _on_capture_point_status_changed(capturing_player_id, capture_point, captur
 	
 func _on_capture_point_capture_lost(capturing_player_id, capture_point):
 	level.get_capture_points()[capture_point].capture_lost(capturing_player_id)
+	
+	if capturing_player_id == id:
+		player.follow_camera()
+		player.set_overview_light_enabled(false)
