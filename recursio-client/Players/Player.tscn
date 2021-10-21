@@ -67,6 +67,9 @@ __meta__ = {
 [node name="AsciiRenderer" parent="TransformReset/LerpedFollow/Camera" index="0" instance=ExtResource( 10 )]
 transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 5.24537e-07, -12 )
 
+[node name="OverviewTarget" type="Position3D" parent="TransformReset" index="1"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10, 0 )
+
 [node name="ViewTarget" type="Position3D" parent="." index="7"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -6 )
 script = ExtResource( 8 )

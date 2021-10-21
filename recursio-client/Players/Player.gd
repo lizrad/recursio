@@ -62,6 +62,15 @@ func move_back_to_spawnpoint():
 	Logger.info("Moving player back to spawnpoint at "+str(spawn_point),"spawnpoints")
 	transform.origin = spawn_point
 
+
+func move_camera_to_overview():
+	$TransformReset/LerpedFollow.target = $TransformReset/OverviewTarget
+
+
+func follow_camera():
+	$TransformReset/LerpedFollow.target = $ViewTarget
+
+
 func get_normalized_input(type, outer_deadzone, inner_deadzone, min_length = 0.0):
 	var input = Vector2(
 		Input.get_action_strength(type + "_up") - Input.get_action_strength(type + "_down"),

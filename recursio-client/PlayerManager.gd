@@ -237,6 +237,8 @@ func _on_round_start_received(round_index, server_time):
 		
 		ghost_paths.append(path)
 		add_child(path)
+	
+	player.move_camera_to_overview()
 
 	
 	#Default ghost index
@@ -262,6 +264,8 @@ func _on_round_start_received(round_index, server_time):
 	for ghost_path in ghost_paths:
 		ghost_path.queue_free()
 	ghost_paths.clear()
+	
+	player.follow_camera()
 	
 	Logger.info("Countdown phase "+str(round_index)+" started", "gameplay")
 	_prep_phase_in_progress = false
