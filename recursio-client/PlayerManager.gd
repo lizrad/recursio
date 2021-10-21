@@ -221,7 +221,9 @@ func _on_round_start_received(round_index, server_time):
 	Logger.info("Prep phase "+str(round_index)+" started", "gameplay")
 	player.hud.prep_phase_start(round_index, Server.get_server_time())
 	_prep_phase_in_progress = true
+	
 	# Display paths of my ghosts
+	var ghost_paths = []
 	for i in _my_ghosts:
 		var curve = Curve3D.new()
 		
@@ -232,6 +234,8 @@ func _on_round_start_received(round_index, server_time):
 		
 		var path = preload("res://Players/GhostPath.tscn").instance()
 		path.set_curve(curve)
+		
+		ghost_paths.append(path)
 		add_child(path)
 
 	
@@ -253,6 +257,12 @@ func _on_round_start_received(round_index, server_time):
 	#===============
 	#COUNTDOWN PHASE
 	#===============
+	
+	# Delete paths again
+	for ghost_path in ghost_paths:
+		ghost_path.queue_free()
+	ghost_paths.clear()
+	
 	Logger.info("Countdown phase "+str(round_index)+" started", "gameplay")
 	_prep_phase_in_progress = false
 	player.hud.countdown_phase_start(round_index, Server.get_server_time())
