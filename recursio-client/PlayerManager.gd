@@ -243,22 +243,22 @@ func _on_round_start_received(round_index, server_time):
 	
 	player.move_camera_to_overview()
 
-	
+
 	#Default ghost index
 	var default_ghost_index = min(round_index-1,Constants.get_value("ghosts", "max_amount"))
 	move_player_to_spawnpoint(default_ghost_index)
 	player.ghost_index = default_ghost_index
 	for enemy_id in enemies:
 		enemies[enemy_id].ghost_index = default_ghost_index
-		
+
 	# Add ghosts to scene and set their start position
 	_enable_ghosts()
 	_move_ghosts_to_spawn()
-	
+
 	# Wait for preparation phase
 	yield(get_tree().create_timer(_prep_phase_time), "timeout")
-	
-	
+
+
 	#===============
 	#COUNTDOWN PHASE
 	#===============

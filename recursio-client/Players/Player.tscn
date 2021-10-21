@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://Players/CharacterBase.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Players/Player.gd" type="Script" id=2]
@@ -11,6 +11,7 @@
 [ext_resource path="res://Players/VisibilityLight.tscn" type="PackedScene" id=9]
 [ext_resource path="res://addons/ascii-shader/AsciiRenderer.tscn" type="PackedScene" id=10]
 [ext_resource path="res://Players/OverviewLight.gd" type="Script" id=11]
+[ext_resource path="res://Resources/Icons/icon_player_minimap.png" type="Texture" id=12]
 
 [sub_resource type="PrismMesh" id=1]
 
@@ -57,7 +58,7 @@ lock_y_rotation = true
 
 [node name="Camera" type="Camera" parent="TransformReset/LerpedFollow" index="0"]
 transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 12, 0 )
-cull_mask = 1048573
+cull_mask = 1048565
 environment = ExtResource( 5 )
 current = true
 fov = 90.0
@@ -91,3 +92,8 @@ omni_attenuation = 3.75716e-05
 [node name="ViewTarget" type="Position3D" parent="." index="7"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -6 )
 script = ExtResource( 8 )
+
+[node name="Sprite3D" type="Sprite3D" parent="." index="8"]
+layers = 8
+axis = 1
+texture = ExtResource( 12 )

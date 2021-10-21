@@ -21,7 +21,7 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0 )
 shape = SubResource( 1 )
 
 [node name="MeshInstance" type="MeshInstance" parent="."]
-layers = 33
+layers = 36
 material_override = SubResource( 2 )
 cast_shadow = 0
 mesh = SubResource( 3 )

@@ -17,8 +17,11 @@ signal ghost_attack
 func init(gameplay_record: Dictionary, ghost_color: Color):
 	record = gameplay_record.duplicate(true)
 	ghost_index = gameplay_record["G"]
-	if $Mesh_Body and $Mesh_Body.material_override:
-		$Mesh_Body.material_override.set_shader_param("color", ghost_color)
+	if has_node("Mesh_Body"):
+		if $Mesh_Body and $Mesh_Body.material_override:
+			$Mesh_Body.material_override.set_shader_param("color", ghost_color)
+	else:
+		Logger.warn("Ghost Mesh_Body not accessible (node not in scene tree)", "ghost")
 
 func stop_replay():
 	_replaying = false
@@ -27,9 +30,14 @@ func start_replay(start_time):
 	_start_time = start_time
 	_replaying = true
 	_current_frame = 0
-	
+
 	_collision_shape.disabled = false
 	rotation = Vector3.ZERO
+
+	if has_node("Sprite3D"):
+		$Sprite3D.visible = true
+	if has_node("Sprite3DDead"):
+		$Sprite3DDead.visible = false
 
 func _physics_process(delta):
 	if not _replaying:
@@ -76,4 +84,8 @@ func receive_hit():
 	# Disable collsions
 	_collision_shape.disabled = true
 	# Show ghost as dead
+	if has_node("Sprite3D"):
+		$Sprite3D.visible = false
+	if has_node("Sprite3DDead"):
+		$Sprite3DDead.visible = true
 	rotate_z(90)
