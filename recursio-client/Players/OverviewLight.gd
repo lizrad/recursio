@@ -1,18 +1,23 @@
-extends SpotLight
+extends OmniLight
 
 
-export var speed := 40
-export var max_height := 60
+export var max_radius := 50.0
+export var radius_diff := 7.0
+export var radius_grow_speed := 50.0
 
 var enabled = true
 
 
 func _physics_process(delta):
 	if enabled:
-		transform.origin.y += delta * speed
-		if transform.origin.y >= max_height:
-			transform.origin.y = 0
+		omni_range += radius_grow_speed * delta
+		$Subtractive.omni_range = omni_range - radius_diff
 		visible = true
+		
+		if omni_range > max_radius:
+			omni_range = 0
+			$Subtractive.omni_range = 0
 	else:
-		transform.origin.y = 0
+		omni_range = 0
+		$Subtractive.omni_range = 0
 		visible = false
