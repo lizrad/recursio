@@ -93,9 +93,10 @@ func remove_player(player_id: int) -> void:
 	player_count -= 1
 
 
-func update_player_input_data(player_id, input_data: InputData):
+func update_player_state(player_id, player_state):
 	if _game_manager.game_phase_in_progress:
-		_player_manager.update_player_input_data(player_id, input_data)
+		_player_manager.update_player_state(player_id, player_state)
+		pass
 
 
 func update_dash_state(player_id, dash_state):

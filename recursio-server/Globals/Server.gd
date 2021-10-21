@@ -101,10 +101,10 @@ remote func fetch_server_time(player_time):
 	rpc_id(player_id, "receive_server_time", OS.get_system_time_msecs(), player_time)
 
 
-remote func receive_player_input_data(input_data: InputData):
+remote func receive_player_state(player_state):
 	var player_id = get_tree().get_rpc_sender_id()
 	var room_id = _player_room_dic[player_id]
-	_room_manager.get_room(room_id).update_player_input_data(player_id, input_data)
+	_room_manager.get_room(room_id).update_player_state(player_id, player_state)
 
 
 remote func receive_dash_state(dash_state):

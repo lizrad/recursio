@@ -59,13 +59,23 @@ func _on_ammo_changed(ammo: int, action: Action, type: int) -> void:
 func _on_action_triggered(action: Action, type: int) -> void:
 	Logger.debug("action triggered for name: " + str(action.name) + " on time: " + str(action.activation_time), "actions")
 
-	InputManager.add_trigger_to_input_frame(type)
+	if type == GlobalActionManager.Trigger.SPECIAL_MOVEMENT_START:
+		player.dash_start = action.activation_time
+		var dash_state = {"T": Server.get_server_time(), "S": 1}
+		Server.send_dash_state(dash_state)
+	else:
+		var action_trigger = {"A": type, "T": Server.get_server_time()}
+		Server.send_action_trigger(action_trigger)
 
 
 func _on_action_released(action: Action, type: int) -> void:
 	Logger.debug("action released for type: " + str(type), "actions")
 
-	InputManager.remove_trigger_from_input_frame(type)
+	if type == GlobalActionManager.Trigger.SPECIAL_MOVEMENT_START:
+		Logger.info("dash released", "actions")
+		player.dash_start = 0
+		var dash_state = {"T": Server.get_server_time(), "S": 0}
+		Server.send_dash_state(dash_state)
 
 
 func handle_input() -> void:
