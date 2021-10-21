@@ -278,7 +278,11 @@ func _get_spawn_point(game_id, ghost_index):
 func _apply_visibility_mask(character):
 	if player:
 		character.get_node("Mesh_Body").material_override.set_shader_param("visibility_mask", player.get_visibility_mask())
-		character.get_node("Mesh_Body/Mesh_Eyes").material_override.set_shader_param("visibility_mask", player.get_visibility_mask())
+
+
+func _apply_visibility_always(character):
+	character.get_node("Mesh_Body").material_override.set_shader_param("always_draw", true)
+
 
 func _create_enemy_ghost(enemy_id, gameplay_record):
 	Logger.info("Enemy ("+str(enemy_id)+") ghost record received with start time of " + str(gameplay_record["T"]), "ghost")
@@ -333,6 +337,7 @@ func _enable_ghosts() ->void:
 	for i in _my_ghosts:
 		if i != player.ghost_index:
 			_add_ghost(_my_ghosts[i])
+			_apply_visibility_always(_my_ghosts[i])
 
 
 func _add_ghost(ghost):
