@@ -13,6 +13,8 @@ onready var middle_pivot = get_node("../RootPivot/MiddlePivot")
 var _time_since_start = 0
 var _fire_type
 var _default_middle_scale = 1
+var _default_middle_z = 0
+var _default_front_z = 0.548
 
 func start_animation(fire_type):
 	_time_since_start = 0
@@ -38,14 +40,14 @@ func get_hitscan_keyframe(ratio):
 	var angle = hitscan_rotation_periods* 2 * PI * remapped_rotation_ratio
 	keyframes[front_pivot] =  Transform(
 		Basis(Vector3(0,0,angle)),
-		Vector3(0,0,0))
+		Vector3(0,0,_default_front_z))
 	
 	
 	var remapped_scale_ratio = pow(ratio*2,2) if ratio<=0.5 else pow((ratio-1)*2,2)
 	var scale = middle_scale_extent * remapped_scale_ratio + _default_middle_scale
 	keyframes[middle_pivot] = Transform(
 		Basis(Vector3(0,0,angle)),
-		Vector3(0,0,0)
+		Vector3(0,0,_default_middle_z)
 	)
 	keyframes[middle_pivot].basis = keyframes[middle_pivot].basis.scaled(Vector3(scale,scale,scale))
 	return keyframes
@@ -56,6 +58,6 @@ func get_wall_keyframe(ratio):
 	var scale = remapped_ratio
 	keyframes[middle_pivot] =  Transform(
 		Basis(Vector3(0,0,0)),
-		Vector3(0,0,0))
+		Vector3(0,0,_default_middle_z))
 	keyframes[middle_pivot].basis = keyframes[middle_pivot].basis.scaled(Vector3(scale,scale,scale))
 	return keyframes
