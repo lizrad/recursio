@@ -29,7 +29,6 @@ func get_keyframe(delta):
 	
 	var keyframes = {}
 	var remapped_ratio = pow(ratio*2,2) if ratio<=0.5 else pow((ratio-1)*2,2)
-	print(remapped_ratio)
 	var z_front = front_extent * remapped_ratio + _default_front_z
 	keyframes[front_pivot] =  Transform(
 		Basis(Vector3(0,0,0)),
