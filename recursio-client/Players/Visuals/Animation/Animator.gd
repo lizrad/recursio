@@ -12,10 +12,13 @@ onready var IdleAnimator  = get_node("../IdleAnimator")
 onready var FireAnimator  = get_node("../FireAnimator")
 onready var DashAnimator  = get_node("../DashAnimator")
 onready var MeleeAnimator  = get_node("../MeleeAnimator")
+onready var MoveAnimator  = get_node("../MoveAnimator")
 
 var _firing = false
 var _dashing = false
 var _meleeing = false
+
+var _debug_velocity = 0
 func _process(delta):
 	if Input.is_action_just_pressed("player_shoot"):
 		FireAnimator.connect("animation_over", self, "stop_fire_animation")
@@ -27,15 +30,31 @@ func _process(delta):
 		DashAnimator.start_animation()
 		_dashing = true
 	elif Input.is_action_just_released("player_dash"):
-		print("Test")
 		DashAnimator.stop_animation()
 	
 	if Input.is_action_just_pressed("player_melee"):
 		MeleeAnimator.connect("animation_over", self, "stop_melee_animation")
 		MeleeAnimator.start_animation()
 		_meleeing = true
+
 	
-	var keyframes = IdleAnimator.get_keyframe(delta)
+	if Input.is_action_pressed("player_move_up"):
+		if _debug_velocity == 0:
+			MoveAnimator.start_animation()
+		_debug_velocity += 0.01
+		_debug_velocity = min(_debug_velocity, 3.5)
+	else:
+		if _debug_velocity != 0:
+			if _debug_velocity - 0.01 <= 0:
+				MoveAnimator.stop_animation()
+		_debug_velocity -=0.01
+		_debug_velocity = max(_debug_velocity, 0.0)
+	MoveAnimator.set_velocity(_debug_velocity)
+	var keyframes
+	if _debug_velocity > 0:
+		keyframes = MoveAnimator.get_keyframe(delta)
+	else:
+		keyframes = IdleAnimator.get_keyframe(delta)
 	if _firing:
 		keyframes = combine_keyframes(keyframes,FireAnimator.get_keyframe(delta),1)
 	if _dashing:
