@@ -202,6 +202,9 @@ func _on_round_start_received(round_index, server_time):
 	game_result_screen.visible = false
 	player.hud.round_start(round_index, server_time)
 	
+	# We have to disable this here because otherwise, the light never sees the ghosts for some reason
+	player.set_overview_light_enabled(false)
+	
 	
 	#===================
 	#LATENCY DELAY PHASE
@@ -222,24 +225,51 @@ func _on_round_start_received(round_index, server_time):
 	player.hud.prep_phase_start(round_index, Server.get_server_time())
 	_prep_phase_in_progress = true
 	
+	# Display paths of my ghosts
+	var ghost_paths = []
+	for i in _my_ghosts:
+		var curve = Curve3D.new()
+		
+		var record = _my_ghosts[i].record
+		var data_array = record["F"]
+		for path_i in range(0, data_array.size(), 30):
+			curve.add_point(data_array[path_i]["P"])
+		
+		var path = preload("res://Players/GhostPath.tscn").instance()
+		path.set_curve(curve)
+		
+		ghost_paths.append(path)
+		add_child(path)
+	
+	player.move_camera_to_overview()
+
+
 	#Default ghost index
 	var default_ghost_index = min(round_index-1,Constants.get_value("ghosts", "max_amount"))
 	move_player_to_spawnpoint(default_ghost_index)
 	player.ghost_index = default_ghost_index
 	for enemy_id in enemies:
 		enemies[enemy_id].ghost_index = default_ghost_index
-		
+
 	# Add ghosts to scene and set their start position
 	_enable_ghosts()
 	_move_ghosts_to_spawn()
-	
+
 	# Wait for preparation phase
 	yield(get_tree().create_timer(_prep_phase_time), "timeout")
-	
-	
+
+
 	#===============
 	#COUNTDOWN PHASE
 	#===============
+	
+	# Delete paths again
+	for ghost_path in ghost_paths:
+		ghost_path.queue_free()
+	ghost_paths.clear()
+	
+	player.follow_camera()
+	
 	Logger.info("Countdown phase "+str(round_index)+" started", "gameplay")
 	_prep_phase_in_progress = false
 	player.hud.countdown_phase_start(round_index, Server.get_server_time())
@@ -278,7 +308,11 @@ func _get_spawn_point(game_id, ghost_index):
 func _apply_visibility_mask(character):
 	if player:
 		character.get_node("Mesh_Body").material_override.set_shader_param("visibility_mask", player.get_visibility_mask())
-		character.get_node("Mesh_Body/Mesh_Eyes").material_override.set_shader_param("visibility_mask", player.get_visibility_mask())
+
+
+func _apply_visibility_always(character):
+	character.get_node("Mesh_Body").material_override.set_shader_param("always_draw", true)
+
 
 func _create_enemy_ghost(enemy_id, gameplay_record):
 	Logger.info("Enemy ("+str(enemy_id)+") ghost record received with start time of " + str(gameplay_record["T"]), "ghost")
@@ -333,6 +367,7 @@ func _enable_ghosts() ->void:
 	for i in _my_ghosts:
 		if i != player.ghost_index:
 			_add_ghost(_my_ghosts[i])
+			_apply_visibility_always(_my_ghosts[i])
 
 
 func _add_ghost(ghost):
@@ -461,6 +496,10 @@ func _on_player_action(player_id, action_type):
 func _on_capture_point_captured(capturing_player_id, capture_point):
 	level.get_capture_points()[capture_point].capture(capturing_player_id)
 	
+	if capturing_player_id == id:
+		player.move_camera_to_overview()
+		player.set_overview_light_enabled(true)
+	
 func _on_capture_point_team_changed(capturing_player_id, capture_point):
 	level.get_capture_points()[capture_point].set_capturing_player(capturing_player_id)
 	
@@ -469,3 +508,7 @@ func _on_capture_point_status_changed(capturing_player_id, capture_point, captur
 	
 func _on_capture_point_capture_lost(capturing_player_id, capture_point):
 	level.get_capture_points()[capture_point].capture_lost(capturing_player_id)
+	
+	if capturing_player_id == id:
+		player.follow_camera()
+		player.set_overview_light_enabled(false)
