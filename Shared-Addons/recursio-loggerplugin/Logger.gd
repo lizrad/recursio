@@ -748,14 +748,14 @@ func load_config(configfile = default_configfile_path):
 	# Look for the file
 	var dir = Directory.new()
 	if not dir.file_exists(configfile):
-		print("Could not load the config in '%s', the file does not exist." % configfile)
+		warn("Could not load the config in '%s', the file does not exist." % configfile, PLUGIN_NAME)
 		return ERR_FILE_NOT_FOUND
 
 	# Load its contents
 	var config = ConfigFile.new()
 	var err = config.load(configfile)
 	if err:
-		print("Could not load the config in '%s'; exited with error %d." % [configfile, err])
+		warn("Could not load the config in '%s'; exited with error %d." % [configfile, err], PLUGIN_NAME)
 		return err
 
 	# Load default config
@@ -777,6 +777,7 @@ func load_config(configfile = default_configfile_path):
 			module_cfg["name"], module_cfg["output_level"], module_cfg["output_strategies"], get_external_sink(module_cfg["external_sink"]["path"])
 		)
 		modules[module_cfg["name"]] = module
+	debug("Successfully loaded the config from '%s'." % configfile, PLUGIN_NAME)
 	return OK
 
 
