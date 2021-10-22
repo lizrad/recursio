@@ -17,6 +17,7 @@ onready var MoveAnimator  = get_node("../MoveAnimator")
 var _firing = false
 var _dashing = false
 var _meleeing = false
+var _moving = false
 
 var _debug_velocity = 0
 func _process(delta):
@@ -40,7 +41,9 @@ func _process(delta):
 	
 	if Input.is_action_pressed("player_move_up"):
 		if _debug_velocity == 0:
+			_moving = true
 			MoveAnimator.start_animation()
+			MoveAnimator.connect("animation_over", self, "stop_move_animation")
 		_debug_velocity += 0.01
 		_debug_velocity = min(_debug_velocity, 3.5)
 	else:
@@ -51,10 +54,12 @@ func _process(delta):
 		_debug_velocity = max(_debug_velocity, 0.0)
 	MoveAnimator.set_velocity(_debug_velocity)
 	var keyframes
-	if _debug_velocity > 0:
+	
+	if _moving:
 		keyframes = MoveAnimator.get_keyframe(delta)
 	else:
 		keyframes = IdleAnimator.get_keyframe(delta)
+	
 	if _firing:
 		keyframes = combine_keyframes(keyframes,FireAnimator.get_keyframe(delta),1)
 	if _dashing:
@@ -66,15 +71,19 @@ func _process(delta):
 
 func stop_fire_animation():
 	FireAnimator.disconnect("animation_over", self, "stop_fire_animation")
-	_firing = false;
+	_firing = false
+
+func stop_move_animation():
+	MoveAnimator.disconnect("animation_over", self, "stop_move_animation")
+	_moving = false
 
 func stop_dash_animation():
 	DashAnimator.disconnect("animation_over", self, "stop_dash_animation")
-	_dashing = false;
-	
+	_dashing = false
+
 func stop_melee_animation():
 	DashAnimator.disconnect("animation_over", self, "stop_melee_animation")
-	_meleeing = false;
+	_meleeing = false
 
 func combine_keyframes(a,b,t):
 	var keyframes = {}
