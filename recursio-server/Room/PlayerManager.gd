@@ -114,9 +114,9 @@ func remove_ghost(ghost):
 
 func disable_ghosts()->void:
 	for player_id in ghosts:
-			for i in ghosts[player_id]:
-				if i != players[player_id].ghost_index:
-					remove_ghost(ghosts[player_id][i])
+		for i in ghosts[player_id]:
+			if i != players[player_id].ghost_index:
+				remove_ghost(ghosts[player_id][i])
 
 
 func set_players_can_move(can_move : bool) -> void:
@@ -126,7 +126,7 @@ func set_players_can_move(can_move : bool) -> void:
 
 func _create_ghost_from_player(player)->void:
 	var ghost = _ghost_scene.instance()
-	ghost.init(player.gameplay_record)
+	ghost.init(player.gameplay_record, 0)
 	ghost.spawn_point = player.spawn_point
 	ghost.game_id = player.game_id
 	ghost.player_id = player.player_id
