@@ -4,7 +4,7 @@ extends Node
 #		./Wall
 #		./Dash
 #		-Move
-#		-Melee
+#		./Melee
 #		-Death
 #		-Spawn
 
