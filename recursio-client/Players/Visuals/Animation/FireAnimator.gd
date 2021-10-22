@@ -5,12 +5,14 @@ signal animation_over
 export var animation_duration := 0.5
 export var hitscan_rotation_periods := 10
 export var hitscan_log_base := 3000
+export var middle_scale_extent := 0.35
 
 onready var front_pivot = get_node("../RootPivot/FrontPivot")
 onready var middle_pivot = get_node("../RootPivot/MiddlePivot")
 
 var _time_since_start = 0
 var _fire_type
+var _default_middle_scale = 1
 
 func start_animation(fire_type):
 	_time_since_start = 0
@@ -32,11 +34,20 @@ func logWithBase(value, base):
 
 func get_hitscan_keyframe(ratio):
 	var keyframes = {}
-	var remapped_ratio = logWithBase(1+(hitscan_log_base-1)*ratio,hitscan_log_base)
-	var angle = hitscan_rotation_periods* 2 * PI * remapped_ratio
+	var remapped_rotation_ratio = logWithBase(1+(hitscan_log_base-1)*ratio,hitscan_log_base)
+	var angle = hitscan_rotation_periods* 2 * PI * remapped_rotation_ratio
 	keyframes[front_pivot] =  Transform(
 		Basis(Vector3(0,0,angle)),
 		Vector3(0,0,0))
+	
+	
+	var remapped_scale_ratio = pow(ratio*2,2) if ratio<=0.5 else pow((ratio-1)*2,2)
+	var scale = middle_scale_extent * remapped_scale_ratio + _default_middle_scale
+	keyframes[middle_pivot] = Transform(
+		Basis(Vector3(0,0,angle)),
+		Vector3(0,0,0)
+	)
+	keyframes[middle_pivot].basis = keyframes[middle_pivot].basis.scaled(Vector3(scale,scale,scale))
 	return keyframes
 
 func get_wall_keyframe(ratio):
