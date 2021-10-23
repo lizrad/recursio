@@ -2,3 +2,13 @@
 
 [resource]
 ambient_light_color = Color( 0.741176, 0.741176, 0.741176, 1 )
+tonemap_mode = 2
+tonemap_exposure = 1.2
+glow_enabled = true
+glow_strength = 0.6
+glow_bloom = 1.0
+glow_blend_mode = 0
+glow_hdr_threshold = 0.5
+glow_hdr_luminance_cap = 6.0
+glow_hdr_scale = 4.0
+glow_bicubic_upscale = true
