@@ -107,19 +107,6 @@ remote func receive_player_input_data(input_data: InputData):
 	_room_manager.get_room(room_id).update_player_input_data(player_id, input_data)
 
 
-remote func receive_dash_state(dash_state):
-	var player_id = get_tree().get_rpc_sender_id()
-	var room_id = _player_room_dic[player_id]
-	_room_manager.get_room(room_id).update_dash_state(player_id, dash_state)
-
-
-remote func receive_action_trigger(action):
-	Logger.info("received action trigger %s" %[action], "connection")
-	var player_id = get_tree().get_rpc_sender_id()
-	var room_id = _player_room_dic[player_id]
-	_room_manager.get_room(room_id).handle_player_action(player_id, action)
-
-
 remote func receive_ghost_pick(ghost_index):
 	var player_id = get_tree().get_rpc_sender_id()
 	var room_id = _player_room_dic[player_id]

@@ -2,6 +2,7 @@ extends CharacterBase
 class_name Player
 
 var velocity := Vector3.ZERO
+var current_target_velocity := Vector3.ZERO
 var acceleration := Vector3.ZERO
 
 onready var dash_activation_timer = get_node("DashActivationTimer")
@@ -33,7 +34,6 @@ func reset():
 	gameplay_record.clear()
 	velocity = Vector3.ZERO
 	acceleration = Vector3.ZERO
-	last_input_data = {}
 	for i in range(dash_start_times.size()):
 		dash_start_times[i] =- 1
 	_waiting_for_dash = false
@@ -111,32 +111,12 @@ func apply_player_input_data(input_data: InputData, physics_delta):
 
 		var acceleration = StaticInput.calculate_acceleration(movement_vector, rotation_vector);
 		_apply_acceleration(acceleration)
-
-	if _recording:
-		gameplay_record["F"].append(
-			_create_record_frame(Server.get_server_time(), transform.origin, rotation.y, action_last_frame)
-		)
-		action_last_frame = action_manager.Trigger.NONE
-
-
-func correct_illegal_movement():
-	#using epsilon here to make it a bit fuzzy, so random networking and floating point errors etc. are ignored
-	var epsilon = 0.1
-	if _collected_illegal_movement.length() > epsilon:
-		Logger.info(
-			"Correcting illegal movement of " + str(_collected_illegal_movement),
-			"movement_validation"
-		)
-		#TODO: if collected_illegal_movement is too big kick bc player had to have cheated
-		transform.origin -= _collected_illegal_movement
-		_collected_illegal_movement = Vector3.ZERO
-		#TODO: adapt to latency or something i dunno once we know it on server, just a random magic number that worked for now
-		wait_for_player_to_correct = 120
-
-
-func update_dash_state(dash_state):
-	if dash_state["S"] == 1:
-		if _valid_dash_start_time(dash_state["T"]):
+	
+	# Buttons pressed in this frame
+	var buttons: int = input_frame.buttons
+	
+	if buttons & action_manager.Trigger.SPECIAL_MOVEMENT_START:
+		if _valid_dash_start_time(input_frame.timestamp):
 			Logger.info("Dash received", "movement_validation")
 			_dashing = true
 			dash_activation_timer.start()
@@ -146,7 +126,7 @@ func update_dash_state(dash_state):
 			
 			if _recording:
 				var i = max(0,gameplay_record["F"].size() - 1)
-				while gameplay_record["F"][i]["T"] > dash_state["T"] && i >= 0:
+				while gameplay_record["F"][i]["T"] > input_frame.timestamp && i >= 0:
 					i -= 1
 				gameplay_record["F"][i]["D"] = action_manager.Trigger.SPECIAL_MOVEMENT_START
 		else:
@@ -155,9 +135,15 @@ func update_dash_state(dash_state):
 	else:
 		if _recording:
 			var i = gameplay_record["F"].size() - 1
-			while gameplay_record["F"][i]["T"] > dash_state["T"] && i >= 0:
+			while gameplay_record["F"][i]["T"] > input_frame.timestamp && i >= 0:
 				i -= 1
 			gameplay_record["F"][i]["D"] = action_manager.Trigger.SPECIAL_MOVEMENT_END
+
+	if _recording:
+		gameplay_record["F"].append(
+			_create_record_frame(Server.get_server_time(), transform.origin, rotation.y, action_last_frame)
+		)
+		action_last_frame = action_manager.Trigger.NONE
 
 
 func _apply_acceleration(new_acceleration):
@@ -167,7 +153,7 @@ func _apply_acceleration(new_acceleration):
 	# For drag: Lerp towards the target velocity
 	# This is usually 0, unless we're on something that's moving, in which case it is that object's
 	#  velocity
-	velocity = lerp(velocity, current_target_velocity, drag)
+	velocity = lerp(velocity, current_target_velocity, _drag)
 	velocity += acceleration
 
 func _valid_dash_start_time(time):

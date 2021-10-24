@@ -98,13 +98,6 @@ func update_player_input_data(player_id, input_data: InputData):
 		_player_manager.update_player_input_data(player_id, input_data)
 
 
-func update_dash_state(player_id, dash_state):
-	_player_manager.update_dash_state(player_id, dash_state)
-
-
-func handle_player_action(player_id, action_state):
-	_player_manager.handle_player_action(player_id, action_state)
-
 func handle_ghost_pick(player_id, ghost_index):
 	if not _game_manager._before_second_half_of_countdown:
 		Logger.error("Received ghost picks outside proper phase", "ghost_picking")

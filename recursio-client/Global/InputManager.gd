@@ -4,7 +4,7 @@ extends Node
 # Consists of 15 
 var _input_data: InputData = InputData.new(15)
 
-var _current_input_frame: InputFrame
+var _current_input_frame: InputFrame = InputFrame.new()
 
 var _timer = 0
 # Sends the player state every frame
@@ -40,7 +40,13 @@ func add_rotation_to_input_frame(rotation: Vector2)-> void:
 
 # Adds the current frame to the ringbuffer and resets the current frame
 func _close_current_input_frame() -> void:
-	_input_data.append(_current_input_frame.duplicate())
+	_current_input_frame.timestamp = Server.get_server_time()
+	var input_frame : InputFrame = InputFrame.new()
+	input_frame.timestamp = _current_input_frame.timestamp
+	input_frame.buttons = _current_input_frame.buttons
+	input_frame.movement = _current_input_frame.movement
+	input_frame.rotation = _current_input_frame.rotation
+	_input_data.add(input_frame)
 
 
 # Send input data with timestamp to the server
