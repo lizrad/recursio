@@ -134,7 +134,7 @@ Constants="*res://Shared/Constants.gd"
 
 [editor_plugins]
 
-enabled=PoolStringArray( "res://addons/recursio-loggerplugin/plugin.cfg" )
+enabled=PoolStringArray( "res://addons/project_editor_settings/plugin.cfg", "res://addons/recursio-loggerplugin/plugin.cfg" )
 
 [global]
 
