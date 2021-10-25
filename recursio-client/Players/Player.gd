@@ -117,12 +117,12 @@ func handle_network_update(position, time):
 	last_server_position = position
 	last_server_time = time
 
-	if not past_frames.has(time):
+	#if not past_frames.has(time):
 		# TODO: Need to handle this?
-		return
+	#	return
 
 	# Get value we had at that time
-	var position_diff = position - past_frames[time].position
+	var position_diff = position - transform.origin
 
 	# If the difference is too large, correct it
 	if position_diff.length() > 0.1:
@@ -174,14 +174,9 @@ func _handle_user_input():
 		if rotate_input_vector != Vector3.ZERO:
 			_rotate_input_vector = rotate_input_vector
 			look_at(rotate_input_vector + global_transform.origin, Vector3.UP)
-
-	var move_direction_scale = (
-		(3.0 + movement_input_vector.dot(rotate_input_vector)) / 4.0
-		if Constants.get_value("movement", "scale_to_view_direction")
-		else 1.0
-	)
-
-	apply_acceleration(movement_input_vector * move_acceleration * move_direction_scale)
+	
+	var acceleration = StaticInput.calculate_acceleration(movement_input_vector, rotate_input_vector);
+	apply_acceleration(acceleration)
 
 	# apply dash
 	if dash_start > 0:

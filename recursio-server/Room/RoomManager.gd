@@ -82,14 +82,14 @@ func is_current_room_full() -> bool:
 # Sends the world state of the room to all players in the room
 func _on_world_state_update(world_state, room_id) -> void:
 	var room: Room = _room_dic[room_id]
-	for player_id in room.get_players().keys():
+	for player_id in room.get_players():
 		_server.send_world_state(player_id, world_state)
 
 
 # Sends the round start event to all players in the room
 func _on_round_start(round_index, room_id):
 	var room: Room = _room_dic[room_id]
-	for player_id in room.get_players().keys():
+	for player_id in room.get_players():
 		room.get_players()[player_id].round_index = round_index
 		_server.send_round_start_to_client(player_id, round_index)
 
@@ -99,7 +99,7 @@ func _on_round_end(round_index, room_id):
 	var room: Room = _room_dic[room_id]
 	room.get_node("ActionManager").clear_action_instances()
 	
-	for player_id in room.get_players().keys():
+	for player_id in room.get_players():
 		_server.send_round_end_to_client(player_id, round_index)
 
 func _on_capture_point_team_changed(team_id, capture_point, room_id):
@@ -107,7 +107,7 @@ func _on_capture_point_team_changed(team_id, capture_point, room_id):
 	var capturing_player_id = -1
 	if team_id != -1:
 		capturing_player_id = room.game_id_to_player_id[team_id]
-	for player_id in room.get_players().keys():
+	for player_id in room.get_players():
 		_server.send_capture_point_team_changed(player_id, capturing_player_id, capture_point)
 
 
@@ -116,7 +116,7 @@ func _on_capture_point_captured(team_id, capture_point, room_id):
 	var capturing_player_id = -1
 	if team_id != -1:
 		capturing_player_id = room.game_id_to_player_id[team_id]
-	for player_id in room.get_players().keys():
+	for player_id in room.get_players():
 		_server.send_capture_point_captured(player_id, capturing_player_id, capture_point)
 
 func _on_capture_point_status_changed(capture_progress, team_id, capture_point, room_id):
@@ -124,7 +124,7 @@ func _on_capture_point_status_changed(capture_progress, team_id, capture_point, 
 	var capturing_player_id = -1
 	if team_id != -1:
 		capturing_player_id = room.game_id_to_player_id[team_id]
-	for player_id in room.get_players().keys():
+	for player_id in room.get_players():
 		_server.send_capture_point_status_changed(player_id, capturing_player_id, capture_point, capture_progress)
 
 func _on_capture_point_capture_lost(team_id, capture_point, room_id):
@@ -132,13 +132,13 @@ func _on_capture_point_capture_lost(team_id, capture_point, room_id):
 	var capturing_player_id = -1
 	if team_id != -1:
 		capturing_player_id = room.game_id_to_player_id[team_id]
-	for player_id in room.get_players().keys():
+	for player_id in room.get_players():
 		_server.send_capture_point_capture_lost(player_id, capturing_player_id, capture_point)
 
 func _on_game_result(team_id, room_id):
 	var room = _room_dic[room_id]
 	var winning_player_id = room.game_id_to_player_id[team_id]
-	for player_id in room.get_players().keys():
+	for player_id in room.get_players():
 		_server.send_game_result(player_id, winning_player_id)
 	room.reset()
 	room.start_game()

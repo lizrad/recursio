@@ -2,19 +2,15 @@ extends Node
 
 # All input frames for sending to the server
 # Consists of 15 
-var _input_data: InputData = InputData.new(15)
+var _input_data: InputData = InputData.new()
 
 var _current_input_frame: InputFrame = InputFrame.new()
 
-var _timer = 0
 # Sends the player state every frame
 func _physics_process(delta):
-	_close_current_input_frame()
-
-	if _timer < 5.0:
-		_timer += delta
+	if Server.get_server_time() <= 0:
 		return
-	_timer = 0
+	_close_current_input_frame()
 	_send_player_input_data_to_server()
 
 
@@ -52,8 +48,7 @@ func _close_current_input_frame() -> void:
 # Send input data with timestamp to the server
 func _send_player_input_data_to_server()-> void:
 	_input_data.timestamp = Server.get_server_time()
-	Server.send_player_input_data(_input_data.to_array())
-
+	Server.send_player_input_data(_input_data)
 
 
 

@@ -42,12 +42,12 @@ _global_script_classes=[ {
 "base": "Object",
 "class": "InputData",
 "language": "GDScript",
-"path": "res://Shared/Input/InputData.gd"
+"path": "res://Shared/Player/Input/InputData.gd"
 }, {
 "base": "Object",
 "class": "InputFrame",
 "language": "GDScript",
-"path": "res://Shared/Input/InputFrame.gd"
+"path": "res://Shared/Player/Input/InputFrame.gd"
 }, {
 "base": "CharacterBase",
 "class": "Player",
@@ -67,7 +67,7 @@ _global_script_classes=[ {
 "base": "Object",
 "class": "RingBuffer",
 "language": "GDScript",
-"path": "res://Shared/Input/Ringbuffer.gd"
+"path": "res://Shared/Player/Input/Ringbuffer.gd"
 }, {
 "base": "Viewport",
 "class": "Room",
@@ -87,7 +87,12 @@ _global_script_classes=[ {
 "base": "Object",
 "class": "StaticInput",
 "language": "GDScript",
-"path": "res://Shared/Input/StaticInput.gd"
+"path": "res://Shared/Player/Input/StaticInput.gd"
+}, {
+"base": "Object",
+"class": "WorldState",
+"language": "GDScript",
+"path": "res://Shared/Player/WorldState.gd"
 }, {
 "base": "Node",
 "class": "WorldStateManager",
@@ -111,6 +116,7 @@ _global_script_class_icons={
 "RoomManager": "",
 "Server": "",
 "StaticInput": "",
+"WorldState": "",
 "WorldStateManager": ""
 }
 

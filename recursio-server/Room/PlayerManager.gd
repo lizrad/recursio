@@ -26,10 +26,13 @@ func reset():
 			for i in ghosts[player_id]:
 				ghosts[player_id][i].queue_free()
 			ghosts[player_id].clear()
-	player_inputs.clear()
+	
 	for player_id in players:
 		players[player_id].reset()
+	
 	reset_spawnpoints()
+	player_inputs.clear()
+
 
 func despawn_player(player_id):
 	player_inputs.erase(player_id)
@@ -141,7 +144,8 @@ func update_player_input_data(player_id, new_input_data: InputData):
 	else:
 		player_inputs[player_id] = new_input_data
 	
-	handle_player_action(player_id, new_input_data.get_elemet(0).buttons)
+	# TODO: Handle all 15 input frames
+	handle_player_action(player_id, new_input_data.get_last().buttons)
 
 
 func handle_player_action(player_id, buttons):
@@ -149,7 +153,7 @@ func handle_player_action(player_id, buttons):
 	var number_of_bits = log(buttons) / log(2) + 1
 	for bit_index in number_of_bits:
 		# Triggers are represented as powers of two
-		var trigger = pow(2, bit_index)
+		var trigger: int = pow(2, bit_index)
 		var bit = buttons & trigger
 		if bit:
 			Logger.info("Handling action of type " + str(trigger))

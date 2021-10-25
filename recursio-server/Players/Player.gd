@@ -4,6 +4,7 @@ class_name Player
 var velocity := Vector3.ZERO
 var current_target_velocity := Vector3.ZERO
 var acceleration := Vector3.ZERO
+var rotation_velocity := 0.0
 
 onready var dash_activation_timer = get_node("DashActivationTimer")
 var dash_charges = Constants.get_value("dash", "charges")
@@ -82,13 +83,13 @@ func _ready():
 
 
 func apply_player_input_data(input_data: InputData, physics_delta):
-	if wait_for_player_to_correct <= 0:
-		pass
+	#if wait_for_player_to_correct <= 0:
+		#pass
 		#_validate_position(player_state, physics_delta)
-	else:
-		wait_for_player_to_correct -= 1
+	#else:
+		#wait_for_player_to_correct -= 1
 
-	var input_frame: InputFrame = input_data.get_elemet(0)
+	var input_frame: InputFrame = input_data.get_last()
 	var movement: Vector2 = input_frame.movement
 	var rotation: Vector2 = input_frame.rotation
 	
@@ -111,6 +112,9 @@ func apply_player_input_data(input_data: InputData, physics_delta):
 
 		var acceleration = StaticInput.calculate_acceleration(movement_vector, rotation_vector);
 		_apply_acceleration(acceleration)
+		
+		move_and_slide(velocity)
+		transform.origin.y = 0
 	
 	# Buttons pressed in this frame
 	var buttons: int = input_frame.buttons
@@ -132,12 +136,12 @@ func apply_player_input_data(input_data: InputData, physics_delta):
 		else:
 			Logger.info("Illegal dash", "movement_validation")
 	#TODO: this does not work correctly as the client only sends dash_state 0 a long time after it actually has ended
-	else:
-		if _recording:
-			var i = gameplay_record["F"].size() - 1
-			while gameplay_record["F"][i]["T"] > input_frame.timestamp && i >= 0:
-				i -= 1
-			gameplay_record["F"][i]["D"] = action_manager.Trigger.SPECIAL_MOVEMENT_END
+	#else:
+	#	if _recording:
+	#		var i = gameplay_record["F"].size() - 1
+	#		while gameplay_record["F"][i]["T"] > input_frame.timestamp && i >= 0:
+	#			i -= 1
+	#		gameplay_record["F"][i]["D"] = action_manager.Trigger.SPECIAL_MOVEMENT_END
 
 	if _recording:
 		gameplay_record["F"].append(

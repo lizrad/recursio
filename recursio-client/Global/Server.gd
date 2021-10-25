@@ -87,8 +87,8 @@ func get_server_time():
 	return server_clock
 
 
-func send_player_input_data(input_data):
-	rpc_unreliable_id(1, "receive_player_input_data", input_data)
+func send_player_input_data(input_data: InputData):
+	rpc_unreliable_id(1, "receive_player_input_data", input_data.to_array())
 
 
 func send_ghost_pick(ghost_index):
@@ -144,7 +144,7 @@ remote func receive_enemy_ghost_record(enemy_id, gameplay_record):
 
 # Receives the current world state of the players room
 remote func receive_world_state(world_state):
-	emit_signal("world_state_received", world_state)
+	emit_signal("world_state_received", WorldState.new().from_array(world_state))
 
 
 # Receives the start of a round with the server time

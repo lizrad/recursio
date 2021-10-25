@@ -47,12 +47,12 @@ _global_script_classes=[ {
 "base": "Object",
 "class": "InputData",
 "language": "GDScript",
-"path": "res://Shared/Input/InputData.gd"
+"path": "res://Shared/Player/Input/InputData.gd"
 }, {
 "base": "Object",
 "class": "InputFrame",
 "language": "GDScript",
-"path": "res://Shared/Input/InputFrame.gd"
+"path": "res://Shared/Player/Input/InputFrame.gd"
 }, {
 "base": "CharacterBase",
 "class": "Player",
@@ -60,14 +60,24 @@ _global_script_classes=[ {
 "path": "res://Players/Player.gd"
 }, {
 "base": "Object",
+"class": "PlayerState",
+"language": "GDScript",
+"path": "res://Shared/Player/PlayerState.gd"
+}, {
+"base": "Object",
 "class": "RingBuffer",
 "language": "GDScript",
-"path": "res://Shared/Input/Ringbuffer.gd"
+"path": "res://Shared/Player/Input/Ringbuffer.gd"
 }, {
 "base": "Object",
 "class": "StaticInput",
 "language": "GDScript",
-"path": "res://Shared/Input/StaticInput.gd"
+"path": "res://Shared/Player/Input/StaticInput.gd"
+}, {
+"base": "Object",
+"class": "WorldState",
+"language": "GDScript",
+"path": "res://Shared/Player/WorldState.gd"
 } ]
 _global_script_class_icons={
 "Action": "",
@@ -80,8 +90,10 @@ _global_script_class_icons={
 "InputData": "",
 "InputFrame": "",
 "Player": "",
+"PlayerState": "",
 "RingBuffer": "",
-"StaticInput": ""
+"StaticInput": "",
+"WorldState": ""
 }
 
 [application]

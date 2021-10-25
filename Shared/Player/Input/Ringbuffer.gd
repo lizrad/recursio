@@ -9,15 +9,14 @@ class_name RingBuffer
 var _data := []
 
 # Max size of the ring buffer
-var _max_size: int = -1
+var _max_size: int = 0
 # Current size of the ring buffer
-var _current_size: int = -1
+var _current_size: int = 0
 
 
 # Sets the size for the internal array
 func _init(max_size: int)-> void:
 	_max_size = max_size
-	_data.resize(_max_size)
 
 
 # Returns the current size of the ring buffer 
@@ -46,6 +45,10 @@ func append(element) -> void:
 # Returns the element at the given index
 func get_element(index: int):
 	return _data[index]
+
+# Returns the last and thereby newest element from the ring buffer
+func get_last():
+	return _data[_current_size - 1]
 
 
 # Returns the internal data-array
