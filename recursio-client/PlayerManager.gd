@@ -237,6 +237,7 @@ func _on_round_start_received(round_index, server_time):
 		
 		var path = preload("res://Players/GhostPath.tscn").instance()
 		path.set_curve(curve)
+		path.set_color_for_index(_my_ghosts[i].ghost_index)
 		
 		ghost_paths.append(path)
 		add_child(path)

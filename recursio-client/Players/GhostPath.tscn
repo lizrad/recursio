@@ -2,7 +2,8 @@
 
 [ext_resource path="res://Players/GhostPath.gd" type="Script" id=1]
 
-[sub_resource type="SpatialMaterial" id=2]
+[sub_resource type="SpatialMaterial" id=1]
+resource_local_to_scene = true
 flags_unshaded = true
 albedo_color = Color( 0.231373, 1, 0, 1 )
 
@@ -13,10 +14,10 @@ script = ExtResource( 1 )
 curve = null
 
 [node name="CSGPolygon" type="CSGPolygon" parent="Path"]
-material_override = SubResource( 2 )
+material_override = SubResource( 1 )
 cast_shadow = 0
 invert_faces = true
-polygon = PoolVector2Array( 0, 0, 0, 0.3, 0.3, 0.3, 0.3, 0 )
+polygon = PoolVector2Array( 0, 0, 0, 0.5, 0.5, 0.5, 0.5, 0 )
 mode = 2
 path_node = NodePath("..")
 path_interval = 1.0
