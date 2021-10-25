@@ -192,7 +192,7 @@ func propagate_player_picks():
 
 func _create_ghost_from_player(player)->void:
 	var ghost = _ghost_scene.instance()
-	ghost.init(player.gameplay_record)
+	ghost.init(player.gameplay_record, 0)
 	ghost.spawn_point = player.spawn_point
 	ghost.game_id = player.game_id
 	ghost.player_id = player.player_id
