@@ -4,7 +4,7 @@ class_name InputData
 
 const RING_BUFFER_SIZE: int = 15
 
-var timestamp: int
+var timestamp: int = -1
 var _data: RingBuffer = RingBuffer.new(RING_BUFFER_SIZE)
 
 # Fills the object with the data from the given array

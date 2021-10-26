@@ -2,7 +2,7 @@ extends Object
 
 class_name InputFrame
 
-var timestamp: int
+var timestamp: int = -1
 var buttons: int = 0x00
 var movement: Vector2 = Vector2.ZERO
 var rotation: Vector2 = Vector2.ZERO
