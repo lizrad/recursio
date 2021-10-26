@@ -24,7 +24,7 @@ var _moving = false
 var _debug_velocity = 0
 
 func on_action_status_changed(action_type, status):
-	Logger.info("Status of"+ str(action_type)+" changed to"+str(status), "animation")
+	Logger.info("Status of "+ str(action_type)+" changed to "+str(status), "animation")
 	match action_type:
 		ActionManager.ActionType.HITSCAN:
 			if status:
@@ -49,6 +49,7 @@ func on_action_status_changed(action_type, status):
 			_meleeing = true
 
 func on_velocity_changed(velocity):
+	Logger.info("Velocity changed to "+str(velocity), "animation")
 	MoveAnimator.set_velocity(_debug_velocity)
 	if not _moving and velocity.length()>0:
 		_moving = true

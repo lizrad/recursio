@@ -96,10 +96,6 @@ cast_shadow = 0
 mesh = SubResource( 5 )
 material/0 = null
 
-[node name="Camera" type="Camera" parent="."]
-transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 12.6206, 0 )
-current = true
-
 [node name="IdleAnimator" type="Node" parent="."]
 script = ExtResource( 4 )
 
@@ -108,9 +104,13 @@ script = ExtResource( 3 )
 
 [node name="DashAnimator" type="Node" parent="."]
 script = ExtResource( 5 )
+speed = 25.0
 
 [node name="MeleeAnimator" type="Node" parent="."]
 script = ExtResource( 6 )
+front_extent = 1.5
+middle_z_extent = 0.5
+middle_scale_extent = 0.5
 
 [node name="MoveAnimator" type="Node" parent="."]
 script = ExtResource( 7 )

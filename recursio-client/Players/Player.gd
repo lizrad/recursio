@@ -195,10 +195,7 @@ func _handle_user_input():
 			0.0
 		)
 		
-		var velocity_modifier = movement_input_vector * e_section
-		if velocity_modifier.length()>0:
-			velocity += velocity_modifier
-			emit_signal("velocity_changed", velocity)
+		velocity += movement_input_vector * e_section
 		_time_since_dash_start += delta
 	else:
 		_time_since_dash_start = 0.0
@@ -223,6 +220,7 @@ func apply_acceleration(new_acceleration):
 	#  velocity
 	velocity = lerp(velocity, current_target_velocity, drag)
 	velocity += acceleration
+	emit_signal("velocity_changed", velocity)
 
 func swap_weapon_type(ghost_index):
 	_trigger_manager.swap_weapon_type(ghost_index)
