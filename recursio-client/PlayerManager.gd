@@ -54,7 +54,7 @@ func _ready():
 	Server.connect("ghost_hit", self, "_on_ghost_hit")
 	Server.connect("ghost_picks", self, "_on_ghost_picks")
 	Server.connect("player_action", self, "_on_player_action")
-	
+
 	set_physics_process(false)
 
 func _reset():
@@ -210,7 +210,7 @@ func _on_round_start_received(round_index, server_time):
 	#LATENCY DELAY PHASE
 	#===================
 	var time_diff = (Server.get_server_time() - server_time)
-	Logger.info("Latency Delay "+str(round_index)+" with time difference of "+str(time_diff/1000.0)+" started", "gameplay")
+	Logger.info("Latency Delay " + str(round_index) + " with time difference of " + str(time_diff/1000.0) + " started", "gameplay")
 	player.hud.latency_delay_phase_start(round_index, server_time, time_diff)
 	# Delay to counteract latency
 	var delay = Constants.get_value("gameplay", "latency_delay") - (time_diff  / 1000.0)
@@ -221,8 +221,9 @@ func _on_round_start_received(round_index, server_time):
 	#==========
 	#PREP PHASE
 	#==========
-	Logger.info("Prep phase "+str(round_index)+" started", "gameplay")
+	Logger.info("Prep phase " + str(round_index) + " started", "gameplay")
 	player.hud.prep_phase_start(round_index, Server.get_server_time())
+	player.button_overlay.show_buttons("ready", 1)
 	_prep_phase_in_progress = true
 	
 	# Display paths of my ghosts
@@ -271,7 +272,7 @@ func _on_round_start_received(round_index, server_time):
 	
 	player.follow_camera()
 	
-	Logger.info("Countdown phase "+str(round_index)+" started", "gameplay")
+	Logger.info("Countdown phase " + str(round_index) + " started", "gameplay")
 	_prep_phase_in_progress = false
 	player.hud.countdown_phase_start(round_index, Server.get_server_time())
 	Server.send_ghost_pick(player.ghost_index)
@@ -286,7 +287,7 @@ func _on_round_start_received(round_index, server_time):
 	#==========
 	#GAME PHASE
 	#==========
-	Logger.info("Game phase "+str(round_index)+" started", "gameplay")
+	Logger.info("Game phase " + str(round_index) + " started", "gameplay")
 	_game_phase_in_progress = true
 	player.hud.game_phase_start(round_index, Server.get_server_time())
 	player.game_in_progress = true
@@ -295,9 +296,11 @@ func _on_round_start_received(round_index, server_time):
 	_restart_ghosts(Server.get_server_time())
 
 
+func _on_player_ready() -> void:
+	Server.send_player_ready()
 
-func move_player_to_spawnpoint(ghost_index:int)->void:
-	Logger.info("Moving player to spawnpoint "+str(ghost_index), "spawnpoints")
+func move_player_to_spawnpoint(ghost_index:int) -> void:
+	Logger.info("Moving player to spawnpoint " + str(ghost_index), "spawnpoints")
 	player.transform.origin = _get_spawn_point(player.game_id, ghost_index)
 	player.spawn_point = _get_spawn_point(player.game_id, ghost_index)
 
@@ -402,6 +405,7 @@ func _restart_ghosts(start_time)->void:
 func _spawn_player(player_id, spawn_point, game_id):
 	set_physics_process(true)
 	player = _spawn_character(_player_scene, spawn_point)
+	player.button_overlay.connect("button_pressed", self, "_on_player_ready")
 	player.spawn_point = spawn_point
 	player.game_id =game_id
 	player.player_id = player_id

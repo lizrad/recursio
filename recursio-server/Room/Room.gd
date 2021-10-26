@@ -26,7 +26,7 @@ var game_id_to_player_id = {}
 func _ready():
 	_world_state_manager.connect("world_state_updated", self, "_on_world_state_update")
 	_game_manager.connect("round_started",self, "_on_round_started")
-	_game_manager.connect("game_phase_started",self, "_on_game_phase_start")
+	_game_manager.connect("game_phase_started", self, "_on_game_phase_start")
 	_game_manager.connect("round_ended",self, "_on_round_ended")
 	_game_manager.connect("countdown_halfway_point", self,"_on_countdown_halfway_point")
 	_player_manager.level = _level
@@ -45,7 +45,7 @@ func _on_round_started(round_index):
 	for player_id in _player_manager.players:
 		_player_manager.set_ghost_index(player_id, default_ghost_index)
 
-func _on_game_phase_start(round_index: int) ->void:
+func _on_game_phase_start(round_index: int) -> void:
 	_player_manager.restart_ghosts()
 	_player_manager.enable_ghosts()
 	_player_manager.start_recording()
@@ -96,6 +96,18 @@ func remove_player(player_id: int) -> void:
 func update_player_input_data(player_id, input_data: InputData):
 	if _game_manager.game_phase_in_progress:
 		_player_manager.update_player_input_data(player_id, input_data)
+
+
+func update_player_ready(player_id):
+	
+	# TODO: establish a "prep_phase_in_progress" variable in game_manager
+	#		or even better an enum for current phase
+	#if _game_manager.prep_phase_in_progress:
+	
+	# TODO: check if both players are ready...
+	#_game_manager._round_timer = _game_manager._prep_phase_time + _game_manager._latency_delay
+	_game_manager._round_timer = _game_manager._time_to_game_phase + _game_manager._countdown_phase_time
+	#_game_manager.game_phase_in_progress = true
 
 
 func handle_ghost_pick(player_id, ghost_index):
