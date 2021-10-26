@@ -19,7 +19,6 @@ func _physics_process(delta):
 	var steepness = 20.0
 	var e_section = max(exp(log((1 + 1 / steepness) / (steepness * _time + 1))) - 1.0 / steepness,0.0)
 
-	print(e_section)
 	_owning_player.velocity += _owning_player.input_movement_direction * e_section
 	_time += delta
 	
