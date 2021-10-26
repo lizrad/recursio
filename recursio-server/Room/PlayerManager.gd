@@ -152,13 +152,15 @@ func update_player_input_data(player_id, new_input_data: InputData):
 
 
 func handle_player_action(player_id, buttons):
+	if buttons <= 1:
+		return
+	
 	# Go through buttons and trigger actions for them
 	var number_of_bits = log(buttons) / log(2) + 1
 	for bit_index in number_of_bits:
 		# Triggers are represented as powers of two
-		var trigger: int = pow(2, bit_index)
-		var bit = buttons & trigger
-		if bit:
+		var trigger: int = pow(2, bit_index) # TODO: dunno if just (1 << bit_index) has better performance?
+		if buttons & trigger:
 			Logger.info("Handling action of type " + str(trigger))
 			do_attack(players[player_id], trigger)
 			
