@@ -2,6 +2,9 @@ extends CharacterBase
 class_name Ghost
 
 onready var _collision_shape: CollisionShape = get_node("CollisionShape")
+# TODO: split and move to client only
+onready var _minimap := load("res://Resources/Icons/icon_ghost_minimap.png")
+onready var _minimap_dead := load("res://Resources/Icons/icon_dead_ghost_minimap.png")
 
 var record := {}
 
@@ -34,10 +37,9 @@ func start_replay(start_time):
 	_collision_shape.disabled = false
 	rotation = Vector3.ZERO
 
-	if has_node("Sprite3D"):
-		$Sprite3D.visible = true
-	if has_node("Sprite3DDead"):
-		$Sprite3DDead.visible = false
+	# TODO: split and move to client only
+	if has_node("MiniMapIcon"):
+		$MiniMapIcon.set_texture(_minimap)
 
 func _physics_process(delta):
 	if not _replaying:
@@ -84,8 +86,7 @@ func receive_hit():
 	# Disable collsions
 	_collision_shape.disabled = true
 	# Show ghost as dead
-	if has_node("Sprite3D"):
-		$Sprite3D.visible = false
-	if has_node("Sprite3DDead"):
-		$Sprite3DDead.visible = true
-	rotate_z(90)
+	$Mesh_Body.rotate_z(90)
+	# TODO: split and move to client
+	if has_node("MiniMapIcon"):
+		$MiniMapIcon.set_texture(_minimap_dead)
