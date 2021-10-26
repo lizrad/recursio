@@ -3,7 +3,8 @@ extends Node
 #		./Idle
 #		./Wall
 #		./Dash
-#		-Move
+#		./Move
+#		-Turn
 #		./Melee
 #		-Death
 #		-Spawn
