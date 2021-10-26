@@ -49,7 +49,7 @@ func _hit_body(collider):
 			collider.receive_hit()
 
 
-func _physics_process(_delta):
+func _physics_process(delta):
 	var bodies = get_overlapping_bodies()
 	if bodies.size() == 0:
 		return

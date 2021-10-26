@@ -10,7 +10,7 @@ func _init() -> void:
 
 
 func _ready():
-	assert($KillGhostArea.connect("body_entered", self, "handle_hit") == OK)
+	$KillGhostArea.connect("body_entered", self, "handle_hit")
 
 
 func initialize(owning_player) -> void:
@@ -19,18 +19,10 @@ func initialize(owning_player) -> void:
 	round_index = owning_player.round_index
 
 
-func initialize_visual(owning_player) -> void:
+func initialize_visual(owning_player) ->void:
 	# TODO: define and use player color
 	#$MeshInstance.material_override.albedo_color = Constants.character_colors[owning_player.id]
-	print("owning player name: " + owning_player.name)
-	print("owning player class: " + owning_player.get_class())
-	if owning_player.has_node("Mesh_Body"):
-		print("having mesh body")
-		var mesh = owning_player.get_node("Mesh_Body")
-		if mesh.material_override:
-			$MeshInstance.material_override.albedo_color = mesh.material_override.albedo_color
-		else:
-			$MeshInstance.material_override.albedo_color = Color.red
+	$MeshInstance.material_override.albedo_color = Color.red
 
 
 func handle_hit(collider):
@@ -45,3 +37,8 @@ func _hit_body(body) ->void:
 	if body is Ghost and body != placed_by_body:
 		Logger.info("body hit -> TODO: kill enemy contact/ghost/robot", "Wall")
 		#body.daie()
+
+func _hit_area(area) ->void:
+	_current_health -= 1
+	if _current_health < 1:
+		queue_free()

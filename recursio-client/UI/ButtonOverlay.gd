@@ -21,7 +21,7 @@ func show_buttons(text, buttons) -> void:
 	_buttons = buttons
 
 
-func _process(_delta) -> void:
+func _process(delta) -> void:
 	# TODO: check input by nice encapsulated input collection
 	# left - melee
 	# down - shoot
