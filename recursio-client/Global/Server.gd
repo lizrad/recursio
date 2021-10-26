@@ -131,7 +131,6 @@ remote func receive_latency(player_time):
 		var total_latency = 0
 		latency_array.sort()
 		var mid_point = latency_array[max_latency_count / 2]
-		var min_latency_outlier_size
 		var relevant_latency_count = 0
 		for i in range(latency_array.size() - 1, -1, -1):
 			if latency_array[i] > (2 * mid_point) and latency_array[i] > 28:
