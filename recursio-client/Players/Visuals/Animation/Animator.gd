@@ -9,11 +9,11 @@ extends Node
 #		-Death
 #		-Spawn
 
-onready var IdleAnimator  = get_node("../IdleAnimator")
-onready var FireAnimator  = get_node("../FireAnimator")
-onready var DashAnimator  = get_node("../DashAnimator")
-onready var MeleeAnimator  = get_node("../MeleeAnimator")
-onready var MoveAnimator  = get_node("../MoveAnimator")
+onready var IdleAnimator  = get_node("IdleAnimator")
+onready var FireAnimator  = get_node("FireAnimator")
+onready var DashAnimator  = get_node("DashAnimator")
+onready var MeleeAnimator  = get_node("MeleeAnimator")
+onready var MoveAnimator  = get_node("MoveAnimator")
 
 var _firing = false
 var _dashing = false
@@ -38,7 +38,7 @@ func _process(delta):
 		MeleeAnimator.connect("animation_over", self, "stop_melee_animation")
 		MeleeAnimator.start_animation()
 		_meleeing = true
-
+	print(_moving)
 	
 	if Input.is_action_pressed("player_move_up"):
 		if _debug_velocity == 0:
