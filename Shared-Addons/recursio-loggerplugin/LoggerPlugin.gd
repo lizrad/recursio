@@ -115,7 +115,6 @@ func _on_module_button_toggled(active: bool, module:String, mode:String):
 
 func _on_module_all_toggled(active: bool, mode:String):
 	for module in config.get_sections():
-		print("setting mode for " + module + " to " + str(active))
 		config.set_value(module, mode, active)
 	_save_settings()
 
