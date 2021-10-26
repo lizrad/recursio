@@ -32,7 +32,7 @@ onready var _prep_phase_time: float = Constants.get_value("gameplay", "prep_phas
 var _prep_phase_in_progress = false
 var _game_phase_in_progress = false
 
-func _ready():
+func _ready():	
 	game_result_screen.visible = false
 	countdown_screen.visible = false
 	time_of_last_world_state_send = Server.get_server_time()
@@ -182,7 +182,7 @@ func _on_round_ended_received(round_index):
 	player.move_back_to_spawnpoint()
 	_stop_ghosts()
 	
-	var ghost_index = min(round_index - 1,Constants.get_value("ghosts", "max_amount"))
+	var ghost_index = min(round_index-1,Constants.get_value("ghosts", "max_amount"))
 	var enemies_replaced_ghost_indices = {}
 	for enemy_id in enemies:
 		enemies_replaced_ghost_indices[enemy_id] = ghost_index
@@ -479,34 +479,34 @@ func _spawn_character(character_scene, spawn_point):
 	return character
 
 
-func _update_character_positions(world_state):
+func _update_character_positions(world_state: WorldState):
 	if not _game_phase_in_progress:
 		return
-	if time_of_last_world_state < world_state["T"]:
-		time_of_last_world_state = world_state["T"]
+	if time_of_last_world_state < world_state.timestamp:
+		time_of_last_world_state = world_state.timestamp
 		time_since_last_server_update = 0
 
-		var enemy_states = world_state["S"]
+		var player_states: Dictionary = world_state.player_states
 
 		# Handle own player
-		if enemy_states.has(id):
-			var server_player = enemy_states[id]
+		if player_states.has(id):
+			var server_player: PlayerState = player_states[id]
 
-			player.handle_network_update(server_player["P"], server_player["T"])
+			player.handle_network_update(server_player.position, server_player.timestamp)
 
-			enemy_states.erase(id)
+			player_states.erase(id)
 
-		for enemy_id in enemy_states:
+		for enemy_id in player_states:
 			if enemies.has(enemy_id):
 				var enemy = enemies[enemy_id]
 
 				# Set parameters for interpolation
 				enemy.last_position = enemy.transform.origin
 				enemy.last_velocity = enemy.velocity
-				enemy.rotation.y = enemy_states[enemy_id]["R"]
-				enemy.server_position = enemy_states[enemy_id]["P"]
-				enemy.server_velocity = enemy_states[enemy_id]["V"]
-				enemy.server_acceleration = enemy_states[enemy_id]["A"]
+				enemy.rotation.y = player_states[enemy_id].rotation
+				enemy.server_position = player_states[enemy_id].position
+				enemy.server_velocity = player_states[enemy_id].velocity
+				enemy.server_acceleration = player_states[enemy_id].acceleration
 
 
 func _on_player_hit(hit_player_id):

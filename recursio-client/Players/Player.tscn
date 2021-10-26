@@ -20,6 +20,9 @@
 "Friend",
 ] instance=ExtResource( 1 )]
 script = ExtResource( 2 )
+inner_deadzone = null
+outer_deadzone = null
+rotate_threshold = null
 
 [node name="Mesh_Body" type="MeshInstance" parent="." index="1"]
 transform = Transform( -0.75, -0.000108995, -0.00015581, 0.000116805, 0.000285584, -1, 0.000109051, -0.75, -0.00038075, 0, 0, 0 )
