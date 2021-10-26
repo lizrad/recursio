@@ -12,6 +12,8 @@ var player_id := -1
 var drag = Constants.get_value("movement", "drag")
 var move_acceleration = Constants.get_value("movement", "acceleration")
 
+var input_movement_direction: Vector3 = Vector3.ZERO
+
 var _last_rotation = 0.0
 var rotation_velocity := 0.0
 
@@ -162,10 +164,11 @@ func _handle_user_input():
 	# movement and aiming
 	var delta = get_physics_process_delta_time()
 	var input = get_normalized_input("player_move", outer_deadzone, inner_deadzone)
+	
 	InputManager.add_movement_to_input_frame(input)
 	
 	var movement_input_vector = Vector3(input.y, 0.0, -input.x)
-
+	input_movement_direction = input_movement_direction
 	var rotate_input = get_normalized_input("player_look", 1.0, 0.0, 0.5)
 	InputManager.add_rotation_to_input_frame(rotate_input)
 	
