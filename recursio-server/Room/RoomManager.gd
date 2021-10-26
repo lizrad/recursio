@@ -23,14 +23,14 @@ func create_room(room_name: String) -> int:
 	# Workaround for getting the viewport to update
 	$ViewportContainer.rect_clip_content = true
 
-	room.connect("world_state_updated", self, "_on_world_state_update")
-	room.get_game_manager().connect("round_started", self, "_on_round_start", [room.id])
-	room.get_game_manager().connect("round_ended", self, "_on_round_end", [room.id])
-	room.get_game_manager().connect("capture_point_team_changed", self, "_on_capture_point_team_changed", [room.id])
-	room.get_game_manager().connect("capture_point_captured", self, "_on_capture_point_captured", [room.id])
-	room.get_game_manager().connect("capture_point_status_changed", self, "_on_capture_point_status_changed", [room.id])
-	room.get_game_manager().connect("capture_point_capture_lost", self, "_on_capture_point_capture_lost", [room.id])
-	room.get_game_manager().connect("game_result", self, "_on_game_result", [room.id])
+	assert(room.connect("world_state_updated", self, "_on_world_state_update") == OK)
+	assert(room.get_game_manager().connect("round_started", self, "_on_round_start", [room.id]) == OK)
+	assert(room.get_game_manager().connect("round_ended", self, "_on_round_end", [room.id]) == OK)
+	assert(room.get_game_manager().connect("capture_point_team_changed", self, "_on_capture_point_team_changed", [room.id]) == OK)
+	assert(room.get_game_manager().connect("capture_point_captured", self, "_on_capture_point_captured", [room.id]) == OK)
+	assert(room.get_game_manager().connect("capture_point_status_changed", self, "_on_capture_point_status_changed", [room.id]) == OK)
+	assert(room.get_game_manager().connect("capture_point_capture_lost", self, "_on_capture_point_capture_lost", [room.id]) == OK)
+	assert(room.get_game_manager().connect("game_result", self, "_on_game_result", [room.id]) == OK)
 	
 	_room_dic[_room_id_counter] = room
 	_room_id_counter += 1

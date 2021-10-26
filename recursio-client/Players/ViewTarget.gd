@@ -7,7 +7,7 @@ export var distance_factor := 0.5
 onready var player = get_parent()
 
 
-func _process(delta):
+func _process(_delta):
 	# Add offset depending on velocity (counteract dash movement)
 	translation = player.global_transform.basis.get_rotation_quat().inverse() * player.velocity * distance_factor
 	# Add basic offset in eye direction

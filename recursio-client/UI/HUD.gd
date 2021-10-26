@@ -34,7 +34,7 @@ func reset():
 	_max_time = -1.0
 	_start_time = -1.0
 
-func _process(delta):
+func _process(_delta):
 	timer_pb.value = _calculate_progress()
 
 # Calculates the remaining time and maps it between 0 and 1
@@ -57,7 +57,7 @@ func round_start(round_index, start_time) ->void:
 	_max_time = Constants.get_value("gameplay", "latency_delay")
 	_start_time = start_time
 
-func latency_delay_phase_start(round_index, start_time, time_diff)->void:
+func latency_delay_phase_start(start_time, time_diff) -> void:
 	phase.text = "Waiting for server..."
 	_max_time = Constants.get_value("gameplay", "latency_delay")-time_diff
 	_start_time = start_time
@@ -67,7 +67,7 @@ func prep_phase_start(round_index, start_time) ->void:
 	_max_time = Constants.get_value("gameplay", "prep_phase_time")
 	_start_time = start_time
 
-func countdown_phase_start(round_index, start_time) ->void:
+func countdown_phase_start(start_time) -> void:
 	phase.text = "Get ready!"
 	_max_time = Constants.get_value("gameplay", "countdown_phase_seconds")
 	_start_time = start_time

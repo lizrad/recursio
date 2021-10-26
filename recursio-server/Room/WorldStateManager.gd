@@ -10,7 +10,7 @@ var _player_states : Dictionary = {}
 var world_processing_offset = 0 # to be set from the Room
 
 
-func _physics_process(delta):
+func _physics_process(_delta):
 	if _player_manager.players.size() >= 2:
 		emit_signal("world_state_updated", _create_world_state())
 
