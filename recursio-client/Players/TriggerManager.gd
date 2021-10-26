@@ -58,46 +58,25 @@ func _on_ammo_changed(ammo: int, action: Action, type: int) -> void:
 
 func _on_action_triggered(action: Action, type: int) -> void:
 	Logger.debug("action triggered for name: " + str(action.name) + " on time: " + str(action.activation_time), "actions")
-
-	if type == GlobalActionManager.Trigger.SPECIAL_MOVEMENT_START:
-		player.dash_start = action.activation_time
-		var dash_state = {"T": Server.get_server_time(), "S": 1}
-		Server.send_dash_state(dash_state)
-	else:
-		var action_trigger = {"A": type, "T": Server.get_server_time()}
-		Server.send_action_trigger(action_trigger)
+	InputManager.add_trigger_to_input_frame(type)
 
 
 func _on_action_released(action: Action, type: int) -> void:
 	Logger.debug("action released for type: " + str(type), "actions")
-
-	if type == GlobalActionManager.Trigger.SPECIAL_MOVEMENT_START:
-		Logger.info("dash released", "actions")
-		player.dash_start = 0
-		var dash_state = {"T": Server.get_server_time(), "S": 0}
-		Server.send_dash_state(dash_state)
+	InputManager.remove_trigger_from_input_frame(type)
 
 
 func handle_input() -> void:
 	for input in _map_input:
 		var action = _map_input[input]
 		
-		if action:
-			if Input.is_action_pressed(input):
-				var activate = (
-					action.activation_max < 1
-					or action.activation_time < 1
-					or (action.activation_time + action.activation_max) > OS.get_ticks_msec()
-				)
-
-				Logger.debug(
-					("activation for " + str(input) + " with max: " + str(action.activation_max) + " act_time: " + str(action.activation_time)
-					+ " for OS.ticks: " + str(OS.get_ticks_msec()) + " -> triggered: " + str(activate)), "actions")
-				
-				GlobalActionManager.set_active(action, true, player, get_tree().root)
-			elif action.activation_time > 0:
-				Logger.debug(
-					("activation for " + str(input) + " with max: " + str(action.activation_max) + " act_time: " + str(action.activation_time)
-					+ " for OS.ticks: " + str(OS.get_ticks_msec()) + " -> triggered: False"), "actions")
-
-				GlobalActionManager.set_active(action, false, player, get_tree().root)
+		if not action:
+			return
+		
+		# Either enable or disable the action
+		if Input.is_action_pressed(input):
+			Logger.debug("Action " + str(input) + " pressed", "actions")
+			GlobalActionManager.set_active(action, true, player, get_tree().root)
+		elif action.activation_time > 0:
+			Logger.debug("Action " + str(input) + " released", "actions")
+			GlobalActionManager.set_active(action, false, player, get_tree().root)

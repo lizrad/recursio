@@ -93,9 +93,9 @@ func remove_player(player_id: int) -> void:
 	player_count -= 1
 
 
-func update_player_state(player_id, player_state):
+func update_player_input_data(player_id, input_data: InputData):
 	if _game_manager.game_phase_in_progress:
-		_player_manager.update_player_state(player_id, player_state)
+		_player_manager.update_player_input_data(player_id, input_data)
 
 
 func update_player_ready(player_id):
@@ -109,13 +109,6 @@ func update_player_ready(player_id):
 	_game_manager._round_timer = _game_manager._time_to_game_phase + _game_manager._countdown_phase_time
 	#_game_manager.game_phase_in_progress = true
 
-
-func update_dash_state(player_id, dash_state):
-	_player_manager.update_dash_state(player_id, dash_state)
-
-
-func handle_player_action(player_id, action_state):
-	_player_manager.handle_player_action(player_id, action_state)
 
 func handle_ghost_pick(player_id, ghost_index):
 	if not _game_manager._before_second_half_of_countdown:

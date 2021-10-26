@@ -91,51 +91,9 @@ func send_player_action(player_id, action_player_id, action_type):
 	rpc_id(player_id, "receive_player_action", action_player_id, action_type)
 
 
-remote func determine_latency(player_time):
-	var player_id = get_tree().get_rpc_sender_id()
-	rpc_id(player_id, "receive_latency", player_time)
-
-
-remote func fetch_server_time(player_time):
-	var player_id = get_tree().get_rpc_sender_id()
-	rpc_id(player_id, "receive_server_time", OS.get_system_time_msecs(), player_time)
-
-
-remote func receive_player_state(player_state):
-	var player_id = get_tree().get_rpc_sender_id()
-	var room_id = _player_room_dic[player_id]
-	_room_manager.get_room(room_id).update_player_state(player_id, player_state)
-
-
-remote func receive_player_ready():
-	var player_id = get_tree().get_rpc_sender_id()
-	var room_id = _player_room_dic[player_id]
-	_room_manager.get_room(room_id).update_player_ready(player_id)
-
-
-remote func receive_dash_state(dash_state):
-	var player_id = get_tree().get_rpc_sender_id()
-	var room_id = _player_room_dic[player_id]
-	_room_manager.get_room(room_id).update_dash_state(player_id, dash_state)
-
-
-remote func receive_action_trigger(action):
-	Logger.info("received action trigger %s" %[action], "connection")
-	var player_id = get_tree().get_rpc_sender_id()
-	var room_id = _player_room_dic[player_id]
-	_room_manager.get_room(room_id).handle_player_action(player_id, action)
-
-
-remote func receive_ghost_pick(ghost_index):
-	var player_id = get_tree().get_rpc_sender_id()
-	var room_id = _player_room_dic[player_id]
-	Logger.info("received ghost index of "+str(ghost_index)+" from player "+str(player_id)+".", "connection")
-	_room_manager.get_room(room_id).handle_ghost_pick(player_id, ghost_index)
-	
-
 # Sends the current world state (of the players room) to the player
 func send_world_state(player_id, world_state):
-	rpc_unreliable_id(player_id, "receive_world_state", world_state)
+	rpc_unreliable_id(player_id, "receive_world_state", world_state.to_array())
 
 
 # Notifies a player that a specific round will start
@@ -169,3 +127,28 @@ func send_ghost_hit(player_id, hit_ghost_player_owner, hit_ghost_id):
 func send_ghost_pick(player_id, player_pick, enemy_picks):
 	Logger.info("Sending ghost picks", "connection")
 	rpc_id(player_id, "receive_ghost_picks", player_pick, enemy_picks)
+
+
+remote func determine_latency(player_time):
+	var player_id = get_tree().get_rpc_sender_id()
+	rpc_id(player_id, "receive_latency", player_time)
+
+
+remote func fetch_server_time(player_time):
+	var player_id = get_tree().get_rpc_sender_id()
+	rpc_id(player_id, "receive_server_time", OS.get_system_time_msecs(), player_time)
+
+
+remote func receive_player_input_data(input_data):
+	var player_id = get_tree().get_rpc_sender_id()
+	var room_id = _player_room_dic[player_id]
+	var test = InputData.new().from_array(input_data)
+	_room_manager.get_room(room_id).update_player_input_data(player_id, test)
+
+
+remote func receive_ghost_pick(ghost_index):
+	var player_id = get_tree().get_rpc_sender_id()
+	var room_id = _player_room_dic[player_id]
+	Logger.info("received ghost index of "+str(ghost_index)+" from player "+str(player_id)+".", "connection")
+	_room_manager.get_room(room_id).handle_ghost_pick(player_id, ghost_index)
+	

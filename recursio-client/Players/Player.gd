@@ -14,6 +14,8 @@ var player_id := -1
 var drag = Constants.get_value("movement", "drag")
 var move_acceleration = Constants.get_value("movement", "acceleration")
 
+var input_movement_direction: Vector3 = Vector3.ZERO
+
 var _last_rotation = 0.0
 var rotation_velocity := 0.0
 
@@ -119,12 +121,12 @@ func handle_network_update(position, time):
 	last_server_position = position
 	last_server_time = time
 
-	if not past_frames.has(time):
+	#if not past_frames.has(time):
 		# TODO: Need to handle this?
-		return
+	#	return
 
 	# Get value we had at that time
-	var position_diff = position - past_frames[time].position
+	var position_diff = position - transform.origin
 
 	# If the difference is too large, correct it
 	if position_diff.length() > 0.1:
@@ -164,22 +166,22 @@ func _handle_user_input():
 	# movement and aiming
 	var delta = get_physics_process_delta_time()
 	var input = get_normalized_input("player_move", outer_deadzone, inner_deadzone)
+	
+	InputManager.add_movement_to_input_frame(input)
+	
 	var movement_input_vector = Vector3(input.y, 0.0, -input.x)
-
+	input_movement_direction = input_movement_direction
 	var rotate_input = get_normalized_input("player_look", 1.0, 0.0, 0.5)
+	InputManager.add_rotation_to_input_frame(rotate_input)
+	
 	var rotate_input_vector = Vector3(rotate_input.y, 0.0, -rotate_input.x)
 	if rotate_input_vector.distance_to(_rotate_input_vector) > rotate_threshold:
 		if rotate_input_vector != Vector3.ZERO:
 			_rotate_input_vector = rotate_input_vector
 			look_at(rotate_input_vector + global_transform.origin, Vector3.UP)
-
-	var move_direction_scale = (
-		(3.0 + movement_input_vector.dot(rotate_input_vector)) / 4.0
-		if Constants.get_value("movement", "scale_to_view_direction")
-		else 1.0
-	)
-
-	apply_acceleration(movement_input_vector * move_acceleration * move_direction_scale)
+	
+	var acceleration = StaticInput.calculate_acceleration(movement_input_vector, rotate_input_vector);
+	apply_acceleration(acceleration)
 
 	# apply dash
 	if dash_start > 0:
