@@ -325,6 +325,7 @@ const ERROR_MESSAGES = {
 ##=============##
 
 # Configuration
+var default_all_config = [1, 1, 1, 1, 1]
 var default_output_level = INFO
 # TODO: Find (or implement in Godot) a more clever way to achieve that
 
@@ -692,6 +693,7 @@ func clear_memory():
 # ----------------------------
 
 const config_fields := {
+	default_all_config = "default_all_config",
 	default_output_level = "default_output_level",
 	default_output_strategies = "default_output_strategies",
 	default_logfile_path = "default_logfile_path",
@@ -710,6 +712,7 @@ func save_config(configfile = default_configfile_path):
 	var config = ConfigFile.new()
 
 	# Store default config
+	config.set_value(PLUGIN_NAME, config_fields.default_all_config, default_all_config)
 	config.set_value(PLUGIN_NAME, config_fields.default_output_level, default_output_level)
 	config.set_value(PLUGIN_NAME, config_fields.default_output_strategies, default_output_strategies)
 	config.set_value(PLUGIN_NAME, config_fields.default_logfile_path, default_logfile_path)
@@ -759,6 +762,7 @@ func load_config(configfile = default_configfile_path):
 		return err
 
 	# Load default config
+	default_all_config = config.get_value(PLUGIN_NAME, config_fields.default_all_config, default_all_config)
 	default_output_level = config.get_value(PLUGIN_NAME, config_fields.default_output_level, default_output_level)
 	default_output_strategies = config.get_value(PLUGIN_NAME, config_fields.default_output_strategies, default_output_strategies)
 	default_logfile_path = config.get_value(PLUGIN_NAME, config_fields.default_logfile_path, default_logfile_path)
