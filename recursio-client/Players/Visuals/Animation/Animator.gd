@@ -38,7 +38,7 @@ func _process(delta):
 		MeleeAnimator.connect("animation_over", self, "stop_melee_animation")
 		MeleeAnimator.start_animation()
 		_meleeing = true
-	print(_moving)
+
 	
 	if Input.is_action_pressed("player_move_up"):
 		if _debug_velocity == 0:

@@ -9,6 +9,7 @@
 [ext_resource path="res://Util/LerpedFollow.tscn" type="PackedScene" id=7]
 [ext_resource path="res://Players/ViewTarget.gd" type="Script" id=8]
 [ext_resource path="res://Players/VisibilityLight.tscn" type="PackedScene" id=9]
+[ext_resource path="res://Players/Visuals/PlayerModel.tscn" type="PackedScene" id=10]
 [ext_resource path="res://addons/ascii-shader/AsciiRenderer.tscn" type="PackedScene" id=10]
 [ext_resource path="res://Players/OverviewLight.gd" type="Script" id=11]
 [ext_resource path="res://Resources/Icons/icon_player_minimap.png" type="Texture" id=12]
@@ -93,6 +94,8 @@ omni_attenuation = 3.75716e-05
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -6 )
 script = ExtResource( 8 )
 
+[node name="PlayerModel" parent="." index="9" instance=ExtResource( 10 )]
+transform = Transform( -0.999999, -0.00113402, 0.000241884, -0.00113394, 0.999999, 0.000325297, -0.000242248, 0.000325027, -1, 0, 2.2911, 0 )
 [node name="Sprite3D" type="Sprite3D" parent="." index="8"]
 layers = 8
 axis = 1
