@@ -3,53 +3,41 @@ class_name WorldStateManager
 
 signal world_state_updated(world_state)
 
-onready var _server = get_node("/root/Server")
-onready var _player_manager = get_node("../PlayerManager")
+onready var _server: Server = get_node("/root/Server")
+onready var _player_manager: PlayerManager = get_node("../PlayerManager")
 
-#
-# World States are structured like this:
-# {
-# 	"T": timestamp,
-# 	"S": {
-#		player_id: {
-# 			"P": position,
-# 			"V": velocity,
-# 			"A": acceleration,
-# 			"R": rotation,
-# 			"H": rotationvelocity
-# 		}
-# 	}
-# }
-#
+var _player_states : Dictionary = {}
 
 
 func _physics_process(delta):
 	if _player_manager.players.size() >= 2:
-		var world_state = define_world_state()
-		emit_signal("world_state_updated", world_state)
+		emit_signal("world_state_updated", _create_world_state())
 
 
-func define_world_state():
+func _create_world_state():
 	var time = _server.get_server_time()
 	var player_states = {}
 	for player_id in _player_manager.players:
-		if not _player_manager.player_states.has(player_id):
-			# We're trying to send a world state with this player before a player state has arrived
-			continue
-		_player_manager.players[player_id].correct_illegal_movement()
-		player_states[player_id] = {}
-		player_states[player_id]["T"] = _player_manager.player_states[player_id]["T"]
-		player_states[player_id]["P"] = _player_manager.players[player_id].transform.origin
-		player_states[player_id]["V"] = _player_manager.players[player_id].velocity
-		player_states[player_id]["A"] = _player_manager.players[player_id].acceleration
-		player_states[player_id]["R"] = _player_manager.players[player_id].rotation.y
-		player_states[player_id]["H"] = _player_manager.players[player_id].rotation_velocity
+		# Skip if given player hasn't send any inputs yet
+		# TODO: Should be possible to set and send the player_state anyways
+		#if not _player_manager.player_inputs.has(player_id):
+		#	continue
+		
+		var player_state: PlayerState = PlayerState.new()
+		# TODO: This timestamp reqiured?
+		#player_state.timestamp = _player_manager.player_inputs[player_id].timestamp
+		player_state.id = player_id
+		player_state.position = _player_manager.players[player_id].transform.origin
+		player_state.velocity = _player_manager.players[player_id].velocity
+		player_state.acceleration = _player_manager.players[player_id].acceleration
+		player_state.rotation = _player_manager.players[player_id].rotation.y
+		player_state.rotation_velocity = _player_manager.players[player_id].rotation_velocity
+		
+		player_states[player_id] = player_state
+	
+	var world_state: WorldState = WorldState.new()
 
-	var world_state = {}
-
-	world_state["T"] = time
-	world_state["S"] = player_states
-
-	#TODO add other necessary information
-
+	world_state.timestamp = time
+	world_state.player_states = player_states
+	
 	return world_state

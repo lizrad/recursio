@@ -12,6 +12,7 @@ flags_unshaded = true
 [node name="Melee" type="Area"]
 gravity_vec = Vector3( 0, 0, 0 )
 script = ExtResource( 1 )
+only_hit_one_body = null
 
 [node name="CollisionShape" type="CollisionShape" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1 )

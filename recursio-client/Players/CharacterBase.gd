@@ -5,6 +5,7 @@ signal hit
 signal action_status_changed(action_type, status)
 signal velocity_changed(velocity, front_vector, right_vector)
 
+
 var ghost_index := -1
 var round_index := -1
 

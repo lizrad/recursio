@@ -2,9 +2,11 @@ extends CharacterBase
 class_name Player
 
 var velocity := Vector3.ZERO
+var current_target_velocity := Vector3.ZERO
 var acceleration := Vector3.ZERO
 var rotation_velocity := 0.0
-var last_player_state = {}
+
+var input_movement_direction: Vector3 = Vector3.ZERO
 
 onready var dash_activation_timer = get_node("DashActivationTimer")
 var dash_charges = Constants.get_value("dash", "charges")
@@ -26,16 +28,17 @@ var can_move: bool = false
 
 var action_manager
 
+var _drag = Constants.get_value("movement", "drag")
+var _move_acceleration = Constants.get_value("movement", "acceleration")
+
 
 func reset():
 	_recording=false
 	gameplay_record.clear()
 	velocity = Vector3.ZERO
 	acceleration = Vector3.ZERO
-	rotation_velocity = 0.0
-	last_player_state = {}
 	for i in range(dash_start_times.size()):
-		dash_start_times[i]=-1
+		dash_start_times[i] =- 1
 	_waiting_for_dash = false
 	_collected_illegal_movement_if_not_dashing= Vector3.ZERO
 	_collected_illegal_movement = Vector3.ZERO
@@ -81,59 +84,41 @@ func _ready():
 	dash_activation_timer.wait_time = 1.25
 
 
-func apply_player_state(player_state, physics_delta):
-	if wait_for_player_to_correct <= 0:
-		_validate_position(player_state, physics_delta)
-	else:
-		wait_for_player_to_correct -= 1
-
-	# TODO: validate attack data
-
-
-
-	var last_position
-	if last_player_state.empty():
-		last_position = transform.origin
-	else:
-		last_position = last_player_state["P"]
-
-	# Ignore movement if player cannot move
+func apply_player_input_data(input_data: InputData, physics_delta):
+	
+	var input_frame: InputFrame = input_data.get_last()
+	var movement: Vector2 = input_frame.movement
+	var rotation: Vector2 = input_frame.rotation
+	
+	# Clamp movement
+	var length = movement.length()
+	movement /= length if length > 1.0 else 1
+	
+	# Clamp rotation
+	length = rotation.length()
+	rotation /= length if length > 1.0 else 1
+	
+	var movement_vector = Vector3(movement.y, 0.0, -movement.x)
+	input_movement_direction = movement_vector
+	var rotation_vector = Vector3(rotation.y, 0.0, -rotation.x)
+	
+	# Only apply movement when player is allowed to move
 	if can_move:
-		var next_position = player_state["P"]
-		var physics_velocity = (next_position - last_position) / physics_delta
-		var new_velocity = move_and_slide(player_state["V"])
-		acceleration = (new_velocity - velocity) / physics_delta
-		velocity = new_velocity
-		rotation_velocity = (player_state["R"] - rotation.y) / physics_delta
-		rotation.y = player_state["R"]
+		# Only rotate if input is given
+		if rotation_vector != Vector3.ZERO:
+			look_at(rotation_vector + global_transform.origin, Vector3.UP)
 
-	if _recording:
-		gameplay_record["F"].append(
-			_create_record_frame(Server.get_server_time(), transform.origin, rotation.y, action_last_frame)
-		)
-		action_last_frame = action_manager.Trigger.NONE
-
-	last_player_state = player_state
-
-
-func correct_illegal_movement():
-	#using epsilon here to make it a bit fuzzy, so random networking and floating point errors etc. are ignored
-	var epsilon = 0.1
-	if _collected_illegal_movement.length() > epsilon:
-		Logger.info(
-			"Correcting illegal movement of " + str(_collected_illegal_movement),
-			"movement_validation"
-		)
-		#TODO: if collected_illegal_movement is too big kick bc player had to have cheated
-		transform.origin -= _collected_illegal_movement
-		_collected_illegal_movement = Vector3.ZERO
-		#TODO: adapt to latency or something i dunno once we know it on server, just a random magic number that worked for now
-		wait_for_player_to_correct = 120
-
-
-func update_dash_state(dash_state):
-	if dash_state["S"] == 1:
-		if _valid_dash_start_time(dash_state["T"]):
+		var acceleration = StaticInput.calculate_acceleration(movement_vector, rotation_vector);
+		_apply_acceleration(acceleration)
+		
+		move_and_slide(velocity)
+		transform.origin.y = 0
+	
+	# Buttons pressed in this frame
+	var buttons: int = input_frame.buttons
+	
+	if buttons & action_manager.Trigger.SPECIAL_MOVEMENT_START:
+		if _valid_dash_start_time(input_frame.timestamp):
 			Logger.info("Dash received", "movement_validation")
 			_dashing = true
 			dash_activation_timer.start()
@@ -143,19 +128,28 @@ func update_dash_state(dash_state):
 			
 			if _recording:
 				var i = max(0,gameplay_record["F"].size() - 1)
-				while gameplay_record["F"][i]["T"] > dash_state["T"] && i >= 0:
+				while gameplay_record["F"][i]["T"] > input_frame.timestamp && i >= 0:
 					i -= 1
 				gameplay_record["F"][i]["D"] = action_manager.Trigger.SPECIAL_MOVEMENT_START
 		else:
 			Logger.info("Illegal dash", "movement_validation")
-	#TODO: this does not work correctly as the client only sends dash_state 0 a long time after it actually has ended
-	else:
-		if _recording:
-			var i = gameplay_record["F"].size() - 1
-			while gameplay_record["F"][i]["T"] > dash_state["T"] && i >= 0:
-				i -= 1
-			gameplay_record["F"][i]["D"] = action_manager.Trigger.SPECIAL_MOVEMENT_END
 
+	if _recording:
+		gameplay_record["F"].append(
+			_create_record_frame(Server.get_server_time(), transform.origin, rotation.y, action_last_frame)
+		)
+		action_last_frame = action_manager.Trigger.NONE
+
+
+func _apply_acceleration(new_acceleration):
+	acceleration = new_acceleration
+
+	# First drag, then add the new acceleration
+	# For drag: Lerp towards the target velocity
+	# This is usually 0, unless we're on something that's moving, in which case it is that object's
+	#  velocity
+	velocity = lerp(velocity, current_target_velocity, _drag)
+	velocity += acceleration
 
 func _valid_dash_start_time(time):
 	for i in range(dash_charges):
@@ -166,67 +160,6 @@ func _valid_dash_start_time(time):
 			dash_start_times[i] = time
 			return true
 	return false
-
-
-func _validate_position(player_state, physics_delta):
-	if last_player_state.empty():
-		return
-	var new_player_packet = player_state["T"] != last_player_state["T"]
-	if not new_player_packet:
-		return
-
-	var goal_position = player_state["P"]
-	var start_position = last_player_state["P"]
-	var distance = goal_position - start_position
-	
-	# Don't let the player move in prep-phase
-	if not can_move:
-		goal_position = start_position
-		distance = Vector3.ZERO
-
-	var packet_number_diff = -1
-	#checking if ids are currently looping
-	if player_state["I"] > last_player_state["I"]:
-		packet_number_diff = player_state["I"] - last_player_state["I"]
-	else:
-		packet_number_diff = (
-			player_state["I"]
-			+ Constants.get_value("network", "max_packet_id")
-			- last_player_state["I"]
-		)
-
-	var server_client_tick_rate_ratio = Constants.get_value(
-		"network", "server_client_tick_rate_ratio"
-	)
-	var delta = physics_delta * server_client_tick_rate_ratio * packet_number_diff
-	var current_velocity = distance / delta
-	#values found by testing
-	#TODO: values were fuzzy, find factually true values
-	var max_normal_speed := 3.5
-	var max_dash_speed := 22.5
-	#illegal movement regardless of wether player is dashing or not
-	if current_velocity.length() > max_dash_speed:
-		#Logger.debug("Velocity bigger than max_dash_speed","movement_validation")
-		var normalized_velocity = current_velocity.normalized()
-		var illegal_velocity_length = current_velocity.length() - max_dash_speed
-		_collected_illegal_movement += (normalized_velocity * illegal_velocity_length) * delta
-		current_velocity -= normalized_velocity * illegal_velocity_length
-	#illegal movement if not dashingw
-	if current_velocity.length() > max_normal_speed:
-		#start illegal movement collection and timer waiting for dash confirmation
-		if not _waiting_for_dash and not _dashing:
-			dash_confirmation_timer.start()
-			_waiting_for_dash = true
-		#collect excess movement in case we have to restore  movement after the timer runs out
-		if _waiting_for_dash:
-			var normalized_velocity = current_velocity.normalized()
-			var illegal_velocity_length = current_velocity.length() - max_normal_speed
-			Logger.debug("Adding to illegal movement", "movement_validation")
-			_collected_illegal_movement_if_not_dashing += (
-				normalized_velocity
-				* illegal_velocity_length
-				* delta
-			)
 
 
 func _on_dash_activation_timeout():

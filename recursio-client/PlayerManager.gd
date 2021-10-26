@@ -32,7 +32,7 @@ onready var _prep_phase_time: float = Constants.get_value("gameplay", "prep_phas
 var _prep_phase_in_progress = false
 var _game_phase_in_progress = false
 
-func _ready():
+func _ready():	
 	game_result_screen.visible = false
 	countdown_screen.visible = false
 	time_of_last_world_state_send = Server.get_server_time()
@@ -54,7 +54,7 @@ func _ready():
 	Server.connect("ghost_hit", self, "_on_ghost_hit")
 	Server.connect("ghost_picks", self, "_on_ghost_picks")
 	Server.connect("player_action", self, "_on_player_action")
-	
+
 	set_physics_process(false)
 
 func _reset():
@@ -210,7 +210,7 @@ func _on_round_start_received(round_index, server_time):
 	#LATENCY DELAY PHASE
 	#===================
 	var time_diff = (Server.get_server_time() - server_time)
-	Logger.info("Latency Delay "+str(round_index)+" with time difference of "+str(time_diff/1000.0)+" started", "gameplay")
+	Logger.info("Latency Delay " + str(round_index) + " with time difference of " + str(time_diff/1000.0) + " started", "gameplay")
 	player.hud.latency_delay_phase_start(round_index, server_time, time_diff)
 	# Delay to counteract latency
 	var delay = Constants.get_value("gameplay", "latency_delay") - (time_diff  / 1000.0)
@@ -221,8 +221,9 @@ func _on_round_start_received(round_index, server_time):
 	#==========
 	#PREP PHASE
 	#==========
-	Logger.info("Prep phase "+str(round_index)+" started", "gameplay")
+	Logger.info("Prep phase " + str(round_index) + " started", "gameplay")
 	player.hud.prep_phase_start(round_index, Server.get_server_time())
+	player.button_overlay.show_buttons("ready", 1)
 	_prep_phase_in_progress = true
 	
 	# Display paths of my ghosts
@@ -271,7 +272,7 @@ func _on_round_start_received(round_index, server_time):
 	
 	player.follow_camera()
 	
-	Logger.info("Countdown phase "+str(round_index)+" started", "gameplay")
+	Logger.info("Countdown phase " + str(round_index) + " started", "gameplay")
 	_prep_phase_in_progress = false
 	player.hud.countdown_phase_start(round_index, Server.get_server_time())
 	Server.send_ghost_pick(player.ghost_index)
@@ -286,7 +287,7 @@ func _on_round_start_received(round_index, server_time):
 	#==========
 	#GAME PHASE
 	#==========
-	Logger.info("Game phase "+str(round_index)+" started", "gameplay")
+	Logger.info("Game phase " + str(round_index) + " started", "gameplay")
 	_game_phase_in_progress = true
 	player.hud.game_phase_start(round_index, Server.get_server_time())
 	player.game_in_progress = true
@@ -295,9 +296,11 @@ func _on_round_start_received(round_index, server_time):
 	_restart_ghosts(Server.get_server_time())
 
 
+func _on_player_ready() -> void:
+	Server.send_player_ready()
 
-func move_player_to_spawnpoint(ghost_index:int)->void:
-	Logger.info("Moving player to spawnpoint "+str(ghost_index), "spawnpoints")
+func move_player_to_spawnpoint(ghost_index:int) -> void:
+	Logger.info("Moving player to spawnpoint " + str(ghost_index), "spawnpoints")
 	player.transform.origin = _get_spawn_point(player.game_id, ghost_index)
 	player.spawn_point = _get_spawn_point(player.game_id, ghost_index)
 
@@ -399,38 +402,10 @@ func _restart_ghosts(start_time)->void:
 			_my_ghosts[i].start_replay(start_time)
 
 
-func _physics_process(delta):
-	_define_player_state()
-
-
-var packet_id = 0
-
-
-func _define_player_state():
-	var player_state = {
-		"T": time_of_last_world_state_send,
-		"P": player.transform.origin,
-		"V": player.velocity,
-		"A": player.acceleration,
-		"R": player.rotation.y,
-		"H": player.rotation_velocity,
-		"I": packet_id
-	}
-	Server.send_player_state(player_state)
-	packet_id += 1
-	#loop around so number does not grow uncontrolled
-	#and because we only really need to know the difference
-	#between 2 packets so it does not matter if ids dont
-	#continually increase as long as we account for the loop
-	#while calculating the difference on the server
-	packet_id %= Constants.get_value("network", "max_packet_id")
-	# This fixes sync issues - maybe because of unexpected order-of-execution of physics_process?
-	time_of_last_world_state_send = Server.get_server_time()
-
-
 func _spawn_player(player_id, spawn_point, game_id):
 	set_physics_process(true)
 	player = _spawn_character(_player_scene, spawn_point)
+	player.button_overlay.connect("button_pressed", self, "_on_player_ready")
 	player.spawn_point = spawn_point
 	player.game_id =game_id
 	player.player_id = player_id
@@ -476,34 +451,34 @@ func _spawn_character(character_scene, spawn_point):
 	return character
 
 
-func _update_character_positions(world_state):
+func _update_character_positions(world_state: WorldState):
 	if not _game_phase_in_progress:
 		return
-	if time_of_last_world_state < world_state["T"]:
-		time_of_last_world_state = world_state["T"]
+	if time_of_last_world_state < world_state.timestamp:
+		time_of_last_world_state = world_state.timestamp
 		time_since_last_server_update = 0
 
-		var enemy_states = world_state["S"]
+		var player_states: Dictionary = world_state.player_states
 
 		# Handle own player
-		if enemy_states.has(id):
-			var server_player = enemy_states[id]
+		if player_states.has(id):
+			var server_player: PlayerState = player_states[id]
 
-			player.handle_network_update(server_player["P"], server_player["T"])
+			player.handle_network_update(server_player.position, server_player.timestamp)
 
-			enemy_states.erase(id)
+			player_states.erase(id)
 
-		for enemy_id in enemy_states:
+		for enemy_id in player_states:
 			if enemies.has(enemy_id):
 				var enemy = enemies[enemy_id]
 
 				# Set parameters for interpolation
 				enemy.last_position = enemy.transform.origin
 				enemy.last_velocity = enemy.velocity
-				enemy.rotation.y = enemy_states[enemy_id]["R"]
-				enemy.server_position = enemy_states[enemy_id]["P"]
-				enemy.server_velocity = enemy_states[enemy_id]["V"]
-				enemy.server_acceleration = enemy_states[enemy_id]["A"]
+				enemy.rotation.y = player_states[enemy_id].rotation
+				enemy.server_position = player_states[enemy_id].position
+				enemy.server_velocity = player_states[enemy_id].velocity
+				enemy.server_acceleration = player_states[enemy_id].acceleration
 
 
 func _on_player_hit(hit_player_id):

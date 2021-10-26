@@ -86,7 +86,9 @@ func receive_hit():
 	# Disable collsions
 	_collision_shape.disabled = true
 	# Show ghost as dead
-	$Mesh_Body.rotate_z(90)
+	if has_node("Mesh_Body") and $Mesh_Body:
+		$Mesh_Body.rotate_z(90)
+
 	# TODO: split and move to client
 	if has_node("MiniMapIcon"):
 		$MiniMapIcon.set_texture(_minimap_dead)
