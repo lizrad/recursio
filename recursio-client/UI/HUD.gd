@@ -34,11 +34,11 @@ func reset():
 	_max_time = -1.0
 	_start_time = -1.0
 
-func _process(delta):
+func _process(_delta):
 	timer_pb.value = _calculate_progress()
 
 # Calculates the remaining time and maps it between 0 and 1
-func _calculate_progress() ->float:
+func _calculate_progress() -> float:
 	if _max_time <= 0 or _start_time <= 0:
 		return 0.0
 	return 1.0 - (((Server.get_server_time() - _start_time) / 1000.0) / _max_time)
@@ -52,45 +52,45 @@ func _calculate_current_time() -> String:
 	# Give seconds a zero as padding if below 10 sekonds
 	return ("%d:%0*d" % [floor(time/60), 2, time])
 
-func round_start(round_index, start_time) ->void:
+func round_start(round_index, start_time) -> void:
 	phase.text = "Round "+str(round_index)+" starting..."
 	_max_time = Constants.get_value("gameplay", "latency_delay")
 	_start_time = start_time
 
-func latency_delay_phase_start(round_index, start_time, time_diff)->void:
+func latency_delay_phase_start(start_time, time_diff) -> void:
 	phase.text = "Waiting for server..."
-	_max_time = Constants.get_value("gameplay", "latency_delay")-time_diff
+	_max_time = Constants.get_value("gameplay", "latency_delay") - time_diff
 	_start_time = start_time
 
-func prep_phase_start(round_index, start_time) ->void:
-	phase.text = "Preparation Phase "+str(round_index)
+func prep_phase_start(round_index, start_time) -> void:
+	phase.text = "Preparation Phase " + str(round_index)
 	_max_time = Constants.get_value("gameplay", "prep_phase_time")
 	_start_time = start_time
 
-func countdown_phase_start(round_index, start_time) ->void:
+func countdown_phase_start(start_time) -> void:
 	phase.text = "Get ready!"
 	_max_time = Constants.get_value("gameplay", "countdown_phase_seconds")
 	_start_time = start_time
 
-func game_phase_start(round_index, start_time) ->void:
+func game_phase_start(round_index, start_time) -> void:
 	phase.text = "Game Phase "+str(round_index)
 	_max_time = Constants.get_value("gameplay", "game_phase_time")
 	_start_time = start_time
 
-func rewind_phase_start(round_index, start_time) ->void:
+func rewind_phase_start(round_index, start_time) -> void:
 	phase.text = "Rewind Phase "+str(round_index)
 	_max_time = Constants.get_value("gameplay", "rewind_phase_time")
 	_start_time = start_time
 
 
-func update_ammo(action_type: int, amount: int) ->void:
+func update_ammo(action_type: int, amount: int) -> void:
 	Logger.info("update ammo for type: %s - %s" %[action_type, amount], "HUD")
 	if action_type == GlobalActionManager.Trigger.FIRE_START and ammo:
 		ammo.text = str(amount)
 	elif action_type == GlobalActionManager.Trigger.SPECIAL_MOVEMENT_START and dash:
 		dash.text = str(amount)
 
-func update_ammo_type(tex: StreamTexture) ->void:
+func update_ammo_type(tex: StreamTexture) -> void:
 	Logger.info("update ammo type", "HUD")
 	if ammo_type:
 		ammo_type.texture = load(tex.resource_path)

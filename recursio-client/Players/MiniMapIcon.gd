@@ -13,7 +13,7 @@ func _ready():
 	$Sprite.texture = texture
 
 
-func _process(delta):
+func _process(_delta):
 	if visibility_mask:
 		_check_for_visibility()
 
@@ -33,6 +33,6 @@ func _check_for_visibility()->void:
 	visible = pixel.gray() > 0.05
 
 
-func set_texture(texture : Texture)->void:
-	texture = texture
+func set_texture(tex : Texture)->void:
+	texture = tex
 	$Sprite.texture = texture

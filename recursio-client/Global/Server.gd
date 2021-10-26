@@ -45,8 +45,8 @@ func connect_to_server():
 	Logger.info("Connecting to server...", "connection")
 	network.create_client(ip, port)
 	get_tree().set_network_peer(network)
-	get_tree().connect("connection_failed", self, "_on_connection_failed")
-	get_tree().connect("connected_to_server", self, "_on_connection_succeeded")
+	assert(get_tree().connect("connection_failed", self, "_on_connection_failed") == OK)
+	assert(get_tree().connect("connected_to_server", self, "_on_connection_succeeded") == OK)
 
 
 func _on_connection_failed():
