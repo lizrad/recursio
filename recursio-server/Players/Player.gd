@@ -27,6 +27,7 @@ var gameplay_record = {}
 var can_move: bool = false
 
 var action_manager
+var world_processing_offset
 
 var _drag = Constants.get_value("movement", "drag")
 var _move_acceleration = Constants.get_value("movement", "acceleration")
@@ -86,7 +87,7 @@ func _ready():
 
 func apply_player_input_data(input_data: InputData, physics_delta):
 	
-	var input_frame: InputFrame = input_data.get_last()
+	var input_frame: InputFrame = input_data.get_closest_or_earlier(Server.get_server_time() - world_processing_offset)
 	var movement: Vector2 = input_frame.movement
 	var rotation: Vector2 = input_frame.rotation
 	

@@ -7,6 +7,7 @@ onready var _server: Server = get_node("/root/Server")
 onready var _player_manager: PlayerManager = get_node("../PlayerManager")
 
 var _player_states : Dictionary = {}
+var world_processing_offset = 0 # to be set from the Room
 
 
 func _physics_process(delta):
@@ -24,8 +25,8 @@ func _create_world_state():
 		#	continue
 		
 		var player_state: PlayerState = PlayerState.new()
-		# TODO: This timestamp reqiured?
-		#player_state.timestamp = _player_manager.player_inputs[player_id].timestamp
+		player_state.timestamp = _player_manager.player_inputs[player_id].get_closest_or_earlier(time - world_processing_offset).timestamp \
+				if _player_manager.player_inputs.has(player_id) else 0
 		player_state.id = player_id
 		player_state.position = _player_manager.players[player_id].transform.origin
 		player_state.velocity = _player_manager.players[player_id].velocity
@@ -37,7 +38,7 @@ func _create_world_state():
 	
 	var world_state: WorldState = WorldState.new()
 
-	world_state.timestamp = time
+	world_state.timestamp = time - world_processing_offset
 	world_state.player_states = player_states
 	
 	return world_state

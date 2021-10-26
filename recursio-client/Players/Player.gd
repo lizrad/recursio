@@ -124,23 +124,38 @@ func handle_network_update(position, time):
 	#if not past_frames.has(time):
 		# TODO: Need to handle this?
 	#	return
+	
+	# Find the most fitting timestamp
+	var time_with_data = time
+	var closest_frame = null
+	
+	while not closest_frame:
+		if past_frames.has(time_with_data):
+			closest_frame = past_frames[time_with_data]
+		else:
+			time_with_data -= 1
+		
+		# Exit condition (e.g. for the first time)
+		if time - time_with_data > 100:
+			break
+	
+	if closest_frame:
+		# Get value we had at that time
+		var position_diff = position - closest_frame.position
 
-	# Get value we had at that time
-	var position_diff = position - transform.origin
+		# If the difference is too large, correct it
+		if position_diff.length() > 0.1:
+			# TODO: Lerp there rather than setting it outright
+			var before = transform.origin
+			transform.origin += position_diff
 
-	# If the difference is too large, correct it
-	if position_diff.length() > 0.1:
-		# TODO: Lerp there rather than setting it outright
-		var before = transform.origin
-		transform.origin += position_diff
+			Logger.info(("Corrected from " + str(before) + " to " + str(transform.origin)
+				+ " (should be at " + str(position) + " according to server)"), "movement_validation")
 
-		Logger.info(("Corrected from " + str(before) + " to " + str(transform.origin)
-			+ " (should be at " + str(position) + " according to server)"), "movement_validation")
+			# Hotfix for overcompensation - we could also fix all following past states, but is that required?
+			past_frames.clear()
 
-		# Hotfix for overcompensation - we could also fix all following past states, but is that required?
-		past_frames.clear()
-
-		_just_corrected = true
+			_just_corrected = true
 
 
 func _physics_process(delta):

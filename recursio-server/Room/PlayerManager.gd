@@ -8,7 +8,9 @@ var players = {}
 var ghosts = {}
 var player_inputs = {}
 
+# Set from the Room above
 var level
+var world_processing_offset
 
 onready var _game_manager = get_node("../GameManager")
 onready var _action_manager = get_node("../ActionManager")
@@ -63,6 +65,7 @@ func spawn_player(player_id, game_id):
 	player.player_id = player_id
 	player.ghost_index = 0
 	player.action_manager = _action_manager
+	player.world_processing_offset = world_processing_offset
 	ghosts[player_id] = {}
 	add_child(player)
 	player.connect("hit", self, "_on_player_hit", [player_id])
