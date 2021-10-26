@@ -28,8 +28,8 @@ func _ready():
 	time_to_next_config_read = time_between_config_reads
 
 func _process(delta):
-	time_to_next_config_read-=delta
-	if time_to_next_config_read <=0:
+	time_to_next_config_read -= delta
+	if time_to_next_config_read <= 0:
 		time_to_next_config_read = time_between_config_reads
 		for module in logger_plugin_instance.get_node("ModulesBackground/ModulesScrollContainer/Modules").get_children():
 			module.queue_free()
@@ -40,11 +40,12 @@ func _read_config_file():
 	var err = config.load("res://addons/recursio-loggerplugin/loggerconfig.ini")
 	if err != OK:
 		print("ERROR: Could not load config file!")
-	else:
-		_add_modes()
-		for module in config.get_sections():
-			_add_new_module(module)
-	_save_settings()
+		return
+
+	_add_modes()
+	for module in config.get_sections():
+		_add_new_module(module)
+	#_save_settings()
 
 
 func _add_modes():
@@ -54,8 +55,12 @@ func _add_modes():
 		var label: Label = Label.new()
 		label.text = mode
 		module_instance.add_child(label)
+
+		var toggle = module_mode_toggle_scene.instance()
+		toggle.connect("toggled",self,"_on_module_all_toggled", [mode])
+		module_instance.add_child(toggle)
 	logger_plugin_instance.get_node("ModulesBackground/ModulesScrollContainer/Modules").add_child(module_instance)
-	
+
 
 func _add_new_module(module):
 	var module_instance = module_config_scene.instance()
@@ -80,6 +85,7 @@ func _save_settings():
 func _save_config_file():
 	var logger_config = ConfigFile.new()
 	var section = "logger"
+	logger_config.set_value(section, "default_all_config",[ 1, 1, 1, 1, 1 ])
 	logger_config.set_value(section, "default_output_level",0)
 	logger_config.set_value(section, "default_output_strategies",[ 1, 1, 1, 1, 1 ])
 	logger_config.set_value(section, "default_logfile_path", "user://%s.log" % ProjectSettings.get_setting("application/config/name"))
@@ -87,7 +93,7 @@ func _save_config_file():
 	var external_sink = {
 		"path": "user://%s.log" % ProjectSettings.get_setting("application/config/name"),
 		"queue_mode": 0
-		}
+	}
 	logger_config.set_value(section, "external_sinks", [external_sink])
 	var modules = []
 	for module in config.get_sections():
@@ -107,15 +113,24 @@ func _on_module_button_toggled(active: bool, module:String, mode:String):
 	config.set_value(module, mode, active)
 	_save_settings()
 
+func _on_module_all_toggled(active: bool, mode:String):
+	for module in config.get_sections():
+		config.set_value(module, mode, active)
+	_save_settings()
+
 func _exit_tree():
 	if logger_plugin_instance:
 		logger_plugin_instance.queue_free()
+
 func has_main_screen():
 	return true
+
 func make_visible(visible):
 	if logger_plugin_instance:
 		logger_plugin_instance.visible = visible
+
 func get_plugin_name():
 	return "Logger Config"
+
 func get_plugin_icon():
 	return get_editor_interface().get_base_control().get_icon("Node", "EditorIcons")

@@ -87,20 +87,12 @@ func get_server_time():
 	return server_clock
 
 
-func send_player_state(player_state):
-	rpc_unreliable_id(1, "receive_player_state", player_state)
+func send_player_input_data(input_data: InputData):
+	rpc_unreliable_id(1, "receive_player_input_data", input_data.to_array())
 
 
 func send_player_ready():
 	rpc_id(1, "receive_player_ready")
-
-
-func send_dash_state(dash_state):
-	rpc_id(1, "receive_dash_state", dash_state)
-
-
-func send_action_trigger(action):
-	rpc_id(1, "receive_action_trigger", action)
 
 func send_ghost_pick(ghost_index):
 	rpc_id(1, "receive_ghost_pick",ghost_index)
@@ -131,7 +123,6 @@ remote func receive_latency(player_time):
 		var total_latency = 0
 		latency_array.sort()
 		var mid_point = latency_array[max_latency_count / 2]
-		var min_latency_outlier_size
 		var relevant_latency_count = 0
 		for i in range(latency_array.size() - 1, -1, -1):
 			if latency_array[i] > (2 * mid_point) and latency_array[i] > 28:
@@ -155,7 +146,7 @@ remote func receive_enemy_ghost_record(enemy_id, gameplay_record):
 
 # Receives the current world state of the players room
 remote func receive_world_state(world_state):
-	emit_signal("world_state_received", world_state)
+	emit_signal("world_state_received", WorldState.new().from_array(world_state))
 
 
 # Receives the start of a round with the server time
