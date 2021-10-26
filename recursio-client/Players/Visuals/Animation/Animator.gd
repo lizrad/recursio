@@ -1,4 +1,4 @@
-extends Node
+extends BaseAnimator
 
 #TODO:	./Idle
 #		./Shoot
@@ -11,119 +11,109 @@ extends Node
 #		-Spawn
 
 onready var IdleAnimator  = get_node("IdleAnimator")
-onready var FireAnimator  = get_node("FireAnimator")
+onready var TurnAnimator  = get_node("TurnAnimator")
+onready var HitscanAnimator  = get_node("HitscanAnimator")
+onready var WallAnimator  = get_node("WallAnimator")
 onready var DashAnimator  = get_node("DashAnimator")
 onready var MeleeAnimator  = get_node("MeleeAnimator")
 onready var MoveAnimator  = get_node("MoveAnimator")
-onready var TurnAnimator  = get_node("TurnAnimator")
 
-var _firing = false
-var _dashing = false
-var _meleeing = false
-var _moving = false
+var _animation_status = {}
+var _action_animations = {}
+var _priority_sorted = []
 
-var _right_velocity = 0
+func _ready():
+	_animation_status[IdleAnimator] = true
+	_priority_sorted.append(IdleAnimator)
+	_animation_status[TurnAnimator] = true
+	_priority_sorted.append(TurnAnimator)
+	_animation_status[MoveAnimator] = false
+	_priority_sorted.append(MoveAnimator)
+	
+	_animation_status[DashAnimator] = false
+	_priority_sorted.append(DashAnimator)
+	
+	_action_animations[ActionManager.ActionType.DASH] = DashAnimator
+	_animation_status[HitscanAnimator] = false
+	_priority_sorted.append(HitscanAnimator)
+	_action_animations[ActionManager.ActionType.HITSCAN] = HitscanAnimator
+	_animation_status[WallAnimator] = false
+	_priority_sorted.append(WallAnimator)
+	_action_animations[ActionManager.ActionType.WALL] = WallAnimator
+	_animation_status[MeleeAnimator] = false
+	_priority_sorted.append(MeleeAnimator)
+	_action_animations[ActionManager.ActionType.MELEE] = MeleeAnimator
 
 func on_action_status_changed(action_type, status):
 	Logger.debug("Status of "+ str(action_type)+" changed to "+str(status), "animation")
-	match action_type:
-		ActionManager.ActionType.HITSCAN:
-			if status:
-				FireAnimator.connect("animation_over", self, "stop_fire_animation")
-				FireAnimator.start_animation(ActionManager.ActionType.HITSCAN)
-				_firing = true
-		ActionManager.ActionType.WALL:
-			if status:
-				FireAnimator.connect("animation_over", self, "stop_fire_animation")
-				FireAnimator.start_animation(ActionManager.ActionType.WALL)
-				_firing = true
-		ActionManager.ActionType.DASH:
-			if status:
-				DashAnimator.connect("animation_over", self, "stop_dash_animation")
-				DashAnimator.start_animation()
-				_dashing = true
-			else:
-				DashAnimator.stop_animation()
-		ActionManager.ActionType.MELEE:
-			MeleeAnimator.connect("animation_over", self, "stop_melee_animation")
-			MeleeAnimator.start_animation()
-			_meleeing = true
+	var animator = _action_animations[action_type]
+	animator.connect("animation_over", self, "_stop_animation", [animator])
+	if status:
+		animator.start_animation()
+		_animation_status[animator] = true
+	else:
+		if animator.has_method("stop_animation"):
+			animator.stop_animation()
 
 func on_velocity_changed(velocity, front_vector, right_vector):
-	Logger.debug("Velocity changed to "+str(velocity), "animation")
-	var front_velocity = abs(front_vector.dot(velocity))
-	Logger.debug("Front velocity: "+str(front_velocity), "animation")
 	#because movement only aproaches 0 asymptotically
 	var epsilon = 0.000001
+	var front_velocity = abs(front_vector.dot(velocity))
+	front_velocity = 0 if abs(front_velocity)<epsilon else front_velocity
+	var right_velocity = right_vector.dot(velocity)
+	right_velocity = 0 if abs(right_velocity)<epsilon else right_velocity
+	
 	MoveAnimator.set_velocity(front_velocity)
-	if not _moving and front_velocity>epsilon:
-		_moving = true
+	if not _animation_status[MoveAnimator] and front_velocity>0:
+		_animation_status[MoveAnimator]  = true
 		MoveAnimator.start_animation()
-		MoveAnimator.connect("animation_over", self, "stop_move_animation")
-	elif _moving and front_velocity<=epsilon:
+		MoveAnimator.connect("animation_over", self, "_stop_animation",[MoveAnimator])
+	elif _animation_status[MoveAnimator]  and front_velocity<=0:
 		MoveAnimator.stop_animation()
-	_right_velocity = right_vector.dot(velocity)
-	_right_velocity = 0 if abs(_right_velocity)<epsilon else _right_velocity
+	TurnAnimator.set_velocity(right_velocity)
 
 func _process(delta):
-	var keyframes
-	
-	if _moving:
-		keyframes = MoveAnimator.get_keyframe(delta)
-	else:
-		keyframes = IdleAnimator.get_keyframe(delta)
-	keyframes = combine_keyframes(keyframes,TurnAnimator.get_keyframe(delta, _right_velocity),1)
-	if _firing:
-		keyframes = combine_keyframes(keyframes,FireAnimator.get_keyframe(delta),1)
-	if _dashing:
-		keyframes = combine_keyframes(keyframes,DashAnimator.get_keyframe(delta),1)
-	if _meleeing:
-		keyframes = combine_keyframes(keyframes,MeleeAnimator.get_keyframe(delta),1)
-	_apply_keyframes(keyframes)
+	_reset_keyframes()
+	for animator in _priority_sorted:
+		if _animation_status[animator]:
+			_keyframes = combine_keyframes(_keyframes,animator.get_keyframe(delta),1)
+	_apply_keyframes(_keyframes)
 
-
-func stop_fire_animation():
-	FireAnimator.disconnect("animation_over", self, "stop_fire_animation")
-	_firing = false
-
-func stop_move_animation():
-	MoveAnimator.disconnect("animation_over", self, "stop_move_animation")
-	_moving = false
-
-func stop_dash_animation():
-	DashAnimator.disconnect("animation_over", self, "stop_dash_animation")
-	_dashing = false
-
-func stop_melee_animation():
-	DashAnimator.disconnect("animation_over", self, "stop_melee_animation")
-	_meleeing = false
+func _stop_animation(animator):
+	animator.disconnect("animation_over", self, "_stop_animation")
+	_animation_status[animator] = false
 
 func combine_keyframes(a,b,t):
 	var keyframes = {}
-	for part in a:
-		if b.has(part):
-			keyframes[part]=mix_keyframe(a[part],b[part],t)
+	if not a:
+		return b
+	if not b:
+		return a
+	for pivot in a:
+		if b.has(pivot):
+			keyframes[pivot]=mix_keyframe(pivot, a[pivot],b[pivot],t)
 		else:
-			keyframes[part]=a[part];
-	for part in b:
-		if not a.has(part):
-			keyframes[part]=b[part]
+			keyframes[pivot]=a[pivot];
+	for pivot in b:
+		if not a.has(pivot):
+			keyframes[pivot]=b[pivot]
 	return keyframes
 
-func mix_keyframe(a,b,t):
+func mix_keyframe(pivot,a,b,t):
 	t = clamp(t,0,1)
 	var euler = Vector3.ZERO
 	var a_euler = a.basis.get_euler()
 	var b_euler = b.basis.get_euler()
-	euler.x = a_euler.x if b_euler.x==0 else (b_euler.x if a_euler.x == 0 else a_euler.x*(1-t)+b_euler.x*t)
-	euler.y = a_euler.y if b_euler.y==0 else (b_euler.y if a_euler.y == 0 else a_euler.y*(1-t)+b_euler.y*t)
-	euler.z = a_euler.z if b_euler.z==0 else (b_euler.z if a_euler.z == 0 else a_euler.z*(1-t)+b_euler.z*t)
+	euler.x = a_euler.x if b_euler.x == _default_rotations[pivot].x else (b_euler.x if a_euler.x == _default_rotations[pivot].x else a_euler.x*(1-t)+b_euler.x*t)
+	euler.y = a_euler.y if b_euler.y == _default_rotations[pivot].y else (b_euler.y if a_euler.y == _default_rotations[pivot].y else a_euler.y*(1-t)+b_euler.y*t)
+	euler.z = a_euler.z if b_euler.z == _default_rotations[pivot].z else (b_euler.z if a_euler.z == _default_rotations[pivot].z else a_euler.z*(1-t)+b_euler.z*t)
 	var origin = Vector3.ZERO
 	var a_origin = a.origin
 	var b_origin = b.origin
-	origin.x = a_origin.x if b_origin.x==0 else (b_origin.x if a_origin.x == 0 else a_origin.x*(1-t)+b_origin.x*t)
-	origin.y = a_origin.y if b_origin.y==0 else (b_origin.y if a_origin.y == 0 else a_origin.y*(1-t)+b_origin.y*t)
-	origin.z = a_origin.z if b_origin.z==0 else (b_origin.z if a_origin.z == 0 else a_origin.z*(1-t)+b_origin.z*t)
+	origin.x = a_origin.x if b_origin.x == _default_positions[pivot].x else (b_origin.x if a_origin.x == _default_positions[pivot].x else a_origin.x*(1-t)+b_origin.x*t)
+	origin.y = a_origin.y if b_origin.y == _default_positions[pivot].y else (b_origin.y if a_origin.y == _default_positions[pivot].y else a_origin.y*(1-t)+b_origin.y*t)
+	origin.z = a_origin.z if b_origin.z == _default_positions[pivot].z else (b_origin.z if a_origin.z == _default_positions[pivot].z else a_origin.z*(1-t)+b_origin.z*t)
+
 	
 	var keyframe = Transform(
 		Basis(euler),
@@ -132,9 +122,9 @@ func mix_keyframe(a,b,t):
 	var scale = Vector3.ZERO
 	var a_scale = a.basis.get_scale()
 	var b_scale = b.basis.get_scale()
-	scale.x = a_scale.x if b_scale.x==1 else (b_scale.x if a_scale.x == 1 else a_scale.x*(1-t)+b_scale.x*t)
-	scale.y = a_scale.y if b_scale.y==1 else (b_scale.y if a_scale.y == 1 else a_scale.y*(1-t)+b_scale.y*t)
-	scale.z = a_scale.z if b_scale.z==1 else (b_scale.z if a_scale.z == 1 else a_scale.z*(1-t)+b_scale.z*t)
+	scale.x = a_scale.x if b_scale.x == _default_scales[pivot].x else (b_scale.x if a_scale.x == _default_scales[pivot].x else a_scale.x*(1-t)+b_scale.x*t)
+	scale.y = a_scale.y if b_scale.y == _default_scales[pivot].y else (b_scale.y if a_scale.y == _default_scales[pivot].y else a_scale.y*(1-t)+b_scale.y*t)
+	scale.z = a_scale.z if b_scale.z == _default_scales[pivot].z else (b_scale.z if a_scale.z == _default_scales[pivot].z else a_scale.z*(1-t)+b_scale.z*t)
 	
 	keyframe.basis = keyframe.basis.scaled(scale)
 	return keyframe
