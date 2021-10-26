@@ -20,6 +20,9 @@ var _default_back_z := -0.567
 var _start_back_z  := -0.567
 var _start_front_z  := 0.548
 var _z_lerp_weight := 0.0
+var _middle_rotate_to_zero_phase_stop = 2*PI
+var _back_rotate_to_zero_phase_stop = 2*PI
+
 
 func start_animation():
 	_rotate_to_zero = false
@@ -29,11 +32,16 @@ func start_animation():
 	_middle_speed=middle_speed
 	
 func stop_animation():
+	Logger.info("Stopping moving animation", "animation")
 	_rotate_to_zero = true
 	_velocity = min_velocity
 	_middle_speed=middle_speed*10
+	_middle_rotate_to_zero_phase_stop = PI if _middle_phase<PI else 2*PI
+	_back_rotate_to_zero_phase_stop = PI if _back_phase<PI else 2*PI
 
 func set_velocity(velocity):
+	if _rotate_to_zero:
+		return
 	_velocity = max(velocity,min_velocity)
 
 func get_keyframe(delta):
@@ -48,16 +56,15 @@ func get_keyframe(delta):
 	_z_lerp_weight = min(_z_lerp_weight + 0.025,1.0) if not _rotate_to_zero else max(_z_lerp_weight - 0.025,0.0) 
 	var back_z = lerp(_start_back_z, _default_back_z, _z_lerp_weight)
 	
-	if _middle_phase >= 2*PI:
-		if _rotate_to_zero:
+	if _rotate_to_zero:
+		if _middle_phase >_middle_rotate_to_zero_phase_stop:
 			_middle_phase = 0
-		else:
-			_middle_phase-=2*PI
-			
-	if _back_phase >= 2*PI:
-		if _rotate_to_zero:
+		if _back_phase >_back_rotate_to_zero_phase_stop:
 			_back_phase = 0
-		else:
+	else:
+		if _middle_phase >= 2*PI:
+			_middle_phase-=2*PI
+		if _back_phase >= 2*PI:
 			_back_phase-=2*PI
 	var back_angle = sin(_back_phase) * back_rotation_extent
 	

@@ -6,7 +6,7 @@ extends Node
 #		./Dash
 #		./Melee
 #		./Move
-#		-Turn
+#		./Turn
 #		-Death
 #		-Spawn
 
@@ -15,16 +15,17 @@ onready var FireAnimator  = get_node("FireAnimator")
 onready var DashAnimator  = get_node("DashAnimator")
 onready var MeleeAnimator  = get_node("MeleeAnimator")
 onready var MoveAnimator  = get_node("MoveAnimator")
+onready var TurnAnimator  = get_node("TurnAnimator")
 
 var _firing = false
 var _dashing = false
 var _meleeing = false
 var _moving = false
 
-var _debug_velocity = 0
+var _right_velocity = 0
 
 func on_action_status_changed(action_type, status):
-	Logger.info("Status of "+ str(action_type)+" changed to "+str(status), "animation")
+	Logger.debug("Status of "+ str(action_type)+" changed to "+str(status), "animation")
 	match action_type:
 		ActionManager.ActionType.HITSCAN:
 			if status:
@@ -48,15 +49,21 @@ func on_action_status_changed(action_type, status):
 			MeleeAnimator.start_animation()
 			_meleeing = true
 
-func on_velocity_changed(velocity):
-	Logger.info("Velocity changed to "+str(velocity), "animation")
-	MoveAnimator.set_velocity(_debug_velocity)
-	if not _moving and velocity.length()>0:
+func on_velocity_changed(velocity, front_vector, right_vector):
+	Logger.debug("Velocity changed to "+str(velocity), "animation")
+	var front_velocity = abs(front_vector.dot(velocity))
+	Logger.debug("Front velocity: "+str(front_velocity), "animation")
+	#because movement only aproaches 0 asymptotically
+	var epsilon = 0.000001
+	MoveAnimator.set_velocity(front_velocity)
+	if not _moving and front_velocity>epsilon:
 		_moving = true
 		MoveAnimator.start_animation()
 		MoveAnimator.connect("animation_over", self, "stop_move_animation")
-	elif _moving and velocity.length()==0:
+	elif _moving and front_velocity<=epsilon:
 		MoveAnimator.stop_animation()
+	_right_velocity = right_vector.dot(velocity)
+	_right_velocity = 0 if abs(_right_velocity)<epsilon else _right_velocity
 
 func _process(delta):
 	var keyframes
@@ -65,7 +72,7 @@ func _process(delta):
 		keyframes = MoveAnimator.get_keyframe(delta)
 	else:
 		keyframes = IdleAnimator.get_keyframe(delta)
-	
+	keyframes = combine_keyframes(keyframes,TurnAnimator.get_keyframe(delta, _right_velocity),1)
 	if _firing:
 		keyframes = combine_keyframes(keyframes,FireAnimator.get_keyframe(delta),1)
 	if _dashing:

@@ -220,7 +220,7 @@ func apply_acceleration(new_acceleration):
 	#  velocity
 	velocity = lerp(velocity, current_target_velocity, drag)
 	velocity += acceleration
-	emit_signal("velocity_changed", velocity)
+	emit_signal("velocity_changed", velocity, -transform.basis.z, transform.basis.x)
 
 func swap_weapon_type(ghost_index):
 	_trigger_manager.swap_weapon_type(ghost_index)
