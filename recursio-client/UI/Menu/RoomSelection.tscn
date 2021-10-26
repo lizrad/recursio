@@ -1,0 +1,69 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://UI/Menu/RoomList.gd" type="Script" id=1]
+[ext_resource path="res://UI/Menu/RoomUI.gd" type="Script" id=2]
+
+[node name="RoomSelection" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PanelContainer" type="PanelContainer" parent="CenterContainer"]
+margin_left = 301.0
+margin_top = 179.0
+margin_right = 723.0
+margin_bottom = 421.0
+
+[node name="RoomUI" type="VBoxContainer" parent="CenterContainer/PanelContainer"]
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 415.0
+margin_bottom = 235.0
+script = ExtResource( 2 )
+
+[node name="TopBar" type="HBoxContainer" parent="CenterContainer/PanelContainer/RoomUI"]
+margin_right = 408.0
+margin_bottom = 24.0
+
+[node name="Button" type="Button" parent="CenterContainer/PanelContainer/RoomUI/TopBar"]
+margin_right = 94.0
+margin_bottom = 24.0
+text = "Create Room"
+
+[node name="LineEdit" type="LineEdit" parent="CenterContainer/PanelContainer/RoomUI/TopBar"]
+margin_left = 98.0
+margin_right = 298.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 200, 0 )
+placeholder_text = "Filter Rooms..."
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Button3" type="Button" parent="CenterContainer/PanelContainer/RoomUI/TopBar"]
+margin_left = 302.0
+margin_right = 362.0
+margin_bottom = 24.0
+text = "Refresh"
+
+[node name="Button2" type="Button" parent="CenterContainer/PanelContainer/RoomUI/TopBar"]
+margin_left = 366.0
+margin_right = 408.0
+margin_bottom = 24.0
+text = "Back"
+
+[node name="RoomList" type="ItemList" parent="CenterContainer/PanelContainer/RoomUI"]
+margin_top = 28.0
+margin_right = 408.0
+margin_bottom = 228.0
+rect_min_size = Vector2( 0, 200 )
+script = ExtResource( 1 )

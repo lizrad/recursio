@@ -1,0 +1,38 @@
+[gd_scene format=2]
+
+[node name="StartScreen" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Buttons" type="VBoxContainer" parent="CenterContainer"]
+margin_left = 467.0
+margin_top = 266.0
+margin_right = 557.0
+margin_bottom = 334.0
+
+[node name="TutorialButton" type="Button" parent="CenterContainer/Buttons"]
+margin_right = 90.0
+margin_bottom = 20.0
+text = "Play Tutorial"
+
+[node name="PlayButton" type="Button" parent="CenterContainer/Buttons"]
+margin_top = 24.0
+margin_right = 90.0
+margin_bottom = 44.0
+text = "Play Online"
+
+[node name="ExitButton" type="Button" parent="CenterContainer/Buttons"]
+margin_top = 48.0
+margin_right = 90.0
+margin_bottom = 68.0
+text = "Exit"
