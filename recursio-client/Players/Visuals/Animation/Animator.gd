@@ -1,11 +1,12 @@
 extends Node
-#TODO:	./Shoot
-#		./Idle
+
+#TODO:	./Idle
+#		./Shoot
 #		./Wall
 #		./Dash
+#		./Melee
 #		./Move
 #		-Turn
-#		./Melee
 #		-Death
 #		-Spawn
 
@@ -21,39 +22,42 @@ var _meleeing = false
 var _moving = false
 
 var _debug_velocity = 0
-func _process(delta):
-	if Input.is_action_just_pressed("player_shoot"):
-		FireAnimator.connect("animation_over", self, "stop_fire_animation")
-		FireAnimator.start_animation(ActionManager.ActionType.HITSCAN)
-		_firing = true
-	
-	if Input.is_action_just_pressed("player_dash"):
-		DashAnimator.connect("animation_over", self, "stop_dash_animation")
-		DashAnimator.start_animation()
-		_dashing = true
-	elif Input.is_action_just_released("player_dash"):
-		DashAnimator.stop_animation()
-	
-	if Input.is_action_just_pressed("player_melee"):
-		MeleeAnimator.connect("animation_over", self, "stop_melee_animation")
-		MeleeAnimator.start_animation()
-		_meleeing = true
 
-	
-	if Input.is_action_pressed("player_move_up"):
-		if _debug_velocity == 0:
-			_moving = true
-			MoveAnimator.start_animation()
-			MoveAnimator.connect("animation_over", self, "stop_move_animation")
-		_debug_velocity += 0.01
-		_debug_velocity = min(_debug_velocity, 3.5)
-	else:
-		if _debug_velocity != 0:
-			if _debug_velocity - 0.01 <= 0:
-				MoveAnimator.stop_animation()
-		_debug_velocity -=0.01
-		_debug_velocity = max(_debug_velocity, 0.0)
+func on_action_status_changed(action_type, status):
+	Logger.info("Status of"+ str(action_type)+" changed to"+str(status), "animation")
+	match action_type:
+		ActionManager.ActionType.HITSCAN:
+			if status:
+				FireAnimator.connect("animation_over", self, "stop_fire_animation")
+				FireAnimator.start_animation(ActionManager.ActionType.HITSCAN)
+				_firing = true
+		ActionManager.ActionType.WALL:
+			if status:
+				FireAnimator.connect("animation_over", self, "stop_fire_animation")
+				FireAnimator.start_animation(ActionManager.ActionType.WALL)
+				_firing = true
+		ActionManager.ActionType.DASH:
+			if status:
+				DashAnimator.connect("animation_over", self, "stop_dash_animation")
+				DashAnimator.start_animation()
+				_dashing = true
+			else:
+				DashAnimator.stop_animation()
+		ActionManager.ActionType.MELEE:
+			MeleeAnimator.connect("animation_over", self, "stop_melee_animation")
+			MeleeAnimator.start_animation()
+			_meleeing = true
+
+func on_velocity_changed(velocity):
 	MoveAnimator.set_velocity(_debug_velocity)
+	if not _moving and velocity.length()>0:
+		_moving = true
+		MoveAnimator.start_animation()
+		MoveAnimator.connect("animation_over", self, "stop_move_animation")
+	elif _moving and velocity.length()==0:
+		MoveAnimator.stop_animation()
+
+func _process(delta):
 	var keyframes
 	
 	if _moving:

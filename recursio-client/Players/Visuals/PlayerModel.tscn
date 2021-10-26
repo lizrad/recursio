@@ -1,7 +1,6 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://Players/Visuals/Animation/Animator.gd" type="Script" id=1]
-[ext_resource path="res://addons/ascii-shader/AsciiRenderer.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Players/Visuals/Animation/FireAnimator.gd" type="Script" id=3]
 [ext_resource path="res://Players/Visuals/Animation/IdleAnimator.gd" type="Script" id=4]
 [ext_resource path="res://Players/Visuals/Animation/DashAnimator.gd" type="Script" id=5]
@@ -75,6 +74,7 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.548254 )
 
 [node name="Front" type="MeshInstance" parent="RootPivot/FrontPivot"]
 transform = Transform( 1.38886, 0, 0, 0, 1.38886, 0, 0, 0, 1.38886, 0, 0, -0.398254 )
+cast_shadow = 0
 mesh = SubResource( 2 )
 material/0 = null
 
@@ -82,7 +82,8 @@ material/0 = null
 transform = Transform( 0.998566, 0, 0, 0, 0.998566, 0, 0, 0, 0.998566, 0, 0, 0 )
 
 [node name="Middle" type="MeshInstance" parent="RootPivot/MiddlePivot"]
-transform = Transform( 0.976267, 0, 0.976267, 0, 1.38065, 0, -0.976267, 0, 0.976267, 0.0821635, 0, 0.0821635 )
+transform = Transform( 0.976267, 0, 0.976267, 0, 1.38065, 0, -0.976267, 0, 0.976267, 0.0821635, 0, 0.104462 )
+cast_shadow = 0
 mesh = SubResource( 3 )
 material/0 = SubResource( 4 )
 
@@ -90,14 +91,14 @@ material/0 = SubResource( 4 )
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.566682 )
 
 [node name="Back" type="MeshInstance" parent="RootPivot/BackPivot"]
-transform = Transform( 1.38886, 0, 0, 0, 1.38886, 0, 0, 0, 1.38886, 0, 0, 0.416682 )
+transform = Transform( 1.38886, 0, 0, 0, 1.38886, 0, 0, 0, 1.38886, 0, 0, 0.438948 )
+cast_shadow = 0
 mesh = SubResource( 5 )
 material/0 = null
 
 [node name="Camera" type="Camera" parent="."]
 transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 12.6206, 0 )
-
-[node name="AsciiRenderer" parent="." instance=ExtResource( 2 )]
+current = true
 
 [node name="IdleAnimator" type="Node" parent="."]
 script = ExtResource( 4 )

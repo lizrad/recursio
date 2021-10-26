@@ -5,6 +5,8 @@ export(float) var inner_deadzone := 0.2
 export(float) var outer_deadzone := 0.8
 export(float) var rotate_threshold := 0.0
 
+
+
 onready var hud :HUD = get_node("HUD")
 var game_id := -1
 var player_id := -1
@@ -74,7 +76,7 @@ func move_camera_to_overview():
 func follow_camera():
 	$TransformReset/LerpedFollow.target = $ViewTarget
 
-
+	
 func get_normalized_input(type, outer_deadzone, inner_deadzone, min_length = 0.0):
 	var input = Vector2(
 		Input.get_action_strength(type + "_up") - Input.get_action_strength(type + "_down"),
@@ -192,8 +194,11 @@ func _handle_user_input():
 			),
 			0.0
 		)
-
-		velocity += movement_input_vector * e_section
+		
+		var velocity_modifier = movement_input_vector * e_section
+		if velocity_modifier.length()>0:
+			velocity += velocity_modifier
+			emit_signal("velocity_changed", velocity)
 		_time_since_dash_start += delta
 	else:
 		_time_since_dash_start = 0.0

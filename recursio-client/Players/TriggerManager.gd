@@ -57,8 +57,8 @@ func _on_ammo_changed(ammo: int, action: Action, type: int) -> void:
 
 
 func _on_action_triggered(action: Action, type: int) -> void:
+	player.set_action_status(GlobalActionManager.get_action_type_for_trigger(type, player.ghost_index),true)
 	Logger.debug("action triggered for name: " + str(action.name) + " on time: " + str(action.activation_time), "actions")
-
 	if type == GlobalActionManager.Trigger.SPECIAL_MOVEMENT_START:
 		player.dash_start = action.activation_time
 		var dash_state = {"T": Server.get_server_time(), "S": 1}
@@ -69,6 +69,7 @@ func _on_action_triggered(action: Action, type: int) -> void:
 
 
 func _on_action_released(action: Action, type: int) -> void:
+	player.set_action_status(GlobalActionManager.get_action_type_for_trigger(type, player.ghost_index),false)
 	Logger.debug("action released for type: " + str(type), "actions")
 
 	if type == GlobalActionManager.Trigger.SPECIAL_MOVEMENT_START:
