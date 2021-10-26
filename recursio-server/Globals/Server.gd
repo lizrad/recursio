@@ -107,6 +107,12 @@ remote func receive_player_state(player_state):
 	_room_manager.get_room(room_id).update_player_state(player_id, player_state)
 
 
+remote func receive_player_ready():
+	var player_id = get_tree().get_rpc_sender_id()
+	var room_id = _player_room_dic[player_id]
+	_room_manager.get_room(room_id).update_player_ready(player_id)
+
+
 remote func receive_dash_state(dash_state):
 	var player_id = get_tree().get_rpc_sender_id()
 	var room_id = _player_room_dic[player_id]

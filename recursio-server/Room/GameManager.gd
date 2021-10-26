@@ -35,6 +35,8 @@ onready var _countdown_phase_time: int = Constants.get_value("gameplay", "countd
 # The length of one round
 onready var _game_phase_length: float = Constants.get_value("gameplay", "game_phase_time")
 
+onready var _time_to_game_phase: float =  _prep_phase_time + _latency_delay
+
 # The index of the current round
 var round_index: int = 0
 
@@ -71,34 +73,33 @@ func _process(delta):
 	if _round_timer == 0:
 		round_index += 1
 		_on_round_start()
-	
+
 	_round_timer += delta
 
-	var time_to_game_phase: float =  _prep_phase_time + _latency_delay
-	
 	# Pre-Game-Phase -> Do nothing
-	if _round_timer < time_to_game_phase:
+	if _round_timer < _time_to_game_phase:
 		return
 	
 	# Wait for half the countdown time
-	if _round_timer < time_to_game_phase + float(_countdown_phase_time)*0.5:
+	if _round_timer < _time_to_game_phase + float(_countdown_phase_time)*0.5:
 		return
 	
 	# Halfway through the countdown send picks to clients
-	if _round_timer<time_to_game_phase + _countdown_phase_time and not countdown_halfway_point_reached:
+	if _round_timer < _time_to_game_phase + _countdown_phase_time and not countdown_halfway_point_reached:
 		_before_second_half_of_countdown = false
 		countdown_halfway_point_reached = true
 		_countdown_halfway_done()
 		return
 	
 	# Game-Phase Start
-	if _round_timer >= time_to_game_phase +_countdown_phase_time and not game_phase_in_progress:
+	if _round_timer >= _time_to_game_phase +_countdown_phase_time and not game_phase_in_progress:
+		Logger.info("game phase start","gameplay")
 		game_phase_in_progress = true
 		_game_phase_start()
 		return
 	
 	# Game-Phase/Round End
-	if _round_timer >= time_to_game_phase +_countdown_phase_time + _game_phase_length and game_phase_in_progress:
+	if _round_timer >= _time_to_game_phase +_countdown_phase_time + _game_phase_length and game_phase_in_progress:
 		game_phase_in_progress = false
 		countdown_halfway_point_reached = false
 		_on_round_end()
