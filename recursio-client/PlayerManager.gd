@@ -274,6 +274,7 @@ func _on_round_start_received(round_index, server_time):
 	Logger.info("Countdown phase started", "gameplay")
 	_prep_phase_in_progress = false
 	player.hud.countdown_phase_start(Server.get_server_time())
+	player.button_overlay.hide_buttons()
 	Server.send_ghost_pick(player.ghost_index)
 	countdown_screen.visible = true
 	var countdown_phase_seconds = Constants.get_value("gameplay","countdown_phase_seconds")
