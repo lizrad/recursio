@@ -20,6 +20,11 @@ _global_script_classes=[ {
 "path": "res://Shared/Actions/ActionManager.gd"
 }, {
 "base": "Control",
+"class": "ButtonOverlay",
+"language": "GDScript",
+"path": "res://UI/ButtonOverlay.gd"
+}, {
+"base": "Control",
 "class": "CapturePointHUD",
 "language": "GDScript",
 "path": "res://UI/CapturePointHUD.gd"
@@ -52,6 +57,7 @@ _global_script_classes=[ {
 _global_script_class_icons={
 "Action": "",
 "ActionManager": "",
+"ButtonOverlay": "",
 "CapturePointHUD": "",
 "CharacterBase": "",
 "Enemy": "",

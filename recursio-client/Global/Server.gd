@@ -91,6 +91,10 @@ func send_player_state(player_state):
 	rpc_unreliable_id(1, "receive_player_state", player_state)
 
 
+func send_player_ready():
+	rpc_id(1, "receive_player_ready")
+
+
 func send_dash_state(dash_state):
 	rpc_id(1, "receive_dash_state", dash_state)
 

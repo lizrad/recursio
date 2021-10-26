@@ -6,6 +6,8 @@ export(float) var outer_deadzone := 0.8
 export(float) var rotate_threshold := 0.0
 
 onready var hud :HUD = get_node("HUD")
+onready var button_overlay :ButtonOverlay = get_node("ButtonOverlay")
+
 var game_id := -1
 var player_id := -1
 
@@ -197,7 +199,7 @@ func _handle_user_input():
 		_time_since_dash_start += delta
 	else:
 		_time_since_dash_start = 0.0
-	
+
 	move_and_slide(velocity)
 	transform.origin.y = 0
 
