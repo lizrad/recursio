@@ -74,19 +74,20 @@ func _physics_process(delta):
 		_hit_body(nearest_body)
 	else:
 		var other_player
-		print("hit bodies size "+str(bodies.size()))
+		Logger.debug("hit bodies size: %d" %[bodies.size()], "Melee")
 		for body in bodies:
 			if not body is CharacterBase:
 				continue
 			if body == _owning_player:
 				continue
-			print("hit "+body.name)
+
+			Logger.debug("hit body: %s" %[body.name], "Melee")
 			# make sure we hit other player last
 			if body is Player:
-				print ("found other player")
+				Logger.debug("found other player", "Melee")
 				other_player = body
 				continue
 			_hit_body(body)
 		if other_player:
-			print ("hit other player")
+			Logger.debug("hit other player", "Melee")
 			_hit_body(other_player)
