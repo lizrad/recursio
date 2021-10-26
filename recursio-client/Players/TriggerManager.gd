@@ -57,11 +57,13 @@ func _on_ammo_changed(ammo: int, action: Action, type: int) -> void:
 
 
 func _on_action_triggered(action: Action, type: int) -> void:
+	player.set_action_status(GlobalActionManager.get_action_type_for_trigger(type, player.ghost_index),true)
 	Logger.debug("action triggered for name: " + str(action.name) + " on time: " + str(action.activation_time), "actions")
 	InputManager.add_trigger_to_input_frame(type)
 
 
 func _on_action_released(action: Action, type: int) -> void:
+	player.set_action_status(GlobalActionManager.get_action_type_for_trigger(type, player.ghost_index),false)
 	Logger.debug("action released for type: " + str(type), "actions")
 	InputManager.remove_trigger_from_input_frame(type)
 

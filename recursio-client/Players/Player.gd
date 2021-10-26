@@ -5,6 +5,8 @@ export(float) var inner_deadzone := 0.2
 export(float) var outer_deadzone := 0.8
 export(float) var rotate_threshold := 0.0
 
+
+
 onready var hud :HUD = get_node("HUD")
 onready var button_overlay :ButtonOverlay = get_node("ButtonOverlay")
 
@@ -78,7 +80,7 @@ func move_camera_to_overview():
 func follow_camera():
 	$TransformReset/LerpedFollow.target = $ViewTarget
 
-
+	
 func get_normalized_input(type, outer_deadzone, inner_deadzone, min_length = 0.0):
 	var input = Vector2(
 		Input.get_action_strength(type + "_up") - Input.get_action_strength(type + "_down"),
@@ -211,7 +213,7 @@ func _handle_user_input():
 			),
 			0.0
 		)
-
+		
 		velocity += movement_input_vector * e_section
 		_time_since_dash_start += delta
 	else:
@@ -237,6 +239,7 @@ func apply_acceleration(new_acceleration):
 	#  velocity
 	velocity = lerp(velocity, current_target_velocity, drag)
 	velocity += acceleration
+	emit_signal("velocity_changed", velocity, -transform.basis.z, transform.basis.x)
 
 func swap_weapon_type(ghost_index):
 	_trigger_manager.swap_weapon_type(ghost_index)

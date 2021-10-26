@@ -20,6 +20,7 @@ shape = SubResource( 1 )
 
 [node name="Visualization" type="MeshInstance" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1 )
+visible = false
 cast_shadow = 0
 mesh = SubResource( 2 )
 material/0 = SubResource( 3 )
