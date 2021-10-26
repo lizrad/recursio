@@ -309,6 +309,8 @@ func _get_spawn_point(game_id, ghost_index):
 func _apply_visibility_mask(character):
 	if player:
 		character.get_node("Mesh_Body").material_override.set_shader_param("visibility_mask", player.get_visibility_mask())
+		if character.has_node("MiniMapIcon"):
+			character.get_node("MiniMapIcon").visibility_mask = player.get_visibility_mask()
 
 
 func _apply_visibility_always(character):
