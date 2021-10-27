@@ -18,3 +18,6 @@ color_scheme = "enemy"
 [node name="MiniMapIcon" parent="." index="2" instance=ExtResource( 5 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.09947, 0 )
 texture = ExtResource( 4 )
+
+[connection signal="action_status_changed" from="." to="CharacterModel" method="on_action_status_changed"]
+[connection signal="velocity_changed" from="." to="CharacterModel" method="on_velocity_changed"]
