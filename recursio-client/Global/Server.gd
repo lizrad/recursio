@@ -48,6 +48,10 @@ func connect_to_server():
 	get_tree().connect("connection_failed", self, "_on_connection_failed")
 	get_tree().connect("connected_to_server", self, "_on_connection_succeeded")
 
+func _notification(what):
+	if what == MainLoop.NOTIFICATION_WM_QUIT_REQUEST:
+		network.close_connection()
+		get_tree().quit() # default behavior
 
 func _on_connection_failed():
 	Logger.info("Failed to connect to server", "connection")
