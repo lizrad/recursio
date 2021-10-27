@@ -12,15 +12,15 @@ onready var front = get_node("../RootPivot/FrontPivot/Front")
 var _time_since_start = 0
 var _default_color 
 
-func _ready():
-	_default_color = front.material_override.albedo_color
-	
+
 func start_animation():
+	_default_color = front.material_override.albedo_color
 	_time_since_start = 0
+	front.material_override.albedo_color = attack_color
 
 func get_keyframe(delta):
 	_reset_keyframes()
-	front.material_override.albedo_color = attack_color
+	
 	if _time_since_start > animation_duration:
 		emit_signal("animation_over")
 		front.material_override.albedo_color = _default_color

@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=19 format=2]
 
 [ext_resource path="res://Players/Visuals/Animation/Animator.gd" type="Script" id=1]
 [ext_resource path="res://Players/Visuals/Animation/TurnAnimator.gd" type="Script" id=2]
@@ -10,9 +10,9 @@
 [ext_resource path="res://Players/Visuals/Animation/WallAnimator.gd" type="Script" id=8]
 [ext_resource path="res://Players/Visuals/CharacterModelController.gd" type="Script" id=9]
 
-[sub_resource type="SpatialMaterial" id=1]
+[sub_resource type="SpatialMaterial" id=8]
+resource_name = "lambert1"
 flags_unshaded = true
-albedo_color = Color( 0, 1, 0.952941, 1 )
 
 [sub_resource type="SpatialMaterial" id=2]
 flags_unshaded = true
@@ -34,6 +34,10 @@ surfaces/0 = {
 "vertex_count": 352
 }
 
+[sub_resource type="SpatialMaterial" id=9]
+resource_name = "lambert1"
+flags_unshaded = true
+
 [sub_resource type="ArrayMesh" id=4]
 blend_shape_mode = 0
 surfaces/0 = {
@@ -53,6 +57,10 @@ surfaces/0 = {
 [sub_resource type="SpatialMaterial" id=5]
 flags_unshaded = true
 albedo_color = Color( 1, 0, 0, 1 )
+
+[sub_resource type="SpatialMaterial" id=10]
+resource_name = "lambert1"
+flags_unshaded = true
 
 [sub_resource type="SpatialMaterial" id=6]
 flags_unshaded = true
@@ -84,7 +92,7 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.548254 )
 
 [node name="Front" type="MeshInstance" parent="RootPivot/FrontPivot"]
 transform = Transform( 1.38886, 0, 0, 0, 1.38886, 0, 0, 0, 1.38886, 0, 0, -0.398254 )
-material_override = SubResource( 1 )
+material_override = SubResource( 8 )
 cast_shadow = 0
 mesh = SubResource( 3 )
 material/0 = null
@@ -94,6 +102,7 @@ transform = Transform( 0.998566, 0, 0, 0, 0.998566, 0, 0, 0, 0.998566, 0, 0, 0 )
 
 [node name="Middle" type="MeshInstance" parent="RootPivot/MiddlePivot"]
 transform = Transform( 0.976267, 0, 0.976267, 0, 1.38065, 0, -0.976267, 0, 0.976267, 0.0821635, 0, 0.104462 )
+material_override = SubResource( 9 )
 cast_shadow = 0
 mesh = SubResource( 4 )
 material/0 = SubResource( 5 )
@@ -103,6 +112,7 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.566682 )
 
 [node name="Back" type="MeshInstance" parent="RootPivot/BackPivot"]
 transform = Transform( 1.38886, 0, 0, 0, 1.38886, 0, 0, 0, 1.38886, 0, 0, 0.438948 )
+material_override = SubResource( 10 )
 cast_shadow = 0
 mesh = SubResource( 7 )
 material/0 = null
