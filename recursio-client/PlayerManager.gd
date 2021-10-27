@@ -311,13 +311,15 @@ func _get_spawn_point(game_id, ghost_index):
 
 func _apply_visibility_mask(character):
 	if player:
-		character.get_node("Mesh_Body").material_override.set_shader_param("visibility_mask", player.get_visibility_mask())
+		#character.get_node("CharacterModel").material_override.set_shader_param("visibility_mask", player.get_visibility_mask())
+		character.get_node("CharacterModel").set_shader_param("visibility_mask", player.get_visibility_mask())
 		if character.has_node("MiniMapIcon"):
 			character.get_node("MiniMapIcon").visibility_mask = player.get_visibility_mask()
 
 
 func _apply_visibility_always(character):
-	character.get_node("Mesh_Body").material_override.set_shader_param("always_draw", true)
+	#character.get_node("Mesh_Body").material_override.set_shader_param("always_draw", true)
+	character.get_node("CharacterModel").set_shader_param("always_draw", true)
 
 
 func _create_enemy_ghost(enemy_id, gameplay_record):
@@ -497,6 +499,7 @@ func _on_ghost_hit(hit_ghost_player_owner, hit_ghost_id):
 
 func _on_player_action(player_id, action_type):
 	var player = enemies[player_id]
+	player.set_action_status(action_type, true)
 	var action = GlobalActionManager.get_action(action_type)
 	GlobalActionManager.set_active(action, true, player, get_tree().root)
 

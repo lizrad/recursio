@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://Players/CharacterBase.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Players/Player.gd" type="Script" id=2]
@@ -15,6 +15,39 @@
 [ext_resource path="res://UI/ButtonOverlay.tscn" type="PackedScene" id=13]
 [ext_resource path="res://addons/ascii-shader/AsciiRenderer.tscn" type="PackedScene" id=14]
 
+[sub_resource type="GDScript" id=1]
+script/source = "extends Node
+
+export(String, \"player\", \"enemy\", \"player_ghost\", \"enemy_ghost\") var color_scheme = \"player\"
+
+var animator 
+var front 
+var middle 
+var back 
+
+func _ready():
+	animator = get_node(\"Animator\")
+	front = get_node(\"RootPivot/FrontPivot/Front\")
+	middle = get_node(\"RootPivot/MiddlePivot/Middle\")
+	back = get_node(\"RootPivot/BackPivot/Back\")
+	set_color_scheme(color_scheme)
+
+func set_shader_param(param, value):
+	pass
+
+func set_color_scheme(new_color_scheme:String):
+	front.material_override.albedo_color = Color(Constants.get_value(\"colors\", new_color_scheme+\"_main\"))
+	middle.material_override.albedo_color = Color(Constants.get_value(\"colors\", new_color_scheme+\"_primary_accent\"))
+	back.material_override.albedo_color = Color(Constants.get_value(\"colors\", new_color_scheme+\"_main\"))
+	color_scheme = new_color_scheme
+
+func on_action_status_changed(action_type, status):
+	animator.action_status_changed(action_type, status)
+
+func on_velocity_changed(velocity, front_vector, right_vector):
+	animator.velocity_changed(velocity, front_vector, right_vector)
+"
+
 [node name="Player" groups=[
 "Friend",
 ] instance=ExtResource( 1 )]
@@ -22,6 +55,7 @@ script = ExtResource( 2 )
 
 [node name="CharacterModel" parent="." index="1" instance=ExtResource( 10 )]
 transform = Transform( -1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0 )
+script = SubResource( 1 )
 
 [node name="TriggerManager" type="Node" parent="." index="2"]
 script = ExtResource( 3 )
@@ -69,6 +103,7 @@ __meta__ = {
 }
 
 [node name="AsciiRenderer" parent="TransformReset/LerpedFollow/Camera" index="0" instance=ExtResource( 14 )]
+visible = false
 
 [node name="OverviewTarget" type="Position3D" parent="TransformReset" index="1"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10, 0 )
