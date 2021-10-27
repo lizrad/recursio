@@ -82,7 +82,7 @@ surfaces/0 = {
 "vertex_count": 386
 }
 
-[node name="PlayerModel" type="Spatial"]
+[node name="CharacterModel" type="Spatial"]
 script = ExtResource( 9 )
 
 [node name="RootPivot" type="Spatial" parent="."]
