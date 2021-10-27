@@ -13,6 +13,7 @@ script = ExtResource( 2 )
 
 [node name="CharacterModel" parent="." index="0" instance=ExtResource( 3 )]
 transform = Transform( -1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0 )
+color_scheme = "enemy"
 
 [node name="MiniMapIcon" parent="." index="2" instance=ExtResource( 5 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.09947, 0 )
