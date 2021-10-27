@@ -19,7 +19,7 @@ signal ghost_attack
 
 func init(gameplay_record: Dictionary, ghost_color: Color):
 	record = gameplay_record.duplicate(true)
-	ghost_index = gameplay_record["G"]
+	self.ghost_index = gameplay_record["G"]
 	if has_node("Mesh_Body"):
 		if $Mesh_Body and $Mesh_Body.material_override:
 			$Mesh_Body.material_override.set_shader_param("color", ghost_color)

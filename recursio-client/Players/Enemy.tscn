@@ -1,43 +1,10 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Players/CharacterBase.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Players/Enemy.gd" type="Script" id=2]
 [ext_resource path="res://Players/Visuals/CharacterModel.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Resources/Icons/icon_enemy_minimap.png" type="Texture" id=4]
 [ext_resource path="res://Players/MiniMapIcon.tscn" type="PackedScene" id=5]
-
-[sub_resource type="GDScript" id=1]
-script/source = "extends Node
-
-export(String, \"player\", \"enemy\", \"player_ghost\", \"enemy_ghost\") var color_scheme = \"player\"
-
-var animator 
-var front 
-var middle 
-var back 
-
-func _ready():
-	animator = get_node(\"Animator\")
-	front = get_node(\"RootPivot/FrontPivot/Front\")
-	middle = get_node(\"RootPivot/MiddlePivot/Middle\")
-	back = get_node(\"RootPivot/BackPivot/Back\")
-	set_color_scheme(color_scheme)
-
-func set_shader_param(param, value):
-	pass
-
-func set_color_scheme(new_color_scheme:String):
-	front.material_override.albedo_color = Color(Constants.get_value(\"colors\", new_color_scheme+\"_main\"))
-	middle.material_override.albedo_color = Color(Constants.get_value(\"colors\", new_color_scheme+\"_primary_accent\"))
-	back.material_override.albedo_color = Color(Constants.get_value(\"colors\", new_color_scheme+\"_main\"))
-	color_scheme = new_color_scheme
-
-func on_action_status_changed(action_type, status):
-	animator.action_status_changed(action_type, status)
-
-func on_velocity_changed(velocity, front_vector, right_vector):
-	animator.velocity_changed(velocity, front_vector, right_vector)
-"
 
 [node name="Enemy" groups=[
 "Enemy",
@@ -46,12 +13,8 @@ script = ExtResource( 2 )
 
 [node name="CharacterModel" parent="." index="0" instance=ExtResource( 3 )]
 transform = Transform( -1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0 )
-script = SubResource( 1 )
 color_scheme = "enemy"
 
 [node name="MiniMapIcon" parent="." index="2" instance=ExtResource( 5 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.09947, 0 )
 texture = ExtResource( 4 )
-
-[connection signal="action_status_changed" from="." to="CharacterModel" method="on_action_status_changed"]
-[connection signal="velocity_changed" from="." to="CharacterModel" method="on_velocity_changed"]

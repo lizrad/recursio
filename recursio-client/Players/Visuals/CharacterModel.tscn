@@ -10,16 +10,16 @@
 [ext_resource path="res://Players/Visuals/Animation/WallAnimator.gd" type="Script" id=8]
 [ext_resource path="res://Players/Visuals/CharacterModelController.gd" type="Script" id=9]
 
-[sub_resource type="SpatialMaterial" id=2]
+[sub_resource type="SpatialMaterial" id=9]
 resource_local_to_scene = true
 resource_name = "lambert1"
 flags_unshaded = true
 
-[sub_resource type="SpatialMaterial" id=3]
+[sub_resource type="SpatialMaterial" id=2]
 flags_unshaded = true
 albedo_color = Color( 0, 1, 0.952941, 1 )
 
-[sub_resource type="ArrayMesh" id=4]
+[sub_resource type="ArrayMesh" id=10]
 blend_shape_mode = 0
 surfaces/0 = {
 "aabb": AABB( -0.388192, -0.10452, -0.00468824, 0.776384, 0.20904, 0.719158 ),
@@ -28,19 +28,19 @@ surfaces/0 = {
 "blend_shape_data": [  ],
 "format": 97559,
 "index_count": 864,
-"material": SubResource( 3 ),
+"material": SubResource( 2 ),
 "name": "lambert1",
 "primitive": 4,
 "skeleton_aabb": [  ],
 "vertex_count": 352
 }
 
-[sub_resource type="SpatialMaterial" id=5]
+[sub_resource type="SpatialMaterial" id=11]
 resource_local_to_scene = true
 resource_name = "lambert1"
 flags_unshaded = true
 
-[sub_resource type="ArrayMesh" id=6]
+[sub_resource type="ArrayMesh" id=12]
 blend_shape_mode = 0
 surfaces/0 = {
 "aabb": AABB( -0.1859, -0.1859, -0.269563, 0.371801, 0.371801, 0.371801 ),
@@ -49,27 +49,27 @@ surfaces/0 = {
 "blend_shape_data": [  ],
 "format": 97559,
 "index_count": 900,
-"material": SubResource( 3 ),
+"material": SubResource( 2 ),
 "name": "lambert1",
 "primitive": 4,
 "skeleton_aabb": [  ],
 "vertex_count": 648
 }
 
-[sub_resource type="SpatialMaterial" id=7]
+[sub_resource type="SpatialMaterial" id=13]
 flags_unshaded = true
 albedo_color = Color( 1, 0, 0, 1 )
 
-[sub_resource type="SpatialMaterial" id=8]
+[sub_resource type="SpatialMaterial" id=14]
 resource_local_to_scene = true
 resource_name = "lambert1"
 flags_unshaded = true
 
-[sub_resource type="SpatialMaterial" id=9]
+[sub_resource type="SpatialMaterial" id=8]
 flags_unshaded = true
 albedo_color = Color( 0, 1, 0.952941, 1 )
 
-[sub_resource type="ArrayMesh" id=10]
+[sub_resource type="ArrayMesh" id=15]
 blend_shape_mode = 0
 surfaces/0 = {
 "aabb": AABB( -0.550024, -0.10452, -0.714169, 1.10005, 0.20904, 0.71015 ),
@@ -78,7 +78,7 @@ surfaces/0 = {
 "blend_shape_data": [  ],
 "format": 97559,
 "index_count": 1140,
-"material": SubResource( 9 ),
+"material": SubResource( 8 ),
 "name": "lambert1",
 "primitive": 4,
 "skeleton_aabb": [  ],
@@ -95,9 +95,9 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.548254 )
 
 [node name="Front" type="MeshInstance" parent="RootPivot/FrontPivot"]
 transform = Transform( 1.38886, 0, 0, 0, 1.38886, 0, 0, 0, 1.38886, 0, 0, -0.398254 )
-material_override = SubResource( 2 )
+material_override = SubResource( 9 )
 cast_shadow = 0
-mesh = SubResource( 4 )
+mesh = SubResource( 10 )
 material/0 = null
 
 [node name="MiddlePivot" type="Spatial" parent="RootPivot"]
@@ -105,19 +105,19 @@ transform = Transform( 0.998566, 0, 0, 0, 0.998566, 0, 0, 0, 0.998566, 0, 0, 0 )
 
 [node name="Middle" type="MeshInstance" parent="RootPivot/MiddlePivot"]
 transform = Transform( 0.976267, 0, 0.976267, 0, 1.38065, 0, -0.976267, 0, 0.976267, 0.0821635, 0, 0.104462 )
-material_override = SubResource( 5 )
+material_override = SubResource( 11 )
 cast_shadow = 0
-mesh = SubResource( 6 )
-material/0 = SubResource( 7 )
+mesh = SubResource( 12 )
+material/0 = SubResource( 13 )
 
 [node name="BackPivot" type="Spatial" parent="RootPivot"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.566682 )
 
 [node name="Back" type="MeshInstance" parent="RootPivot/BackPivot"]
 transform = Transform( 1.38886, 0, 0, 0, 1.38886, 0, 0, 0, 1.38886, 0, 0, 0.438948 )
-material_override = SubResource( 8 )
+material_override = SubResource( 14 )
 cast_shadow = 0
-mesh = SubResource( 10 )
+mesh = SubResource( 15 )
 material/0 = null
 
 [node name="Animator" type="Node" parent="."]
@@ -147,4 +147,3 @@ script = ExtResource( 6 )
 front_extent = 1.5
 middle_z_extent = 0.5
 middle_scale_extent = 0.5
-attack_color = Color( 1, 0, 0, 1 )

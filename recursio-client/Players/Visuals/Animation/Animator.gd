@@ -47,7 +47,7 @@ func _ready():
 func action_status_changed(action_type, status):
 	Logger.debug("Status of "+ str(action_type)+" changed to "+str(status), "animation")
 	var animator = _action_animations[action_type]
-	if status:
+	if status and not _animation_status[animator] :
 		animator.connect("animation_over", self, "_stop_animation", [animator])
 		animator.start_animation()
 		_animation_status[animator] = true

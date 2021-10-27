@@ -5,18 +5,24 @@ export var front_extent := 0.75
 export var middle_z_extent := 0.375
 export var middle_scale_extent := 0.3
 export var middle_rotation_periods := 2
-export var attack_color = Color.tomato
+
+var _attack_color = Color.tomato
 
 onready var front = get_node("../RootPivot/FrontPivot/Front")
 
 var _time_since_start = 0
 var _default_color 
 
+func _ready():
+	get_parent().connect("color_scheme_changed",self,"_on_color_scheme_changed")
+
+func _on_color_scheme_changed(new_color_scheme):
+	_attack_color=Color(Constants.get_value("colors",new_color_scheme + "_secondary_accent"))
 
 func start_animation():
 	_default_color = front.material_override.albedo_color
 	_time_since_start = 0
-	front.material_override.albedo_color = attack_color
+	front.material_override.albedo_color = _attack_color
 
 func get_keyframe(delta):
 	_reset_keyframes()
