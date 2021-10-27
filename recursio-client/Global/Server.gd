@@ -33,18 +33,12 @@ signal ghost_picks(player_pick, enemy_picks)
 signal player_action(player_id, action_type)
 
 func _ready():
-	#set_physics_process(false)
-	#connect_to_server()
-	pass
+	set_physics_process(false)
+	connect_to_server()
 
-var timer = 0.2
+
 func _physics_process(delta):
-	if timer >0:
-		timer-=delta
-		if timer<=0:
-			emit_signal("spawning_player", 1, Vector3(-18,0,-3), 1)
-			emit_signal("round_start_received", 0, -1)
-	#_run_server_clock(delta)
+	_run_server_clock(delta)
 
 
 func connect_to_server():
@@ -67,7 +61,7 @@ func _on_connection_succeeded():
 
 
 func _start_clock_synchronization():
-	#rpc_id(1, "fetch_server_time", OS.get_system_time_msecs())
+	rpc_id(1, "fetch_server_time", OS.get_system_time_msecs())
 	var timer = Timer.new()
 	var clock_update_per_seconds = 2.0
 	timer.wait_time = (1.0 / clock_update_per_seconds)
@@ -86,24 +80,22 @@ func _run_server_clock(delta):
 
 
 func _determine_latency():
-	#rpc_id(1, "determine_latency", OS.get_system_time_msecs())
-	pass
+	rpc_id(1, "determine_latency", OS.get_system_time_msecs())
+
 
 func get_server_time():
 	return server_clock
 
 
 func send_player_input_data(input_data: InputData):
-	#rpc_unreliable_id(1, "receive_player_input_data", input_data.to_array())
-	pass
+	rpc_unreliable_id(1, "receive_player_input_data", input_data.to_array())
+
 
 func send_player_ready():
-	#rpc_id(1, "receive_player_ready")
-	pass
+	rpc_id(1, "receive_player_ready")
 
 func send_ghost_pick(ghost_index):
-	#rpc_id(1, "receive_ghost_pick",ghost_index)
-	pass
+	rpc_id(1, "receive_ghost_pick",ghost_index)
 
 
 remote func spawn_player(player_id, spawn_point, game_id):
