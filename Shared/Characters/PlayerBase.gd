@@ -18,10 +18,12 @@ var _base = Constants.get_value("movement", "scale_to_view_base")
 var _factor = Constants.get_value("movement", "scale_to_view_factor")
 var _move_acceleration = Constants.get_value("movement", "acceleration")
 
+# RecordManager for recording movement and actions
+var _record_manager: RecordManager = RecordManager.new()
 
-# Sets "_movement_vector" and thereby moves it
+
 # Should only be called in "physics_update()"
-func move_and_rotate(movement: Vector3, rotation: Vector3) -> void:
+func apply_input(movement: Vector3, rotation: Vector3, buttons: int) -> void:
 	# Nothing to do if player can't move
 	if _block_movement:
 		return
@@ -51,3 +53,19 @@ func move_and_rotate(movement: Vector3, rotation: Vector3) -> void:
 	_velocity += _acceleration * get_physics_process_delta_time()
 	
 	_kb.move_and_slide(_velocity)
+	
+	# Trigger all actions with base
+	.trigger_actions(buttons)
+	
+	# Add everything to the recording
+	_record_manager.add_record_frame(movement, .get_rotation_y(), buttons)
+
+
+func get_record_data() -> RecordData:
+	return _record_manager.record_data
+
+
+
+
+
+

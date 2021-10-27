@@ -36,6 +36,6 @@ func start_playing(start_time: int) -> void:
 
 
 func _apply_record_frame(record_frame: RecordFrame):
-	self.set_position(record_frame.position)
-	self.set_rotation_y(record_frame.rotation_y)
-	self.trigger_actions(record_frame.buttons)
+	.set_position(record_frame.position)
+	.set_rotation_y(record_frame.rotation_y)
+	.trigger_actions(record_frame.buttons)
