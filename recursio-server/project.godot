@@ -42,7 +42,7 @@ _global_script_classes=[ {
 "base": "CharacterBase",
 "class": "Ghost",
 "language": "GDScript",
-"path": "res://Shared/Ghost.gd"
+"path": "res://Shared/Characters/Ghost.gd"
 }, {
 "base": "CharacterBase",
 "class": "GhostBase",

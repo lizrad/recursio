@@ -1,5 +1,6 @@
 tool
 extends Spatial
+class_name MiniMapIcon
 
 
 export var texture: Texture

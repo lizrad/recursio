@@ -1,4 +1,5 @@
 extends Spatial
+class_name LerpedFollow
 
 
 export(NodePath) var target_node

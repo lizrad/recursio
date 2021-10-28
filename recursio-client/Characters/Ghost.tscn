@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://Rendering/Visibility.gdshader" type="Shader" id=1]
 [ext_resource path="res://Shared/Characters/GhostBase.tscn" type="PackedScene" id=2]
 [ext_resource path="res://UI/MiniMapIcon.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Characters/Ghost.gd" type="Script" id=4]
 
 [sub_resource type="ShaderMaterial" id=1]
 resource_local_to_scene = true
@@ -14,15 +15,14 @@ shader_param/always_draw = false
 
 [sub_resource type="PrismMesh" id=2]
 
-[node name="Ghost" type="Node"]
+[node name="Ghost" instance=ExtResource( 2 )]
+script = ExtResource( 4 )
 
-[node name="GhostBase" parent="." instance=ExtResource( 2 )]
-
-[node name="Mesh_Body" type="MeshInstance" parent="."]
+[node name="Mesh_Body" type="MeshInstance" parent="." index="1"]
 transform = Transform( -0.75, -0.000108995, -0.00015581, 0.000116805, 0.000285584, -1, 0.000109051, -0.75, -0.00038075, 0, 0, 0 )
 material_override = SubResource( 1 )
 mesh = SubResource( 2 )
 material/0 = null
 
-[node name="MiniMapIcon" parent="." instance=ExtResource( 3 )]
+[node name="MiniMapIcon" parent="." index="2" instance=ExtResource( 3 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.48839, 0 )

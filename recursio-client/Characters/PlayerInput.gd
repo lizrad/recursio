@@ -7,16 +7,20 @@ export(float) var rotate_threshold := 0.0
 onready var _player: Player = get_parent()
 onready var _action_manager = _player.get_action_manager()
 
-
+# Maps the actual button to the internal enums
 var _trigger_dic : Dictionary = {
 	"player_shoot": ActionManager.Trigger.FIRE_START,
 	"player_melee": ActionManager.Trigger.DEFAULT_ATTACK_START,
 	"player_dash": ActionManager.Trigger.SPECIAL_MOVEMENT_START
 }
 
+# Action for pressing fire
 var _fire_action = _action_manager.get_action(ActionManager.ActionType.HITSCAN)
+# Action for melee
 var _default_attack_action = _action_manager.get_action(ActionManager.ActionType.MELEE)
+# Action for dash
 var _special_movement_action = _action_manager.get_action(ActionManager.ActionType.DASH)
+
 
 func _ready():
 	# Subscribe to Action Events
@@ -39,6 +43,7 @@ func _physics_process(delta):
 	InputManager.set_triggers_in_input_frame(buttons_pressed)
 
 
+# Changes the weapon depending on the given timeline index
 func swap_weapon_type(timeline_index) -> void:
 	_fire_action.disconnect("ammunition_changed", self, "_on_fire_ammo_changed")
 	_fire_action = _action_manager.get_action_for_trigger(ActionManager.Trigger.FIRE_START, timeline_index)

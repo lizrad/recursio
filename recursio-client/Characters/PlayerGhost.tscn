@@ -1,10 +1,22 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Characters/Ghost.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Rendering/VisibilityLight.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Rendering/Visibility.gdshader" type="Shader" id=3]
+[ext_resource path="res://Characters/PlayerGhost.gd" type="Script" id=4]
 
-[node name="PlayerGhost" type="Node"]
+[sub_resource type="ShaderMaterial" id=1]
+resource_local_to_scene = true
+shader = ExtResource( 3 )
+shader_param/color = Color( 0.443137, 0.443137, 0.443137, 1 )
+shader_param/visibility_threshold = 0.2
+shader_param/camera_size = 70.0
+shader_param/always_draw = false
 
-[node name="Ghost" parent="." instance=ExtResource( 1 )]
+[node name="PlayerGhost" instance=ExtResource( 1 )]
+script = ExtResource( 4 )
 
-[node name="VisibilityLight" parent="." instance=ExtResource( 2 )]
+[node name="Mesh_Body" parent="." index="1"]
+material_override = SubResource( 1 )
+
+[node name="VisibilityLight" parent="." index="3" instance=ExtResource( 2 )]

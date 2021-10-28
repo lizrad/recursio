@@ -3,8 +3,14 @@ class_name Player
 
 onready var _hud: HUD = get_node("HUD")
 
+onready var _light_viewport = get_node("LightViewport")
+onready var _overview_light = get_node("TransformReset/OverviewLight")
+onready var _overview_target = get_node("TransformReset/OverviewTarget")
+onready var _lerped_follow: LerpedFollow = get_node("TransformReset/LerpedFollow")
+onready var _view_target = get_node("ViewTarget")
+
 func get_visibility_mask():
-	return $LightViewport.get_texture()
+	return _light_viewport.get_texture()
 
 
 func reset():
@@ -17,15 +23,15 @@ func move_back_to_spawnpoint():
 
 
 func set_overview_light_enabled(enabled):
-	$TransformReset/OverviewLight.enabled = enabled
+	_overview_light.enabled = enabled
 
 
 func move_camera_to_overview():
-	$TransformReset/LerpedFollow.target = $TransformReset/OverviewTarget
+	_lerped_follow.target = _overview_target
 
 
 func follow_camera():
-	$TransformReset/LerpedFollow.target = $ViewTarget
+	_lerped_follow.target = _view_target
 
 
 func update_weapon_type(weapon_action: Action) -> void:
