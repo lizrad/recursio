@@ -1,30 +1,28 @@
 [gd_scene load_steps=15 format=2]
 
-[ext_resource path="res://Players/CharacterBase.tscn" type="PackedScene" id=1]
-[ext_resource path="res://Players/Player.gd" type="Script" id=2]
-[ext_resource path="res://Players/TriggerManager.gd" type="Script" id=3]
+[ext_resource path="res://Shared/Characters/PlayerBase.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Characters/Player.gd" type="Script" id=2]
 [ext_resource path="res://UI/HUD.tscn" type="PackedScene" id=4]
-[ext_resource path="res://Players/ViewEnvironment.tres" type="Environment" id=5]
-[ext_resource path="res://Players/VisibilityEnvironment.tres" type="Environment" id=6]
+[ext_resource path="res://Rendering/ViewEnvironment.tres" type="Environment" id=5]
+[ext_resource path="res://Rendering/VisibilityEnvironment.tres" type="Environment" id=6]
 [ext_resource path="res://Util/LerpedFollow.tscn" type="PackedScene" id=7]
-[ext_resource path="res://Players/ViewTarget.gd" type="Script" id=8]
-[ext_resource path="res://Players/VisibilityLight.tscn" type="PackedScene" id=9]
-[ext_resource path="res://Players/Visuals/CharacterModel.tscn" type="PackedScene" id=10]
-[ext_resource path="res://Players/OverviewLight.gd" type="Script" id=11]
+[ext_resource path="res://Util/ViewTarget.gd" type="Script" id=8]
+[ext_resource path="res://Rendering/VisibilityLight.tscn" type="PackedScene" id=9]
+[ext_resource path="res://Characters/Visuals/CharacterModel.tscn" type="PackedScene" id=10]
+[ext_resource path="res://Rendering/OverviewLight.gd" type="Script" id=11]
 [ext_resource path="res://Resources/Icons/icon_player_minimap.png" type="Texture" id=12]
 [ext_resource path="res://UI/ButtonOverlay.tscn" type="PackedScene" id=13]
 [ext_resource path="res://addons/ascii-shader/AsciiRenderer.tscn" type="PackedScene" id=14]
+[ext_resource path="res://Characters/PlayerInput.gd" type="Script" id=15]
 
-[node name="Player" groups=[
-"Friend",
-] instance=ExtResource( 1 )]
+[node name="Player" instance=ExtResource( 1 )]
 script = ExtResource( 2 )
 
 [node name="CharacterModel" parent="." index="1" instance=ExtResource( 10 )]
 transform = Transform( -1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0 )
 
-[node name="TriggerManager" type="Node" parent="." index="2"]
-script = ExtResource( 3 )
+[node name="PlayerInput" type="Node" parent="." index="2"]
+script = ExtResource( 15 )
 
 [node name="ButtonOverlay" parent="." index="3" instance=ExtResource( 13 )]
 visible = false

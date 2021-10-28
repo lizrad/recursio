@@ -84,17 +84,17 @@ func rewind_phase_start(round_index, start_time) -> void:
 
 func update_fire_action_ammo(amount: int) -> void:
 	Logger.info("Set fire ammo to: " + str(amount), "HUD")
-	ammo.text = str(amount)
+	_ammo.text = str(amount)
 
 
 func update_special_movement_ammo(amount: int) -> void:
 	Logger.info("Set fire ammo to: " + str(amount), "HUD")
-	dash.text = str(amount)
+	_dash.text = str(amount)
 
 
 func update_weapon_type(weapon_action: Action) ->void:
 	Logger.info("Update ammo type", "HUD")
-	ammo_type.texture = load(weapon_action.img_bullet.resource_path)
+	_ammo_type.texture = load(weapon_action.img_bullet.resource_path)
 
 
 # Sets the internal player id for the capture points

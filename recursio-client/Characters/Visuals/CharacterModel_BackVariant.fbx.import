@@ -2,12 +2,12 @@
 
 importer="scene"
 type="PackedScene"
-path="res://.import/CharacterModel.fbx-486cd7a1db364a43d9a502746ea3f1d7.scn"
+path="res://.import/CharacterModel_BackVariant.fbx-07348cf7c594b39fb6eaeacd383d20d5.scn"
 
 [deps]
 
-source_file="res://Players/Visuals/CharacterModel.fbx"
-dest_files=[ "res://.import/CharacterModel.fbx-486cd7a1db364a43d9a502746ea3f1d7.scn" ]
+source_file="res://Characters/Visuals/CharacterModel_BackVariant.fbx"
+dest_files=[ "res://.import/CharacterModel_BackVariant.fbx-07348cf7c594b39fb6eaeacd383d20d5.scn" ]
 
 [params]
 

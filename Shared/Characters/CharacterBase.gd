@@ -2,17 +2,20 @@ extends Node
 class_name CharacterBase
 
 signal hit()
+signal action_status_changed(action_type, status)
+signal velocity_changed(velocity, front_vector, right_vector)
+signal timeline_index_changed(ghost_index)
 
 
 # The timeline this character belongs to
-var timeline_index: int = -1
+var timeline_index: int = -1 setget set_timeline_index
 # The spawn point of this character
-var spawn_point: Vector3 = Vector3.ZERO
+var spawn_point: Vector3
 
-# Property for quick access
-var position: Vector3 = Vector3.ZERO setget set_position, get_position
-# Property for quick access
-var rotation_y: float = 0.0 setget set_rotation_y, get_rotation_y
+
+var position: Vector3 setget set_position, get_position
+var rotation_y: float setget set_rotation_y, get_rotation_y
+var velocity: Vector3 setget set_velocity
 
 
 # Underlying kinematic body
@@ -42,6 +45,16 @@ func set_position(new_position: Vector3) -> void:
 # Sets the y-rotation of the underlying kinematic body
 func set_rotation_y(new_rotation_y: float) -> void:
 	_kb.rotation.y = new_rotation_y
+
+
+func set_velocity(new_velocity):
+	emit_signal("velocity_changed", velocity, -_kb.transform.basis.z, _kb.transform.basis.x)
+	velocity = new_velocity
+
+
+func set_timeline_index(new_timeline_index):
+	emit_signal("ghost_index_changed", new_timeline_index)
+	timeline_index = new_timeline_index
 
 
 func hit() -> void:

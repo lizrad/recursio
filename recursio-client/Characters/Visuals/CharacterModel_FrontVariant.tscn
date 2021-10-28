@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://Players/Visuals/lambert1.material" type="Material" id=1]
-[ext_resource path="res://Players/Visibility.gdshader" type="Shader" id=2]
+[ext_resource path="res://Characters/Visuals/lambert1.material" type="Material" id=1]
+[ext_resource path="res://Characters/Visibility.gdshader" type="Shader" id=2]
 
 [sub_resource type="ShaderMaterial" id=2]
 shader = ExtResource( 2 )
