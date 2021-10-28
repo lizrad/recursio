@@ -20,7 +20,7 @@ func _physics_process(delta):
 	for player_id in player_inputs:
 		if players.has(player_id):
 			players[player_id].apply_player_input_data(player_inputs[player_id], delta)
-			
+
 
 func reset():
 	stop_recording()
@@ -31,7 +31,7 @@ func reset():
 	
 	for player_id in players:
 		players[player_id].reset()
-	
+
 	reset_spawnpoints()
 	player_inputs.clear()
 

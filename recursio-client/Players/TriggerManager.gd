@@ -24,9 +24,9 @@ func _ready():
 	setup_action_connections(_current_default_attack_action, GlobalActionManager.Trigger.DEFAULT_ATTACK_START)
 
 	# TODO: move to outer action initialization
-	hud.update_ammo_type(_current_fire_action.img_bullet);
 	hud.update_ammo(GlobalActionManager.Trigger.FIRE_START, _current_fire_action.max_ammo)
 	hud.update_ammo(GlobalActionManager.Trigger.SPECIAL_MOVEMENT_START, _current_special_movement_action.max_ammo)
+	hud.update_ammo_type(_current_fire_action.img_bullet)
 
 
 func setup_action_connections(action, type):
