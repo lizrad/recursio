@@ -2,7 +2,7 @@ extends Node
 class_name ActionManager
 
 enum Trigger {
-	NONE = 0x00,
+	NONE = 0,
 	FIRE_START = 2,
 	FIRE_END = -1,
 	SPECIAL_MOVEMENT_START = 4,
@@ -30,14 +30,14 @@ var action_resources = {
 var _instanced_actions = []
 
 
-func get_action(action_type):
+static func get_action(action_type):
 	var instance = action_resources[action_type].duplicate()
 	instance.ammunition = instance.max_ammo
 	
 	return instance
 
 
-func get_action_type_for_trigger(trigger, ghost_index):
+static func get_action_type_for_trigger(trigger, ghost_index):
 	if trigger == Trigger.FIRE_START:
 		if ghost_index == Constants.get_value("ghosts", "wall_placing_ghost_index"):
 			return ActionType.WALL
@@ -49,7 +49,7 @@ func get_action_type_for_trigger(trigger, ghost_index):
 		return ActionType.MELEE
 
 
-func get_action_for_trigger(trigger, ghost_index):
+static func get_action_for_trigger(trigger, ghost_index):
 	return get_action(get_action_type_for_trigger(trigger, ghost_index))
 
 

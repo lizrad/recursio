@@ -1,5 +1,5 @@
 extends CharacterBase
-class_name Enemy
+#class_name Enemy
 
 var last_position
 var last_velocity

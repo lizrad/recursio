@@ -63,6 +63,10 @@ func trigger_actions(buttons: int) -> void:
 		_action_manager.set_active(action, true, _kb, get_parent())
 
 
+func get_action_manager() -> ActionManager:
+	return _action_manager
+
+
 
 
 

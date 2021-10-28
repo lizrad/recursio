@@ -1,5 +1,5 @@
 extends CharacterBase
-class_name Player
+#class_name Player
 
 export(float) var inner_deadzone := 0.2
 export(float) var outer_deadzone := 0.8
