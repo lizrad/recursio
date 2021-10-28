@@ -402,7 +402,7 @@ func error(message, module = default_module_name, error_code = -1):
 # Module management
 # -----------------
 
-
+signal module_added
 func add_module(name, output_level = default_output_level, output_strategies = default_output_strategies, logfile = null):
 	"""Add a new module with the given parameter or (by default) the
 	default ones.
@@ -413,6 +413,7 @@ func add_module(name, output_level = default_output_level, output_strategies = d
 		if logfile == null:
 			logfile = get_external_sink(default_logfile_path)
 		modules[name] = Module.new(name, output_level, output_strategies, logfile)
+		emit_signal("module_added")
 	return modules[name]
 
 

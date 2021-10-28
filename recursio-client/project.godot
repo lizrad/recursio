@@ -117,10 +117,11 @@ config/icon="res://icon.png"
 
 [autoload]
 
+Logger="*res://addons/recursio-loggerplugin/Logger.gd"
+LoggerPluginSingleton="*res://addons/recursio-loggerplugin/LoggerPluginSingleton.gd"
 Constants="*res://Shared/Constants.gd"
 Server="*res://Global/Server.gd"
 GlobalActionManager="*res://Shared/Actions/ActionManager.gd"
-Logger="*res://addons/recursio-loggerplugin/Logger.gd"
 InputManager="*res://Global/InputManager.gd"
 
 [debug]
