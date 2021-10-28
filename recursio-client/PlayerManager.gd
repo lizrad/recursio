@@ -37,23 +37,23 @@ func _ready():
 	countdown_screen.visible = false
 	time_of_last_world_state_send = Server.get_server_time()
 
-	Server.connect("spawning_player", self, "_spawn_player")
-	Server.connect("spawning_enemy", self, "_spawn_enemy")
-	Server.connect("despawning_enemy", self, "_despawn_enemy")
-	Server.connect("world_state_received", self, "_update_character_positions")
-	Server.connect("own_ghost_record_received", self, "_create_own_ghost")
-	Server.connect("enemy_ghost_record_received", self, "_create_enemy_ghost")
-	Server.connect("round_start_received",self, "_on_round_start_received")
-	Server.connect("round_end_received", self, "_on_round_ended_received")
-	Server.connect("capture_point_captured", self, "_on_capture_point_captured" )
-	Server.connect("capture_point_team_changed", self, "_on_capture_point_team_changed" )
-	Server.connect("capture_point_status_changed", self, "_on_capture_point_status_changed" )
-	Server.connect("capture_point_capture_lost", self, "_on_capture_point_capture_lost" )
-	Server.connect("game_result", self, "_on_game_result" )
-	Server.connect("player_hit", self, "_on_player_hit")
-	Server.connect("ghost_hit", self, "_on_ghost_hit")
-	Server.connect("ghost_picks", self, "_on_ghost_picks")
-	Server.connect("player_action", self, "_on_player_action")
+	assert(Server.connect("spawning_player", self, "_spawn_player") == OK)
+	assert(Server.connect("spawning_enemy", self, "_spawn_enemy") == OK)
+	assert(Server.connect("despawning_enemy", self, "_despawn_enemy") == OK)
+	assert(Server.connect("world_state_received", self, "_update_character_positions") == OK)
+	assert(Server.connect("own_ghost_record_received", self, "_create_own_ghost") == OK)
+	assert(Server.connect("enemy_ghost_record_received", self, "_create_enemy_ghost") == OK)
+	assert(Server.connect("round_start_received",self, "_on_round_start_received") == OK)
+	assert(Server.connect("round_end_received", self, "_on_round_ended_received") == OK)
+	assert(Server.connect("capture_point_captured", self, "_on_capture_point_captured") == OK)
+	assert(Server.connect("capture_point_team_changed", self, "_on_capture_point_team_changed") == OK)
+	assert(Server.connect("capture_point_status_changed", self, "_on_capture_point_status_changed") == OK)
+	assert(Server.connect("capture_point_capture_lost", self, "_on_capture_point_capture_lost") == OK)
+	assert(Server.connect("game_result", self, "_on_game_result") == OK)
+	assert(Server.connect("player_hit", self, "_on_player_hit") == OK)
+	assert(Server.connect("ghost_hit", self, "_on_ghost_hit") == OK)
+	assert(Server.connect("ghost_picks", self, "_on_ghost_picks") == OK)
+	assert(Server.connect("player_action", self, "_on_player_action") == OK)
 
 	set_physics_process(false)
 
@@ -96,15 +96,16 @@ func handle_ghost_picking_input(delta:float):
 		return
 	if not _prep_phase_in_progress:
 		return
-	
+
 	if Input.is_action_pressed("player_switch"):
-		Logger.info("Switching ghost from "+str(player.ghost_index)+ " to "+str((player.ghost_index+1)%(Constants.get_value("ghosts","max_amount")+1)),"ghost_picking")
+		Logger.info("Switching ghost from " + str(player.ghost_index) + " to " + str((player.ghost_index + 1)%(Constants.get_value("ghosts","max_amount") + 1)),"ghost_picking")
 		_wait_for_new_ghost_picking_input = 0.2
-		
+
 		#Disable all ghosts
 		_disable_ghosts()
 		#Update ghost index
-		player.ghost_index=(player.ghost_index+1)%(Constants.get_value("ghosts","max_amount")+1)
+		player.ghost_index = (player.ghost_index + 1)%(Constants.get_value("ghosts","max_amount") + 1)
+		player.swap_weapon_type(player.ghost_index)
 		#Enable new relevant ghosts
 		_enable_ghosts()
 		#Move player to new spawnpoint
@@ -183,7 +184,6 @@ func _on_round_ended_received(round_index):
 	_stop_ghosts()
 	
 	var ghost_index = min(round_index-1,Constants.get_value("ghosts", "max_amount"))
-	var my_replaced_ghost_index = ghost_index
 	var enemies_replaced_ghost_indices = {}
 	for enemy_id in enemies:
 		enemies_replaced_ghost_indices[enemy_id] = ghost_index
@@ -211,7 +211,7 @@ func _on_round_start_received(round_index, server_time):
 	#===================
 	var time_diff = (Server.get_server_time() - server_time)
 	Logger.info("Latency Delay " + str(round_index) + " with time difference of " + str(time_diff/1000.0) + " started", "gameplay")
-	player.hud.latency_delay_phase_start(round_index, server_time, time_diff)
+	player.hud.latency_delay_phase_start(server_time, time_diff)
 	# Delay to counteract latency
 	var delay = Constants.get_value("gameplay", "latency_delay") - (time_diff  / 1000.0)
 	# Wait for latency delay
@@ -272,9 +272,10 @@ func _on_round_start_received(round_index, server_time):
 	
 	player.follow_camera()
 	
-	Logger.info("Countdown phase " + str(round_index) + " started", "gameplay")
+	Logger.info("Countdown phase started", "gameplay")
 	_prep_phase_in_progress = false
-	player.hud.countdown_phase_start(round_index, Server.get_server_time())
+	player.hud.countdown_phase_start(Server.get_server_time())
+	player.button_overlay.hide_buttons()
 	Server.send_ghost_pick(player.ghost_index)
 	countdown_screen.visible = true
 	var countdown_phase_seconds = Constants.get_value("gameplay","countdown_phase_seconds")
@@ -496,9 +497,9 @@ func _on_ghost_hit(hit_ghost_player_owner, hit_ghost_id):
 
 
 func _on_player_action(player_id, action_type):
-	var player = enemies[player_id]
+	var _player = enemies[player_id]
 	var action = GlobalActionManager.get_action(action_type)
-	GlobalActionManager.set_active(action, true, player, get_tree().root)
+	GlobalActionManager.set_active(action, true, _player, get_tree().root)
 
 func _on_capture_point_captured(capturing_player_id, capture_point):
 	level.get_capture_points()[capture_point].capture(capturing_player_id)

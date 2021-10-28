@@ -2,13 +2,13 @@ extends Node
 class_name ActionManager
 
 enum Trigger {
-	NONE = 0x00,
-	FIRE_START = 0x02,
-	FIRE_END = 0xF1,
-	SPECIAL_MOVEMENT_START = 0x04,
-	SPECIAL_MOVEMENT_END = 0xF2,
-	DEFAULT_ATTACK_START = 0x08,
-	DEFAULT_ATTACK_END = 0xF3
+	NONE = 						0x00,
+	FIRE_START = 				0x02,
+	FIRE_END = 					0xF1,
+	SPECIAL_MOVEMENT_START = 	0x04,
+	SPECIAL_MOVEMENT_END = 		0xF2,
+	DEFAULT_ATTACK_START = 		0x08,
+	DEFAULT_ATTACK_END = 		0xF3
 }
 
 enum ActionType {

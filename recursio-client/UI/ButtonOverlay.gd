@@ -20,8 +20,11 @@ func show_buttons(text, buttons) -> void:
 	# TODO: buttons to accept
 	_buttons = buttons
 
+func hide_buttons() -> void:
+	visible = false
 
-func _process(delta) -> void:
+
+func _process(_delta) -> void:
 	# TODO: check input by nice encapsulated input collection
 	# left - melee
 	# down - shoot

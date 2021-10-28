@@ -41,7 +41,7 @@ func start_replay(start_time):
 	if has_node("MiniMapIcon"):
 		$MiniMapIcon.set_texture(_minimap)
 
-func _physics_process(delta):
+func _physics_process(_delta):
 	if not _replaying:
 		return
 
