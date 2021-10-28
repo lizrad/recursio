@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://Resources/Fonts/default_font.tres" type="DynamicFont" id=1]
 [ext_resource path="res://Resources/Icons/button_scheme.png" type="Texture" id=2]
 [ext_resource path="res://UI/ButtonOverlay.gd" type="Script" id=3]
+[ext_resource path="res://Resources/Icons/circle_white_256x256.png" type="Texture" id=4]
 
 [node name="ButtonOverlay" type="Panel"]
 anchor_top = -0.107
@@ -39,3 +40,32 @@ stretch_mode = 6
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="Buttons" type="Control" parent="."]
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="1" type="Sprite" parent="Buttons"]
+visible = false
+position = Vector2( 65.1695, 29.8518 )
+scale = Vector2( 0.13611, 0.13611 )
+texture = ExtResource( 4 )
+
+[node name="2" type="Sprite" parent="Buttons"]
+visible = false
+position = Vector2( 65.1695, 102.169 )
+scale = Vector2( 0.13611, 0.13611 )
+texture = ExtResource( 4 )
+
+[node name="4" type="Sprite" parent="Buttons"]
+visible = false
+position = Vector2( 23.1247, 66.8513 )
+scale = Vector2( 0.13611, 0.13611 )
+texture = ExtResource( 4 )
+
+[node name="8" type="Sprite" parent="Buttons"]
+visible = false
+position = Vector2( 109.737, 66.8513 )
+scale = Vector2( 0.13611, 0.13611 )
+texture = ExtResource( 4 )

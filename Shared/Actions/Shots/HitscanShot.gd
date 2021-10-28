@@ -71,6 +71,14 @@ func handle_hit(collider):
 	var distance = (collision_point- global_transform.origin).length()
 	$Visualisation.scale.y = distance*0.5
 	$Visualisation.transform.origin.z = -distance*0.5
+	
+	if _first_frame:
+		$HitPoint.global_transform.origin = collision_point
+		$HitPoint/FrontParticles.emitting = true
+		$HitPoint/BackParticles.emitting = true
+		
+		_first_frame = false
+	
 	if collider is CharacterBase:
 		assert(collider.has_method("receive_hit"))
 		if (not _hit_bodies_invincibilty_tracker.has(collider) or _hit_bodies_invincibilty_tracker[collider] <=0):

@@ -30,6 +30,15 @@ func get_last():
 	return _data.get_last()
 
 
+# Returns the element closest to or earlier than the given time
+func get_closest_or_earlier(time):
+	for i in range(0, _data.size()):
+		var element = _data.get_element(i)
+		
+		if element.timestamp <= time:
+			return element
+
+
 # Converts this class into an array
 func to_array()-> Array:
 	var array := [timestamp]

@@ -37,23 +37,23 @@ func _ready():
 	countdown_screen.visible = false
 	time_of_last_world_state_send = Server.get_server_time()
 
-	Server.connect("spawning_player", self, "_spawn_player")
-	Server.connect("spawning_enemy", self, "_spawn_enemy")
-	Server.connect("despawning_enemy", self, "_despawn_enemy")
-	Server.connect("world_state_received", self, "_update_character_positions")
-	Server.connect("own_ghost_record_received", self, "_create_own_ghost")
-	Server.connect("enemy_ghost_record_received", self, "_create_enemy_ghost")
-	Server.connect("round_start_received",self, "_on_round_start_received")
-	Server.connect("round_end_received", self, "_on_round_ended_received")
-	Server.connect("capture_point_captured", self, "_on_capture_point_captured" )
-	Server.connect("capture_point_team_changed", self, "_on_capture_point_team_changed" )
-	Server.connect("capture_point_status_changed", self, "_on_capture_point_status_changed" )
-	Server.connect("capture_point_capture_lost", self, "_on_capture_point_capture_lost" )
-	Server.connect("game_result", self, "_on_game_result" )
-	Server.connect("player_hit", self, "_on_player_hit")
-	Server.connect("ghost_hit", self, "_on_ghost_hit")
-	Server.connect("ghost_picks", self, "_on_ghost_picks")
-	Server.connect("player_action", self, "_on_player_action")
+	assert(Server.connect("spawning_player", self, "_spawn_player") == OK)
+	assert(Server.connect("spawning_enemy", self, "_spawn_enemy") == OK)
+	assert(Server.connect("despawning_enemy", self, "_despawn_enemy") == OK)
+	assert(Server.connect("world_state_received", self, "_update_character_positions") == OK)
+	assert(Server.connect("own_ghost_record_received", self, "_create_own_ghost") == OK)
+	assert(Server.connect("enemy_ghost_record_received", self, "_create_enemy_ghost") == OK)
+	assert(Server.connect("round_start_received",self, "_on_round_start_received") == OK)
+	assert(Server.connect("round_end_received", self, "_on_round_ended_received") == OK)
+	assert(Server.connect("capture_point_captured", self, "_on_capture_point_captured") == OK)
+	assert(Server.connect("capture_point_team_changed", self, "_on_capture_point_team_changed") == OK)
+	assert(Server.connect("capture_point_status_changed", self, "_on_capture_point_status_changed") == OK)
+	assert(Server.connect("capture_point_capture_lost", self, "_on_capture_point_capture_lost") == OK)
+	assert(Server.connect("game_result", self, "_on_game_result") == OK)
+	assert(Server.connect("player_hit", self, "_on_player_hit") == OK)
+	assert(Server.connect("ghost_hit", self, "_on_ghost_hit") == OK)
+	assert(Server.connect("ghost_picks", self, "_on_ghost_picks") == OK)
+	assert(Server.connect("player_action", self, "_on_player_action") == OK)
 
 	set_physics_process(false)
 
@@ -96,15 +96,16 @@ func handle_ghost_picking_input(delta:float):
 		return
 	if not _prep_phase_in_progress:
 		return
-	
+
 	if Input.is_action_pressed("player_switch"):
-		Logger.info("Switching ghost from "+str(player.ghost_index)+ " to "+str((player.ghost_index+1)%(Constants.get_value("ghosts","max_amount")+1)),"ghost_picking")
+		Logger.info("Switching ghost from " + str(player.ghost_index) + " to " + str((player.ghost_index + 1)%(Constants.get_value("ghosts","max_amount") + 1)),"ghost_picking")
 		_wait_for_new_ghost_picking_input = 0.2
-		
+
 		#Disable all ghosts
 		_disable_ghosts()
 		#Update ghost index
-		player.ghost_index=(player.ghost_index+1)%(Constants.get_value("ghosts","max_amount")+1)
+		player.ghost_index = (player.ghost_index + 1)%(Constants.get_value("ghosts","max_amount") + 1)
+		player.swap_weapon_type(player.ghost_index)
 		#Enable new relevant ghosts
 		_enable_ghosts()
 		#Move player to new spawnpoint
@@ -183,7 +184,6 @@ func _on_round_ended_received(round_index):
 	_stop_ghosts()
 	
 	var ghost_index = min(round_index-1,Constants.get_value("ghosts", "max_amount"))
-	var my_replaced_ghost_index = ghost_index
 	var enemies_replaced_ghost_indices = {}
 	for enemy_id in enemies:
 		enemies_replaced_ghost_indices[enemy_id] = ghost_index
@@ -211,7 +211,7 @@ func _on_round_start_received(round_index, server_time):
 	#===================
 	var time_diff = (Server.get_server_time() - server_time)
 	Logger.info("Latency Delay " + str(round_index) + " with time difference of " + str(time_diff/1000.0) + " started", "gameplay")
-	player.hud.latency_delay_phase_start(round_index, server_time, time_diff)
+	player.hud.latency_delay_phase_start(server_time, time_diff)
 	# Delay to counteract latency
 	var delay = Constants.get_value("gameplay", "latency_delay") - (time_diff  / 1000.0)
 	# Wait for latency delay
@@ -223,7 +223,7 @@ func _on_round_start_received(round_index, server_time):
 	#==========
 	Logger.info("Prep phase " + str(round_index) + " started", "gameplay")
 	player.hud.prep_phase_start(round_index, Server.get_server_time())
-	player.button_overlay.show_buttons("ready", 1)
+	player.button_overlay.show_buttons("ready", ButtonOverlay.BUTTONS.RIGHT, true)
 	_prep_phase_in_progress = true
 	
 	# Display paths of my ghosts
@@ -272,9 +272,10 @@ func _on_round_start_received(round_index, server_time):
 	
 	player.follow_camera()
 	
-	Logger.info("Countdown phase " + str(round_index) + " started", "gameplay")
+	Logger.info("Countdown phase started", "gameplay")
 	_prep_phase_in_progress = false
-	player.hud.countdown_phase_start(round_index, Server.get_server_time())
+	player.hud.countdown_phase_start(Server.get_server_time())
+	player.button_overlay.hide_buttons()
 	Server.send_ghost_pick(player.ghost_index)
 	countdown_screen.visible = true
 	var countdown_phase_seconds = Constants.get_value("gameplay","countdown_phase_seconds")
@@ -296,7 +297,7 @@ func _on_round_start_received(round_index, server_time):
 	_restart_ghosts(Server.get_server_time())
 
 
-func _on_player_ready() -> void:
+func _on_player_ready(_button) -> void:
 	Server.send_player_ready()
 
 func move_player_to_spawnpoint(ghost_index:int) -> void:
@@ -311,13 +312,13 @@ func _get_spawn_point(game_id, ghost_index):
 
 func _apply_visibility_mask(character):
 	if player:
-		character.get_node("Mesh_Body").material_override.set_shader_param("visibility_mask", player.get_visibility_mask())
+		character.get_node("CharacterModel").set_shader_param("visibility_mask", player.get_visibility_mask())
 		if character.has_node("MiniMapIcon"):
 			character.get_node("MiniMapIcon").visibility_mask = player.get_visibility_mask()
 
 
 func _apply_visibility_always(character):
-	character.get_node("Mesh_Body").material_override.set_shader_param("always_draw", true)
+	character.get_node("CharacterModel").set_shader_param("always_draw", true)
 
 
 func _create_enemy_ghost(enemy_id, gameplay_record):
@@ -368,13 +369,12 @@ func _enable_ghosts() ->void:
 		for i in _enemy_ghosts_dic[enemy_id]:
 			if i != enemies[enemy_id].ghost_index:
 				# Apply the visibility mask for enemy ghosts only (friendly ones are always visible)
-				_apply_visibility_mask(_enemy_ghosts_dic[enemy_id][i])
 				_add_ghost(_enemy_ghosts_dic[enemy_id][i])
+				_apply_visibility_mask(_enemy_ghosts_dic[enemy_id][i])
 	for i in _my_ghosts:
 		if i != player.ghost_index:
 			_add_ghost(_my_ghosts[i])
 			_apply_visibility_always(_my_ghosts[i])
-
 
 func _add_ghost(ghost):
 	add_child(ghost)
@@ -405,7 +405,7 @@ func _restart_ghosts(start_time)->void:
 func _spawn_player(player_id, spawn_point, game_id):
 	set_physics_process(true)
 	player = _spawn_character(_player_scene, spawn_point)
-	player.button_overlay.connect("button_pressed", self, "_on_player_ready")
+	assert(player.button_overlay.connect("button_pressed", self, "_on_player_ready") == OK)
 	player.spawn_point = spawn_point
 	player.game_id =game_id
 	player.player_id = player_id
@@ -497,8 +497,9 @@ func _on_ghost_hit(hit_ghost_player_owner, hit_ghost_id):
 
 func _on_player_action(player_id, action_type):
 	var player = enemies[player_id]
+	player.set_action_status(action_type, true)
 	var action = GlobalActionManager.get_action(action_type)
-	GlobalActionManager.set_active(action, true, player, get_tree().root)
+	GlobalActionManager.set_active(action, true, _player, get_tree().root)
 
 func _on_capture_point_captured(capturing_player_id, capture_point):
 	level.get_capture_points()[capture_point].capture(capturing_player_id)

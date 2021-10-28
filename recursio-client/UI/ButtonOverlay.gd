@@ -1,7 +1,7 @@
 extends Control
 class_name ButtonOverlay
 
-signal button_pressed
+signal button_pressed(button)
 
 enum BUTTONS {
 	NONE = 	0,
@@ -11,23 +11,46 @@ enum BUTTONS {
 	RIGHT = 8
 }
 
-var _buttons := 0
+var _conf = { 
+				BUTTONS.UP: "ui_select",
+				BUTTONS.DOWN: "player_shoot",
+				BUTTONS.LEFT: "player_melee",
+				BUTTONS.RIGHT: "ui_cancel"
+			}
+var _triggers := []
+var _close := false
 
-func show_buttons(text, buttons) -> void:
-	visible = true
-	set_process(true)
+func show_buttons(text: String, buttons: int, close_on_activation: bool = false) -> void:
+	for button in BUTTONS.values():
+		if buttons & button:
+			$Buttons.get_node(str(button)).show()
+			_triggers.append(_conf[button])
+
 	$Label.text = text
-	# TODO: buttons to accept
-	_buttons = buttons
+	_close = close_on_activation
+
+	set_process(true)
+	visible = true
 
 
-func _process(delta) -> void:
-	# TODO: check input by nice encapsulated input collection
-	# left - melee
-	# down - shoot
-	# up - ui_select
-	# right - ui_cancel
-	if Input.is_action_pressed("ui_cancel"):
-		emit_signal("button_pressed")
-		visible = false
-		set_process(false)
+func hide_buttons() -> void:
+	set_process(false)
+	visible = false
+	for button in $Buttons.get_children():
+		button.hide()
+	_triggers.clear()
+
+
+func _process(_delta) -> void:
+	for trigger in _triggers:
+		if Input.is_action_pressed(trigger):
+			var keys = _conf.keys()
+			print("correct key")
+			for key in _conf:
+				if _conf[key] == trigger:
+					print("emit trgger")
+					emit_signal("button_pressed", key)
+					break
+
+			if _close:
+				hide_buttons()

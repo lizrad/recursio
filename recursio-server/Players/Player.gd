@@ -1,7 +1,6 @@
 extends CharacterBase
 class_name Player
 
-var velocity := Vector3.ZERO
 var current_target_velocity := Vector3.ZERO
 var acceleration := Vector3.ZERO
 var rotation_velocity := 0.0
@@ -27,6 +26,7 @@ var gameplay_record = {}
 var can_move: bool = false
 
 var action_manager
+var world_processing_offset
 
 var _drag = Constants.get_value("movement", "drag")
 var _move_acceleration = Constants.get_value("movement", "acceleration")
@@ -86,7 +86,9 @@ func _ready():
 
 func apply_player_input_data(input_data: InputData, physics_delta):
 	
-	var input_frame: InputFrame = input_data.get_last()
+	var input_frame: InputFrame = input_data.get_closest_or_earlier(Server.get_server_time() - world_processing_offset)
+	if not input_frame:
+		Logger.error("Nil or invalid input_frame", "movement_validation")
 	var movement: Vector2 = input_frame.movement
 	var rotation: Vector2 = input_frame.rotation
 	
@@ -116,7 +118,6 @@ func apply_player_input_data(input_data: InputData, physics_delta):
 	
 	# Buttons pressed in this frame
 	var buttons: int = input_frame.buttons
-	
 	if buttons & action_manager.Trigger.SPECIAL_MOVEMENT_START:
 		if _valid_dash_start_time(input_frame.timestamp):
 			Logger.info("Dash received", "movement_validation")
@@ -132,7 +133,7 @@ func apply_player_input_data(input_data: InputData, physics_delta):
 					i -= 1
 				gameplay_record["F"][i]["D"] = action_manager.Trigger.SPECIAL_MOVEMENT_START
 		else:
-			Logger.info("Illegal dash", "movement_validation")
+			Logger.warn("Illegal dash", "movement_validation")
 
 	if _recording:
 		gameplay_record["F"].append(

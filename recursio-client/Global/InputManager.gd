@@ -7,7 +7,7 @@ var _input_data: InputData = InputData.new()
 var _current_input_frame: InputFrame = InputFrame.new()
 
 # Sends the player state every frame
-func _physics_process(delta):
+func _physics_process(_delta):
 	if Server.get_server_time() <= 0:
 		return
 	_close_current_input_frame()

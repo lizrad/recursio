@@ -8,7 +8,9 @@ var players = {}
 var ghosts = {}
 var player_inputs = {}
 
+# Set from the Room above
 var level
+var world_processing_offset
 
 onready var _game_manager = get_node("../GameManager")
 onready var _action_manager = get_node("../ActionManager")
@@ -18,7 +20,7 @@ func _physics_process(delta):
 	for player_id in player_inputs:
 		if players.has(player_id):
 			players[player_id].apply_player_input_data(player_inputs[player_id], delta)
-			
+
 
 func reset():
 	stop_recording()
@@ -29,7 +31,7 @@ func reset():
 	
 	for player_id in players:
 		players[player_id].reset()
-	
+
 	reset_spawnpoints()
 	player_inputs.clear()
 
@@ -63,6 +65,7 @@ func spawn_player(player_id, game_id):
 	player.player_id = player_id
 	player.ghost_index = 0
 	player.action_manager = _action_manager
+	player.world_processing_offset = world_processing_offset
 	ghosts[player_id] = {}
 	add_child(player)
 	player.connect("hit", self, "_on_player_hit", [player_id])
@@ -149,13 +152,15 @@ func update_player_input_data(player_id, new_input_data: InputData):
 
 
 func handle_player_action(player_id, buttons):
+	if buttons <= 1:
+		return
+	
 	# Go through buttons and trigger actions for them
 	var number_of_bits = log(buttons) / log(2) + 1
 	for bit_index in number_of_bits:
 		# Triggers are represented as powers of two
-		var trigger: int = pow(2, bit_index)
-		var bit = buttons & trigger
-		if bit:
+		var trigger: int = pow(2, bit_index) # TODO: dunno if just (1 << bit_index) has better performance?
+		if buttons & trigger:
 			Logger.info("Handling action of type " + str(trigger))
 			do_attack(players[player_id], trigger)
 			

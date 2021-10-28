@@ -9,7 +9,7 @@ export(float) var lerp_factor = 0.5
 export(bool) var lock_y_rotation
 
 
-func _physics_process(delta):
+func _physics_process(_delta):
 	global_transform = global_transform.interpolate_with(target.global_transform, lerp_factor)
 	
 	if lock_y_rotation:
