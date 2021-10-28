@@ -8,7 +8,8 @@ export var middle_rotation_periods := 2
 
 var _attack_color = Color.tomato
 
-onready var front = get_node("../RootPivot/FrontPivot/Front")
+onready var _front = get_node("../RootPivot/FrontPivot/Front")
+onready var _front_variant = get_node("../RootPivot/FrontPivot/FrontVariant")
 
 var _time_since_start = 0
 var _default_color 
@@ -22,14 +23,16 @@ func _on_color_scheme_changed(new_color_scheme):
 	
 func start_animation():
 	_time_since_start = 0
-	front.material_override.set_shader_param("color",_attack_color)
+	_front.material_override.set_shader_param("color",_attack_color)
+	_front_variant.material_override.set_shader_param("color",_attack_color)
 
 func get_keyframe(delta):
 	_reset_keyframes()
 	
 	if _time_since_start > animation_duration:
 		emit_signal("animation_over")
-		front.material_override.set_shader_param("color",_default_color)
+		_front.material_override.set_shader_param("color",_default_color)
+		_front_variant.material_override.set_shader_param("color",_default_color)
 		_time_since_start = animation_duration
 	else:
 		_time_since_start += delta

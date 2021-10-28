@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=2]
+[gd_scene load_steps=20 format=2]
 
 [ext_resource path="res://Players/Visuals/Animation/Animator.gd" type="Script" id=1]
 [ext_resource path="res://Players/Visuals/Animation/TurnAnimator.gd" type="Script" id=2]
@@ -10,19 +10,21 @@
 [ext_resource path="res://Players/Visuals/Animation/WallAnimator.gd" type="Script" id=8]
 [ext_resource path="res://Players/Visuals/CharacterModelController.gd" type="Script" id=9]
 [ext_resource path="res://Players/Visibility.gdshader" type="Shader" id=10]
+[ext_resource path="res://Players/Visuals/CharacterModel_BackVariant.tscn" type="PackedScene" id=11]
+[ext_resource path="res://Players/Visuals/CharacterModel_FrontVariant.tscn" type="PackedScene" id=12]
 
-[sub_resource type="ShaderMaterial" id=7]
+[sub_resource type="ShaderMaterial" id=1]
 shader = ExtResource( 10 )
 shader_param/color = Color( 1, 1, 1, 1 )
 shader_param/visibility_threshold = 0.2
 shader_param/camera_size = 70.0
 shader_param/always_draw = false
 
-[sub_resource type="SpatialMaterial" id=1]
+[sub_resource type="SpatialMaterial" id=2]
 flags_unshaded = true
 albedo_color = Color( 0, 1, 0.952941, 1 )
 
-[sub_resource type="ArrayMesh" id=2]
+[sub_resource type="ArrayMesh" id=3]
 blend_shape_mode = 0
 surfaces/0 = {
 "aabb": AABB( -0.388192, -0.10452, -0.00468824, 0.776384, 0.20904, 0.719158 ),
@@ -31,14 +33,14 @@ surfaces/0 = {
 "blend_shape_data": [  ],
 "format": 97559,
 "index_count": 864,
-"material": SubResource( 1 ),
+"material": SubResource( 2 ),
 "name": "lambert1",
 "primitive": 4,
 "skeleton_aabb": [  ],
 "vertex_count": 352
 }
 
-[sub_resource type="ArrayMesh" id=3]
+[sub_resource type="ArrayMesh" id=4]
 blend_shape_mode = 0
 surfaces/0 = {
 "aabb": AABB( -0.1859, -0.1859, -0.269563, 0.371801, 0.371801, 0.371801 ),
@@ -47,22 +49,22 @@ surfaces/0 = {
 "blend_shape_data": [  ],
 "format": 97559,
 "index_count": 900,
-"material": SubResource( 1 ),
+"material": SubResource( 2 ),
 "name": "lambert1",
 "primitive": 4,
 "skeleton_aabb": [  ],
 "vertex_count": 648
 }
 
-[sub_resource type="SpatialMaterial" id=4]
+[sub_resource type="SpatialMaterial" id=5]
 flags_unshaded = true
 albedo_color = Color( 1, 0, 0, 1 )
 
-[sub_resource type="SpatialMaterial" id=5]
+[sub_resource type="SpatialMaterial" id=6]
 flags_unshaded = true
 albedo_color = Color( 0, 1, 0.952941, 1 )
 
-[sub_resource type="ArrayMesh" id=6]
+[sub_resource type="ArrayMesh" id=7]
 blend_shape_mode = 0
 surfaces/0 = {
 "aabb": AABB( -0.550024, -0.10452, -0.714169, 1.10005, 0.20904, 0.71015 ),
@@ -71,7 +73,7 @@ surfaces/0 = {
 "blend_shape_data": [  ],
 "format": 97559,
 "index_count": 1140,
-"material": SubResource( 5 ),
+"material": SubResource( 6 ),
 "name": "lambert1",
 "primitive": 4,
 "skeleton_aabb": [  ],
@@ -86,11 +88,15 @@ script = ExtResource( 9 )
 [node name="FrontPivot" type="Spatial" parent="RootPivot"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.548254 )
 
+[node name="FrontVariant" parent="RootPivot/FrontPivot" instance=ExtResource( 12 )]
+transform = Transform( 0.00998566, 0, 0, 0, 0.00998566, 0, 0, 0, 0.00998566, 5.44914e-12, 0, -0.548256 )
+visible = false
+
 [node name="Front" type="MeshInstance" parent="RootPivot/FrontPivot"]
 transform = Transform( 1.38886, 0, 0, 0, 1.38886, 0, 0, 0, 1.38886, 0, 0, -0.398254 )
-material_override = SubResource( 7 )
+material_override = SubResource( 1 )
 cast_shadow = 0
-mesh = SubResource( 2 )
+mesh = SubResource( 3 )
 material/0 = null
 
 [node name="MiddlePivot" type="Spatial" parent="RootPivot"]
@@ -98,20 +104,24 @@ transform = Transform( 0.998566, 0, 0, 0, 0.998566, 0, 0, 0, 0.998566, 0, 0, 0 )
 
 [node name="Middle" type="MeshInstance" parent="RootPivot/MiddlePivot"]
 transform = Transform( 0.976267, 0, 0.976267, 0, 1.38065, 0, -0.976267, 0, 0.976267, 0.0821635, 0, 0.104462 )
-material_override = SubResource( 7 )
+material_override = SubResource( 1 )
 cast_shadow = 0
-mesh = SubResource( 3 )
-material/0 = SubResource( 4 )
+mesh = SubResource( 4 )
+material/0 = SubResource( 5 )
 
 [node name="BackPivot" type="Spatial" parent="RootPivot"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.566682 )
 
 [node name="Back" type="MeshInstance" parent="RootPivot/BackPivot"]
 transform = Transform( 1.38886, 0, 0, 0, 1.38886, 0, 0, 0, 1.38886, 0, 0, 0.438948 )
-material_override = SubResource( 7 )
+material_override = SubResource( 1 )
 cast_shadow = 0
-mesh = SubResource( 6 )
+mesh = SubResource( 7 )
 material/0 = null
+
+[node name="BackVariant" parent="RootPivot/BackPivot" instance=ExtResource( 11 )]
+transform = Transform( 0.01, 0, 0, 0, 0.01, 0, 0, 0, 0.01, 0, 0, 0.548 )
+visible = false
 
 [node name="Animator" type="Node" parent="."]
 script = ExtResource( 1 )
