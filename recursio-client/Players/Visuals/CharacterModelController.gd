@@ -19,17 +19,20 @@ func _ready():
 	_parent.connect("ghost_index_changed",self,"_on_ghost_index_changed")
 	
 func set_shader_param(param, value):
-	pass
+	_front.material_override.set_shader_param(param, value)
+	_middle.material_override.set_shader_param(param, value)
+	_back.material_override.set_shader_param(param, value)
 
 func _set_color_scheme(new_color_scheme:String, ghost_index):
 	emit_signal("color_scheme_changed",new_color_scheme)
-	_front.material_override.albedo_color = Color(Constants.get_value("colors", new_color_scheme+"_main"))
+	var color_parameter = "color"
+	_front.material_override.set_shader_param(color_parameter, Color(Constants.get_value("colors", new_color_scheme+"_main"))) 
 	
 	var wall_index = Constants.get_value("ghosts","wall_placing_ghost_index")
 	var accent_type = "primary" if wall_index != ghost_index else "secondary"
-	_middle.material_override.albedo_color = Color(Constants.get_value("colors", new_color_scheme+"_"+accent_type+"_accent"))
+	_middle.material_override.set_shader_param(color_parameter,Color(Constants.get_value("colors", new_color_scheme+"_"+accent_type+"_accent")))
 	
-	_back.material_override.albedo_color = Color(Constants.get_value("colors", new_color_scheme+"_main"))
+	_back.material_override.set_shader_param(color_parameter,Color(Constants.get_value("colors", new_color_scheme+"_main")))
 
 func _on_action_status_changed(action_type, status):
 	animator.action_status_changed(action_type, status)

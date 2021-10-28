@@ -17,19 +17,19 @@ func _ready():
 	get_parent().connect("color_scheme_changed",self,"_on_color_scheme_changed")
 
 func _on_color_scheme_changed(new_color_scheme):
-	_attack_color=Color(Constants.get_value("colors",new_color_scheme + "_secondary_accent"))
-
+	_attack_color= Color(Constants.get_value("colors",new_color_scheme + "_secondary_accent"))
+	_default_color = Color(Constants.get_value("colors",new_color_scheme + "_main"))
+	
 func start_animation():
-	_default_color = front.material_override.albedo_color
 	_time_since_start = 0
-	front.material_override.albedo_color = _attack_color
+	front.material_override.set_shader_param("color",_attack_color)
 
 func get_keyframe(delta):
 	_reset_keyframes()
 	
 	if _time_since_start > animation_duration:
 		emit_signal("animation_over")
-		front.material_override.albedo_color = _default_color
+		front.material_override.set_shader_param("color",_default_color)
 		_time_since_start = animation_duration
 	else:
 		_time_since_start += delta

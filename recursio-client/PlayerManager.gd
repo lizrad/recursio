@@ -311,14 +311,12 @@ func _get_spawn_point(game_id, ghost_index):
 
 func _apply_visibility_mask(character):
 	if player:
-		#character.get_node("CharacterModel").material_override.set_shader_param("visibility_mask", player.get_visibility_mask())
 		character.get_node("CharacterModel").set_shader_param("visibility_mask", player.get_visibility_mask())
 		if character.has_node("MiniMapIcon"):
 			character.get_node("MiniMapIcon").visibility_mask = player.get_visibility_mask()
 
 
 func _apply_visibility_always(character):
-	#character.get_node("Mesh_Body").material_override.set_shader_param("always_draw", true)
 	character.get_node("CharacterModel").set_shader_param("always_draw", true)
 
 
@@ -370,13 +368,12 @@ func _enable_ghosts() ->void:
 		for i in _enemy_ghosts_dic[enemy_id]:
 			if i != enemies[enemy_id].ghost_index:
 				# Apply the visibility mask for enemy ghosts only (friendly ones are always visible)
-				_apply_visibility_mask(_enemy_ghosts_dic[enemy_id][i])
 				_add_ghost(_enemy_ghosts_dic[enemy_id][i])
+				_apply_visibility_mask(_enemy_ghosts_dic[enemy_id][i])
 	for i in _my_ghosts:
 		if i != player.ghost_index:
 			_add_ghost(_my_ghosts[i])
 			_apply_visibility_always(_my_ghosts[i])
-
 
 func _add_ghost(ghost):
 	add_child(ghost)
