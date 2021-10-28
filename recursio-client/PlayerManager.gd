@@ -1,8 +1,9 @@
 extends Spatial
 
-var _player_scene = preload("res://Characters/Player.tscn")
-var _ghost_scene = preload("res://Characters/Ghost.tscn")
-var _enemy_scene = preload("res://Characters/Enemy.tscn")
+var _player_scene = preload("res://Players/Player.tscn")
+var _ghost_scene = preload("res://Players/Ghost.tscn")
+var _player_ghost_scene = preload("res://Players/PlayerGhost.tscn")
+var _enemy_scene = preload("res://Players/Enemy.tscn")
 
 var _my_ghosts = {}
 # Key: Player ID | Value: List of ghosts
