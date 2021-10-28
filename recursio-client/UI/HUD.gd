@@ -83,17 +83,19 @@ func rewind_phase_start(round_index, start_time) ->void:
 	_start_time = start_time
 
 
-func update_ammo(action_type: int, amount: int) ->void:
-	Logger.info("update ammo for type: %s - %s" %[action_type, amount], "HUD")
-	if action_type == GlobalActionManager.Trigger.FIRE_START and ammo:
-		ammo.text = str(amount)
-	elif action_type == GlobalActionManager.Trigger.SPECIAL_MOVEMENT_START and dash:
-		dash.text = str(amount)
+func update_fire_action_ammo(amount: int) -> void:
+	Logger.info("Set fire ammo to: " + str(amount), "HUD")
+	ammo.text = str(amount)
 
-func update_ammo_type(tex: StreamTexture) ->void:
-	Logger.info("update ammo type", "HUD")
-	if ammo_type:
-		ammo_type.texture = load(tex.resource_path)
+
+func update_special_movement_ammo(amount: int) -> void:
+	Logger.info("Set fire ammo to: " + str(amount), "HUD")
+	dash.text = str(amount)
+
+
+func update_weapon_type(weapon_action: Action) ->void:
+	Logger.info("Update ammo type", "HUD")
+	ammo_type.texture = load(weapon_action.img_bullet.resource_path)
 
 # Sets the internal player id for the capture points
 func set_player_id(player_id):

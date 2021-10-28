@@ -30,14 +30,14 @@ var action_resources = {
 var _instanced_actions = []
 
 
-static func get_action(action_type):
+func get_action(action_type):
 	var instance = action_resources[action_type].duplicate()
 	instance.ammunition = instance.max_ammo
 	
 	return instance
 
 
-static func get_action_type_for_trigger(trigger, ghost_index):
+func get_action_type_for_trigger(trigger, ghost_index):
 	if trigger == Trigger.FIRE_START:
 		if ghost_index == Constants.get_value("ghosts", "wall_placing_ghost_index"):
 			return ActionType.WALL
@@ -49,7 +49,7 @@ static func get_action_type_for_trigger(trigger, ghost_index):
 		return ActionType.MELEE
 
 
-static func get_action_for_trigger(trigger, ghost_index):
+func get_action_for_trigger(trigger, ghost_index):
 	return get_action(get_action_type_for_trigger(trigger, ghost_index))
 
 

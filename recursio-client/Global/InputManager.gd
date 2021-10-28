@@ -14,23 +14,17 @@ func _physics_process(delta):
 	_send_player_input_data_to_server()
 
 
-
-# Adds a new triggered trigger to the input frame
-func add_trigger_to_input_frame(trigger_type: int)-> void:
-	_current_input_frame.add_button(trigger_type)
-
-
-# Removes the triggered trigger from the input frame
-func remove_trigger_from_input_frame(trigger_type: int)-> void:
-	_current_input_frame.remove_button(trigger_type)
+# Sets the entire button bitmask with the given bits
+func set_triggers_in_input_frame(triggers: int) -> void:
+	_current_input_frame.buttons.set_bits(triggers)
 
 
 # Adds new movement data to the input frame
-func add_movement_to_input_frame(movement: Vector2)-> void:
+func add_movement_to_input_frame(movement: Vector2) -> void:
 	_current_input_frame.movement = movement
 
 # Adds new rotation data to the input frame
-func add_rotation_to_input_frame(rotation: Vector2)-> void:
+func add_rotation_to_input_frame(rotation: Vector2) -> void:
 	_current_input_frame.rotation = rotation
 
 
@@ -46,7 +40,7 @@ func _close_current_input_frame() -> void:
 
 
 # Send input data with timestamp to the server
-func _send_player_input_data_to_server()-> void:
+func _send_player_input_data_to_server() -> void:
 	_input_data.timestamp = Server.get_server_time()
 	Server.send_player_input_data(_input_data)
 

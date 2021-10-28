@@ -14,15 +14,14 @@ var _trigger_dic : Dictionary = {
 	"player_dash": ActionManager.Trigger.SPECIAL_MOVEMENT_START
 }
 
-var _fire_action = ActionManager.get_action(ActionManager.ActionType.HITSCAN)
-var _default_attack_action = ActionManager.get_action(ActionManager.ActionType.MELEE)
-var _special_movement_action = ActionManager.get_action(ActionManager.ActionType.DASH)
+var _fire_action = _action_manager.get_action(ActionManager.ActionType.HITSCAN)
+var _default_attack_action = _action_manager.get_action(ActionManager.ActionType.MELEE)
+var _special_movement_action = _action_manager.get_action(ActionManager.ActionType.DASH)
 
 func _ready():
 	# Subscribe to Action Events
-	_connect_to_action_signals(_fire_action, ActionManager.Trigger.FIRE_START)
-	_connect_to_action_signals(_default_attack_action, ActionManager.Trigger.DEFAULT_ATTACK_START)
-	_connect_to_action_signals(_special_movement_action, ActionManager.Trigger.SPECIAL_MOVEMENT_START)
+	_fire_action.connect("ammunition_changed", self, "_on_fire_ammo_changed")
+	_special_movement_action.connect("ammunition_changed", self, "_on_special_movement_ammo_changed")
 
 
 
@@ -35,22 +34,21 @@ func _physics_process(delta):
 	var rotate_vector = Vector3(rotate_input.y, 0.0, -rotate_input.x)
 	InputManager.add_rotation_to_input_frame(rotate_input)
 	
-	_player.apply_input(movement_vector, rotate_vector, _get_buttons_pressed())
+	var buttons_pressed: int = _get_buttons_pressed()
+	_player.apply_input(movement_vector, rotate_vector, buttons_pressed)
+	InputManager.set_triggers_in_input_frame(buttons_pressed)
 
 
 func swap_weapon_type(timeline_index) -> void:
-	_disconnect_from_action_signals(_fire_action)
-	_fire_action = ActionManager.get_action_for_trigger(ActionManager.Trigger.FIRE_START, timeline_index)
+	_fire_action.disconnect("ammunition_changed", self, "_on_fire_ammo_changed")
+	_fire_action = _action_manager.get_action_for_trigger(ActionManager.Trigger.FIRE_START, timeline_index)
 	
 	# Re-subscribe to signals
-	_connect_to_action_signals(_fire_action, ActionManager.Trigger.FIRE_START)
+	_fire_action.connect("ammunition_changed", self, "_on_fire_ammo_changed")
 	Logger.info("Weapon selected: " + _fire_action.name, "actions")
 	
-	_update_player_hud()
+	_player.update_weapon_type(_fire_action)
 
-
-func _update_player_hud():
-	pass
 
 
 # Reads the input of the given type e.g. "player_move" or "player_look"
@@ -73,28 +71,13 @@ func _get_buttons_pressed() -> int:
 	return buttons.mask
 
 
-func _connect_to_action_signals(action, type):
-	action.connect("ammunition_changed", self, "_on_ammo_changed", [action, type])
-	action.connect("action_triggered", self, "_on_action_triggered", [action, type])
-	action.connect("action_released", self, "_on_action_released", [action, type])
+func _on_fire_ammo_changed(ammo: int) -> void:
+	Logger.debug("Fire ammunition changed to: " + str(ammo))
+	_player.update_fire_action_ammo(ammo)
 
-func _disconnect_from_action_signals(action):
-	action.disconnect("ammunition_changed", self, "_on_ammo_changed")
-	action.disconnect("action_triggered", self, "_on_action_triggered")
-	action.disconnect("action_released", self, "_on_action_released")
+func _on_special_movement_ammo_changed(ammo: int) -> void:
+	Logger.debug("Special movement ammunition changed to: " + str(ammo))
+	_player.update_special_movement_ammo(ammo)
 
 
-func _on_ammo_changed(ammo: int, action: Action, type: int) -> void:
-	Logger.debug("Ammunition for type: " + str(type) + " changed to: " + str(ammo), "actions")
-	_update_player_hud()
-
-
-func _on_action_triggered(action: Action, type: int) -> void:
-	Logger.debug("Action triggered for name: " + str(action.name) + " on time: " + str(action.activation_time), "actions")
-	InputManager.add_trigger_to_input_frame(type)
-
-
-func _on_action_released(action: Action, type: int) -> void:
-	Logger.debug("Action released for type: " + str(type), "actions")
-	InputManager.remove_trigger_from_input_frame(type)
 

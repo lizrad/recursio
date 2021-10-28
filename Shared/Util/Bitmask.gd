@@ -4,7 +4,7 @@ class_name Bitmask
 var mask: int = 0
 
 func _init(bits: int):
-	mask = bits
+	set_bits(bits)
 
 
 func add(bit_index: int):
@@ -13,3 +13,7 @@ func add(bit_index: int):
 
 func remove(bit_index: int):
 	mask = mask & ~bit_index
+
+
+func set_bits(bits: int):
+	mask = bits

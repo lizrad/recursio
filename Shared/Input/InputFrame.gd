@@ -7,11 +7,6 @@ var buttons: Bitmask = Bitmask.new(0)
 var movement: Vector2 = Vector2.ZERO
 var rotation: Vector2 = Vector2.ZERO
 
-func add_button(bit_index: int):
-	buttons.add(bit_index)
-
-func remove_button(bit_index: int):
-	buttons.remove(bit_index)
 
 func from_array(data: Array):
 	timestamp = data[0]
