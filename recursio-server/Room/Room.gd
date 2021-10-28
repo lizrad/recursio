@@ -29,11 +29,11 @@ var world_processing_offset = 100
 
 
 func _ready():
-	_world_state_manager.connect("world_state_updated", self, "_on_world_state_update")
-	_game_manager.connect("round_started",self, "_on_round_started")
-	_game_manager.connect("game_phase_started", self, "_on_game_phase_start")
-	_game_manager.connect("round_ended",self, "_on_round_ended")
-	_game_manager.connect("countdown_halfway_point", self,"_on_countdown_halfway_point")
+	assert(_world_state_manager.connect("world_state_updated", self, "_on_world_state_update") == OK)
+	assert(_game_manager.connect("round_started",self, "_on_round_started") == OK)
+	assert(_game_manager.connect("game_phase_started", self, "_on_game_phase_start") == OK)
+	assert(_game_manager.connect("round_ended",self, "_on_round_ended") == OK)
+	assert(_game_manager.connect("countdown_halfway_point", self,"_on_countdown_halfway_point") == OK)
 	_player_manager.level = _level
 	_game_manager.level = _level
 	_world_state_manager.world_processing_offset = world_processing_offset
