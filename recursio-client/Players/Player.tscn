@@ -9,7 +9,7 @@
 [ext_resource path="res://Util/LerpedFollow.tscn" type="PackedScene" id=7]
 [ext_resource path="res://Players/ViewTarget.gd" type="Script" id=8]
 [ext_resource path="res://Players/VisibilityLight.tscn" type="PackedScene" id=9]
-[ext_resource path="res://Players/Visuals/PlayerModel.tscn" type="PackedScene" id=10]
+[ext_resource path="res://Players/Visuals/CharacterModel.tscn" type="PackedScene" id=10]
 [ext_resource path="res://Players/OverviewLight.gd" type="Script" id=11]
 [ext_resource path="res://Resources/Icons/icon_player_minimap.png" type="Texture" id=12]
 [ext_resource path="res://UI/ButtonOverlay.tscn" type="PackedScene" id=13]
@@ -20,7 +20,7 @@
 ] instance=ExtResource( 1 )]
 script = ExtResource( 2 )
 
-[node name="PlayerModel" parent="." index="1" instance=ExtResource( 10 )]
+[node name="CharacterModel" parent="." index="1" instance=ExtResource( 10 )]
 transform = Transform( -1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0 )
 
 [node name="TriggerManager" type="Node" parent="." index="2"]
@@ -105,6 +105,3 @@ axis = 1
 texture = ExtResource( 12 )
 
 [node name="HUD" parent="." index="10" instance=ExtResource( 4 )]
-
-[connection signal="action_status_changed" from="." to="PlayerModel" method="on_action_status_changed"]
-[connection signal="velocity_changed" from="." to="PlayerModel" method="on_velocity_changed"]

@@ -28,7 +28,6 @@ var _just_corrected = false
 var last_server_position
 var last_server_time
 
-var velocity := Vector3.ZERO
 var acceleration := Vector3.ZERO
 
 # TODO: set per property?
@@ -53,7 +52,7 @@ func reset():
 	_just_corrected = false
 	last_server_position = Vector3.ZERO
 	last_server_time = 0
-	velocity = Vector3.ZERO
+	self.velocity = Vector3.ZERO
 	acceleration = Vector3.ZERO
 	dash_start = 0  
 	_time_since_dash_start = 0.0  
@@ -214,7 +213,7 @@ func _handle_user_input():
 			0.0
 		)
 		
-		velocity += movement_input_vector * e_section
+		self.velocity += movement_input_vector * e_section
 		_time_since_dash_start += delta
 	else:
 		_time_since_dash_start = 0.0
@@ -237,10 +236,9 @@ func apply_acceleration(new_acceleration):
 	# For drag: Lerp towards the target velocity
 	# This is usually 0, unless we're on something that's moving, in which case it is that object's
 	#  velocity
-	velocity = lerp(velocity, current_target_velocity, drag)
-	velocity += acceleration
-	emit_signal("velocity_changed", velocity, -transform.basis.z, transform.basis.x)
-
+	self.velocity = lerp(velocity, current_target_velocity, drag)
+	self.velocity += acceleration
+	
 func swap_weapon_type(ghost_index):
 	_trigger_manager.swap_weapon_type(ghost_index)
 

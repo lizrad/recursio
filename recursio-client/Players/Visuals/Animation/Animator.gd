@@ -10,44 +10,44 @@ extends BaseAnimator
 #		-Death
 #		-Spawn
 
-onready var IdleAnimator  = get_node("IdleAnimator")
-onready var TurnAnimator  = get_node("TurnAnimator")
-onready var HitscanAnimator  = get_node("HitscanAnimator")
-onready var WallAnimator  = get_node("WallAnimator")
-onready var DashAnimator  = get_node("DashAnimator")
-onready var MeleeAnimator  = get_node("MeleeAnimator")
-onready var MoveAnimator  = get_node("MoveAnimator")
+onready var idle_animator  = get_node("../IdleAnimator")
+onready var turn_animator  = get_node("../TurnAnimator")
+onready var move_animator  = get_node("../MoveAnimator")
+onready var dash_animator  = get_node("../DashAnimator")
+onready var hitscan_animator  = get_node("../HitscanAnimator")
+onready var wall_animator  = get_node("../WallAnimator")
+onready var melee_animator  = get_node("../MeleeAnimator")
 
 var _animation_status = {}
 var _action_animations = {}
 var _priority_sorted = []
 
 func _ready():
-	_animation_status[IdleAnimator] = true
-	_priority_sorted.append(IdleAnimator)
-	_animation_status[TurnAnimator] = true
-	_priority_sorted.append(TurnAnimator)
-	_animation_status[MoveAnimator] = false
-	_priority_sorted.append(MoveAnimator)
+	_animation_status[idle_animator] = true
+	_priority_sorted.append(idle_animator)
+	_animation_status[turn_animator] = true
+	_priority_sorted.append(turn_animator)
+	_animation_status[move_animator] = false
+	_priority_sorted.append(move_animator)
 	
-	_animation_status[DashAnimator] = false
-	_priority_sorted.append(DashAnimator)
+	_animation_status[dash_animator] = false
+	_priority_sorted.append(dash_animator)
 	
-	_action_animations[ActionManager.ActionType.DASH] = DashAnimator
-	_animation_status[HitscanAnimator] = false
-	_priority_sorted.append(HitscanAnimator)
-	_action_animations[ActionManager.ActionType.HITSCAN] = HitscanAnimator
-	_animation_status[WallAnimator] = false
-	_priority_sorted.append(WallAnimator)
-	_action_animations[ActionManager.ActionType.WALL] = WallAnimator
-	_animation_status[MeleeAnimator] = false
-	_priority_sorted.append(MeleeAnimator)
-	_action_animations[ActionManager.ActionType.MELEE] = MeleeAnimator
+	_action_animations[ActionManager.ActionType.DASH] = dash_animator
+	_animation_status[hitscan_animator] = false
+	_priority_sorted.append(hitscan_animator)
+	_action_animations[ActionManager.ActionType.HITSCAN] = hitscan_animator
+	_animation_status[wall_animator] = false
+	_priority_sorted.append(wall_animator)
+	_action_animations[ActionManager.ActionType.WALL] = wall_animator
+	_animation_status[melee_animator] = false
+	_priority_sorted.append(melee_animator)
+	_action_animations[ActionManager.ActionType.MELEE] = melee_animator
 
-func on_action_status_changed(action_type, status):
+func action_status_changed(action_type, status):
 	Logger.debug("Status of "+ str(action_type)+" changed to "+str(status), "animation")
 	var animator = _action_animations[action_type]
-	if status:
+	if status and not _animation_status[animator] :
 		animator.connect("animation_over", self, "_stop_animation", [animator])
 		animator.start_animation()
 		_animation_status[animator] = true
@@ -55,7 +55,7 @@ func on_action_status_changed(action_type, status):
 		if animator.has_method("stop_animation"):
 			animator.stop_animation()
 
-func on_velocity_changed(velocity, front_vector, right_vector):
+func velocity_changed(velocity, front_vector, right_vector):
 	#because movement only aproaches 0 asymptotically
 	var epsilon = 0.000001
 	var front_velocity = abs(front_vector.dot(velocity))
@@ -63,14 +63,14 @@ func on_velocity_changed(velocity, front_vector, right_vector):
 	var right_velocity = right_vector.dot(velocity)
 	right_velocity = 0 if abs(right_velocity)<epsilon else right_velocity
 	
-	MoveAnimator.set_velocity(front_velocity)
-	if not _animation_status[MoveAnimator] and front_velocity>0:
-		_animation_status[MoveAnimator]  = true
-		MoveAnimator.start_animation()
-		MoveAnimator.connect("animation_over", self, "_stop_animation",[MoveAnimator])
-	elif _animation_status[MoveAnimator]  and front_velocity<=0:
-		MoveAnimator.stop_animation()
-	TurnAnimator.set_velocity(right_velocity)
+	move_animator.set_velocity(front_velocity)
+	if not _animation_status[move_animator] and front_velocity>0:
+		_animation_status[move_animator]  = true
+		move_animator.start_animation()
+		move_animator.connect("animation_over", self, "_stop_animation",[move_animator])
+	elif _animation_status[move_animator]  and front_velocity<=0:
+		move_animator.stop_animation()
+	turn_animator.set_velocity(right_velocity)
 
 func _process(delta):
 	_reset_keyframes()
