@@ -2,9 +2,9 @@
 
 [ext_resource path="res://Characters/Enemy.gd" type="Script" id=1]
 [ext_resource path="res://Shared/Characters/PlayerBase.tscn" type="PackedScene" id=2]
-[ext_resource path="res://Players/MiniMapIcon.tscn" type="PackedScene" id=3]
+[ext_resource path="res://UI/MiniMapIcon.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Resources/Icons/icon_enemy_minimap.png" type="Texture" id=4]
-[ext_resource path="res://Players/Visibility.gdshader" type="Shader" id=5]
+[ext_resource path="res://Rendering/Visibility.gdshader" type="Shader" id=5]
 
 [sub_resource type="ShaderMaterial" id=1]
 resource_local_to_scene = true

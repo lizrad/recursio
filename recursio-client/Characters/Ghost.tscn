@@ -1,0 +1,28 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://Rendering/Visibility.gdshader" type="Shader" id=1]
+[ext_resource path="res://Shared/Characters/GhostBase.tscn" type="PackedScene" id=2]
+[ext_resource path="res://UI/MiniMapIcon.tscn" type="PackedScene" id=3]
+
+[sub_resource type="ShaderMaterial" id=1]
+resource_local_to_scene = true
+shader = ExtResource( 1 )
+shader_param/color = Color( 0.443137, 0.443137, 0.443137, 1 )
+shader_param/visibility_threshold = 0.2
+shader_param/camera_size = 70.0
+shader_param/always_draw = false
+
+[sub_resource type="PrismMesh" id=2]
+
+[node name="Ghost" type="Node"]
+
+[node name="GhostBase" parent="." instance=ExtResource( 2 )]
+
+[node name="Mesh_Body" type="MeshInstance" parent="."]
+transform = Transform( -0.75, -0.000108995, -0.00015581, 0.000116805, 0.000285584, -1, 0.000109051, -0.75, -0.00038075, 0, 0, 0 )
+material_override = SubResource( 1 )
+mesh = SubResource( 2 )
+material/0 = null
+
+[node name="MiniMapIcon" parent="." instance=ExtResource( 3 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.48839, 0 )

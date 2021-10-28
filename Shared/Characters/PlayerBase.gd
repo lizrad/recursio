@@ -9,7 +9,7 @@ var _target_velocity: Vector3 = Vector3.ZERO
 var _acceleration: Vector3 = Vector3.ZERO
 
 # Blocks any movement applied to it (includes rotation-movement)
-var _block_movement: bool = false
+var block_movement: bool = false
 
 
 # Values from constants.ini
@@ -25,7 +25,7 @@ var _record_manager: RecordManager = RecordManager.new()
 # Should only be called in "physics_update()"
 func apply_input(movement: Vector3, rotation: Vector3, buttons: int) -> void:
 	# Nothing to do if player can't move
-	if _block_movement:
+	if block_movement:
 		return
 	
 	# Clamp movement
