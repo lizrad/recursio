@@ -1,7 +1,6 @@
 extends CharacterBase
 class_name Player
 
-var velocity := Vector3.ZERO
 var current_target_velocity := Vector3.ZERO
 var acceleration := Vector3.ZERO
 var rotation_velocity := 0.0
