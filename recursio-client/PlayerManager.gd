@@ -96,15 +96,16 @@ func handle_ghost_picking_input(delta:float):
 		return
 	if not _prep_phase_in_progress:
 		return
-	
+
 	if Input.is_action_pressed("player_switch"):
-		Logger.info("Switching ghost from "+str(player.ghost_index)+ " to "+str((player.ghost_index+1)%(Constants.get_value("ghosts","max_amount")+1)),"ghost_picking")
+		Logger.info("Switching ghost from " + str(player.ghost_index) + " to " + str((player.ghost_index + 1)%(Constants.get_value("ghosts","max_amount") + 1)),"ghost_picking")
 		_wait_for_new_ghost_picking_input = 0.2
-		
+
 		#Disable all ghosts
 		_disable_ghosts()
 		#Update ghost index
-		player.ghost_index=(player.ghost_index+1)%(Constants.get_value("ghosts","max_amount")+1)
+		player.ghost_index = (player.ghost_index + 1)%(Constants.get_value("ghosts","max_amount") + 1)
+		player.swap_weapon_type(player.ghost_index)
 		#Enable new relevant ghosts
 		_enable_ghosts()
 		#Move player to new spawnpoint
