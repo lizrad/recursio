@@ -30,9 +30,9 @@ func _ready():
 
 
 func setup_action_connections(action, type):
-	action.connect("ammunition_changed", self, "_on_ammo_changed", [action, type])
-	action.connect("action_triggered", self, "_on_action_triggered", [action, type])
-	action.connect("action_released", self, "_on_action_released", [action, type])
+	assert(action.connect("ammunition_changed", self, "_on_ammo_changed", [action, type]) == OK)
+	assert(action.connect("action_triggered", self, "_on_action_triggered", [action, type]) == OK)
+	assert(action.connect("action_released", self, "_on_action_released", [action, type]) == OK)
 
 
 func swap_weapon_type(ghost_index) -> void:

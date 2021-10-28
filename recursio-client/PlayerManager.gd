@@ -223,7 +223,7 @@ func _on_round_start_received(round_index, server_time):
 	#==========
 	Logger.info("Prep phase " + str(round_index) + " started", "gameplay")
 	player.hud.prep_phase_start(round_index, Server.get_server_time())
-	player.button_overlay.show_buttons("ready", 1)
+	player.button_overlay.show_buttons("ready", ButtonOverlay.BUTTONS.RIGHT, true)
 	_prep_phase_in_progress = true
 	
 	# Display paths of my ghosts
@@ -297,7 +297,7 @@ func _on_round_start_received(round_index, server_time):
 	_restart_ghosts(Server.get_server_time())
 
 
-func _on_player_ready() -> void:
+func _on_player_ready(_button) -> void:
 	Server.send_player_ready()
 
 func move_player_to_spawnpoint(ghost_index:int) -> void:
@@ -406,7 +406,7 @@ func _restart_ghosts(start_time)->void:
 func _spawn_player(player_id, spawn_point, game_id):
 	set_physics_process(true)
 	player = _spawn_character(_player_scene, spawn_point)
-	player.button_overlay.connect("button_pressed", self, "_on_player_ready")
+	assert(player.button_overlay.connect("button_pressed", self, "_on_player_ready") == OK)
 	player.spawn_point = spawn_point
 	player.game_id =game_id
 	player.player_id = player_id
