@@ -25,9 +25,7 @@ func initialize(owning_player) -> void:
 	var character_model_controller = owning_player.get_node("CharacterModel")
 	if character_model_controller:
 		var color_scheme = character_model_controller.color_scheme
-		var wall_index = Constants.get_value("ghosts","wall_placing_ghost_index")
-		var type = "_primary" if owning_player.ghost_index != wall_index else "_secondary"
-		color = Color(Constants.get_value("colors",color_scheme+type+"_accent"))
+		color = Color(Constants.get_value("colors",color_scheme+"_primary_accent"))
 	$Visualisation.material_override.albedo_color = color
 	Logger.info("initialize action", "HitscanShot")
 	_visual = true
