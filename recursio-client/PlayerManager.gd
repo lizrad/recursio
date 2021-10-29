@@ -499,7 +499,7 @@ func _on_player_action(player_id, action_type):
 	var player = enemies[player_id]
 	player.set_action_status(action_type, true)
 	var action = GlobalActionManager.get_action(action_type)
-	GlobalActionManager.set_active(action, true, _player, get_tree().root)
+	GlobalActionManager.set_active(action, true, player, get_tree().root)
 
 func _on_capture_point_captured(capturing_player_id, capture_point):
 	level.get_capture_points()[capture_point].capture(capturing_player_id)
