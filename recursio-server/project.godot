@@ -40,11 +40,6 @@ _global_script_classes=[ {
 "path": "res://Room/GameManager.gd"
 }, {
 "base": "CharacterBase",
-"class": "Ghost",
-"language": "GDScript",
-"path": "res://Shared/Characters/Ghost.gd"
-}, {
-"base": "CharacterBase",
 "class": "GhostBase",
 "language": "GDScript",
 "path": "res://Shared/Characters/GhostBase.gd"
@@ -136,7 +131,6 @@ _global_script_class_icons={
 "CapturePoint": "",
 "CharacterBase": "",
 "GameManager": "",
-"Ghost": "",
 "GhostBase": "",
 "InputData": "",
 "InputFrame": "",

@@ -60,7 +60,7 @@ func _ready():
 func _reset():
 	Logger.info("Full reset triggered.","gameplay")
 	player.reset()
-	player.spawn_point = _get_spawn_point(player.game_id, 0)
+	player.spawn_point = _get_spawn_point(player.team_id, 0)
 	player.move_back_to_spawnpoint()
 	for enemy_id in enemies:
 		enemies[enemy_id].reset()
@@ -302,11 +302,11 @@ func _on_player_ready(_button) -> void:
 
 func move_player_to_spawnpoint(ghost_index:int) -> void:
 	Logger.info("Moving player to spawnpoint " + str(ghost_index), "spawnpoints")
-	player.transform.origin = _get_spawn_point(player.game_id, ghost_index)
-	player.spawn_point = _get_spawn_point(player.game_id, ghost_index)
+	player.transform.origin = _get_spawn_point(player.team_id, ghost_index)
+	player.spawn_point = _get_spawn_point(player.team_id, ghost_index)
 
-func _get_spawn_point(game_id, ghost_index):
-	var player_number = game_id + 1
+func _get_spawn_point(team_id, ghost_index):
+	var player_number = team_id + 1
 	var spawn_point = level.get_spawn_points(player_number)[ghost_index]
 	return spawn_point
 
@@ -326,7 +326,7 @@ func _create_enemy_ghost(enemy_id, gameplay_record):
 	
 	var ghost = _create_ghost(gameplay_record)
 	#Low Priority TODO: this works for two player only
-	ghost.spawn_point = _get_spawn_point(1-player.game_id,gameplay_record["G"])
+	ghost.spawn_point = _get_spawn_point(1-player.team_id,gameplay_record["G"])
 	ghost.add_to_group("Enemy")
 	if _enemy_ghosts_dic[enemy_id].has([gameplay_record["G"]]):
 		_enemy_ghosts_dic[enemy_id][gameplay_record["G"]].queue_free()
@@ -335,7 +335,7 @@ func _create_enemy_ghost(enemy_id, gameplay_record):
 func _create_own_ghost(gameplay_record):
 	Logger.info("Own ghost record received with start time of " + str(gameplay_record["T"]), "ghost")
 	var ghost = _create_ghost(gameplay_record, true)
-	ghost.spawn_point = _get_spawn_point(player.game_id,gameplay_record["G"])
+	ghost.spawn_point = _get_spawn_point(player.team_id,gameplay_record["G"])
 	ghost.add_to_group("Friend")
 	if _my_ghosts.has([gameplay_record["G"]]):
 		_my_ghosts[gameplay_record["G"]] .queue_free()
@@ -402,12 +402,12 @@ func _restart_ghosts(start_time)->void:
 			_my_ghosts[i].start_replay(start_time)
 
 
-func _spawn_player(player_id, spawn_point, game_id):
+func _spawn_player(player_id, spawn_point, team_id):
 	set_physics_process(true)
 	player = _spawn_character(_player_scene, spawn_point)
 	assert(player.button_overlay.connect("button_pressed", self, "_on_player_ready") == OK)
 	player.spawn_point = spawn_point
-	player.game_id =game_id
+	player.team_id =team_id
 	player.player_id = player_id
 	player.set_name(str(player_id))
 	id = player_id

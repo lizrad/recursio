@@ -13,8 +13,9 @@ func get_visibility_mask():
 	return _light_viewport.get_texture()
 
 
-func reset():
-	block_movement = true
+# OVERRIDE #
+func reset() -> void:
+	.reset()
 	_hud.reset()
 
 func move_back_to_spawnpoint():

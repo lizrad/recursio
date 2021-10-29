@@ -1,15 +1,13 @@
 extends CharacterBase
 class_name PlayerBase
 
-# The current velocity of this player
-var _velocity: Vector3 = Vector3.ZERO
 # Used for applying drag (e.g. moving platform velocity)
 var _target_velocity: Vector3 = Vector3.ZERO
 # The acceleration applied to the velocity
 var _acceleration: Vector3 = Vector3.ZERO
 
 # Blocks any movement applied to it (includes rotation-movement)
-var block_movement: bool = false
+var block_movement: bool = true
 
 
 # Values from constants.ini
@@ -20,6 +18,13 @@ var _move_acceleration = Constants.get_value("movement", "acceleration")
 
 # RecordManager for recording movement and actions
 var _record_manager: RecordManager = RecordManager.new()
+
+# OVERRIDE #
+func reset() -> void:
+	.reset()
+	block_movement = true
+	_acceleration = Vector3.ZERO
+	_target_velocity = Vector3.ZERO
 
 
 # Should only be called in "physics_update()"
@@ -48,11 +53,11 @@ func apply_input(movement: Vector3, rotation: Vector3, buttons: int) -> void:
 	_acceleration = movement_vector * _move_acceleration * scale
 	
 	# Lerp to target velocity to simulate drag
-	_velocity = lerp(_velocity, _target_velocity, _drag)
+	self.velocity = lerp(velocity, _target_velocity, _drag)
 	# Apply acceleration to velocity (important: after lerp)
-	_velocity += _acceleration * get_physics_process_delta_time()
+	self.velocity += _acceleration * get_physics_process_delta_time()
 	
-	_kb.move_and_slide(_velocity)
+	_kb.move_and_slide(velocity)
 	
 	# Trigger all actions with base
 	.trigger_actions(buttons)

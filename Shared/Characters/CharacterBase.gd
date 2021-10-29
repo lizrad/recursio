@@ -6,7 +6,8 @@ signal action_status_changed(action_type, status)
 signal velocity_changed(velocity, front_vector, right_vector)
 signal timeline_index_changed(ghost_index)
 
-
+# The team id defines which side the player starts on
+var team_id: int = -1
 # The timeline this character belongs to
 var timeline_index: int = -1 setget set_timeline_index
 # The spawn point of this character
@@ -25,6 +26,16 @@ var _action_manager: ActionManager
 
 func _init(action_manager: ActionManager):
 	_action_manager = action_manager
+
+
+func reset() -> void:
+	self.velocity = Vector3.ZERO
+	self.position = Vector3.ZERO
+	self.rotation_y = 0
+
+
+func move_to_spawn_point() -> void:
+	self.position = spawn_point
 
 
 # Returns the position of the underlying kinematic body
@@ -53,7 +64,7 @@ func set_velocity(new_velocity):
 
 
 func set_timeline_index(new_timeline_index):
-	emit_signal("ghost_index_changed", new_timeline_index)
+	emit_signal("timeline_index_changed", new_timeline_index)
 	timeline_index = new_timeline_index
 
 

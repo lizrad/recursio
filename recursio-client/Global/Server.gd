@@ -102,8 +102,8 @@ func send_ghost_pick(ghost_index):
 	rpc_id(1, "receive_ghost_pick",ghost_index)
 
 
-remote func spawn_player(player_id, spawn_point, game_id):
-	emit_signal("spawning_player", player_id, spawn_point, game_id)
+remote func spawn_player(player_id, spawn_point, team_id):
+	emit_signal("spawning_player", player_id, spawn_point, team_id)
 
 
 remote func spawn_enemy(enemy_id, spawn_point):

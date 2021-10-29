@@ -21,8 +21,8 @@ func reset():
 		capture_point.reset()
 	toggle_capture_points(false)
 
-func get_spawn_points(player_number):
-	var node_name = "Player" + str(player_number) + "Spawns"
+func get_spawn_points(team_id):
+	var node_name = "Player" + str(team_id + 1) + "Spawns"
 	if has_node(node_name):
 		var spawn_positions = []
 		for position in get_node(node_name).get_children():

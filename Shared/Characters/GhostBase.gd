@@ -14,6 +14,14 @@ func _init(action_manager : ActionManager, record_data: RecordData).(action_mana
 	_record_data = RecordData.new().copy(record_data)
 
 
+# OVERRIDE #
+func reset() -> void:
+	.reset()
+	_is_playing = false
+	_current_frame_index = -1
+	_start_time = -1
+
+
 # Goes through the record and applies each frame
 func _physics_process(delta):
 	if not _is_playing:
