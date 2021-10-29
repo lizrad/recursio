@@ -32,7 +32,6 @@ func set_shader_param(param, value):
 	_back_variant.material_override.set_shader_param(param, value)
 
 func _set_color_scheme(new_color_scheme:String, ghost_index):
-	emit_signal("color_scheme_changed",new_color_scheme)
 	var color_parameter = "color"
 	_front.material_override.set_shader_param(color_parameter, Color(Constants.get_value("colors", new_color_scheme+"_main"))) 
 	_front_variant.material_override.set_shader_param(color_parameter, Color(Constants.get_value("colors", new_color_scheme+"_main"))) 
@@ -43,6 +42,9 @@ func _set_color_scheme(new_color_scheme:String, ghost_index):
 	
 	_back.material_override.set_shader_param(color_parameter,Color(Constants.get_value("colors", new_color_scheme+"_main")))
 	_back_variant.material_override.set_shader_param(color_parameter,Color(Constants.get_value("colors", new_color_scheme+"_main")))
+	
+	emit_signal("color_scheme_changed",new_color_scheme, ghost_index)
+
 
 func _set_variant(ghost_index):
 	var wall_index = Constants.get_value("ghosts","wall_placing_ghost_index")

@@ -17,8 +17,10 @@ var _default_color
 func _ready():
 	get_parent().connect("color_scheme_changed",self,"_on_color_scheme_changed")
 
-func _on_color_scheme_changed(new_color_scheme):
-	_attack_color= Color(Constants.get_value("colors",new_color_scheme + "_secondary_accent"))
+func _on_color_scheme_changed(new_color_scheme, ghost_index):
+	var wall_index = Constants.get_value("ghosts","wall_placing_ghost_index")
+	var accent_type = "primary" if wall_index != ghost_index else "secondary"
+	_attack_color= Color(Constants.get_value("colors", new_color_scheme+"_"+accent_type+"_accent"))
 	_default_color = Color(Constants.get_value("colors",new_color_scheme + "_main"))
 	
 func start_animation():
