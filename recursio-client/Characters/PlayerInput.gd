@@ -14,6 +14,8 @@ var _trigger_dic : Dictionary = {
 	"player_dash": ActionManager.Trigger.SPECIAL_MOVEMENT_START
 }
 
+var _player_ghost_pick_trigger : String = "player_switch"
+
 # Action for pressing fire
 var _fire_action = _action_manager.get_action(ActionManager.ActionType.HITSCAN)
 # Action for melee
@@ -41,10 +43,17 @@ func _physics_process(delta):
 	var buttons_pressed: int = _get_buttons_pressed()
 	_player.apply_input(movement_vector, rotate_vector, buttons_pressed)
 	InputManager.set_triggers_in_input_frame(buttons_pressed)
+	
+	if Input.is_action_pressed(_player_ghost_pick_trigger):
+		var timeline_index: int = (_player.timeline_index + 1) % (Constants.get_value("ghosts","max_amount") + 1)
+		_player.timeline_index = timeline_index
+		_swap_weapon_type(timeline_index)
+		
+		InputManager.pick_player_ghost(timeline_index)
 
 
 # Changes the weapon depending on the given timeline index
-func swap_weapon_type(timeline_index) -> void:
+func _swap_weapon_type(timeline_index) -> void:
 	_fire_action.disconnect("ammunition_changed", self, "_on_fire_ammo_changed")
 	_fire_action = _action_manager.get_action_for_trigger(ActionManager.Trigger.FIRE_START, timeline_index)
 	
@@ -83,6 +92,5 @@ func _on_fire_ammo_changed(ammo: int) -> void:
 func _on_special_movement_ammo_changed(ammo: int) -> void:
 	Logger.debug("Special movement ammunition changed to: " + str(ammo))
 	_player.update_special_movement_ammo(ammo)
-
 
 

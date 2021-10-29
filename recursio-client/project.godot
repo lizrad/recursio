@@ -47,7 +47,7 @@ _global_script_classes=[ {
 "base": "Node",
 "class": "CharacterManager",
 "language": "GDScript",
-"path": "res://CharacterManager.gd"
+"path": "res://Managers/CharacterManager.gd"
 }, {
 "base": "Object",
 "class": "DeadZones",
@@ -58,6 +58,11 @@ _global_script_classes=[ {
 "class": "Enemy",
 "language": "GDScript",
 "path": "res://Characters/Enemy.gd"
+}, {
+"base": "Node",
+"class": "GameManager",
+"language": "GDScript",
+"path": "res://Managers/GameManager.gd"
 }, {
 "base": "GhostBase",
 "class": "Ghost",
@@ -90,6 +95,11 @@ _global_script_classes=[ {
 "path": "res://Util/LerpedFollow.gd"
 }, {
 "base": "Spatial",
+"class": "Level",
+"language": "GDScript",
+"path": "res://Shared/Level/Level.gd"
+}, {
+"base": "Spatial",
 "class": "MiniMapIcon",
 "language": "GDScript",
 "path": "res://UI/MiniMapIcon.gd"
@@ -103,6 +113,11 @@ _global_script_classes=[ {
 "class": "PlayerBase",
 "language": "GDScript",
 "path": "res://Shared/Characters/PlayerBase.gd"
+}, {
+"base": "Ghost",
+"class": "PlayerGhost",
+"language": "GDScript",
+"path": "res://Characters/PlayerGhost.gd"
 }, {
 "base": "Object",
 "class": "PlayerState",
@@ -150,15 +165,18 @@ _global_script_class_icons={
 "CharacterManager": "",
 "DeadZones": "",
 "Enemy": "",
+"GameManager": "",
 "Ghost": "",
 "GhostBase": "",
 "HUD": "",
 "InputData": "",
 "InputFrame": "",
 "LerpedFollow": "",
+"Level": "",
 "MiniMapIcon": "",
 "Player": "",
 "PlayerBase": "",
+"PlayerGhost": "",
 "PlayerState": "",
 "RecordData": "",
 "RecordFrame": "",
@@ -181,6 +199,7 @@ Constants="*res://Shared/Constants.gd"
 Server="*res://Global/Server.gd"
 Logger="*res://addons/recursio-loggerplugin/Logger.gd"
 InputManager="*res://Global/InputManager.gd"
+RoundManager="*res://Shared/RoundManager.gd"
 
 [debug]
 

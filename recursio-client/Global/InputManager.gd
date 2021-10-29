@@ -1,5 +1,9 @@
 extends Node
 
+
+signal player_timeline_picked(timeline_index)
+
+
 # All input frames for sending to the server
 # Consists of 15 
 var _input_data: InputData = InputData.new()
@@ -26,6 +30,10 @@ func add_movement_to_input_frame(movement: Vector2) -> void:
 # Adds new rotation data to the input frame
 func add_rotation_to_input_frame(rotation: Vector2) -> void:
 	_current_input_frame.rotation = rotation
+
+
+func pick_player_ghost(timeline_index) -> void:
+	emit_signal("player_timeline_picked", timeline_index)
 
 
 # Adds the current frame to the ringbuffer and resets the current frame

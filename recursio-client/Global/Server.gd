@@ -20,8 +20,6 @@ signal spawning_player(player_id, spawn_point)
 signal world_state_received(world_state)
 signal own_ghost_record_received(gameplay_record)
 signal enemy_ghost_record_received(enemy_id, gameplay_record)
-signal round_start_received(round_index, warm_up, server_time)
-signal round_end_received(round_index)
 signal capture_point_captured(capturing_player_id, capture_point)
 signal capture_point_team_changed(capturing_player_id, capture_point)
 signal capture_point_status_changed(capturing_player_id, capture_point, capture_progress)
@@ -29,7 +27,7 @@ signal capture_point_capture_lost(capturing_player_id, capture_point)
 signal game_result(winning_player_id)
 signal player_hit(hit_player_id)
 signal ghost_hit(hit_ghost_player_owner, hit_ghost_id)
-signal ghost_picks(player_pick, enemy_picks)
+signal timeline_picks(player_pick, enemy_picks)
 signal player_action(player_id, action_type)
 
 func _ready():
@@ -98,8 +96,9 @@ func send_player_input_data(input_data: InputData):
 func send_player_ready():
 	rpc_id(1, "receive_player_ready")
 
-func send_ghost_pick(ghost_index):
-	rpc_id(1, "receive_ghost_pick",ghost_index)
+
+func send_timeline_pick(timeline_index):
+	rpc_id(1, "receive_timeline_pick",timeline_index)
 
 
 remote func spawn_player(player_id, spawn_point, team_id):
@@ -155,13 +154,12 @@ remote func receive_world_state(world_state):
 
 # Receives the start of a round with the server time
 remote func receive_round_start(round_index, server_time):
-	emit_signal("round_start_received", round_index, server_time)
+	RoundManager.start_round(round_index, (get_server_time() - server_time) / 1000.0)
 
 
 # Receives the end of a round
 remote func receive_round_end(round_index):
-	Logger.info("Round " + str(round_index) + " has ended", "gameplay")
-	emit_signal("round_end_received", round_index)
+	RoundManager.stop_round()
 
 
 remote func receive_capture_point_captured(capturing_player_id, capture_point):
@@ -196,6 +194,6 @@ remote func receive_player_action(action_player_id, action_type):
 	Logger.info("Other player action received: " + str(action_type))
 	emit_signal("player_action", action_player_id, action_type)
 
-remote func receive_ghost_picks(player_pick, enemy_picks):
+remote func receive_timeline_picks(player_pick, enemy_pick):
 	Logger.info("Ghost picks received", "connection")
-	emit_signal("ghost_picks",player_pick, enemy_picks)
+	emit_signal("timeline_picks",player_pick, enemy_pick)

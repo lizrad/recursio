@@ -22,7 +22,7 @@ enum {
 }
 #var _round_state = Latency_Delay
 var _max_time := -1.0
-var _start_time := -1.0
+var _latency: float = -1.0
 
 func _ready() -> void:
 	reset()
@@ -31,55 +31,50 @@ func reset():
 	_phase.text = "Waiting for game to start..."
 	#_round_state = Latency_Delay
 	_max_time = -1.0
-	_start_time = -1.0
+	_latency = -1.0
 
 func _process(_delta):
 	_timer_pb.value = _calculate_progress()
 
 # Calculates the remaining time and maps it between 0 and 1
 func _calculate_progress() -> float:
-	if _max_time <= 0 or _start_time <= 0:
+	if _max_time <= 0 or _latency <= 0:
 		return 0.0
-	return 1.0 - (((Server.get_server_time() - _start_time) / 1000.0) / _max_time)
+	return 1.0 - (_latency / _max_time)
 
 # DEBUG: Still useful for checking client synchronization?
 func _calculate_current_time() -> String:
-	if _max_time < 0 or _start_time < 0:
+	if _max_time < 0 or _latency < 0:
 		return "0:00"
-	var time_diff = (Server.get_server_time() - _start_time) / 1000.0
-	var time = max(_max_time - time_diff,0)
+	var time = max(_max_time - _latency, 0)
 	# Give seconds a zero as padding if below 10 sekonds
 	return ("%d:%0*d" % [floor(time/60), 2, time])
 
-func round_start(round_index, start_time) -> void:
+func round_start(round_index, latency) -> void:
 	_phase.text = "Round "+str(round_index)+" starting..."
 	_max_time = Constants.get_value("gameplay", "latency_delay")
-	_start_time = start_time
+	_latency = latency
 
-func latency_delay_phase_start(start_time, time_diff) -> void:
+func latency_delay_phase_start() -> void:
+	assert(_latency >= 0.0)
 	_phase.text = "Waiting for server..."
-	_max_time = Constants.get_value("gameplay", "latency_delay")-time_diff
-	_start_time = start_time
+	_max_time = Constants.get_value("gameplay", "latency_delay") - _latency
 
-func prep_phase_start(round_index, start_time) -> void:
+func prep_phase_start(round_index) -> void:
 	_phase.text = "Preparation Phase "+str(round_index)
 	_max_time = Constants.get_value("gameplay", "prep_phase_time")
-	_start_time = start_time
 
-func countdown_phase_start(start_time) -> void:
+func countdown_phase_start() -> void:
 	_phase.text = "Get ready!"
 	_max_time = Constants.get_value("gameplay", "countdown_phase_seconds")
-	_start_time = start_time
 
-func game_phase_start(round_index, start_time) -> void:
+func game_phase_start(round_index) -> void:
 	_phase.text = "Game Phase "+str(round_index)
 	_max_time = Constants.get_value("gameplay", "game_phase_time")
-	_start_time = start_time
 
-func rewind_phase_start(round_index, start_time) -> void:
+func rewind_phase_start(round_index) -> void:
 	_phase.text = "Rewind Phase "+str(round_index)
 	_max_time = Constants.get_value("gameplay", "rewind_phase_time")
-	_start_time = start_time
 
 
 func update_fire_action_ammo(amount: int) -> void:

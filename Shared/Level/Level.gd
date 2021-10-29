@@ -1,4 +1,5 @@
 extends Spatial
+class_name Level
 
 
 # Scene to add  to the capture points for logic
