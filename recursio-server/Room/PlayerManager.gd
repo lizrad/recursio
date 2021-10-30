@@ -51,8 +51,8 @@ func despawn_player(player_id):
 func reset_spawnpoints():
 	for player_id in players:
 		move_player_to_spawnpoint(player_id)
-		
-		
+
+
 func move_player_to_spawnpoint(player_id)->void:
 	Logger.info("Moving player "+str(player_id)+" to spawnpoint "+str(players[player_id].ghost_index), "spawnpoints")
 	#Hotfix: otherwise it would overcorrect again
@@ -197,12 +197,11 @@ func propagate_player_picks():
 		Server.send_ghost_pick(player_id, player_pick, enemy_picks)
 
 
-func _create_ghost_from_player(player)->void:
-	var ghost = _ghost_scene.instance()
-	ghost.init(player.gameplay_record, 0)
+func _create_ghost_from_player(player: PlayerBase)->void:
+	var ghost: GhostBase = _ghost_scene.instance()
+	ghost.ghost_base_init(_action_manager, player.gameplay_record)
 	ghost.spawn_point = player.spawn_point
-	ghost.game_id = player.game_id
-	ghost.player_id = player.player_id
+	ghost.team_id = player.team_id
 	ghost.round_index = _game_manager.round_index
 
 	if  ghosts[player.player_id].has([player.gameplay_record["G"]]):

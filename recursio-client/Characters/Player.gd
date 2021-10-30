@@ -17,7 +17,7 @@ var _last_server_position
 var _last_server_time
 
 
-func player_init(action_manager: ActionManager) -> void:
+func player_init(action_manager) -> void:
 	.player_base_init(action_manager)
 
 

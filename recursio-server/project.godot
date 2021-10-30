@@ -60,11 +60,6 @@ _global_script_classes=[ {
 "path": "res://Shared/Level/Level.gd"
 }, {
 "base": "CharacterBase",
-"class": "Player",
-"language": "GDScript",
-"path": "res://Players/Player.gd"
-}, {
-"base": "CharacterBase",
 "class": "PlayerBase",
 "language": "GDScript",
 "path": "res://Shared/Characters/PlayerBase.gd"
@@ -135,7 +130,6 @@ _global_script_class_icons={
 "InputData": "",
 "InputFrame": "",
 "Level": "",
-"Player": "",
 "PlayerBase": "",
 "PlayerManager": "",
 "PlayerState": "",

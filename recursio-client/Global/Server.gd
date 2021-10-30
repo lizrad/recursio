@@ -13,12 +13,12 @@ var delta_latency: int = 0
 var decimal_collector: float = 0.0
 var latency_array = []
 
-signal successfully_connected
+signal successfully_connected()
 signal spawning_enemy(enemy_id, spawn_point)
 signal despawning_enemy(enemy_id)
 signal spawning_player(player_id, spawn_point)
 signal world_state_received(world_state)
-signal own_ghost_record_received(gameplay_record)
+signal player_ghost_record_received(gameplay_record)
 signal enemy_ghost_record_received(enemy_id, gameplay_record)
 signal capture_point_captured(capturing_player_id, capture_point)
 signal capture_point_team_changed(capturing_player_id, capture_point)
@@ -28,7 +28,6 @@ signal game_result(winning_player_id)
 signal player_hit(hit_player_id)
 signal ghost_hit(hit_ghost_player_owner, hit_ghost_id)
 signal timeline_picks(player_pick, enemy_picks)
-signal player_action(player_id, action_type)
 
 func _ready():
 	set_physics_process(false)

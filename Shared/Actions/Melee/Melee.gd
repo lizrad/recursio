@@ -83,7 +83,7 @@ func _physics_process(_delta):
 
 			Logger.debug("hit body: %s" %[body.name], "Melee")
 			# make sure we hit other player last
-			if body is Player:
+			if body is PlayerBase:
 				Logger.debug("found other player", "Melee")
 				other_player = body
 				continue

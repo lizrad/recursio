@@ -28,13 +28,13 @@ func initialize_visual(owning_player) ->void:
 func handle_hit(collider):
 	Logger.debug("hit collider: %s" %[collider.get_class()] , "HitscanShot")
 	
-	if collider is Ghost and not collider == placed_by_body \
+	if collider is GhostBase and not collider == placed_by_body \
 			and collider.round_index < round_index:
 		collider.hit()
 
 
 func _hit_body(body) ->void:
-	if body is Ghost and body != placed_by_body:
+	if body is GhostBase and body != placed_by_body:
 		Logger.info("body hit -> TODO: kill enemy contact/ghost/robot", "Wall")
 		#body.daie()
 

@@ -48,9 +48,6 @@ func _ready():
 	
 	assert(Server.connect("timeline_picks", self, "_on_timeline_picks") == OK)
 	
-	assert(Server.connect("round_start_received",self, "_on_round_start_received") == OK)
-	assert(Server.connect("round_end_received", self, "_on_round_ended_received") == OK)
-	
 	assert(Server.connect("capture_point_captured", self, "_on_capture_point_captured") == OK)
 	assert(Server.connect("capture_point_capture_lost", self, "_on_capture_point_capture_lost") == OK)
 	

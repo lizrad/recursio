@@ -3,8 +3,8 @@ class_name GameManager
 
 export var level_path: NodePath
 
-onready var _game_result_screen = get_node("../GameResultScreen")
-onready var _countdown_screen = get_node("../CountdownScreen")
+onready var _game_result_screen = get_node("../../GameResultScreen")
+onready var _countdown_screen = get_node("../../CountdownScreen")
 onready var _countdown_screen_text = _countdown_screen.get_node("CountdownText")
 onready var _level: Level = get_node(level_path)
 

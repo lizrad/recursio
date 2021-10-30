@@ -5,7 +5,7 @@ onready var _path_scene = preload("res://Rendering/GhostPath.tscn").instance()
 var _path: Curve3D
 
 
-func player_ghost_init(action_manager : ActionManager, record_data: RecordData, color: Color) -> void:
+func player_ghost_init(action_manager, record_data: RecordData, color: Color) -> void:
 	.ghost_init(action_manager, record_data, color)
 
 

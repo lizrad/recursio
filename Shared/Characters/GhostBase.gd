@@ -1,7 +1,6 @@
 extends CharacterBase
 class_name GhostBase
 
-onready var _collision_shape: CollisionShape = get_node("CollisionShape")
 
 var _is_playing: bool = false
 
@@ -10,7 +9,7 @@ var _current_frame_index: int = -1
 var _start_time: int = -1
 
 
-func ghost_base_init(action_manager : ActionManager, record_data: RecordData) -> void:
+func ghost_base_init(action_manager, record_data: RecordData) -> void:
 	.character_base_init(action_manager)
 	_record_data = RecordData.new().copy(record_data)
 

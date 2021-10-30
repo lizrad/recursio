@@ -8,7 +8,7 @@ onready var _minimap_icon_alive := load("res://Resources/Icons/icon_ghost_minima
 onready var _minimap_icon_dead := load("res://Resources/Icons/icon_dead_ghost_minimap.png")
 
 
-func ghost_init(action_manager : ActionManager, record_data: RecordData, color: Color) -> void:
+func ghost_init(action_manager, record_data: RecordData, color: Color) -> void:
 	.ghost_base_init(action_manager, record_data)
 	_mesh.material_override.set_shader_param("color", color)
 	

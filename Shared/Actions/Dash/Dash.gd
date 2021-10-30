@@ -13,7 +13,7 @@ func initialize(owning_player):
 
 func _physics_process(delta):
 	
-	if not _owning_player is Player:
+	if not _owning_player is PlayerBase:
 		return
 	
 	var steepness = 20.0

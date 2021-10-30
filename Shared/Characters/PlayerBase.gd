@@ -20,7 +20,7 @@ var _move_acceleration = Constants.get_value("movement", "acceleration")
 var _record_manager: RecordManager = RecordManager.new()
 
 
-func player_base_init(action_manager: ActionManager) -> void:
+func player_base_init(action_manager) -> void:
 	.character_base_init(action_manager)
 
 

@@ -12,6 +12,8 @@ var team_id: int = -1
 var timeline_index: int = -1 setget set_timeline_index
 # The spawn point of this character
 var spawn_point: Vector3
+# The round this character got created in
+var round_index: int = -1
 
 
 var position: Vector3 setget set_position, get_position
@@ -21,10 +23,11 @@ var velocity: Vector3 setget set_velocity
 
 # Underlying kinematic body
 onready var _kb: KinematicBody = get_node("KinematicBody")
+onready var _collision_shape: CollisionShape = get_node("KinematicBody/CollisionShape")
 
-var _action_manager: ActionManager
+var _action_manager
 
-func character_base_init(action_manager: ActionManager) -> void:
+func character_base_init(action_manager) -> void:
 	_action_manager = action_manager
 
 
@@ -87,7 +90,7 @@ func trigger_actions(buttons: int) -> void:
 		_action_manager.set_active(action, true, _kb, get_parent())
 
 
-func get_action_manager() -> ActionManager:
+func get_action_manager():
 	return _action_manager
 
 

@@ -79,7 +79,7 @@ func handle_hit(collider):
 		
 		_first_frame = false
 	
-	if collider is CharacterBase:
+	if collider is GhostBase:
 		assert(collider.has_method("hit"))
 		if (not _hit_bodies_invincibilty_tracker.has(collider) or _hit_bodies_invincibilty_tracker[collider] <=0):
 			_hit_bodies_invincibilty_tracker[collider]=_damage_invincibility_time

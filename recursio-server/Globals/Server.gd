@@ -8,10 +8,8 @@ var player_amount = 0
 
 signal peer_connected(player_id)
 signal peer_disconnected(player_id)
-signal player_input_received(player_id, input_data)
+signal player_input_data_received(player_id, input_data)
 signal player_timeline_pick_received(player_id, timeline_index)
-
-
 
 
 func _ready():
@@ -136,7 +134,7 @@ remote func fetch_server_time(player_time):
 
 
 remote func receive_player_input_data(input_data):
-	emit_signal("player_input_received", get_tree().get_rpc_sender_id(), input_data)
+	emit_signal("player_input_data_received", get_tree().get_rpc_sender_id(), input_data)
 
 
 remote func receive_timeline_pick(timeline_index):
