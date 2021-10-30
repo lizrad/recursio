@@ -24,7 +24,7 @@ onready var _kb: KinematicBody = get_node("KinematicBody")
 
 var _action_manager: ActionManager
 
-func _init(action_manager: ActionManager):
+func character_base_init(action_manager: ActionManager) -> void:
 	_action_manager = action_manager
 
 

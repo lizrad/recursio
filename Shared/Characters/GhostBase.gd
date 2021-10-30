@@ -9,8 +9,9 @@ var _record_data: RecordData
 var _current_frame_index: int = -1
 var _start_time: int = -1
 
-# OVERRIDE #
-func _init(action_manager : ActionManager, record_data: RecordData).(action_manager):
+
+func ghost_base_init(action_manager : ActionManager, record_data: RecordData) -> void:
+	.character_base_init(action_manager)
 	_record_data = RecordData.new().copy(record_data)
 
 

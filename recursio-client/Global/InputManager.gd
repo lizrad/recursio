@@ -32,7 +32,7 @@ func add_rotation_to_input_frame(rotation: Vector2) -> void:
 	_current_input_frame.rotation = rotation
 
 
-func pick_player_ghost(timeline_index) -> void:
+func pick_player_timeline(timeline_index) -> void:
 	emit_signal("player_timeline_picked", timeline_index)
 
 

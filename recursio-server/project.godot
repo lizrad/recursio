@@ -54,6 +54,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://Shared/Input/InputFrame.gd"
 }, {
+"base": "Spatial",
+"class": "Level",
+"language": "GDScript",
+"path": "res://Shared/Level/Level.gd"
+}, {
 "base": "CharacterBase",
 "class": "Player",
 "language": "GDScript",
@@ -134,6 +139,7 @@ _global_script_class_icons={
 "GhostBase": "",
 "InputData": "",
 "InputFrame": "",
+"Level": "",
 "Player": "",
 "PlayerBase": "",
 "PlayerManager": "",

@@ -17,33 +17,36 @@ var _enemy: Enemy
 
 var _player_rpc_id: int
 
-# Timeline index
-var _player_ghosts: Array = []
-var _enemy_ghosts: Array = []
+# Timeline index <-> ghost
+var _player_ghosts: Dictionary = {}
+var _enemy_ghosts: Dictionary = {}
 
 var _max_ghosts = Constants.get_value("ghosts", "max_amount")
 
 var _time_since_last_server_update = 0.0
+var _time_since_last_world_state_update = 0.0
 
 func _ready():	
 	# Connect to server signals
-	assert(Server.connect("spawning_player", self, "_spawn_player") == OK)
-	assert(Server.connect("spawning_enemy", self, "_spawn_enemy") == OK)
-	assert(Server.connect("despawning_enemy", self, "_despawn_enemy") == OK)
-	assert(Server.connect("world_state_received", self, "_update_character_positions") == OK)
-	assert(Server.connect("own_ghost_record_received", self, "_create_own_ghost") == OK)
+	assert(Server.connect("spawning_player", self, "_on_spawn_player") == OK)
+	assert(Server.connect("spawning_enemy", self, "_on_spawn_enemy") == OK)
+	assert(Server.connect("despawning_enemy", self, "_on_despawn_enemy") == OK)
+	assert(Server.connect("player_ghost_record_received", self, "_on_player_ghost_record_received") == OK)
 	assert(Server.connect("enemy_ghost_record_received", self, "_create_enemy_ghost") == OK)
+	
+	assert(Server.connect("world_state_received", self, "_on_world_state_received") == OK)
 	assert(Server.connect("player_hit", self, "_on_player_hit") == OK)
 	assert(Server.connect("ghost_hit", self, "_on_ghost_hit") == OK)
+	
 	assert(Server.connect("timeline_picks", self, "_on_timeline_picks") == OK)
 	assert(Server.connect("player_action", self, "_on_player_action") == OK)
 	
 	assert(Server.connect("round_start_received",self, "_on_round_start_received") == OK)
 	assert(Server.connect("round_end_received", self, "_on_round_ended_received") == OK)
+	
 	assert(Server.connect("capture_point_captured", self, "_on_capture_point_captured") == OK)
-	assert(Server.connect("capture_point_team_changed", self, "_on_capture_point_team_changed") == OK)
-	assert(Server.connect("capture_point_status_changed", self, "_on_capture_point_status_changed") == OK)
 	assert(Server.connect("capture_point_capture_lost", self, "_on_capture_point_capture_lost") == OK)
+	
 	assert(Server.connect("game_result", self, "_on_game_result") == OK)
 	
 	assert(InputManager.connect("player_timeline_picked", self, "_on_player_timeline_picked") == OK)
@@ -217,6 +220,125 @@ func _on_timeline_picks(timeline_index, enemy_pick):
 	
 	_enemy.timeline_index = enemy_pick
 	_enable_ghosts()
+
+
+func _on_player_ready(_button) -> void:
+	Server.send_player_ready()
+
+
+func _on_player_ghost_record_received(timeline_index, record_data):
+	var ghost = _create_player_ghost(record_data)
+	ghost.spawn_point = _game_manager.get_spawn_point(_player.team_id, timeline_index)
+	
+	if _player_ghosts.has(timeline_index):
+		_player_ghosts[timeline_index] .queue_free()
+	_player_ghosts[timeline_index] = ghost
+
+
+func _on_enemy_ghost_record_received(timeline_index, record_data: RecordData):	
+	var ghost = _create_enemy_ghost(record_data)
+	ghost.spawn_point = _game_manager.get_spawn_points(1 - _player.team_id, timeline_index)
+	
+	# Check if there is already a ghost, and delete it
+	if _enemy_ghosts.has(timeline_index):
+		_enemy_ghosts[timeline_index].queue_free()
+	_enemy_ghosts[timeline_index] = ghost
+
+
+func _on_spawn_player(player_id, spawn_point, team_id):
+	set_physics_process(true)
+	_player = _spawn_character(_player_scene, spawn_point)
+	assert(_player.button_overlay.connect("button_pressed", self, "_on_player_ready") == OK)
+	_player_rpc_id = player_id
+	_player.team_id = team_id
+	_player.set_name(str(player_id))
+	
+	# Apply visibility mask to all entities which have been here before the player
+	_apply_visibility_mask(_enemy)
+	for timeline_index in _enemy_ghosts:
+		_apply_visibility_mask(_enemy_ghosts[timeline_index])
+	
+	# Initialize capture point HUD for current level
+	_player.setup_capture_point_hud(_game_manager.get_capture_points().size())
+
+
+func _on_spawn_enemy(enemy_id, spawn_point):
+	_enemy = _spawn_character(_enemy_scene, spawn_point)
+	_enemy.set_name(str(enemy_id))
+	_apply_visibility_mask(_enemy)
+
+
+func _on_despawn_enemy(enemy_id):
+	_enemy.queue_free()
+	for timeline_index in _enemy_ghosts:
+		_enemy_ghosts[timeline_index].queue_free()
+	_enemy_ghosts.clear()
+
+
+func _on_world_state_received(world_state: WorldState):
+	if _time_since_last_world_state_update < world_state.timestamp:
+		_time_since_last_world_state_update = world_state.timestamp
+		_time_since_last_server_update = 0
+
+		var player_states: Dictionary = world_state.player_states
+
+		
+		if player_states.has(_player_rpc_id):
+			var server_player: PlayerState = player_states[_player_rpc_id]
+
+			_player.handle_server_update(server_player.position, server_player.timestamp)
+
+			player_states.erase(_player_rpc_id)
+
+		for id in player_states:
+			# Handle own player
+			if id == _player_rpc_id:
+				var server_player: PlayerState = player_states[_player_rpc_id]
+				_player.handle_server_update(server_player.position, server_player.timestamp)
+				player_states.erase(_player_rpc_id)
+			else:
+				# Set parameters for interpolation
+				_enemy.last_position = _enemy.transform.origin
+				_enemy.last_velocity = _enemy.velocity
+				_enemy.rotation.y = player_states[id].rotation
+				_enemy.server_position = player_states[id].position
+				_enemy.server_velocity = player_states[id].velocity
+				_enemy.server_acceleration = player_states[id].acceleration
+
+
+func _on_capture_point_captured(capturing_player_id, capture_point):
+	if capturing_player_id == _player_rpc_id:
+		_player.move_camera_to_overview()
+		_player.set_overview_light_enabled(true)
+
+
+func _on_capture_point_capture_lost(capturing_player_id, capture_point):
+	if capturing_player_id == _player_rpc_id:
+		_player.follow_camera()
+		_player.set_overview_light_enabled(false)
+
+
+
+func _spawn_character(character_scene, spawn_point):
+	var character: CharacterBase = character_scene.instance()
+	character.spawn_point = spawn_point
+	character.move_to_spawn_point()
+	add_child(character)
+	return character
+
+
+func _create_player_ghost(record_data: RecordData):
+	var ghost: PlayerGhost = _player_ghost_scene.instance()
+	# TODO: Get color from ColorManager
+	ghost.player_ghost_init(_action_manager, record_data, Color.lightcoral)
+	return ghost
+
+
+func _create_enemy_ghost(record_data):
+	var ghost: Ghost = _ghost_scene.instance()
+	# TODO: Get color from ColorManager
+	ghost.ghost_init(_action_manager, record_data, Color.lightblue)
+	return ghost
 
 
 func _start_ghosts() -> void:

@@ -14,6 +14,11 @@ func _ready():
 	# Hide screens
 	_game_result_screen.visible = false
 	_countdown_screen.visible = false
+	
+	assert(Server.connect("capture_point_captured", self, "_on_capture_point_captured") == OK)
+	assert(Server.connect("capture_point_team_changed", self, "_on_capture_point_team_changed") == OK)
+	assert(Server.connect("capture_point_status_changed", self, "_on_capture_point_status_changed") == OK)
+	assert(Server.connect("capture_point_capture_lost", self, "_on_capture_point_capture_lost") == OK)
 
 
 func _process(delta):	
@@ -70,4 +75,18 @@ func reset() -> void:
 	_level.toggle_capture_points(false)
 
 
+func _on_capture_point_captured(capturing_player_id, capture_point):
+	_level.get_capture_points()[capture_point].capture(capturing_player_id)
+
+
+func _on_capture_point_team_changed(capturing_player_id, capture_point):
+	_level.get_capture_points()[capture_point].set_capturing_player(capturing_player_id)
+
+
+func _on_capture_point_status_changed(capturing_player_id, capture_point, capture_progress):
+	_level.get_capture_points()[capture_point].set_capture_status(capturing_player_id, capture_progress)
+
+
+func _on_capture_point_capture_lost(capturing_player_id, capture_point):
+	_level.get_capture_points()[capture_point].capture_lost(capturing_player_id)
 

@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=2]
 
-[ext_resource path="res://Managers/PlayerManager.gd" type="Script" id=1]
+[ext_resource path="res://Managers/CharacterManager.gd" type="Script" id=1]
 [ext_resource path="res://Shared/Level/LevelH.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Level/CapturePoint.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Resources/Fonts/default_font.tres" type="DynamicFont" id=4]
@@ -12,14 +12,13 @@
 [node name="LevelH" parent="." instance=ExtResource( 2 )]
 capture_point_scene = ExtResource( 3 )
 
-[node name="PlayerManager" type="Spatial" parent="."]
+[node name="CharacterManager" type="Node" parent="."]
 script = ExtResource( 1 )
-level_path = NodePath("../LevelH")
 
-[node name="ActionManager" type="Node" parent="PlayerManager"]
+[node name="ActionManager" type="Node" parent="CharacterManager"]
 script = ExtResource( 5 )
 
-[node name="GameManager" type="Node" parent="PlayerManager"]
+[node name="GameManager" type="Node" parent="CharacterManager"]
 script = ExtResource( 6 )
 
 [node name="GameResultScreen" type="Control" parent="."]

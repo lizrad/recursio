@@ -49,7 +49,7 @@ func _physics_process(delta):
 		_player.timeline_index = timeline_index
 		_swap_weapon_type(timeline_index)
 		
-		InputManager.pick_player_ghost(timeline_index)
+		InputManager.pick_player_timeline(timeline_index)
 
 
 # Changes the weapon depending on the given timeline index
@@ -61,7 +61,7 @@ func _swap_weapon_type(timeline_index) -> void:
 	_fire_action.connect("ammunition_changed", self, "_on_fire_ammo_changed")
 	Logger.info("Weapon selected: " + _fire_action.name, "actions")
 	
-	_player.update_weapon_type(_fire_action)
+	_player.update_weapon_type_hud(_fire_action)
 
 
 
@@ -87,10 +87,10 @@ func _get_buttons_pressed() -> int:
 
 func _on_fire_ammo_changed(ammo: int) -> void:
 	Logger.debug("Fire ammunition changed to: " + str(ammo))
-	_player.update_fire_action_ammo(ammo)
+	_player.update_fire_action_ammo_hud(ammo)
 
 func _on_special_movement_ammo_changed(ammo: int) -> void:
 	Logger.debug("Special movement ammunition changed to: " + str(ammo))
-	_player.update_special_movement_ammo(ammo)
+	_player.update_special_movement_ammo_hud(ammo)
 
 
