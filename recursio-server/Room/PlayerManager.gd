@@ -1,9 +1,8 @@
 extends Node
 class_name PlayerManager
 
-onready var Server = get_node("/root/Server")
-var _player_scene = preload("res://Players/Player.tscn")
-var _ghost_scene = preload("res://Players/Ghost.tscn")
+var _player_scene = preload("res://Shared/Characters/PlayerBase.tscn")
+var _ghost_scene = preload("res://Shared/Characters/GhostBase.tscn")
 var players = {}
 var ghosts = {}
 var player_inputs = {}
@@ -19,7 +18,10 @@ onready var _action_manager = get_node("../ActionManager")
 func _physics_process(delta):
 	for player_id in player_inputs:
 		if players.has(player_id):
-			players[player_id].apply_player_input_data(player_inputs[player_id], delta)
+			var input_data: InputData = player_inputs[player_id]
+			var input_frame: InputFrame = input_data.get_closest_or_earlier(Server.get_server_time() - world_processing_offset)
+			var player: PlayerBase = players[player_id]
+			player.apply_input(input_frame.movement, input_frame.rotation, input_frame.buttons.mask)
 
 
 func reset():

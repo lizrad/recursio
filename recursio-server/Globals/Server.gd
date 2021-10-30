@@ -1,14 +1,17 @@
 extends Node
-class_name Server
 
 var network = NetworkedMultiplayerENet.new()
 var port = 1909
 var max_players = 100
 var player_amount = 0
 
-onready var _room_manager = get_node("RoomManager")
 
-var _player_room_dic: Dictionary = {}
+signal peer_connected(player_id)
+signal peer_disconnected(player_id)
+signal player_input_received(player_id, input_data)
+signal player_timeline_pick_received(player_id, timeline_index)
+
+
 
 
 func _ready():
@@ -27,25 +30,12 @@ func start_server():
 
 func _peer_connected(player_id):
 	Logger.info("Player with id: " + str(player_id) + " connected.", "connection")
-
-	player_amount += 1
-
-	if _room_manager.is_current_room_full():
-		var room_id = _room_manager.create_room("Room 1")
-		_room_manager.join_room(room_id, player_id)
-		_player_room_dic[player_id] = room_id
-	else:
-		var room_id = _room_manager.get_current_room_id()
-		_room_manager.join_room(room_id, player_id)
-		_player_room_dic[player_id] = room_id
+	emit_signal("peer_connected", player_id)
 
 
 func _peer_disconnected(player_id):
 	Logger.info("Player with id: " + str(player_id) + " disconnected.", "connection")
-
-	_room_manager.leave_room(_player_room_dic[player_id], player_id)
-	_player_room_dic.erase(player_id)
-	player_amount -= 1
+	emit_signal("peer_disconnected", player_id)
 
 
 func spawn_player_on_client(player_id, spawn_point, game_id):
@@ -146,15 +136,14 @@ remote func fetch_server_time(player_time):
 
 
 remote func receive_player_input_data(input_data):
-	var player_id = get_tree().get_rpc_sender_id()
-	var room_id = _player_room_dic[player_id]
-	var test = InputData.new().from_array(input_data)
-	_room_manager.get_room(room_id).update_player_input_data(player_id, test)
+	emit_signal("player_input_received", get_tree().get_rpc_sender_id(), input_data)
 
 
-remote func receive_ghost_pick(ghost_index):
-	var player_id = get_tree().get_rpc_sender_id()
-	var room_id = _player_room_dic[player_id]
-	Logger.info("received ghost index of "+str(ghost_index)+" from player "+str(player_id)+".", "connection")
-	_room_manager.get_room(room_id).handle_ghost_pick(player_id, ghost_index)
-	
+remote func receive_timeline_pick(timeline_index):
+	emit_signal("player_timeline_pick_received", get_tree().get_rpc_sender_id(), timeline_index)	
+
+
+
+
+
+

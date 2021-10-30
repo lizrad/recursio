@@ -4,8 +4,8 @@ class_name InputFrame
 
 var timestamp: int = -1
 var buttons: Bitmask = Bitmask.new(0)
-var movement: Vector2 = Vector2.ZERO
-var rotation: Vector2 = Vector2.ZERO
+var movement: Vector3 = Vector3.ZERO
+var rotation: Vector3 = Vector3.ZERO
 
 
 func from_array(data: Array):

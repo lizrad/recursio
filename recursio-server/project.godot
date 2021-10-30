@@ -109,11 +109,6 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://Room/RoomManager.gd"
 }, {
-"base": "Node",
-"class": "Server",
-"language": "GDScript",
-"path": "res://Globals/Server.gd"
-}, {
 "base": "Object",
 "class": "StaticInput",
 "language": "GDScript",
@@ -150,7 +145,6 @@ _global_script_class_icons={
 "RingBuffer": "",
 "Room": "",
 "RoomManager": "",
-"Server": "",
 "StaticInput": "",
 "WorldState": "",
 "WorldStateManager": ""
@@ -167,6 +161,7 @@ config/icon="res://icon.png"
 
 Logger="*res://addons/recursio-loggerplugin/Logger.gd"
 Constants="*res://Shared/Constants.gd"
+Server="*res://Globals/Server.gd"
 
 [editor_plugins]
 

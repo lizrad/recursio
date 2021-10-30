@@ -3,7 +3,6 @@ class_name WorldStateManager
 
 signal world_state_updated(world_state)
 
-onready var _server: Server = get_node("/root/Server")
 onready var _player_manager: PlayerManager = get_node("../PlayerManager")
 
 var _player_states : Dictionary = {}
@@ -16,7 +15,7 @@ func _physics_process(_delta):
 
 
 func _create_world_state():
-	var time = _server.get_server_time()
+	var time = Server.get_server_time()
 	var player_states = {}
 	for player_id in _player_manager.players:
 		# Skip if given player hasn't send any inputs yet
