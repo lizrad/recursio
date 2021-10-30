@@ -27,6 +27,8 @@ func initialize(owning_player) -> void:
 		var color_scheme = character_model_controller.color_scheme
 		color = Color(Constants.get_value("colors",color_scheme+"_primary_accent"))
 	$Visualisation.material_override.albedo_color = color
+	$HitPoint/FrontParticles.material_override.emission = color
+	$HitPoint/BackParticles.material_override.emission = color
 	Logger.info("initialize action", "HitscanShot")
 	_visual = true
 	#_damage = attack_type.damage

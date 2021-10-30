@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://Shared/Actions/Shots/HitscanShot.gd" type="Script" id=1]
 
@@ -20,7 +20,8 @@ emission_energy = 500.0
 emission_operator = 0
 emission_on_uv2 = false
 
-[sub_resource type="SpatialMaterial" id=4]
+[sub_resource type="SpatialMaterial" id=9]
+resource_local_to_scene = true
 emission_enabled = true
 emission = Color( 1, 0, 0, 1 )
 emission_energy = 500.0
@@ -45,6 +46,14 @@ height = 0.4
 radial_segments = 10
 rings = 5
 
+[sub_resource type="SpatialMaterial" id=10]
+resource_local_to_scene = true
+emission_enabled = true
+emission = Color( 1, 0, 0, 1 )
+emission_energy = 500.0
+emission_operator = 0
+emission_on_uv2 = false
+
 [node name="HitscanShot" type="RayCast"]
 enabled = true
 cast_to = Vector3( 0, 0, -1 )
@@ -61,7 +70,7 @@ material/0 = SubResource( 3 )
 
 [node name="BackParticles" type="Particles" parent="HitPoint"]
 transform = Transform( -4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, 0 )
-material_override = SubResource( 4 )
+material_override = SubResource( 9 )
 cast_shadow = 0
 emitting = false
 amount = 5
@@ -74,7 +83,7 @@ draw_pass_1 = SubResource( 8 )
 
 [node name="FrontParticles" type="Particles" parent="HitPoint"]
 transform = Transform( 1.31134e-07, 0, -1, 0, 1, 0, 1, 0, 1.31134e-07, 0, 0, 0 )
-material_override = SubResource( 4 )
+material_override = SubResource( 10 )
 cast_shadow = 0
 emitting = false
 amount = 5
