@@ -26,7 +26,15 @@ var _max_ghosts = Constants.get_value("ghosts", "max_amount")
 var _time_since_last_server_update = 0.0
 var _time_since_last_world_state_update = 0.0
 
-func _ready():	
+func _ready():
+	assert(RoundManager.connect("round_started", self, "_on_round_started") == OK)
+	assert(RoundManager.connect("latency_delay_phase_started", self, "_on_latency_delay_phase_started") == OK)
+	assert(RoundManager.connect("preparation_phase_started", self, "_on_preparation_phase_started") == OK)
+	assert(RoundManager.connect("countdown_phase_started", self, "_on_countdown_phase_started") == OK)
+	assert(RoundManager.connect("game_phase_started", self, "_on_game_phase_started") == OK)
+	
+	assert(InputManager.connect("player_timeline_picked", self, "_on_player_timeline_picked") == OK)
+	
 	# Connect to server signals
 	assert(Server.connect("spawning_player", self, "_on_spawn_player") == OK)
 	assert(Server.connect("spawning_enemy", self, "_on_spawn_enemy") == OK)
@@ -39,7 +47,6 @@ func _ready():
 	assert(Server.connect("ghost_hit", self, "_on_ghost_hit") == OK)
 	
 	assert(Server.connect("timeline_picks", self, "_on_timeline_picks") == OK)
-	assert(Server.connect("player_action", self, "_on_player_action") == OK)
 	
 	assert(Server.connect("round_start_received",self, "_on_round_start_received") == OK)
 	assert(Server.connect("round_end_received", self, "_on_round_ended_received") == OK)
@@ -47,15 +54,7 @@ func _ready():
 	assert(Server.connect("capture_point_captured", self, "_on_capture_point_captured") == OK)
 	assert(Server.connect("capture_point_capture_lost", self, "_on_capture_point_capture_lost") == OK)
 	
-	assert(Server.connect("game_result", self, "_on_game_result") == OK)
-	
-	assert(InputManager.connect("player_timeline_picked", self, "_on_player_timeline_picked") == OK)
-	
-	assert(RoundManager.connect("round_started", self, "_on_round_started") == OK)
-	assert(RoundManager.connect("latency_delay_phase_started", self, "_on_latency_delay_phase_started") == OK)
-	assert(RoundManager.connect("preparation_phase_started", self, "_on_preparation_phase_started") == OK)
-	assert(RoundManager.connect("countdown_phase_started", self, "_on_countdown_phase_started") == OK)
-	assert(RoundManager.connect("game_phase_started", self, "_on_game_phase_started") == OK)
+	assert(Server.connect("game_result", self, "_on_game_result") == OK)	
 
 	_player_rpc_id = get_tree().get_network_unique_id()
 	
@@ -304,6 +303,17 @@ func _on_world_state_received(world_state: WorldState):
 				_enemy.server_position = player_states[id].position
 				_enemy.server_velocity = player_states[id].velocity
 				_enemy.server_acceleration = player_states[id].acceleration
+
+
+func _on_player_hit(hit_player_id) -> void:
+	_player.hit() if hit_player_id == _player_rpc_id else _enemy.hit()
+
+
+func _on_ghost_hit(hit_ghost_player_owner, hit_ghost_id) -> void:
+	if hit_ghost_player_owner == _player_rpc_id:
+		_player_ghosts[hit_ghost_id].hit()
+	else:
+		_enemy_ghosts[hit_ghost_id].hit()
 
 
 func _on_capture_point_captured(capturing_player_id, capture_point):
