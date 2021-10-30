@@ -12,15 +12,16 @@ var room_name: String
 var id: int
 var player_count: int = 0
 
-onready var _player_manager: PlayerManager = get_node("PlayerManager")
+onready var _character_manager: CharacterManager = get_node("CharacterManager")
 onready var _world_state_manager: WorldStateManager = get_node("WorldStateManager")
 onready var _game_manager: GameManager = get_node("GameManager")
 onready var _action_manager: ActionManager = get_node("ActionManager")
+onready var _round_manager: RoundManager = get_node("RoundManager")
 onready var _level = get_node("LevelH") # TODO: Should be configurable later
 
 #id dictionary -> translates network id to game id (0 or 1)
-var player_id_to_game_id = {}
-var game_id_to_player_id = {}
+var player_id_to_team_id = {}
+var team_id_to_player_id = {}
 
 # We don't process the latest player data, but the latest data which was sent in world_processing_offset or earlier.
 # That way, we avoid discrepancies between high- and low-latency players and don't need to rollback.
@@ -29,52 +30,55 @@ var world_processing_offset = 100
 
 
 func _ready():
-	assert(_world_state_manager.connect("world_state_updated", self, "_on_world_state_update") == OK)
-	assert(_game_manager.connect("round_started",self, "_on_round_started") == OK)
-	assert(_game_manager.connect("game_phase_started", self, "_on_game_phase_start") == OK)
-	assert(_game_manager.connect("round_ended",self, "_on_round_ended") == OK)
-	assert(_game_manager.connect("countdown_halfway_point", self,"_on_countdown_halfway_point") == OK)
-	_player_manager.level = _level
+	assert(_world_state_manager.connect("world_state_updated", self, "_on_world_state_update") == OK)	
+	
+	assert(_round_manager.connect("round_started", self,"_on_round_started") == OK)
+	assert(_round_manager.connect("latency_delay_phase_started", self,"_on_latency_delay_phase_started") == OK)
+	assert(_round_manager.connect("preparation_phase_started", self,"_on_preparation_phase_started") == OK)
+	assert(_round_manager.connect("countdown_phase_started", self,"_on_countdown_phase_starte") == OK)
+	assert(_round_manager.connect("game_phase_started", self,"_on_game_phase_started") == OK)
+	assert(_round_manager.connect("game_phase_ended", self,"_on_game_phase_ended") == OK)
+	assert(_round_manager.connect("round_ended", self,"_on_round_ended") == OK)
+	
 	_game_manager.level = _level
 	_world_state_manager.world_processing_offset = world_processing_offset
-	_player_manager.world_processing_offset = world_processing_offset
+	_character_manager.world_processing_offset = world_processing_offset
 
 
 func reset():
 	Logger.info("Full reset triggered.","gameplay")
 	_action_manager.clear_action_instances()
-	_player_manager.reset()
+	_character_manager.reset()
 	_game_manager.reset()
 	_level.reset()
 
 func _on_round_started(round_index):
-	var default_ghost_index = min(round_index-1,Constants.get_value("ghosts", "max_amount"))
-	for player_id in _player_manager.players:
-		_player_manager.set_ghost_index(player_id, default_ghost_index)
+	var default_timeline_index = min(round_index-1,Constants.get_value("ghosts", "max_amount"))
+	for player_id in _character_manager.player_dic:
+		_character_manager.set_timeline_index(player_id, default_timeline_index)
+
+func _on_countdown_phase_started():
+	_character_manager.propagate_player_picks()
 
 func _on_game_phase_start(round_index: int) -> void:
-	_player_manager.restart_ghosts()
-	_player_manager.enable_ghosts()
-	_player_manager.start_recording()
-	for player_id in _player_manager.players:
-		_player_manager.move_player_to_spawnpoint(player_id)
-	_player_manager.set_players_can_move(true)
+	_character_manager.start_ghosts()
+	_character_manager.enable_ghosts()
+	_character_manager.move_players_to_spawn_point()
+	_character_manager.set_block_player_input(false)
 
-func _on_countdown_halfway_point():
-	_player_manager.propagate_player_picks()
 
-func _on_round_ended(_round_index: int) -> void:
-	_player_manager.stop_recording()
-	_player_manager.create_ghosts()
-	_player_manager.disable_ghosts()
-	_player_manager.reset_spawnpoints()
-	_player_manager.set_players_can_move(false)
+func _on_round_ended() -> void:
+	_game_manager.reset()
+	_character_manager.create_ghosts()
+	_character_manager.disable_ghosts()
+	_character_manager.move_players_to_spawn_point()
+	_character_manager.set_block_player_input(true)
 
 func add_player(player_id: int) -> void:
-	_player_manager.spawn_player(player_id, player_count)
+	_character_manager.spawn_player(player_id, player_count)
 	#update id dictionary
-	player_id_to_game_id[player_id] = player_count
-	game_id_to_player_id[player_count] = player_id
+	player_id_to_team_id[player_id] = player_count
+	team_id_to_player_id[player_count] = player_id
 	player_count += 1
 	
 	# If the room is filled, start the game
@@ -82,53 +86,45 @@ func add_player(player_id: int) -> void:
 		start_game()
 
 func start_game():
-	
 	_game_manager.start_game()
+	_round_manager.start_round(0, 0)
 	
 func remove_player(player_id: int) -> void:
-	_player_manager.despawn_player(player_id)
+	_character_manager.despawn_player(player_id)
 	#update id dictionary
-	player_id_to_game_id.erase(player_id)
-	game_id_to_player_id.clear()
-	var game_id = 0
-	for player_id in player_id_to_game_id:
-		_player_manager.players[player_id].game_id = game_id
-		player_id_to_game_id[player_id] = game_id
-		game_id_to_player_id[game_id] = player_id
-		game_id += 1
+	player_id_to_team_id.erase(player_id)
+	team_id_to_player_id.clear()
+	var team_id = 0
+	for player_id in player_id_to_team_id:
+		_character_manager.players[player_id].team_id = team_id
+		player_id_to_team_id[player_id] = team_id
+		team_id_to_player_id[team_id] = player_id
+		team_id += 1
 
 	player_count -= 1
 
 
 func update_player_input_data(player_id, input_data: InputData):
 	if _game_manager.game_phase_in_progress:
-		_player_manager.update_player_input_data(player_id, input_data)
+		_character_manager.update_player_input_data(player_id, input_data)
 
 
-func update_player_ready(player_id):
-	
-	# TODO: establish a "prep_phase_in_progress" variable in game_manager
-	#		or even better an enum for current phase
-	#if _game_manager.prep_phase_in_progress:
-	
-	# TODO: check if both players are ready...
-	#_game_manager._round_timer = _game_manager._prep_phase_time + _game_manager._latency_delay
-	_game_manager._round_timer = _game_manager._time_to_game_phase + _game_manager._countdown_phase_time
-	#_game_manager.game_phase_in_progress = true
-
-
-func handle_ghost_pick(player_id, ghost_index):
+func handle_ghost_pick(player_id, timeline_index):
 	if not _game_manager._before_second_half_of_countdown:
 		Logger.error("Received ghost picks outside proper phase", "ghost_picking")
 		return
-	_player_manager.set_ghost_index(player_id, ghost_index)
+	_character_manager.set_timeline_index(player_id, timeline_index)
 	
 
 func get_players():
-	return _player_manager.players
+	return _character_manager.player_dic
 
 func get_game_manager() -> GameManager:
 	return _game_manager
+
+
+func get_round_manager() -> RoundManager:
+	return _round_manager
 
 
 func _on_world_state_update(world_state):

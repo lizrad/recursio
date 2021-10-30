@@ -29,6 +29,9 @@ signal player_hit(hit_player_id)
 signal ghost_hit(hit_ghost_player_owner, hit_ghost_id)
 signal timeline_picks(player_pick, enemy_picks)
 
+signal round_started(round_index, server_time)
+signal round_ended(round_index)
+
 func _ready():
 	set_physics_process(false)
 	connect_to_server()
@@ -153,45 +156,53 @@ remote func receive_world_state(world_state):
 
 # Receives the start of a round with the server time
 remote func receive_round_start(round_index, server_time):
-	RoundManager.start_round(round_index, (get_server_time() - server_time) / 1000.0)
+	emit_signal("round_started", round_index, server_time)
 
 
 # Receives the end of a round
 remote func receive_round_end(round_index):
-	RoundManager.stop_round()
+	emit_signal("round_ended", round_index)
 
 
 remote func receive_capture_point_captured(capturing_player_id, capture_point):
 	Logger.info("Capture point captured received", "connection")
 	emit_signal("capture_point_captured", capturing_player_id, capture_point)
 
+
 remote func receive_capture_point_team_changed( capturing_player_id, capture_point ):
 	Logger.info("Capture point team changed received", "connection")
 	emit_signal("capture_point_team_changed", capturing_player_id, capture_point)
+
 
 remote func receive_capture_point_status_changed( capturing_player_id, capture_point, capture_progress ):
 	Logger.info("Capture point status changed received", "connection")
 	emit_signal("capture_point_status_changed", capturing_player_id, capture_point, capture_progress)
 
+
 remote func receive_capture_point_capture_lost( capturing_player_id, capture_point ):
 	Logger.info("Capture point capture lost received", "connection")
 	emit_signal("capture_point_capture_lost", capturing_player_id, capture_point)
+
 
 remote func receive_game_result(winning_player_id):
 	Logger.info("Game results received", "connection")
 	emit_signal("game_result", winning_player_id)
 
+
 remote func receive_player_hit(hit_player_id):
 	Logger.info("Player hit received: " + str(hit_player_id), "connection")
 	emit_signal("player_hit", hit_player_id)
+
 
 remote func receive_ghost_hit(hit_ghost_player_owner, hit_ghost_id):
 	Logger.info("Ghost hit received: " + str(hit_ghost_id) + " of player " + str(hit_ghost_player_owner), "connection")
 	emit_signal("ghost_hit", hit_ghost_player_owner, hit_ghost_id)
 
+
 remote func receive_player_action(action_player_id, action_type):
 	Logger.info("Other player action received: " + str(action_type))
 	emit_signal("player_action", action_player_id, action_type)
+
 
 remote func receive_timeline_picks(player_pick, enemy_pick):
 	Logger.info("Ghost picks received", "connection")

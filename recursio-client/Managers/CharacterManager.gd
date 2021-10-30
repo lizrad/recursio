@@ -3,6 +3,7 @@ class_name CharacterManager
 
 onready var _action_manager: ActionManager = get_node("ActionManager")
 onready var _game_manager: GameManager = get_node("GameManager")
+onready var _round_manager: RoundManager = get_node("RoundManager")
 
 # Scenes for instanciating 
 var _player_scene = preload("res://Characters/Player.tscn")
@@ -27,11 +28,14 @@ var _time_since_last_server_update = 0.0
 var _time_since_last_world_state_update = 0.0
 
 func _ready():
-	assert(RoundManager.connect("round_started", self, "_on_round_started") == OK)
-	assert(RoundManager.connect("latency_delay_phase_started", self, "_on_latency_delay_phase_started") == OK)
-	assert(RoundManager.connect("preparation_phase_started", self, "_on_preparation_phase_started") == OK)
-	assert(RoundManager.connect("countdown_phase_started", self, "_on_countdown_phase_started") == OK)
-	assert(RoundManager.connect("game_phase_started", self, "_on_game_phase_started") == OK)
+	assert(Server.connect("round_started", self, "_on_server_round_started") == OK)
+	assert(Server.connect("round_ended", self, "_on_server_round_ended") == OK)
+	
+	assert(_round_manager.connect("round_started", self, "_on_round_started") == OK)
+	assert(_round_manager.connect("latency_delay_phase_started", self, "_on_latency_delay_phase_started") == OK)
+	assert(_round_manager.connect("preparation_phase_started", self, "_on_preparation_phase_started") == OK)
+	assert(_round_manager.connect("countdown_phase_started", self, "_on_countdown_phase_started") == OK)
+	assert(_round_manager.connect("game_phase_started", self, "_on_game_phase_started") == OK)
 	
 	assert(InputManager.connect("player_timeline_picked", self, "_on_player_timeline_picked") == OK)
 	
@@ -51,7 +55,9 @@ func _ready():
 	assert(Server.connect("capture_point_captured", self, "_on_capture_point_captured") == OK)
 	assert(Server.connect("capture_point_capture_lost", self, "_on_capture_point_capture_lost") == OK)
 	
-	assert(Server.connect("game_result", self, "_on_game_result") == OK)	
+	assert(Server.connect("game_result", self, "_on_game_result") == OK)
+	
+	
 
 	_player_rpc_id = get_tree().get_network_unique_id()
 	
@@ -59,6 +65,8 @@ func _ready():
 
 
 func _process(delta):
+	if not _round_manager.round_is_running():
+		return
 	
 	_time_since_last_server_update += delta
 	var server_delta = 1.0 / Server.tickrate
@@ -126,6 +134,14 @@ func _reset() -> void:
 	_action_manager.clear_action_instances()
 
 
+func _on_server_round_started(round_index, server_time) -> void:
+	_round_manager.start_round(round_index, (Server.get_server_time() - server_time) / 1000.0)
+
+
+func _on_server_round_ended(round_index) -> void:
+	_round_manager.stop_round()
+
+
 func _on_game_result(winning_player_index) -> void:
 	if winning_player_index == _player_rpc_id:
 		_game_manager.show_win()
@@ -147,7 +163,7 @@ func _on_latency_delay_phase_started() -> void:
 
 
 func _on_preparation_phase_started() -> void:
-	_player.show_preparation_hud(RoundManager.round_index)
+	_player.show_preparation_hud(_round_manager.round_index)
 	
 	# Display paths of my ghosts
 	for timeline_index in _player_ghosts:
@@ -158,7 +174,7 @@ func _on_preparation_phase_started() -> void:
 	_player.move_camera_to_overview()
 	
 	# Move player to next timeline spawn point
-	var next_timeline_index = min(RoundManager.round_index - 1, _max_ghosts)
+	var next_timeline_index = min(_round_manager.round_index - 1, _max_ghosts)
 	_player.timeline_index = next_timeline_index
 	_player.move_to_spawn_point()
 	_enemy.timeline_index = next_timeline_index
@@ -182,7 +198,7 @@ func _on_countdown_phase_started(countdown_time) -> void:
 
 func _on_game_phase_started() -> void:
 	_game_manager.hide_countdown_screen()
-	_player.show_game_hud(RoundManager.round_index)
+	_player.show_game_hud(_round_manager.round_index)
 	_game_manager.toggle_capture_points(true)
 	_start_ghosts()
 
@@ -323,7 +339,6 @@ func _on_capture_point_capture_lost(capturing_player_id, capture_point):
 	if capturing_player_id == _player_rpc_id:
 		_player.follow_camera()
 		_player.set_overview_light_enabled(false)
-
 
 
 func _spawn_character(character_scene, spawn_point):

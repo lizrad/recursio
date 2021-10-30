@@ -33,8 +33,9 @@ func character_base_init(action_manager) -> void:
 
 func reset() -> void:
 	self.velocity = Vector3.ZERO
-	self.position = Vector3.ZERO
+	self.position = spawn_point
 	self.rotation_y = 0
+	self.timeline_index = 0
 
 
 func move_to_spawn_point() -> void:

@@ -36,8 +36,8 @@ func _peer_disconnected(player_id):
 	emit_signal("peer_disconnected", player_id)
 
 
-func spawn_player_on_client(player_id, spawn_point, game_id):
-	rpc_id(player_id, "spawn_player", player_id, spawn_point, game_id)
+func spawn_player_on_client(player_id, spawn_point, team_id):
+	rpc_id(player_id, "spawn_player", player_id, spawn_point, team_id)
 
 
 func spawn_enemy_on_client(player_id, enemy_id, enemy_position):

@@ -1,14 +1,15 @@
 extends CharacterBase
 class_name PlayerBase
 
-# Used for applying drag (e.g. moving platform velocity)
-var _target_velocity: Vector3 = Vector3.ZERO
-# The acceleration applied to the velocity
-var _acceleration: Vector3 = Vector3.ZERO
+var buttons_pressed: int
 
 # Blocks any movement applied to it (includes rotation-movement)
 var block_movement: bool = true
 
+# Used for applying drag (e.g. moving platform velocity)
+var _target_velocity: Vector3 = Vector3.ZERO
+# The acceleration applied to the velocity
+var _acceleration: Vector3 = Vector3.ZERO
 
 # Values from constants.ini
 var _drag = Constants.get_value("movement", "drag")

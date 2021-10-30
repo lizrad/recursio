@@ -1,4 +1,5 @@
 extends Node
+class_name RoundManager
 
 signal round_started(round_index)
 signal latency_delay_phase_started()
@@ -30,6 +31,7 @@ var _latency: float = 0.0
 var _phase = Phases.NONE
 
 var _round_started: bool = false
+
 
 
 func _process(delta):
@@ -85,11 +87,11 @@ func stop_round() -> void:
 	emit_signal("round_ended")
 
 
+func round_is_running() -> bool:
+	return _round_started
 
-
-
-
-
+func get_current_phase() -> int:
+	return _phase
 
 
 

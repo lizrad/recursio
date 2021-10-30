@@ -10,7 +10,7 @@ var rotation: Vector3 = Vector3.ZERO
 
 func from_array(data: Array):
 	timestamp = data[0]
-	buttons.mask = data[1].mask
+	buttons.mask = data[1]
 	movement = data[2]
 	rotation = data[3]
 	return self
