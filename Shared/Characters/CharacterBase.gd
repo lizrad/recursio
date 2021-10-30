@@ -4,7 +4,7 @@ class_name CharacterBase
 signal hit()
 signal action_status_changed(action_type, status)
 signal velocity_changed(velocity, front_vector, right_vector)
-signal timeline_index_changed(ghost_index)
+signal timeline_index_changed(timeline_index)
 
 # The team id defines which side the player starts on
 var team_id: int = -1

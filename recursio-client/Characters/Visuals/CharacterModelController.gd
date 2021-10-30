@@ -17,11 +17,11 @@ func _ready():
 	_middle.material_override = _middle.material_override.duplicate(true)
 	_back.material_override = _back.material_override.duplicate(true)
 	_back_variant.material_override = _back_variant.material_override.duplicate(true)
-	_set_color_scheme(color_scheme, _parent.ghost_index)
-	_set_variant(_parent.ghost_index)
+	_set_color_scheme(color_scheme, _parent.timeline_index)
+	_set_variant(_parent.timeline_index)
 	_parent.connect("action_status_changed",self,"_on_action_status_changed")
 	_parent.connect("velocity_changed",self,"_on_velocity_changed")
-	_parent.connect("ghost_index_changed",self,"_on_ghost_index_changed")
+	_parent.connect("timeline_index_changed",self,"_on_timeline_index_changed")
 
 	
 func set_shader_param(param, value):
@@ -31,22 +31,22 @@ func set_shader_param(param, value):
 	_back.material_override.set_shader_param(param, value)
 	_back_variant.material_override.set_shader_param(param, value)
 
-func _set_color_scheme(new_color_scheme:String, ghost_index):
+func _set_color_scheme(new_color_scheme:String, timeline_index):
 	emit_signal("color_scheme_changed",new_color_scheme)
 	var color_parameter = "color"
 	_front.material_override.set_shader_param(color_parameter, Color(Constants.get_value("colors", new_color_scheme+"_main"))) 
 	_front_variant.material_override.set_shader_param(color_parameter, Color(Constants.get_value("colors", new_color_scheme+"_main"))) 
 	
-	var wall_index = Constants.get_value("ghosts","wall_placing_ghost_index")
-	var accent_type = "primary" if wall_index != ghost_index else "secondary"
+	var wall_index = Constants.get_value("ghosts","wall_placing_timeline_index")
+	var accent_type = "primary" if wall_index != timeline_index else "secondary"
 	_middle.material_override.set_shader_param(color_parameter,Color(Constants.get_value("colors", new_color_scheme+"_"+accent_type+"_accent")))
 	
 	_back.material_override.set_shader_param(color_parameter,Color(Constants.get_value("colors", new_color_scheme+"_main")))
 	_back_variant.material_override.set_shader_param(color_parameter,Color(Constants.get_value("colors", new_color_scheme+"_main")))
 
-func _set_variant(ghost_index):
-	var wall_index = Constants.get_value("ghosts","wall_placing_ghost_index")
-	var variant_active = ghost_index == wall_index
+func _set_variant(timeline_index):
+	var wall_index = Constants.get_value("ghosts","wall_placing_timeline_index")
+	var variant_active = timeline_index == wall_index
 	_front_variant.visible = variant_active
 	_back_variant.visible = variant_active
 	_front.visible = not variant_active
@@ -58,6 +58,6 @@ func _on_action_status_changed(action_type, status):
 func _on_velocity_changed(velocity, front_vector, right_vector):
 	animator.velocity_changed(velocity, front_vector, right_vector)
 
-func _on_ghost_index_changed(ghost_index):
-	_set_color_scheme(color_scheme, ghost_index)
-	_set_variant(ghost_index)
+func _on_timeline_index_changed(timeline_index):
+	_set_color_scheme(color_scheme, timeline_index)
+	_set_variant(timeline_index)
