@@ -30,7 +30,7 @@ func handle_hit(collider):
 	
 	if collider is Ghost and not collider == placed_by_body \
 			and collider.round_index < round_index:
-		collider.receive_hit()
+		collider.hit()
 
 
 func _hit_body(body) ->void:
