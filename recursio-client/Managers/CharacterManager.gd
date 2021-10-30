@@ -152,7 +152,6 @@ func _on_game_result(winning_player_index) -> void:
 func _on_round_started(round_index, latency) -> void:
 	_game_manager.hide_game_result_screen()
 	_player.block_movement = false
-	print(latency)
 	_player.show_round_start_hud(round_index, latency)
 	
 	# We have to disable this here because otherwise, the light never sees the ghosts for some reason

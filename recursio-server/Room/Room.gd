@@ -67,6 +67,7 @@ func add_player(player_id: int) -> void:
 
 func start_game():
 	_game_manager.start_game()
+	yield(get_tree().create_timer(3), "timeout")
 	_round_manager.start_round(0, 0)
 
 
@@ -113,8 +114,7 @@ func _on_world_state_update(world_state):
 
 
 func _on_round_started(round_index, latency):
-	print("test2")
-	var default_timeline_index = min(round_index-1,Constants.get_value("ghosts", "max_amount"))
+	var default_timeline_index = min(round_index,Constants.get_value("ghosts", "max_amount"))
 	for player_id in _character_manager.player_dic:
 		_character_manager.set_timeline_index(player_id, default_timeline_index)
 
