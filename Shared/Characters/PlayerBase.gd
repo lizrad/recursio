@@ -1,15 +1,14 @@
 extends CharacterBase
 class_name PlayerBase
 
-var buttons_pressed: int
+# The acceleration applied to the velocity
+var acceleration: Vector3 = Vector3.ZERO
 
 # Blocks any movement applied to it (includes rotation-movement)
 var block_movement: bool = true
 
 # Used for applying drag (e.g. moving platform velocity)
 var _target_velocity: Vector3 = Vector3.ZERO
-# The acceleration applied to the velocity
-var _acceleration: Vector3 = Vector3.ZERO
 
 # Values from constants.ini
 var _drag = Constants.get_value("movement", "drag")
@@ -29,7 +28,7 @@ func player_base_init(action_manager) -> void:
 func reset() -> void:
 	.reset()
 	block_movement = true
-	_acceleration = Vector3.ZERO
+	acceleration = Vector3.ZERO
 	_target_velocity = Vector3.ZERO
 
 
@@ -56,12 +55,12 @@ func apply_input(movement: Vector3, rotation: Vector3, buttons: int) -> void:
 
 	# Scale movement depending on the direction the player is looking
 	var scale = (_base + movement_vector.dot(rotation_vector)) / _factor
-	_acceleration = movement_vector * _move_acceleration * scale
+	acceleration = movement_vector * _move_acceleration * scale
 	
 	# Lerp to target velocity to simulate drag
 	self.velocity = lerp(velocity, _target_velocity, _drag)
 	# Apply acceleration to velocity (important: after lerp)
-	self.velocity += _acceleration * get_physics_process_delta_time()
+	self.velocity += acceleration * get_physics_process_delta_time()
 	
 	_kb.move_and_slide(velocity)
 	

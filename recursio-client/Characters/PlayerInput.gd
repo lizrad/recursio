@@ -5,7 +5,7 @@ export(float) var outer_deadzone := 0.9
 export(float) var rotate_threshold := 0.0
 
 onready var _player: Player = get_parent()
-onready var _action_manager = _player.get_action_manager()
+
 
 # Maps the actual button to the internal enums
 var _trigger_dic : Dictionary = {
@@ -14,24 +14,27 @@ var _trigger_dic : Dictionary = {
 	"player_dash": ActionManager.Trigger.SPECIAL_MOVEMENT_START
 }
 
+var _action_manager
+
 var _player_ghost_pick_trigger : String = "player_switch"
 
 # Action for pressing fire
-var _fire_action = _action_manager.get_action(ActionManager.ActionType.HITSCAN)
+var _fire_action
 # Action for melee
-var _default_attack_action = _action_manager.get_action(ActionManager.ActionType.MELEE)
+var _default_attack_action
 # Action for dash
-var _special_movement_action = _action_manager.get_action(ActionManager.ActionType.DASH)
+var _special_movement_action
 
+var _player_initialized: bool = false
 
 func _ready():
-	# Subscribe to Action Events
-	_fire_action.connect("ammunition_changed", self, "_on_fire_ammo_changed")
-	_special_movement_action.connect("ammunition_changed", self, "_on_special_movement_ammo_changed")
-
+	_player.connect("initialized", self, "_on_player_initialized")
 
 
 func _physics_process(delta):
+	if not _player_initialized:
+		return
+	
 	var input = DeadZones.apply_2D(_get_input("player_move"), inner_deadzone, outer_deadzone)
 	var movement_vector = Vector3(input.y, 0.0, -input.x)
 	InputManager.add_movement_to_input_frame(movement_vector)
@@ -50,6 +53,17 @@ func _physics_process(delta):
 		_swap_weapon_type(timeline_index)
 		
 		InputManager.pick_player_timeline(timeline_index)
+
+
+func _on_player_initialized():
+	_action_manager = _player.get_action_manager()
+	_fire_action = _action_manager.get_action(ActionManager.ActionType.HITSCAN)
+	_default_attack_action = _action_manager.get_action(ActionManager.ActionType.MELEE)
+	_special_movement_action = _action_manager.get_action(ActionManager.ActionType.DASH)
+	
+	# Subscribe to Action Events
+	_fire_action.connect("ammunition_changed", self, "_on_fire_ammo_changed")
+	_special_movement_action.connect("ammunition_changed", self, "_on_special_movement_ammo_changed")
 
 
 # Changes the weapon depending on the given timeline index

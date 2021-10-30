@@ -1,6 +1,8 @@
 extends PlayerBase
 class_name Player
 
+signal initialized()
+
 onready var _hud: HUD = get_node("HUD")
 
 onready var _light_viewport = get_node("LightViewport")
@@ -19,6 +21,7 @@ var _last_server_time
 
 func player_init(action_manager) -> void:
 	.player_base_init(action_manager)
+	emit_signal("initialized")
 
 
 # OVERRIDE #
@@ -88,6 +91,10 @@ func show_countdown_hud() -> void:
 
 func show_game_hud(round_index) -> void:
 	_hud.game_phase_start(round_index)
+
+
+func get_button_overlay() -> ButtonOverlay:
+	return _button_overlay
 
 
 func handle_server_update(position, time):

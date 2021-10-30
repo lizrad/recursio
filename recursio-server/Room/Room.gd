@@ -40,7 +40,7 @@ func _ready():
 	assert(_round_manager.connect("game_phase_ended", self,"_on_game_phase_ended") == OK)
 	assert(_round_manager.connect("round_ended", self,"_on_round_ended") == OK)
 	
-	_game_manager.level = _level
+	_game_manager._level = _level
 	_world_state_manager.world_processing_offset = world_processing_offset
 	_character_manager.world_processing_offset = world_processing_offset
 
@@ -60,11 +60,16 @@ func _on_round_started(round_index):
 func _on_countdown_phase_started():
 	_character_manager.propagate_player_picks()
 
-func _on_game_phase_start(round_index: int) -> void:
+
+func _on_game_phase_start() -> void:
 	_character_manager.start_ghosts()
 	_character_manager.enable_ghosts()
 	_character_manager.move_players_to_spawn_point()
 	_character_manager.set_block_player_input(false)
+
+
+func _on_game_phase_end() -> void:
+	_round_manager.stop_round()
 
 
 func _on_round_ended() -> void:
@@ -105,12 +110,12 @@ func remove_player(player_id: int) -> void:
 
 
 func update_player_input_data(player_id, input_data: InputData):
-	if _game_manager.game_phase_in_progress:
+	if _round_manager.get_current_phase() == RoundManager.Phases.GAME:
 		_character_manager.update_player_input_data(player_id, input_data)
 
 
 func handle_ghost_pick(player_id, timeline_index):
-	if not _game_manager._before_second_half_of_countdown:
+	if _round_manager.get_current_phase() != RoundManager.Phases.COUNTDOWN:
 		Logger.error("Received ghost picks outside proper phase", "ghost_picking")
 		return
 	_character_manager.set_timeline_index(player_id, timeline_index)

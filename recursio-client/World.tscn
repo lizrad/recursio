@@ -21,6 +21,7 @@ script = ExtResource( 5 )
 
 [node name="GameManager" type="Node" parent="CharacterManager"]
 script = ExtResource( 6 )
+level_path = NodePath("../../LevelH")
 
 [node name="RoundManager" type="Node" parent="CharacterManager"]
 script = ExtResource( 7 )

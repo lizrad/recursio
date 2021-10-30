@@ -260,13 +260,15 @@ func _on_enemy_ghost_record_received(timeline_index, record_data: RecordData):
 func _on_spawn_player(player_id, spawn_point, team_id):
 	set_physics_process(true)
 	_player = _spawn_character(_player_scene, spawn_point)
-	assert(_player.button_overlay.connect("button_pressed", self, "_on_player_ready") == OK)
+	_player.player_init(_action_manager)
+	# TODO: Tunnel signal instead of accessing button overlay here
+	assert(_player.get_button_overlay().connect("button_pressed", self, "_on_player_ready") == OK)
 	_player_rpc_id = player_id
 	_player.team_id = team_id
 	_player.set_name(str(player_id))
 	
 	# Apply visibility mask to all entities which have been here before the player
-	_apply_visibility_mask(_enemy)
+	_apply_visibility_mask(_player)
 	for timeline_index in _enemy_ghosts:
 		_apply_visibility_mask(_enemy_ghosts[timeline_index])
 	
@@ -276,6 +278,7 @@ func _on_spawn_player(player_id, spawn_point, team_id):
 
 func _on_spawn_enemy(enemy_id, spawn_point):
 	_enemy = _spawn_character(_enemy_scene, spawn_point)
+	_enemy.enemy_init(_action_manager)
 	_enemy.set_name(str(enemy_id))
 	_apply_visibility_mask(_enemy)
 
@@ -310,9 +313,9 @@ func _on_world_state_received(world_state: WorldState):
 				player_states.erase(_player_rpc_id)
 			else:
 				# Set parameters for interpolation
-				_enemy.last_position = _enemy.transform.origin
+				_enemy.last_position = _enemy.position
 				_enemy.last_velocity = _enemy.velocity
-				_enemy.rotation.y = player_states[id].rotation
+				_enemy.rotation_y = player_states[id].rotation
 				_enemy.server_position = player_states[id].position
 				_enemy.server_velocity = player_states[id].velocity
 				_enemy.server_acceleration = player_states[id].acceleration
@@ -343,9 +346,9 @@ func _on_capture_point_capture_lost(capturing_player_id, capture_point):
 
 func _spawn_character(character_scene, spawn_point):
 	var character: CharacterBase = character_scene.instance()
+	add_child(character)
 	character.spawn_point = spawn_point
 	character.move_to_spawn_point()
-	add_child(character)
 	return character
 
 
@@ -408,6 +411,8 @@ func _move_ghosts_to_spawn() -> void:
 
 
 func _apply_visibility_mask(character) -> void:
+	if not _player:
+		return
 	character.get_node("CharacterModel").set_shader_param("visibility_mask", _player.get_visibility_mask())
 	if character.has_node("MiniMapIcon"):
 		character.get_node("MiniMapIcon").visibility_mask = _player.get_visibility_mask()

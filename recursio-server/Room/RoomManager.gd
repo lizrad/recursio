@@ -17,7 +17,7 @@ var _player_amount: int = 0
 
 func _ready():
 	assert(Server.connect("peer_connected", self, "_on_peer_connected") == OK)
-	assert(Server.connect("peer_disconnected", self, "_on_peer_connected") == OK)
+	assert(Server.connect("peer_disconnected", self, "_on_peer_disconnected") == OK)
 	assert(Server.connect("player_input_data_received", self, "_on_player_input_data_received") == OK)
 
 
@@ -101,7 +101,7 @@ func _on_peer_connected(player_id):
 		_player_room_dic[player_id] = room_id
 
 
-func _on_peer_disconnect(player_id):
+func _on_peer_disconnected(player_id):
 	_leave_room(_player_room_dic[player_id], player_id)
 	_player_room_dic.erase(player_id)
 	_player_amount -= 1
