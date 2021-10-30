@@ -9,7 +9,7 @@ onready var _front_variant = get_node("RootPivot/FrontPivot/FrontVariant")
 onready var _middle = get_node("RootPivot/MiddlePivot/Middle")
 onready var _back = get_node("RootPivot/BackPivot/Back")
 onready var _back_variant = get_node("RootPivot/BackPivot/BackVariant")
-onready var _parent = get_parent()
+onready var _parent = get_parent().get_parent()
 func _ready():
 	#local to scene and make unique are the biggest piles of unusable trash i have ever seen, so im brute forcing this shit get at me bruh
 	_front.material_override = _front.material_override.duplicate(true)

@@ -413,13 +413,13 @@ func _move_ghosts_to_spawn() -> void:
 func _apply_visibility_mask(character) -> void:
 	if not _player:
 		return
-	character.get_node("CharacterModel").set_shader_param("visibility_mask", _player.get_visibility_mask())
-	if character.has_node("MiniMapIcon"):
-		character.get_node("MiniMapIcon").visibility_mask = _player.get_visibility_mask()
+	character.get_node("KinematicBody/CharacterModel").set_shader_param("visibility_mask", _player.get_visibility_mask())
+	if character.has_node("KinematicBody/MiniMapIcon"):
+		character.get_node("KinematicBody/MiniMapIcon").visibility_mask = _player.get_visibility_mask()
 
 
 func _apply_visibility_always(character) -> void:
-	character.get_node("CharacterModel").set_shader_param("always_draw", true)
+	character.get_node("KinematicBody/CharacterModel").set_shader_param("always_draw", true)
 
 
 

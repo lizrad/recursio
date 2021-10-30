@@ -18,22 +18,22 @@
 [node name="Player" instance=ExtResource( 1 )]
 script = ExtResource( 2 )
 
-[node name="CharacterModel" parent="." index="1" instance=ExtResource( 10 )]
+[node name="CharacterModel" parent="KinematicBody" index="1" instance=ExtResource( 10 )]
 transform = Transform( -1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0 )
 
-[node name="PlayerInput" type="Node" parent="." index="2"]
+[node name="PlayerInput" type="Node" parent="KinematicBody" index="2"]
 script = ExtResource( 15 )
 
-[node name="ButtonOverlay" parent="." index="3" instance=ExtResource( 13 )]
+[node name="ButtonOverlay" parent="KinematicBody" index="3" instance=ExtResource( 13 )]
 visible = false
 margin_left = 363.57
 margin_top = 527.664
 margin_right = 363.57
 margin_bottom = 527.664
 
-[node name="VisibilityLight" parent="." index="4" instance=ExtResource( 9 )]
+[node name="VisibilityLight" parent="KinematicBody" index="4" instance=ExtResource( 9 )]
 
-[node name="LightViewport" type="Viewport" parent="." index="5"]
+[node name="LightViewport" type="Viewport" parent="KinematicBody" index="5"]
 size = Vector2( 2048, 2048 )
 handle_input_locally = false
 hdr = false
@@ -41,7 +41,7 @@ keep_3d_linear = true
 render_target_update_mode = 3
 shadow_atlas_size = 4096
 
-[node name="LightCamera" type="Camera" parent="LightViewport" index="0"]
+[node name="LightCamera" type="Camera" parent="KinematicBody/LightViewport" index="0"]
 transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 6, 0 )
 cull_mask = 2
 environment = ExtResource( 6 )
@@ -49,14 +49,14 @@ projection = 1
 current = true
 size = 70.0
 
-[node name="TransformReset" type="Node" parent="." index="6"]
+[node name="TransformReset" type="Node" parent="KinematicBody" index="6"]
 
-[node name="LerpedFollow" parent="TransformReset" index="0" instance=ExtResource( 7 )]
+[node name="LerpedFollow" parent="KinematicBody/TransformReset" index="0" instance=ExtResource( 7 )]
 target_node = NodePath("../../ViewTarget")
 lerp_factor = 0.05
 lock_y_rotation = true
 
-[node name="Camera" type="Camera" parent="TransformReset/LerpedFollow" index="0"]
+[node name="Camera" type="Camera" parent="KinematicBody/TransformReset/LerpedFollow" index="0"]
 transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 12, 0 )
 cull_mask = 1048565
 environment = ExtResource( 5 )
@@ -66,12 +66,12 @@ __meta__ = {
 "_editor_description_": ""
 }
 
-[node name="AsciiRenderer" parent="TransformReset/LerpedFollow/Camera" index="0" instance=ExtResource( 14 )]
+[node name="AsciiRenderer" parent="KinematicBody/TransformReset/LerpedFollow/Camera" index="0" instance=ExtResource( 14 )]
 
-[node name="OverviewTarget" type="Position3D" parent="TransformReset" index="1"]
+[node name="OverviewTarget" type="Position3D" parent="KinematicBody/TransformReset" index="1"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10, 0 )
 
-[node name="OverviewLight" type="OmniLight" parent="TransformReset" index="2"]
+[node name="OverviewLight" type="OmniLight" parent="KinematicBody/TransformReset" index="2"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10, 0 )
 layers = 3
 light_color = Color( 0.556863, 0, 0.690196, 1 )
@@ -80,7 +80,7 @@ omni_range = 0.0
 omni_attenuation = 3.75716e-05
 script = ExtResource( 11 )
 
-[node name="Subtractive" type="OmniLight" parent="TransformReset/OverviewLight" index="0"]
+[node name="Subtractive" type="OmniLight" parent="KinematicBody/TransformReset/OverviewLight" index="0"]
 layers = 3
 light_color = Color( 0.556863, 0, 0.690196, 1 )
 light_energy = 50.0
@@ -88,18 +88,18 @@ light_negative = true
 omni_range = 0.0
 omni_attenuation = 3.75716e-05
 
-[node name="ViewTarget" type="Position3D" parent="." index="7"]
+[node name="ViewTarget" type="Position3D" parent="KinematicBody" index="7"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -6 )
 script = ExtResource( 8 )
 
-[node name="ViewTarget" type="Position3D" parent="." index="8"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -6 )
-script = ExtResource( 8 )
-
-[node name="MiniMapSprite" type="Sprite3D" parent="." index="9"]
+[node name="MiniMapSprite" type="Sprite3D" parent="KinematicBody" index="8"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.07854, 0 )
 layers = 8
 axis = 1
 texture = ExtResource( 12 )
 
-[node name="HUD" parent="." index="10" instance=ExtResource( 4 )]
+[node name="HUD" parent="KinematicBody" index="9" instance=ExtResource( 4 )]
+
+[node name="ViewTarget2" type="Position3D" parent="KinematicBody" index="10"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -6 )
+script = ExtResource( 8 )

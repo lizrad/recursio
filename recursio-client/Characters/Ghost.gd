@@ -3,7 +3,7 @@ class_name Ghost
 
 onready var _mesh : MeshInstance = get_node("Mesh_Body")
 
-onready var _minimap_icon : MiniMapIcon = get_node("MiniMapIcon")
+onready var _minimap_icon : MiniMapIcon = get_node("KinematicBody/MiniMapIcon")
 onready var _minimap_icon_alive := load("res://Resources/Icons/icon_ghost_minimap.png")
 onready var _minimap_icon_dead := load("res://Resources/Icons/icon_dead_ghost_minimap.png")
 

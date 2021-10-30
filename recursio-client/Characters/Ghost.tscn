@@ -8,9 +8,9 @@
 [node name="Ghost" instance=ExtResource( 1 )]
 script = ExtResource( 2 )
 
-[node name="CharacterModel" parent="." index="1" instance=ExtResource( 5 )]
+[node name="CharacterModel" parent="KinematicBody" index="1" instance=ExtResource( 5 )]
 transform = Transform( -1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0 )
 color_scheme = "enemy_ghost"
 
-[node name="MiniMapIcon" parent="." index="2" instance=ExtResource( 4 )]
+[node name="MiniMapIcon" parent="KinematicBody" index="2" instance=ExtResource( 4 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.48839, 0 )

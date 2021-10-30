@@ -3,15 +3,15 @@ class_name Player
 
 signal initialized()
 
-onready var _hud: HUD = get_node("HUD")
+onready var _hud: HUD = get_node("KinematicBody/HUD")
 
-onready var _light_viewport = get_node("LightViewport")
-onready var _overview_light = get_node("TransformReset/OverviewLight")
-onready var _overview_target = get_node("TransformReset/OverviewTarget")
-onready var _lerped_follow: LerpedFollow = get_node("TransformReset/LerpedFollow")
-onready var _view_target = get_node("ViewTarget")
+onready var _light_viewport = get_node("KinematicBody/LightViewport")
+onready var _overview_light = get_node("KinematicBody/TransformReset/OverviewLight")
+onready var _overview_target = get_node("KinematicBody/TransformReset/OverviewTarget")
+onready var _lerped_follow: LerpedFollow = get_node("KinematicBody/TransformReset/LerpedFollow")
+onready var _view_target = get_node("KinematicBody/ViewTarget")
 
-onready var _button_overlay: ButtonOverlay = get_node("ButtonOverlay")
+onready var _button_overlay: ButtonOverlay = get_node("KinematicBody/ButtonOverlay")
 
 var _past_frames = {}
 var _just_corrected = false

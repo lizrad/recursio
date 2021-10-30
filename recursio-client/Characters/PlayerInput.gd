@@ -4,7 +4,7 @@ export(float) var inner_deadzone := 0.1
 export(float) var outer_deadzone := 0.9
 export(float) var rotate_threshold := 0.0
 
-onready var _player: Player = get_parent()
+onready var _player: Player = get_parent().get_parent()
 
 
 # Maps the actual button to the internal enums
