@@ -1,7 +1,7 @@
 extends Node
 class_name RoundManager
 
-signal round_started(round_index)
+signal round_started(round_index, latency)
 signal latency_delay_phase_started()
 signal preparation_phase_started()
 signal countdown_phase_started(countdown_time)
@@ -34,7 +34,7 @@ var _round_started: bool = false
 
 
 
-func _process(delta):
+func _physics_process(delta):
 	_timer += delta
 	
 	match _phase:

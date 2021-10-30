@@ -60,8 +60,8 @@ func _on_connection_failed():
 
 func _on_connection_succeeded():
 	Logger.info("Successfully connected", "connection")
-	emit_signal("successfully_connected")
 	_start_clock_synchronization()
+	emit_signal("successfully_connected")
 
 
 func _start_clock_synchronization():

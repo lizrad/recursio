@@ -1,7 +1,8 @@
 extends Node
+# Creates and removes rooms, and mediates between Server requests and specific rooms.
 class_name RoomManager
 
-# Creates and removes rooms, and mediates between Server requests and specific rooms.
+onready var _server = get_parent()
 
 var room_count: int = 0
 
@@ -16,9 +17,9 @@ var _player_room_dic: Dictionary = {}
 var _player_amount: int = 0
 
 func _ready():
-	assert(Server.connect("peer_connected", self, "_on_peer_connected") == OK)
-	assert(Server.connect("peer_disconnected", self, "_on_peer_disconnected") == OK)
-	assert(Server.connect("player_input_data_received", self, "_on_player_input_data_received") == OK)
+	assert(_server.connect("peer_connected", self, "_on_peer_connected") == OK)
+	assert(_server.connect("peer_disconnected", self, "_on_peer_disconnected") == OK)
+	assert(_server.connect("player_input_data_received", self, "_on_player_input_data_received") == OK)
 
 
 func _create_room(room_name: String) -> int:
@@ -32,8 +33,8 @@ func _create_room(room_name: String) -> int:
 	$ViewportContainer.rect_clip_content = true
 
 	assert(room.connect("world_state_updated", self, "_on_world_state_update") == OK)
-	assert(room.get_round_manager().connect("round_started", self, "_on_round_start", [room.id]) == OK)
-	assert(room.get_round_manager().connect("round_ended", self, "_on_round_end", [room.id]) == OK)
+	assert(room.get_round_manager().connect("round_started", self, "_on_round_started", [room.id]) == OK)
+	assert(room.get_round_manager().connect("round_ended", self, "_on_round_ended", [room.id]) == OK)
 	assert(room.get_game_manager().connect("capture_point_team_changed", self, "_on_capture_point_team_changed", [room.id]) == OK)
 	assert(room.get_game_manager().connect("capture_point_captured", self, "_on_capture_point_captured", [room.id]) == OK)
 	assert(room.get_game_manager().connect("capture_point_status_changed", self, "_on_capture_point_status_changed", [room.id]) == OK)
@@ -123,15 +124,15 @@ func _on_player_timline_pick_received(player_id, timeline_index):
 func _on_world_state_update(world_state, room_id) -> void:
 	var room: Room = _room_dic[room_id]
 	for player_id in room.get_players():
-		Server.send_world_state(player_id, world_state)
+		_server.send_world_state(player_id, world_state)
 
 
 # Sends the round start event to all players in the room
-func _on_round_start(round_index, room_id):
+func _on_round_started(round_index, latency, room_id):
 	var room: Room = _room_dic[room_id]
 	for player_id in room.get_players():
 		room.get_players()[player_id].round_index = round_index
-		Server.send_round_start_to_client(player_id, round_index)
+		_server.send_round_start_to_client(player_id, round_index)
 
 
 # Sends the round end event to all players in the room
@@ -140,7 +141,7 @@ func _on_round_end(round_index, room_id):
 	room.get_node("ActionManager").clear_action_instances()
 	
 	for player_id in room.get_players():
-		Server.send_round_end_to_client(player_id, round_index)
+		_server.send_round_end_to_client(player_id, round_index)
 
 func _on_capture_point_team_changed(team_id, capture_point, room_id):
 	var room = _room_dic[room_id]
@@ -148,7 +149,7 @@ func _on_capture_point_team_changed(team_id, capture_point, room_id):
 	if team_id != -1:
 		capturing_player_id = room.team_id_to_player_id[team_id]
 	for player_id in room.get_players():
-		Server.send_capture_point_team_changed(player_id, capturing_player_id, capture_point)
+		_server.send_capture_point_team_changed(player_id, capturing_player_id, capture_point)
 
 
 func _on_capture_point_captured(team_id, capture_point, room_id):
@@ -157,7 +158,7 @@ func _on_capture_point_captured(team_id, capture_point, room_id):
 	if team_id != -1:
 		capturing_player_id = room.team_id_to_player_id[team_id]
 	for player_id in room.get_players():
-		Server.send_capture_point_captured(player_id, capturing_player_id, capture_point)
+		_server.send_capture_point_captured(player_id, capturing_player_id, capture_point)
 
 func _on_capture_point_status_changed(capture_progress, team_id, capture_point, room_id):
 	var room = _room_dic[room_id]
@@ -165,7 +166,7 @@ func _on_capture_point_status_changed(capture_progress, team_id, capture_point, 
 	if team_id != -1:
 		capturing_player_id = room.team_id_to_player_id[team_id]
 	for player_id in room.get_players():
-		Server.send_capture_point_status_changed(player_id, capturing_player_id, capture_point, capture_progress)
+		_server.send_capture_point_status_changed(player_id, capturing_player_id, capture_point, capture_progress)
 
 func _on_capture_point_capture_lost(team_id, capture_point, room_id):
 	var room = _room_dic[room_id]
@@ -173,12 +174,12 @@ func _on_capture_point_capture_lost(team_id, capture_point, room_id):
 	if team_id != -1:
 		capturing_player_id = room.team_id_to_player_id[team_id]
 	for player_id in room.get_players():
-		Server.send_capture_point_capture_lost(player_id, capturing_player_id, capture_point)
+		_server.send_capture_point_capture_lost(player_id, capturing_player_id, capture_point)
 
 func _on_game_result(team_id, room_id):
 	var room = _room_dic[room_id]
 	var winning_player_id = room.team_id_to_player_id[team_id]
 	for player_id in room.get_players():
-		Server.send_game_result(player_id, winning_player_id)
+		_server.send_game_result(player_id, winning_player_id)
 	room.reset()
 	room.start_game()

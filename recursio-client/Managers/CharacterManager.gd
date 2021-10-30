@@ -64,7 +64,7 @@ func _ready():
 	set_physics_process(false)
 
 
-func _process(delta):
+func _physics_process(delta):
 	if not _round_manager.round_is_running():
 		return
 	
@@ -103,7 +103,7 @@ func _process(delta):
 		)
 	)
 
-	_enemy.transform.origin = (
+	_enemy.position = (
 		projected_from_start
 		+ (projected_from_last_known - projected_from_start) * tick_progress
 	)
@@ -152,6 +152,7 @@ func _on_game_result(winning_player_index) -> void:
 func _on_round_started(round_index, latency) -> void:
 	_game_manager.hide_game_result_screen()
 	_player.block_movement = false
+	print(latency)
 	_player.show_round_start_hud(round_index, latency)
 	
 	# We have to disable this here because otherwise, the light never sees the ghosts for some reason

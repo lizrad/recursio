@@ -8,7 +8,7 @@ var record_data: RecordData = RecordData.new()
 func add_record_frame(position: Vector3, rotation_y: float, buttons: int) -> void:
 	var record_frame: RecordFrame = RecordFrame.new()
 	
-	record_frame.timestamp = Server.get_server_time()
+	record_frame.timestamp = OS.get_system_time_msecs()
 	record_frame.position = position
 	record_frame.rotation_y = rotation_y
 	record_frame.buttons = buttons

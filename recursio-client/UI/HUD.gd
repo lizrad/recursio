@@ -56,7 +56,7 @@ func round_start(round_index, latency) -> void:
 	_latency = latency
 
 func latency_delay_phase_start() -> void:
-	assert(_latency >= 0.0)
+	#assert(_latency >= 0.0)
 	_phase.text = "Waiting for server..."
 	_max_time = Constants.get_value("gameplay", "latency_delay") - _latency
 

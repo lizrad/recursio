@@ -1,4 +1,5 @@
 extends Node
+class_name Server
 
 var network = NetworkedMultiplayerENet.new()
 var port = 1909

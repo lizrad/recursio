@@ -13,7 +13,7 @@ var player_inputs = {}
 # Offset at which the world is updated (used for rendering everything in the past)
 var world_processing_offset
 
-
+onready var Server = get_node("/root/Server")
 onready var _game_manager: GameManager = get_node("../GameManager")
 onready var _action_manager: ActionManager = get_node("../ActionManager")
 onready var _round_manager: RoundManager = get_node("../RoundManager")

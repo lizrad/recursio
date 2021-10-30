@@ -15,7 +15,7 @@ func _physics_process(_delta):
 
 
 func _create_world_state():
-	var time = Server.get_server_time()
+	var time = OS.get_system_time_msecs()
 	var player_states = {}
 	for player_id in _character_manager.player_dic:
 		# Skip if given player hasn't send any inputs yet

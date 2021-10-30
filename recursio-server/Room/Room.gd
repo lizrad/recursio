@@ -52,7 +52,68 @@ func reset():
 	_game_manager.reset()
 	_level.reset()
 
-func _on_round_started(round_index):
+
+func add_player(player_id: int) -> void:
+	_character_manager.spawn_player(player_id, player_count)
+	#update id dictionary
+	player_id_to_team_id[player_id] = player_count
+	team_id_to_player_id[player_count] = player_id
+	player_count += 1
+	
+	# If the room is filled, start the game
+	if player_count >= PLAYER_NUMBER_PER_ROOM:
+		start_game()
+
+
+func start_game():
+	_game_manager.start_game()
+	_round_manager.start_round(0, 0)
+
+
+func remove_player(player_id: int) -> void:
+	_character_manager.despawn_player(player_id)
+	#update id dictionary
+	player_id_to_team_id.erase(player_id)
+	team_id_to_player_id.clear()
+	var team_id = 0
+	for player_id in player_id_to_team_id:
+		_character_manager.player_dic[player_id].team_id = team_id
+		player_id_to_team_id[player_id] = team_id
+		team_id_to_player_id[team_id] = player_id
+		team_id += 1
+
+	player_count -= 1
+
+
+func update_player_input_data(player_id, input_data: InputData):
+	if _round_manager.get_current_phase() == RoundManager.Phases.GAME:
+		_character_manager.update_player_input_data(player_id, input_data)
+
+
+func handle_ghost_pick(player_id, timeline_index):
+	if _round_manager.get_current_phase() != RoundManager.Phases.COUNTDOWN:
+		Logger.error("Received ghost picks outside proper phase", "ghost_picking")
+		return
+	_character_manager.set_timeline_index(player_id, timeline_index)
+
+
+func get_players():
+	return _character_manager.player_dic
+
+func get_game_manager() -> GameManager:
+	return _game_manager
+
+
+func get_round_manager() -> RoundManager:
+	return _round_manager
+
+
+func _on_world_state_update(world_state):
+	emit_signal("world_state_updated", world_state, id)
+
+
+func _on_round_started(round_index, latency):
+	print("test2")
 	var default_timeline_index = min(round_index-1,Constants.get_value("ghosts", "max_amount"))
 	for player_id in _character_manager.player_dic:
 		_character_manager.set_timeline_index(player_id, default_timeline_index)
@@ -78,59 +139,3 @@ func _on_round_ended() -> void:
 	_character_manager.disable_ghosts()
 	_character_manager.move_players_to_spawn_point()
 	_character_manager.set_block_player_input(true)
-
-func add_player(player_id: int) -> void:
-	_character_manager.spawn_player(player_id, player_count)
-	#update id dictionary
-	player_id_to_team_id[player_id] = player_count
-	team_id_to_player_id[player_count] = player_id
-	player_count += 1
-	
-	# If the room is filled, start the game
-	if player_count >= PLAYER_NUMBER_PER_ROOM:
-		start_game()
-
-func start_game():
-	_game_manager.start_game()
-	_round_manager.start_round(0, 0)
-	
-func remove_player(player_id: int) -> void:
-	_character_manager.despawn_player(player_id)
-	#update id dictionary
-	player_id_to_team_id.erase(player_id)
-	team_id_to_player_id.clear()
-	var team_id = 0
-	for player_id in player_id_to_team_id:
-		_character_manager.players[player_id].team_id = team_id
-		player_id_to_team_id[player_id] = team_id
-		team_id_to_player_id[team_id] = player_id
-		team_id += 1
-
-	player_count -= 1
-
-
-func update_player_input_data(player_id, input_data: InputData):
-	if _round_manager.get_current_phase() == RoundManager.Phases.GAME:
-		_character_manager.update_player_input_data(player_id, input_data)
-
-
-func handle_ghost_pick(player_id, timeline_index):
-	if _round_manager.get_current_phase() != RoundManager.Phases.COUNTDOWN:
-		Logger.error("Received ghost picks outside proper phase", "ghost_picking")
-		return
-	_character_manager.set_timeline_index(player_id, timeline_index)
-	
-
-func get_players():
-	return _character_manager.player_dic
-
-func get_game_manager() -> GameManager:
-	return _game_manager
-
-
-func get_round_manager() -> RoundManager:
-	return _round_manager
-
-
-func _on_world_state_update(world_state):
-	emit_signal("world_state_updated", world_state, id)
