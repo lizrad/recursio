@@ -6,6 +6,7 @@ var _player_ghost_scene = preload("res://Players/PlayerGhost.tscn")
 var _enemy_scene = preload("res://Players/Enemy.tscn")
 
 var _my_ghosts = {}
+var _ghost_paths := {}
 # Key: Player ID | Value: List of ghosts
 var _enemy_ghosts_dic = {}
 
@@ -105,6 +106,10 @@ func handle_ghost_picking_input(delta:float):
 		_disable_ghosts()
 		#Update ghost index
 		player.ghost_index = (player.ghost_index + 1)%(Constants.get_value("ghosts","max_amount") + 1)
+		for i in _ghost_paths:
+			_ghost_paths[i].selected = false
+		if _ghost_paths.has(player.ghost_index):
+			_ghost_paths[player.ghost_index].selected = true
 		player.swap_weapon_type(player.ghost_index)
 		#Enable new relevant ghosts
 		_enable_ghosts()
@@ -227,7 +232,7 @@ func _on_round_start_received(round_index, server_time):
 	_prep_phase_in_progress = true
 	
 	# Display paths of my ghosts
-	var ghost_paths = []
+	_ghost_paths.clear()
 	for i in _my_ghosts:
 		var curve = Curve3D.new()
 		
@@ -238,9 +243,8 @@ func _on_round_start_received(round_index, server_time):
 		
 		var path = preload("res://Players/GhostPath.tscn").instance()
 		path.set_curve(curve)
-		path.set_color_for_index(_my_ghosts[i].ghost_index)
-		
-		ghost_paths.append(path)
+		path.index=_my_ghosts[i].ghost_index
+		_ghost_paths[_my_ghosts[i].ghost_index] = path
 		add_child(path)
 	
 	player.move_camera_to_overview()
@@ -248,6 +252,8 @@ func _on_round_start_received(round_index, server_time):
 
 	#Default ghost index
 	var default_ghost_index = min(round_index-1,Constants.get_value("ghosts", "max_amount"))
+	if _ghost_paths.has(default_ghost_index):
+		_ghost_paths[default_ghost_index].selected=true
 	move_player_to_spawnpoint(default_ghost_index)
 	player.ghost_index = default_ghost_index
 	for enemy_id in enemies:
@@ -266,9 +272,9 @@ func _on_round_start_received(round_index, server_time):
 	#===============
 	
 	# Delete paths again
-	for ghost_path in ghost_paths:
-		ghost_path.queue_free()
-	ghost_paths.clear()
+	for i in _ghost_paths:
+		_ghost_paths[i].queue_free()
+	_ghost_paths.clear()
 	
 	player.follow_camera()
 	
