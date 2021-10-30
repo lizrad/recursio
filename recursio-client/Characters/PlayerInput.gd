@@ -39,7 +39,7 @@ func _physics_process(delta):
 	var movement_vector = Vector3(input.y, 0.0, -input.x)
 	InputManager.add_movement_to_input_frame(movement_vector)
 	
-	var rotate_input = DeadZones.apply_2D(_get_input("player_look"), 1.0, 0.0)
+	var rotate_input = DeadZones.apply_2D(_get_input("player_look"), inner_deadzone, outer_deadzone)
 	var rotate_vector = Vector3(rotate_input.y, 0.0, -rotate_input.x)
 	InputManager.add_rotation_to_input_frame(rotate_vector)
 	
@@ -64,6 +64,8 @@ func _on_player_initialized():
 	# Subscribe to Action Events
 	_fire_action.connect("ammunition_changed", self, "_on_fire_ammo_changed")
 	_special_movement_action.connect("ammunition_changed", self, "_on_special_movement_ammo_changed")
+	
+	_player_initialized = true
 
 
 # Changes the weapon depending on the given timeline index

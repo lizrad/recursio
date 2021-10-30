@@ -33,21 +33,10 @@ func reset() -> void:
 
 
 # Should only be called in "physics_update()"
-func apply_input(movement: Vector3, rotation: Vector3, buttons: int) -> void:
+func apply_input(movement_vector: Vector3, rotation_vector: Vector3, buttons: int) -> void:
 	# Nothing to do if player can't move
 	if block_movement:
 		return
-	
-	# Clamp movement
-	var length = movement.length()
-	movement /= length if length > 1.0 else 1
-	
-	# Clamp rotation
-	length = rotation.length()
-	rotation /= length if length > 1.0 else 1
-	
-	var movement_vector = Vector3(movement.y, 0.0, -movement.x)
-	var rotation_vector = Vector3(rotation.y, 0.0, -rotation.x)
 
 	# Only rotate if input is given
 	if rotation_vector != Vector3.ZERO:
@@ -61,14 +50,13 @@ func apply_input(movement: Vector3, rotation: Vector3, buttons: int) -> void:
 	self.velocity = lerp(velocity, _target_velocity, _drag)
 	# Apply acceleration to velocity (important: after lerp)
 	self.velocity += acceleration * get_physics_process_delta_time()
-	
 	_kb.move_and_slide(velocity)
 	
 	# Trigger all actions with base
 	.trigger_actions(buttons)
 	
 	# Add everything to the recording
-	_record_manager.add_record_frame(movement, .get_rotation_y(), buttons)
+	_record_manager.add_record_frame(movement_vector, .get_rotation_y(), buttons)
 
 
 func get_record_data() -> RecordData:
