@@ -34,19 +34,6 @@ func _ready():
 	_capture_time = Constants.get_value("capture","capture_time")
 
 
-
-func reset():
-	if _is_captured:
-		emit_signal("capture_lost", capture_team)
-	_is_captured = false
-	_capturing_entities[0] = 0
-	_capturing_entities[1] = 0
-	capture_team = -1
-	capture_progress = 0
-	_check_capturing_status()
-	emit_signal("capture_team_changed", -1)
-	emit_signal("capture_status_changed",0,-1)
-
 func _process(delta):
 	if not active:
 		return
@@ -64,6 +51,30 @@ func _process(delta):
 		# No team is capturing -> progress decreases
 		_release(delta / _capture_time)
 
+
+func _on_body_entered_area(body):
+	var character = body.get_parent()
+	if character is CharacterBase:
+		start_capturing(character.team_id)
+
+
+func _on_body_exited_area(body):
+	var character = body.get_parent()
+	if character is CharacterBase:
+		stop_capturing(character.team_id)
+
+
+func reset():
+	if _is_captured:
+		emit_signal("capture_lost", capture_team)
+	_is_captured = false
+	_capturing_entities[0] = 0
+	_capturing_entities[1] = 0
+	capture_team = -1
+	capture_progress = 0
+	_check_capturing_status()
+	emit_signal("capture_team_changed", -1)
+	emit_signal("capture_status_changed",0,-1)
 
 
 func _capture(delta: float):
@@ -107,11 +118,6 @@ func _switch_capturing_teams(new_team: int):
 	emit_signal("capture_team_changed", new_team)
 
 
-func _on_body_entered_area(body):
-	if body is CharacterBase:
-		start_capturing(body.team_id)
-
-
 func start_capturing(team_id: int):
 	_capturing_entities[team_id] += 1
 	_check_capturing_status()
@@ -123,9 +129,7 @@ func _check_capturing_status():
 	_current_capture_team = 0 if _capturing_entities[0] > _capturing_entities[1] else 1
 
 
-func _on_body_exited_area(body):
-	if body is CharacterBase:
-		stop_capturing(body.team_id)
+
 
 
 func stop_capturing(team_id: int):
