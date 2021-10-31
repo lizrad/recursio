@@ -33,9 +33,7 @@ func _ready():
 	assert(_world_state_manager.connect("world_state_updated", self, "_on_world_state_update") == OK)	
 	
 	assert(_round_manager.connect("round_started", self,"_on_round_started") == OK)
-	assert(_round_manager.connect("latency_delay_phase_started", self,"_on_latency_delay_phase_started") == OK)
-	assert(_round_manager.connect("preparation_phase_started", self,"_on_preparation_phase_started") == OK)
-	assert(_round_manager.connect("countdown_phase_started", self,"_on_countdown_phase_starte") == OK)
+	assert(_round_manager.connect("countdown_phase_started", self,"_on_countdown_phase_started") == OK)
 	assert(_round_manager.connect("game_phase_started", self,"_on_game_phase_started") == OK)
 	assert(_round_manager.connect("game_phase_ended", self,"_on_game_phase_ended") == OK)
 	assert(_round_manager.connect("round_ended", self,"_on_round_ended") == OK)
@@ -118,18 +116,18 @@ func _on_round_started(round_index, latency):
 	for player_id in _character_manager.player_dic:
 		_character_manager.set_timeline_index(player_id, default_timeline_index)
 
-func _on_countdown_phase_started():
+func _on_countdown_phase_started(countdown_time):
 	_character_manager.propagate_player_picks()
 
 
-func _on_game_phase_start() -> void:
+func _on_game_phase_started() -> void:
 	_character_manager.start_ghosts()
 	_character_manager.enable_ghosts()
 	_character_manager.move_players_to_spawn_point()
 	_character_manager.set_block_player_input(false)
 
 
-func _on_game_phase_end() -> void:
+func _on_game_phase_ended() -> void:
 	_round_manager.stop_round()
 
 

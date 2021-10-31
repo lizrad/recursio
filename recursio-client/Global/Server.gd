@@ -50,6 +50,7 @@ func connect_to_server():
 
 func _notification(what):
 	if what == MainLoop.NOTIFICATION_WM_QUIT_REQUEST:
+		Logger.info("Disconnecting from server...", "connection")
 		network.close_connection()
 		get_tree().quit() # default behavior
 
@@ -65,6 +66,7 @@ func _on_connection_succeeded():
 
 
 func _start_clock_synchronization():
+	Logger.debug("Start clock synchronization", "server")
 	rpc_id(1, "fetch_server_time", OS.get_system_time_msecs())
 	var timer = Timer.new()
 	var clock_update_per_seconds = 2.0
@@ -84,6 +86,7 @@ func _run_server_clock(delta):
 
 
 func _determine_latency():
+	Logger.debug("Determine latency", "server")
 	rpc_id(1, "determine_latency", OS.get_system_time_msecs())
 
 
@@ -92,36 +95,44 @@ func get_server_time():
 
 
 func send_player_input_data(input_data: InputData):
+	Logger.debug("Send player input data", "server")
 	rpc_unreliable_id(1, "receive_player_input_data", input_data.to_array())
 
 
 func send_player_ready():
+	Logger.debug("Send player ready", "server")
 	rpc_id(1, "receive_player_ready")
 
 
 func send_timeline_pick(timeline_index):
+	Logger.debug("Send player timeline pick", "server")
 	rpc_id(1, "receive_timeline_pick",timeline_index)
 
 
 remote func spawn_player(player_id, spawn_point, team_id):
+	Logger.debug("Receive spawn player", "server")
 	emit_signal("spawning_player", player_id, spawn_point, team_id)
 
 
 remote func spawn_enemy(enemy_id, spawn_point):
+	Logger.debug("Receive spawn enemy", "server")
 	emit_signal("spawning_enemy", enemy_id, spawn_point)
 
 
 remote func despawn_enemy(enemy_id):
+	Logger.debug("Receive despawn enemy", "server")
 	emit_signal("despawning_enemy", enemy_id)
 
 
 remote func receive_server_time(server_time, player_time):
+	Logger.debug("Receive server time", "server")
 	latency = (OS.get_system_time_msecs() - player_time) / 2
 	server_clock = server_time + latency
 	set_physics_process(true)
 
 
 remote func receive_latency(player_time):
+	
 	latency_array.append((OS.get_system_time_msecs() - player_time) / 2)
 	var max_latency_count = 9
 	if latency_array.size() == max_latency_count:
@@ -139,71 +150,77 @@ remote func receive_latency(player_time):
 		delta_latency = (new_latency) - latency
 		latency = new_latency
 		latency_array.clear()
+	Logger.debug("Receive latency (" + str(latency) + ")", "server")
 
 
-remote func receive_own_ghost_record(gameplay_record):
-	emit_signal("own_ghost_record_received", gameplay_record)
+remote func receive_player_ghost_record(gameplay_record):
+	Logger.debug("Receive player ghost record", "server")
+	emit_signal("player_ghost_record_received", gameplay_record)
 
 
 remote func receive_enemy_ghost_record(enemy_id, gameplay_record):
+	Logger.debug("Receive enemy ghost record", "server")
 	emit_signal("enemy_ghost_record_received",enemy_id, gameplay_record)
 
 
 # Receives the current world state of the players room
 remote func receive_world_state(world_state):
+	Logger.debug("Receive world starte", "server")
 	emit_signal("world_state_received", WorldState.new().from_array(world_state))
 
 
 # Receives the start of a round with the server time
 remote func receive_round_start(round_index, server_time):
+	Logger.debug("Receive round start", "server")
 	emit_signal("round_started", round_index, server_time)
 
 
 # Receives the end of a round
 remote func receive_round_end(round_index):
+	Logger.debug("Receive round end", "server")
 	emit_signal("round_ended", round_index)
 
 
 remote func receive_capture_point_captured(capturing_player_id, capture_point):
-	Logger.info("Capture point captured received", "connection")
+	Logger.debug("Capture point captured received", "server")
 	emit_signal("capture_point_captured", capturing_player_id, capture_point)
 
 
 remote func receive_capture_point_team_changed( capturing_player_id, capture_point ):
-	Logger.info("Capture point team changed received", "connection")
+	Logger.debug("Capture point team changed received", "server")
 	emit_signal("capture_point_team_changed", capturing_player_id, capture_point)
 
 
 remote func receive_capture_point_status_changed( capturing_player_id, capture_point, capture_progress ):
-	Logger.info("Capture point status changed received", "connection")
+	Logger.debug("Capture point status changed received", "server")
 	emit_signal("capture_point_status_changed", capturing_player_id, capture_point, capture_progress)
 
 
 remote func receive_capture_point_capture_lost( capturing_player_id, capture_point ):
-	Logger.info("Capture point capture lost received", "connection")
+	Logger.debug("Capture point capture lost received", "server")
 	emit_signal("capture_point_capture_lost", capturing_player_id, capture_point)
 
 
 remote func receive_game_result(winning_player_id):
-	Logger.info("Game results received", "connection")
+	Logger.debug("Game results received", "server")
 	emit_signal("game_result", winning_player_id)
 
 
 remote func receive_player_hit(hit_player_id):
-	Logger.info("Player hit received: " + str(hit_player_id), "connection")
+	Logger.debug("Player hit received: " + str(hit_player_id), "server")
 	emit_signal("player_hit", hit_player_id)
 
 
 remote func receive_ghost_hit(hit_ghost_player_owner, hit_ghost_id):
-	Logger.info("Ghost hit received: " + str(hit_ghost_id) + " of player " + str(hit_ghost_player_owner), "connection")
+	Logger.debug("Ghost hit received: " + str(hit_ghost_id) + " of player " + str(hit_ghost_player_owner), "server")
 	emit_signal("ghost_hit", hit_ghost_player_owner, hit_ghost_id)
 
 
 remote func receive_player_action(action_player_id, action_type):
-	Logger.info("Other player action received: " + str(action_type))
+	Logger.debug("Other player action received: " + str(action_type), "server")
 	emit_signal("player_action", action_player_id, action_type)
 
 
 remote func receive_timeline_picks(player_pick, enemy_pick):
-	Logger.info("Ghost picks received", "connection")
+	Logger.debug("Ghost picks received", "server")
 	emit_signal("timeline_picks",player_pick, enemy_pick)

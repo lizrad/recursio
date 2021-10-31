@@ -18,6 +18,9 @@ var _just_corrected = false
 var _last_server_position
 var _last_server_time
 
+class MovementFrame:
+	var position: Vector3 = Vector3.ZERO
+
 
 func player_init(action_manager) -> void:
 	.player_base_init(action_manager)
@@ -27,8 +30,19 @@ func player_init(action_manager) -> void:
 # OVERRIDE #
 func reset() -> void:
 	.reset()
+	_past_frames.clear()
 	_hud.reset()
 
+# OVERRIDE #
+func apply_input(movement_vector: Vector3, rotation_vector: Vector3, buttons: int) -> void:
+	.apply_input(movement_vector, rotation_vector, buttons)
+	if _just_corrected:
+		_past_frames.clear()
+		_just_corrected = false
+	else:
+		var frame = MovementFrame.new()
+		frame.position = self.position
+		_past_frames[Server.get_server_time()] = frame
 
 func get_visibility_mask():
 	return _light_viewport.get_texture()
@@ -100,10 +114,6 @@ func get_button_overlay() -> ButtonOverlay:
 func handle_server_update(position, time):
 	_last_server_position = position
 	_last_server_time = time
-
-	#if not past_frames.has(time):
-		# TODO: Need to handle this?
-	#	return
 	
 	# Find the most fitting timestamp
 	var time_with_data = time

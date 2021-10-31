@@ -59,13 +59,8 @@ func clear_action_instances():
 			instance.get_ref().queue_free()
 
 
-func set_active(action: Action, value: bool, user: Spatial, action_scene_parent: Node) -> void:
-	Logger.debug("Action " + action.name + " set active for value: " + str(value), "actions")
-
-	if not value:
-		action.activation_time = 0
-		action.emit_signal("action_released")
-		return
+func set_active(action: Action, character: CharacterBase, tree_position: Spatial, action_scene_parent: Node) -> void:
+	Logger.debug("Action " + action.name + " set active", "actions")
 
 	if action.blocked:
 		return
@@ -92,8 +87,8 @@ func set_active(action: Action, value: bool, user: Spatial, action_scene_parent:
 	if action.attack:
 		Logger.info("instancing new attack named "+ action.name, "actions")
 		var spawn = action.attack.instance()
-		spawn.initialize(user)
-		spawn.global_transform = user.global_transform
+		spawn.initialize(character)
+		spawn.global_transform = tree_position.global_transform
 		action_scene_parent.add_child(spawn)
 		_instanced_actions.append(weakref(spawn))
 

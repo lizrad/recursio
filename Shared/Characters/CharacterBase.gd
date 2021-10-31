@@ -88,7 +88,7 @@ func trigger_actions(buttons: int) -> void:
 		
 		Logger.info("Handling action of type " + str(trigger), "actions")
 		var action = _action_manager.get_action_for_trigger(trigger, timeline_index)
-		_action_manager.set_active(action, true, _kb, get_parent())
+		_action_manager.set_active(action, self, _kb, get_parent())
 
 
 func get_action_manager():

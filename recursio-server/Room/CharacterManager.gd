@@ -158,10 +158,10 @@ func stop_ghosts() -> void:
 
 func _create_ghost_from_player(player: PlayerBase) -> void:
 	var ghost: GhostBase = _ghost_scene.instance()
-	ghost.ghost_base_init(_action_manager, player.gameplay_record)
+	ghost.ghost_base_init(_action_manager, player.get_record_data())
 	ghost.spawn_point = player.spawn_point
 	ghost.team_id = player.team_id
-	ghost.round_index = _game_manager.round_index
+	ghost.round_index = _round_manager.round_index
 
 	if  ghost_dic[player.player_id].has(player.timeline_index):
 		ghost_dic[player.player_id][player.timeline_index].queue_free()

@@ -7,6 +7,8 @@ var acceleration: Vector3 = Vector3.ZERO
 # Blocks any movement applied to it (includes rotation-movement)
 var block_movement: bool = true
 
+var input_movement_direction: Vector3 = Vector3.ZERO
+
 # Used for applying drag (e.g. moving platform velocity)
 var _target_velocity: Vector3 = Vector3.ZERO
 
@@ -37,6 +39,8 @@ func apply_input(movement_vector: Vector3, rotation_vector: Vector3, buttons: in
 	# Nothing to do if player can't move
 	if block_movement:
 		return
+	
+	input_movement_direction = movement_vector
 
 	# Only rotate if input is given
 	if rotation_vector != Vector3.ZERO:

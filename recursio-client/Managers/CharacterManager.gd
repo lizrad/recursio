@@ -300,6 +300,7 @@ func _on_world_state_received(world_state: WorldState):
 		
 		if player_states.has(_player_rpc_id):
 			var server_player: PlayerState = player_states[_player_rpc_id]
+			print(server_player.to_array())
 
 			_player.handle_server_update(server_player.position, server_player.timestamp)
 
