@@ -1,4 +1,5 @@
 extends Spatial
+class_name CapturePoint
 
 var active = true
 var _capture_progress = 0
@@ -36,20 +37,22 @@ func reset():
 
 
 func _on_body_entered(body):
-	if body is Player:
+	var character = body.get_parent()
+	if character is Player:
 		_local_player_inside = true
-	if body is Enemy:
+	if character is Enemy:
 		_local_enemy_inside = true
-	if body is Ghost:
+	if character is Ghost:
 		_local_ghost_inside = true
 
 
 func _on_body_exited(body):
-	if body is Player:
+	var character = body.get_parent()
+	if character is Player:
 		_local_player_inside = false
-	if body is Enemy:
+	if character is Enemy:
 		_local_enemy_inside = false
-	if body is Ghost:
+	if character is Ghost:
 		_local_ghost_inside = false
 
 

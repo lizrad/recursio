@@ -97,9 +97,9 @@ func update_weapon_type(weapon_action: Action) ->void:
 
 
 # Sets the internal player id for the capture points
-func set_player_id(player_id) -> void:
+func set_team_id(team_id) -> void:
 	for capture_point in _capture_points:
-		capture_point.set_player_id(player_id)
+		capture_point.set_team_id(team_id)
 
 # Adds a new capture point HUD item to the HUD
 func add_capture_point() -> void:
