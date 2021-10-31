@@ -2,10 +2,10 @@ extends Node
 class_name RoundManager
 
 signal round_started(round_index, latency)
-signal latency_delay_phase_started()
-signal preparation_phase_started()
-signal countdown_phase_started(countdown_time)
-signal game_phase_started()
+signal latency_delay_phase_started(latency)
+signal preparation_phase_started(latency)
+signal countdown_phase_started(countdown_time, latency)
+signal game_phase_started(latency)
 signal game_phase_ended()
 signal round_ended(round_index)
 
@@ -43,25 +43,25 @@ func _physics_process(delta):
 				_timer = 0
 				_phase = Phases.LATENCY_DELAY
 				Logger.info("Latency delay phase started","gameplay")
-				emit_signal("latency_delay_phase_started")
+				emit_signal("latency_delay_phase_started", _latency)
 		Phases.LATENCY_DELAY:
 			if _timer >= _latency_delay_time - _latency:
 				_timer -= _latency_delay_time
 				_phase = Phases.PREPARATION
 				Logger.info("Preparation phase started","gameplay")
-				emit_signal("preparation_phase_started")
+				emit_signal("preparation_phase_started", _latency)
 		Phases.PREPARATION:
 			if _timer >= _preparation_time:
 				_timer -= _preparation_time
 				_phase = Phases.COUNTDOWN
 				Logger.info("Countdown phase started","gameplay")
-				emit_signal("countdown_phase_started", _countdown_time)
+				emit_signal("countdown_phase_started", _countdown_time, _latency)
 		Phases.COUNTDOWN:
 			if _timer >= _countdown_time:
 				_timer -= _countdown_time
 				_phase = Phases.GAME
 				Logger.info("Game phase started","gameplay")
-				emit_signal("game_phase_started")
+				emit_signal("game_phase_started", _latency)
 		Phases.GAME:
 			if _timer >= _game_time:
 				_timer -= _game_time
@@ -90,9 +90,13 @@ func stop_round() -> void:
 func round_is_running() -> bool:
 	return _round_started
 
+
 func get_current_phase() -> int:
 	return _phase
 
+
+func get_latency() -> float:
+	return _latency
 
 
 

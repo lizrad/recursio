@@ -85,26 +85,26 @@ func update_capture_point_hud(capture_points: Array) -> void:
 		index += 1
 
 
-func show_round_start_hud(round_index, latency) -> void:
-	_hud.round_start(round_index, latency)
+func show_round_start_hud(round_index, start_time) -> void:
+	_hud.round_start(round_index, start_time)
 
 
-func show_latency_delay_hud() -> void:
-	_hud.latency_delay_phase_start()
+func show_latency_delay_hud(start_time, latency) -> void:
+	_hud.latency_delay_phase_start(start_time, latency)
 
 
-func show_preparation_hud(round_index: int) -> void:
-	_hud.prep_phase_start(round_index)
+func show_preparation_hud(round_index, start_time) -> void:
+	_hud.prep_phase_start(round_index, start_time)
 	_button_overlay.show_buttons("ready", ButtonOverlay.BUTTONS.RIGHT, true)
 
 
-func show_countdown_hud() -> void:
-	_hud.countdown_phase_start()
+func show_countdown_hud(start_time) -> void:
+	_hud.countdown_phase_start(start_time)
 	_button_overlay.hide_buttons()
 
 
-func show_game_hud(round_index) -> void:
-	_hud.game_phase_start(round_index)
+func show_game_hud(round_index, start_time) -> void:
+	_hud.game_phase_start(round_index, start_time)
 
 
 func get_button_overlay() -> ButtonOverlay:

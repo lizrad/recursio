@@ -29,7 +29,7 @@ signal player_hit(hit_player_id)
 signal ghost_hit(hit_ghost_player_owner, hit_ghost_id)
 signal timeline_picks(player_pick, enemy_picks)
 
-signal round_started(round_index, server_time)
+signal round_started(round_index, latency)
 signal round_ended(round_index)
 
 func _ready():
@@ -171,7 +171,7 @@ remote func receive_world_state(world_state):
 # Receives the start of a round with the server time
 remote func receive_round_start(round_index, server_time):
 	Logger.debug("Receive round start", "server")
-	emit_signal("round_started", round_index, server_time)
+	emit_signal("round_started", round_index, Server.get_server_time() - server_time)
 
 
 # Receives the end of a round

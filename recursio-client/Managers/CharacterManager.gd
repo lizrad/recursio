@@ -134,8 +134,8 @@ func _reset() -> void:
 	_action_manager.clear_action_instances()
 
 
-func _on_server_round_started(round_index, server_time) -> void:
-	_round_manager.start_round(round_index, (Server.get_server_time() - server_time) / 1000.0)
+func _on_server_round_started(round_index, latency) -> void:
+	_round_manager.start_round(round_index, latency)
 
 
 func _on_server_round_ended(round_index) -> void:
@@ -152,18 +152,18 @@ func _on_game_result(winning_player_index) -> void:
 func _on_round_started(round_index, latency) -> void:
 	_game_manager.hide_game_result_screen()
 	_player.block_movement = false
-	_player.show_round_start_hud(round_index, latency)
+	_player.show_round_start_hud(round_index, Server.get_server_time() - latency)
 	
 	# We have to disable this here because otherwise, the light never sees the ghosts for some reason
 	_player.set_overview_light_enabled(false)
 
 
-func _on_latency_delay_phase_started() -> void:
-	_player.show_latency_delay_hud()
+func _on_latency_delay_phase_started(latency) -> void:
+	_player.show_latency_delay_hud(Server.get_server_time() - latency, latency)
 
 
-func _on_preparation_phase_started() -> void:
-	_player.show_preparation_hud(_round_manager.round_index)
+func _on_preparation_phase_started(latency) -> void:
+	_player.show_preparation_hud(_round_manager.round_index, Server.get_server_time() - latency)
 	
 	# Display paths of my ghosts
 	for timeline_index in _player_ghosts:
@@ -185,20 +185,20 @@ func _on_preparation_phase_started() -> void:
 	_move_ghosts_to_spawn()
 
 
-func _on_countdown_phase_started(countdown_time) -> void:
+func _on_countdown_phase_started(countdown_time, latency) -> void:
 	# Delete ghost path visualization
 	for timeline_index in _player_ghosts:
 		_player_ghosts[timeline_index].delete_path()
 	
 	_player.follow_camera()
-	_player.show_countdown_hud()
+	_player.show_countdown_hud(Server.get_server_time() - latency)
 	_game_manager.show_countdown_screen(countdown_time)
 	# Send currently selected timeline to server
 	Server.send_timeline_pick(_player.timeline_index)
 
-func _on_game_phase_started() -> void:
+func _on_game_phase_started(latency) -> void:
 	_game_manager.hide_countdown_screen()
-	_player.show_game_hud(_round_manager.round_index)
+	_player.show_game_hud(_round_manager.round_index, Server.get_server_time() - latency)
 	_game_manager.toggle_capture_points(true)
 	_start_ghosts()
 
