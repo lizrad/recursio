@@ -1,4 +1,5 @@
 extends Node
+class_name CharacterModel
 
 signal color_scheme_changed(new_color_scheme)
 export(String, "player", "enemy", "player_ghost", "enemy_ghost") var color_scheme = "player"

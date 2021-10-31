@@ -10,8 +10,9 @@ var _start_time: int = -1
 
 
 func ghost_base_init(action_manager, record_data: RecordData) -> void:
-	.character_base_init(action_manager)
 	_record_data = RecordData.new().copy(record_data)
+	timeline_index = record_data.timeline_index
+	.character_base_init(action_manager)
 
 
 # OVERRIDE #
@@ -30,7 +31,7 @@ func _physics_process(delta):
 	if _current_frame_index >= _record_data.record_frames.size():
 		return
 	
-	var time_diff = _start_time - _record_data.timestamp
+	var time_diff = _start_time - _record_data.record_frames[0].timestamp
 	while _current_frame_index < _record_data.record_frames.size():
 		var frame: RecordFrame = _record_data.record_frames[_current_frame_index]
 		
@@ -38,6 +39,7 @@ func _physics_process(delta):
 			break
 		
 		_apply_record_frame(frame)
+		_current_frame_index += 1
 		
 
 

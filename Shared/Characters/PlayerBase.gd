@@ -1,6 +1,7 @@
 extends CharacterBase
 class_name PlayerBase
 
+
 # The acceleration applied to the velocity
 var acceleration: Vector3 = Vector3.ZERO
 
@@ -60,11 +61,13 @@ func apply_input(movement_vector: Vector3, rotation_vector: Vector3, buttons: in
 	.trigger_actions(buttons)
 	
 	# Add everything to the recording
-	_record_manager.add_record_frame(movement_vector, .get_rotation_y(), buttons)
+	_record_manager.add_record_frame(.get_position(), .get_rotation_y(), buttons)
 
 
 func get_record_data() -> RecordData:
-	return _record_manager.record_data
+	var record_data: RecordData = _record_manager.record_data
+	record_data.timeline_index = self.timeline_index
+	return record_data
 
 
 

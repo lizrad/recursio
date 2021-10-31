@@ -69,6 +69,7 @@ func spawn_player(player_id, team_id) -> void:
 	var spawn_point = _game_manager.get_spawn_point(team_id, 0)
 	var player: PlayerBase = _player_scene.instance()
 	player.player_base_init(_action_manager)
+	player.player_id = player_id
 	player.team_id = team_id
 	player.timeline_index = 0
 	player.spawn_point = spawn_point
@@ -159,33 +160,32 @@ func stop_ghosts() -> void:
 func _create_ghost_from_player(player: PlayerBase) -> void:
 	var ghost: GhostBase = _ghost_scene.instance()
 	ghost.ghost_base_init(_action_manager, player.get_record_data())
+	ghost.player_id = player.player_id
 	ghost.spawn_point = player.spawn_point
 	ghost.team_id = player.team_id
 	ghost.round_index = _round_manager.round_index
 
-	if  ghost_dic[player.player_id].has(player.timeline_index):
+	if ghost_dic[player.player_id].has(player.timeline_index):
 		ghost_dic[player.player_id][player.timeline_index].queue_free()
 	
 	ghost_dic[player.player_id][player.timeline_index] = ghost
 	
 	_add_ghost(ghost)
 	
-	Server.send_own_ghost_record_to_client(player.player_id, player.gameplay_record)
+	Server.send_player_ghost_record_to_client(player.player_id, player.timeline_index, player.get_record_data())
 	for client_id in player_dic:
 		if client_id != player.player_id:
-			Server.send_enemy_ghost_record_to_client(client_id, player.player_id, player.gameplay_record)
+			Server.send_enemy_ghost_record_to_client(client_id, player.timeline_index, player.get_record_data())
 
 
 func _add_ghost(ghost) -> void:
 	add_child(ghost)
 	ghost.connect("hit", self, "_on_ghost_hit", [ghost.timeline_index, ghost.player_id])
-	ghost.connect("ghost_attack", self, "do_attack")
 
 
 func _remove_ghost(ghost) -> void:
 	remove_child(ghost)
 	ghost.disconnect("hit", self, "_on_ghost_hit")
-	ghost.disconnect("ghost_attack", self, "do_attack")
 
 
 func _on_player_hit(hit_player_id):

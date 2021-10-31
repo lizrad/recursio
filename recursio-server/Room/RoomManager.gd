@@ -136,12 +136,14 @@ func _on_round_started(round_index, latency, room_id):
 
 
 # Sends the round end event to all players in the room
-func _on_round_end(round_index, room_id):
+func _on_round_ended(round_index, room_id):
 	var room: Room = _room_dic[room_id]
 	room.get_node("ActionManager").clear_action_instances()
 	
 	for player_id in room.get_players():
 		_server.send_round_end_to_client(player_id, round_index)
+	
+	room.get_round_manager().start_round(room.get_round_manager().round_index + 1, 0)
 
 func _on_capture_point_team_changed(team_id, capture_point, room_id):
 	var room = _room_dic[room_id]

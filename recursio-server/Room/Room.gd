@@ -131,7 +131,7 @@ func _on_game_phase_ended() -> void:
 	_round_manager.stop_round()
 
 
-func _on_round_ended() -> void:
+func _on_round_ended(round_index) -> void:
 	_game_manager.reset()
 	_character_manager.create_ghosts()
 	_character_manager.disable_ghosts()

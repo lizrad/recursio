@@ -6,6 +6,7 @@ signal action_status_changed(action_type, status)
 signal velocity_changed(velocity, front_vector, right_vector)
 signal timeline_index_changed(timeline_index)
 
+var player_id: int
 # The team id defines which side the player starts on
 var team_id: int = -1
 # The timeline this character belongs to

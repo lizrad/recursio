@@ -7,7 +7,7 @@ signal preparation_phase_started()
 signal countdown_phase_started(countdown_time)
 signal game_phase_started()
 signal game_phase_ended()
-signal round_ended()
+signal round_ended(round_index)
 
 enum Phases {
 	LATENCY_DELAY,
@@ -84,7 +84,7 @@ func stop_round() -> void:
 	_round_started = false
 	_phase = Phases.NONE
 	Logger.info("Round ended","gameplay")
-	emit_signal("round_ended")
+	emit_signal("round_ended", round_index)
 
 
 func round_is_running() -> bool:

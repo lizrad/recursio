@@ -49,12 +49,14 @@ func despawn_enemy_on_client(player_id, enemy_id):
 	rpc_id(player_id, "despawn_enemy", enemy_id)
 
 
-func send_own_ghost_record_to_client(player_id, gameplay_record):
-	rpc_id(player_id, "receive_player_ghost_record", gameplay_record)
+func send_player_ghost_record_to_client(player_id, timeline_index, record_data: RecordData):
+	record_data.timestamp = get_server_time()
+	rpc_id(player_id, "receive_player_ghost_record", timeline_index, record_data.to_array())
 
 
-func send_enemy_ghost_record_to_client(player_id, enemy_id, gameplay_record):
-	rpc_id(player_id, "receive_enemy_ghost_record", enemy_id, gameplay_record)
+func send_enemy_ghost_record_to_client(player_id, timeline_index, record_data: RecordData):
+	record_data.timestamp = get_server_time()
+	rpc_id(player_id, "receive_enemy_ghost_record", timeline_index, record_data.to_array())
 
 
 func get_server_time():

@@ -44,7 +44,7 @@ func _ready():
 	assert(Server.connect("spawning_enemy", self, "_on_spawn_enemy") == OK)
 	assert(Server.connect("despawning_enemy", self, "_on_despawn_enemy") == OK)
 	assert(Server.connect("player_ghost_record_received", self, "_on_player_ghost_record_received") == OK)
-	assert(Server.connect("enemy_ghost_record_received", self, "_create_enemy_ghost") == OK)
+	assert(Server.connect("enemy_ghost_record_received", self, "_on_enemy_ghost_record_received") == OK)
 	
 	assert(Server.connect("world_state_received", self, "_on_world_state_received") == OK)
 	assert(Server.connect("player_hit", self, "_on_player_hit") == OK)
@@ -249,7 +249,7 @@ func _on_player_ghost_record_received(timeline_index, record_data):
 
 func _on_enemy_ghost_record_received(timeline_index, record_data: RecordData):	
 	var ghost = _create_enemy_ghost(record_data)
-	ghost.spawn_point = _game_manager.get_spawn_points(1 - _player.team_id, timeline_index)
+	ghost.spawn_point = _game_manager.get_spawn_point(1 - _player.team_id, timeline_index)
 	
 	# Check if there is already a ghost, and delete it
 	if _enemy_ghosts.has(timeline_index):
@@ -300,10 +300,9 @@ func _on_world_state_received(world_state: WorldState):
 		
 		if player_states.has(_player_rpc_id):
 			var server_player: PlayerState = player_states[_player_rpc_id]
-			print(server_player.to_array())
-
+			
 			_player.handle_server_update(server_player.position, server_player.timestamp)
-
+			
 			player_states.erase(_player_rpc_id)
 
 		for id in player_states:
@@ -355,15 +354,17 @@ func _spawn_character(character_scene, spawn_point):
 
 func _create_player_ghost(record_data: RecordData):
 	var ghost: PlayerGhost = _player_ghost_scene.instance()
+	add_child(ghost)
 	# TODO: Get color from ColorManager
-	ghost.player_ghost_init(_action_manager, record_data, Color.lightcoral)
+	ghost.player_ghost_init(_action_manager, record_data, "player_ghost")
 	return ghost
 
 
 func _create_enemy_ghost(record_data):
 	var ghost: Ghost = _ghost_scene.instance()
+	add_child(ghost)
 	# TODO: Get color from ColorManager
-	ghost.ghost_init(_action_manager, record_data, Color.lightblue)
+	ghost.ghost_init(_action_manager, record_data, "enemy_ghost")
 	return ghost
 
 
