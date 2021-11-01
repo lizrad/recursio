@@ -268,9 +268,10 @@ func _on_spawn_player(player_id, spawn_point, team_id):
 	_player.set_name(str(player_id))
 	
 	# Apply visibility mask to all entities which have been here before the player
-	_apply_visibility_mask(_player)
+	_apply_visibility_always(_player)
 	for timeline_index in _enemy_ghosts:
 		_apply_visibility_mask(_enemy_ghosts[timeline_index])
+	if _enemy: _apply_visibility_mask(_enemy)
 	
 	# Initialize capture point HUD for current level
 	_player.setup_capture_point_hud(_game_manager.get_capture_points().size())
