@@ -228,9 +228,9 @@ func _on_timeline_picks(timeline_index, enemy_pick):
 	_disable_ghosts()
 	_player.timeline_index = timeline_index
 	
-	_player.swap_weapon_type(timeline_index)
+#	_player.swap_weapon_type(timeline_index)
 	
-	_enemy.timeline_index = enemy_pick
+	_enemy.timeline_index = enemy_pick.values()[0]
 	_enable_ghosts()
 
 
@@ -297,6 +297,7 @@ func _on_world_state_received(world_state: WorldState):
 
 		var player_states: Dictionary = world_state.player_states
 
+		if not _player: return
 		
 		if player_states.has(_player_rpc_id):
 			var server_player: PlayerState = player_states[_player_rpc_id]
