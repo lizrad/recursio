@@ -23,9 +23,11 @@ func _create_world_state():
 		#if not _player_manager.player_inputs.has(player_id):
 		#	continue
 		
+		var last_processed_packet = _character_manager.player_inputs[player_id].get_closest_or_earlier(time - world_processing_offset) \
+				if _character_manager.player_inputs.has(player_id) else null
+		
 		var player_state: PlayerState = PlayerState.new()
-		player_state.timestamp = _character_manager.player_inputs[player_id].get_closest_or_earlier(time - world_processing_offset).timestamp \
-				if _character_manager.player_inputs.has(player_id) else 0
+		player_state.timestamp = last_processed_packet.timestamp if last_processed_packet else 0
 		player_state.id = player_id
 		player_state.position = _character_manager.player_dic[player_id].position
 		player_state.velocity = _character_manager.player_dic[player_id].velocity
