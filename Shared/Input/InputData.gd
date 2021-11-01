@@ -32,7 +32,7 @@ func get_last():
 
 # Returns the element closest to or earlier than the given time
 func get_closest_or_earlier(time):
-	for i in range(0, _data.size()):
+	for i in range(_data.size() - 1, -1, -1):
 		var element = _data.get_element(i)
 		
 		if element.timestamp <= time:
