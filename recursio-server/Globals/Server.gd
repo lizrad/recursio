@@ -119,7 +119,7 @@ func send_ghost_hit(player_id, hit_ghost_player_owner, hit_ghost_id):
 
 func send_ghost_pick(player_id, player_pick, enemy_picks):
 	Logger.info("Sending ghost picks", "connection")
-	rpc_id(player_id, "receive_ghost_picks", player_pick, enemy_picks)
+	rpc_id(player_id, "receive_timeline_picks", player_pick, enemy_picks)
 
 
 remote func determine_latency(player_time):
