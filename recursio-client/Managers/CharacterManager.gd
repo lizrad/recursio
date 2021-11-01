@@ -220,17 +220,17 @@ func _on_player_timeline_picked(timeline_index) -> void:
 	# Enable new relevant ghosts
 	_enable_ghosts()
 	# Move player to new spawnpoint
+	_player.spawn_point = _game_manager.get_spawn_point(_player.team_id, timeline_index)
 	_player.move_to_spawn_point()
 
 
 func _on_timeline_picks(timeline_index, enemy_pick):
 	Logger.info("Received ghost picks from server","ghost_picking")
 	_disable_ghosts()
+	
 	_player.timeline_index = timeline_index
-	
-#	_player.swap_weapon_type(timeline_index)
-	
 	_enemy.timeline_index = enemy_pick.values()[0]
+	
 	_enable_ghosts()
 
 
