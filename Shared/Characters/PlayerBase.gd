@@ -10,6 +10,9 @@ var block_movement: bool = true
 
 var input_movement_direction: Vector3 = Vector3.ZERO
 
+var timestamp_of_previous_packet = -1
+var previously_applied_packets := RingBuffer.new(20)
+
 # Used for applying drag (e.g. moving platform velocity)
 var _target_velocity: Vector3 = Vector3.ZERO
 

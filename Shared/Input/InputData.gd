@@ -2,7 +2,7 @@ extends Object
 
 class_name InputData
 
-const RING_BUFFER_SIZE: int = 15
+const RING_BUFFER_SIZE: int = 30
 
 var timestamp: int = -1
 var _data: RingBuffer = RingBuffer.new(RING_BUFFER_SIZE)

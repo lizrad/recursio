@@ -13,8 +13,6 @@ var player_inputs = {}
 # Offset at which the world is updated (used for rendering everything in the past)
 var world_processing_offset
 
-var timestamp_of_previous_packet = -1
-
 onready var Server = get_node("/root/Server")
 onready var _game_manager: GameManager = get_node("../GameManager")
 onready var _action_manager: ActionManager = get_node("../ActionManager")
@@ -32,29 +30,24 @@ func _physics_process(delta):
 			var input_frame: InputFrame = input_data.get_closest_or_earlier(Server.get_server_time() - world_processing_offset)
 			var player: PlayerBase = player_dic[player_id]
 			
-			# We don't check for packet loss and instead just implicitly go with the re-application of the last packet,
-			# which is probably a good guess most of the time.
+			if not input_frame:
+				Logger.warn("No input frame for timestamp")
+				break
 			
 			# Check if we need to apply packets in-between due to packet loss
 			var physics_delta = get_physics_process_delta_time() * 1000
-			var time_diff_to_previous = abs(input_frame.timestamp - timestamp_of_previous_packet)
+			var time_diff_to_previous = abs(input_frame.timestamp - player.timestamp_of_previous_packet) \
+					if player.timestamp_of_previous_packet > 0 else 0
 			
-			if false:#if timestamp_of_previous_packet != -1 and time_diff_to_previous > physics_delta * 1.5: # Multiply by 1.5 to compensate for fluctuations
-				Logger.info("Need to apply in-between packets - potential packet loss or out-of-order")
-				var number_of_previous_to_apply = floor(time_diff_to_previous / physics_delta)
-				Logger.info("Applying " + str(number_of_previous_to_apply) + " packets in-between")
-				
-				for i in range(number_of_previous_to_apply, 0, -1):
-					# FIXME: Can we be sure that we're not re-applying a packet here?
-					input_frame = input_data.get_closest_or_earlier(Server.get_server_time() - world_processing_offset - physics_delta * i)
-					if input_frame:
-						player.apply_input(input_frame.movement, input_frame.rotation, input_frame.buttons.mask)
-			else:
-				Logger.debug("No in-between packets required")
-				input_frame = input_data.get_closest_or_earlier(Server.get_server_time() - world_processing_offset)
-				player.apply_input(input_frame.movement, input_frame.rotation, input_frame.buttons.mask)
+			var number_of_previous_to_apply = floor(time_diff_to_previous / physics_delta) + 1
+			Logger.debug("Applying " + str(number_of_previous_to_apply) + " packets for player " + str(player_id) + "this frame", "packet-loss")
 			
-			timestamp_of_previous_packet = input_frame.timestamp
+			for i in range(number_of_previous_to_apply, 0, -1):
+				input_frame = input_data.get_closest_or_earlier(Server.get_server_time() - world_processing_offset - physics_delta * i)
+				if input_frame and not player.previously_applied_packets.get_data().has(input_frame.timestamp):
+					player.previously_applied_packets.append(input_frame.timestamp)
+					player.apply_input(input_frame.movement, input_frame.rotation, input_frame.buttons.mask)
+					player.timestamp_of_previous_packet = input_frame.timestamp
 
 
 func reset() -> void:

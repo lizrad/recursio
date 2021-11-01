@@ -95,7 +95,7 @@ func _get_buttons_pressed() -> int:
 	for trigger in _trigger_dic:
 		var action = _trigger_dic[trigger]
 		
-		if Input.is_action_pressed(trigger):
+		if Input.is_action_just_pressed(trigger):
 			buttons.add(action)
 		
 	return buttons.mask
