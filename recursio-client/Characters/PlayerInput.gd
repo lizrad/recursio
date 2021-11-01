@@ -16,7 +16,7 @@ var _trigger_dic : Dictionary = {
 
 var _action_manager
 
-var _player_ghost_pick_trigger : String = "player_switch"
+var _player_timeline_pick_trigger : String = "player_switch"
 
 # Action for pressing fire
 var _fire_action
@@ -29,6 +29,7 @@ var _player_initialized: bool = false
 
 func _ready():
 	_player.connect("initialized", self, "_on_player_initialized")
+	_player.connect("timeline_index_changed", self, "_on_timeline_changed")
 
 
 func _physics_process(delta):
@@ -47,7 +48,8 @@ func _physics_process(delta):
 	_player.apply_input(movement_vector, rotate_vector, buttons_pressed)
 	InputManager.set_triggers_in_input_frame(buttons_pressed)
 	
-	if Input.is_action_pressed(_player_ghost_pick_trigger):
+	# TODO: Limit this to prepare phase
+	if Input.is_action_pressed(_player_timeline_pick_trigger):
 		var timeline_index: int = (_player.timeline_index + 1) % (Constants.get_value("ghosts","max_amount") + 1)
 		_player.timeline_index = timeline_index
 		_swap_weapon_type(timeline_index)
@@ -66,6 +68,11 @@ func _on_player_initialized():
 	_special_movement_action.connect("ammunition_changed", self, "_on_special_movement_ammo_changed")
 	
 	_player_initialized = true
+
+
+func _on_timeline_changed(timeline_index) -> void:
+	_swap_weapon_type(timeline_index)
+
 
 
 # Changes the weapon depending on the given timeline index

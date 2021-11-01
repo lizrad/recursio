@@ -67,7 +67,7 @@ func setup_capture_point_hud(number_of_capture_points) -> void:
 
 
 func update_weapon_type_hud(weapon_action: Action) -> void:
-	_hud.update_ammo_type(weapon_action)
+	_hud.update_weapon_type(weapon_action)
 
 
 func update_fire_action_ammo_hud(amount: int) -> void:

@@ -226,10 +226,7 @@ func _on_player_timeline_picked(timeline_index) -> void:
 func _on_timeline_picks(timeline_index, enemy_pick):
 	Logger.info("Received ghost picks from server","ghost_picking")
 	_disable_ghosts()
-	_player.timeline_index = timeline_index
-	
-	_player.swap_weapon_type(timeline_index)
-	
+	_player.timeline_index = timeline_index	
 	_enemy.timeline_index = enemy_pick
 	_enable_ghosts()
 

@@ -118,11 +118,11 @@ func propagate_player_picks():
 	Logger.info("Propagating ghost picks", "ghost_picking")
 	for player_id in player_dic:
 		var player_pick = player_dic[player_id].timeline_index
-		var enemy_picks = {}
+		var enemy_pick
 		for enemy_id in player_dic:
 			if enemy_id != player_id:
-				enemy_picks[enemy_id] = player_dic[enemy_id].timeline_index
-		Server.send_ghost_pick(player_id, player_pick, enemy_picks)
+				enemy_pick = player_dic[enemy_id].timeline_index
+		Server.send_ghost_pick(player_id, player_pick, enemy_pick)
 
 
 func enable_ghosts() -> void:
