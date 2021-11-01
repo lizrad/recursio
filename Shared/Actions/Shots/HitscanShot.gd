@@ -66,6 +66,8 @@ func _physics_process(delta):
 
 
 func handle_hit(collider):
+	var character = collider.get_parent()
+	
 	Logger.debug("hit collider: %s" %[collider.get_class()] , "HitscanShot")
 	var collision_point = get_collision_point()
 	var distance = (collision_point- global_transform.origin).length()
@@ -79,11 +81,11 @@ func handle_hit(collider):
 		
 		_first_frame = false
 	
-	if collider is GhostBase:
-		assert(collider.has_method("hit"))
-		if (not _hit_bodies_invincibilty_tracker.has(collider) or _hit_bodies_invincibilty_tracker[collider] <=0):
-			_hit_bodies_invincibilty_tracker[collider]=_damage_invincibility_time
-			collider.hit()
+	if character is CharacterBase:
+		assert(character.has_method("hit"))
+		if (not _hit_bodies_invincibilty_tracker.has(character) or _hit_bodies_invincibilty_tracker[character] <=0):
+			_hit_bodies_invincibilty_tracker[character]=_damage_invincibility_time
+			character.hit()
 
 
 func _update_collision():
