@@ -12,15 +12,19 @@ func initialize(owning_player):
 
 
 func _physics_process(delta):
-	
 	if not _owning_player is PlayerBase:
 		return
 	
-	var steepness = 20.0
-	var e_section = max(exp(log((1 + 1 / steepness) / (steepness * _time + 1))) - 1.0 / steepness,0.0)
-
-	_owning_player.velocity += _owning_player.input_movement_direction * e_section
 	_time += delta
+	_time = min(_time, 1)
+
+	var steepness = 2
+	var e_section = max(exp(-steepness*_time),0.0)
 	
-	if e_section <= 0.01:
+	var factor = 10
+	_owning_player.velocity += _owning_player.input_movement_direction * e_section * factor
+
+	#always finish after one second
+	if _time == 1:
+		_time = 1
 		queue_free()
