@@ -2,10 +2,12 @@ extends GhostBase
 class_name Ghost
 
 onready var _character_model : CharacterModel = get_node("KinematicBody/CharacterModel")
+onready var _kinematic_body = get_node("KinematicBody")
 
 onready var _minimap_icon : MiniMapIcon = get_node("KinematicBody/MiniMapIcon")
 onready var _minimap_icon_alive := load("res://Resources/Icons/icon_ghost_minimap.png")
 onready var _minimap_icon_dead := load("res://Resources/Icons/icon_dead_ghost_minimap.png")
+
 
 
 func ghost_init(action_manager, record_data: RecordData) -> void:
@@ -24,3 +26,11 @@ func hit():
 	.hit()
 	_minimap_icon.set_texture(_minimap_icon_dead)
 	#_mesh.rotate_z(90)
+
+func enable_body():
+	if not _kinematic_body.is_inside_tree():
+		add_child(_kinematic_body)
+
+func disable_body():
+	if _kinematic_body.is_inside_tree():
+		remove_child(_kinematic_body)

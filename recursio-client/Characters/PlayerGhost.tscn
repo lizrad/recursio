@@ -9,6 +9,7 @@
 script = ExtResource( 4 )
 
 [node name="VisibilityLight" parent="KinematicBody" index="3" instance=ExtResource( 2 )]
+visible = false
 light_energy = 4.0
 
 [node name="GhostPath" parent="." index="1" instance=ExtResource( 3 )]

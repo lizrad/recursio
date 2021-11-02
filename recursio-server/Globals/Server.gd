@@ -46,7 +46,9 @@ func spawn_enemy_on_client(player_id, enemy_id, enemy_position):
 
 
 func despawn_enemy_on_client(player_id, enemy_id):
-	rpc_id(player_id, "despawn_enemy", enemy_id)
+	#TODO: disconnect is not handled properly yet anyway, and this causes a crash on client
+	#rpc_id(player_id, "despawn_enemy", enemy_id)
+	pass
 
 
 func send_player_ghost_record_to_client(player_id, timeline_index, record_data: RecordData):

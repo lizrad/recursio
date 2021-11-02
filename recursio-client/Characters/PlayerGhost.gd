@@ -1,10 +1,15 @@
 extends Ghost
 class_name PlayerGhost
 
+onready var _visibility_light = get_node("KinematicBody/VisibilityLight")
 
 func player_ghost_init(action_manager, record_data: RecordData) -> void:
 	.ghost_init(action_manager, record_data)
 	_character_model._set_color_scheme("player_ghost", record_data.timeline_index)
+
+
+func toggle_visibility_light(value: bool):
+	_visibility_light.visible = value
 
 func create_path():
 		var _curve = Curve3D.new()

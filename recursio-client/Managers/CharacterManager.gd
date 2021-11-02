@@ -141,6 +141,7 @@ func _on_server_round_started(round_index, latency) -> void:
 
 func _on_server_round_ended(round_index) -> void:
 	_round_manager.stop_round()
+	_toggle_visbility_lights(false)
 
 
 func _on_game_result(winning_player_index) -> void:
@@ -194,6 +195,7 @@ func _on_countdown_phase_started(countdown_time, latency) -> void:
 	Server.send_timeline_pick(_player.timeline_index)
 
 func _on_game_phase_started(latency) -> void:
+	_toggle_visbility_lights(true)
 	_game_manager.hide_countdown_screen()
 	_player.show_game_hud(_round_manager.round_index, Server.get_server_time() - latency)
 	_game_manager.toggle_capture_points(true)
@@ -377,7 +379,7 @@ func _enable_ghosts() -> void:
 		if timeline_index == _enemy.timeline_index:
 			continue
 		var enemy_ghost = _enemy_ghosts[timeline_index]
-		add_child(enemy_ghost)
+		enemy_ghost.enable_body()
 		# Apply visibility for enemies
 		_apply_visibility_mask(enemy_ghost)
 	for timeline_index in _player_ghosts:
@@ -385,18 +387,22 @@ func _enable_ghosts() -> void:
 		if timeline_index == _player.timeline_index:
 			continue
 		var player_ghost = _player_ghosts[timeline_index]
-		add_child(player_ghost)
+		player_ghost.enable_body()
 		# Apply visibility for own ghosts (always visible)
 		_apply_visibility_always(player_ghost)
 
-
 func _disable_ghosts() -> void:
 	for timeline_index in _enemy_ghosts:
-		if _enemy_ghosts[timeline_index].is_inside_tree():
-			remove_child(_enemy_ghosts[timeline_index])
+		_enemy_ghosts[timeline_index].disable_body()
 	for timeline_index in _player_ghosts:
-		if _player_ghosts[timeline_index].is_inside_tree():
-			remove_child(_player_ghosts[timeline_index])
+		_player_ghosts[timeline_index].disable_body()
+
+
+func _toggle_visbility_lights(value: bool):
+	print("toggle visbility lights to "+str(value))
+	_player.toggle_visibility_light(value)
+	for timeline_index in _player_ghosts:
+		_player_ghosts[timeline_index].toggle_visibility_light(value)
 
 
 func _move_ghosts_to_spawn() -> void:
