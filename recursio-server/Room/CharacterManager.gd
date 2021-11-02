@@ -193,7 +193,6 @@ func _create_ghost_from_player(player) -> void:
 	ghost.team_id = player.team_id
 	ghost.round_index = _round_manager.round_index
 	
-	print("Creating ghost with timeline index of "+str(player.timeline_index))
 	if ghost_dic[player.player_id].has(player.timeline_index):
 		ghost_dic[player.player_id][player.timeline_index].queue_free()
 	

@@ -71,9 +71,8 @@ func set_velocity(new_velocity):
 
 
 func set_timeline_index(new_timeline_index: int):
-	print("setting timeline base of character from "+str(timeline_index)+ " to "+str(new_timeline_index))
+	timeline_index = new_timeline_index	
 	emit_signal("timeline_index_changed", new_timeline_index)
-	timeline_index = new_timeline_index
 
 
 func hit() -> void:

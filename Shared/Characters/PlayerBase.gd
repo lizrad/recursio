@@ -72,6 +72,5 @@ func reset_record_data():
 
 func get_record_data() -> RecordData:
 	var record_data: RecordData = _record_manager.record_data
-	print("Creating record data with timeline index of "+str(self.timeline_index))
 	record_data.timeline_index = self.timeline_index
 	return record_data
