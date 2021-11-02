@@ -17,6 +17,7 @@ var _being_captured: bool = false
 var _capturing_paused: bool = false
 var _is_captured: bool = false
 var _capturing_entities := [0, 0]
+var _just_reset := false
 
 var _capture_speed: float = 1.0
 var _recapture_speed: float = 2.0
@@ -38,6 +39,10 @@ func _process(delta):
 	if not active:
 		return
 	if _capturing_paused:
+		return
+	
+	if _just_reset:
+		_just_reset = false
 		return
 		
 	if _being_captured:
@@ -72,6 +77,7 @@ func reset():
 	_capturing_entities[1] = 0
 	capture_team = -1
 	capture_progress = 0
+	_just_reset = true
 	_check_capturing_status()
 	emit_signal("capture_team_changed", -1)
 	emit_signal("capture_status_changed",0,-1)
