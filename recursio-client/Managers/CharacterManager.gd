@@ -154,7 +154,8 @@ func _on_round_started(round_index, latency) -> void:
 	_player.set_overview_light_enabled(false)
 
 
-func _on_round_ended():
+# unused param, but event is shared with server
+func _on_round_ended(_round_index):
 	_player.block_movement = true
 	_player.move_to_spawn_point()
 	_stop_ghosts()
