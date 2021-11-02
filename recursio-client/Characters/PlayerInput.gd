@@ -35,18 +35,19 @@ func _ready():
 func _physics_process(delta):
 	if not _player_initialized:
 		return
+		
+	if _player.get_round_manager().get_current_phase() == RoundManager.Phases.GAME:
+		var input = DeadZones.apply_2D(_get_input("player_move"), inner_deadzone, outer_deadzone)
+		var movement_vector = Vector3(input.y, 0.0, -input.x)
+		InputManager.add_movement_to_input_frame(movement_vector)
 	
-	var input = DeadZones.apply_2D(_get_input("player_move"), inner_deadzone, outer_deadzone)
-	var movement_vector = Vector3(input.y, 0.0, -input.x)
-	InputManager.add_movement_to_input_frame(movement_vector)
+		var rotate_input = DeadZones.apply_2D(_get_input("player_look"), inner_deadzone, outer_deadzone)
+		var rotate_vector = Vector3(rotate_input.y, 0.0, -rotate_input.x)
+		InputManager.add_rotation_to_input_frame(rotate_vector)
 	
-	var rotate_input = DeadZones.apply_2D(_get_input("player_look"), inner_deadzone, outer_deadzone)
-	var rotate_vector = Vector3(rotate_input.y, 0.0, -rotate_input.x)
-	InputManager.add_rotation_to_input_frame(rotate_vector)
-	
-	var buttons_pressed: int = _get_buttons_pressed()
-	_player.apply_input(movement_vector, rotate_vector, buttons_pressed)
-	InputManager.set_triggers_in_input_frame(buttons_pressed)
+		var buttons_pressed: int = _get_buttons_pressed()
+		_player.apply_input(movement_vector, rotate_vector, buttons_pressed)
+		InputManager.set_triggers_in_input_frame(buttons_pressed)
 	
 
 	if Input.is_action_just_pressed(_player_timeline_pick_trigger):

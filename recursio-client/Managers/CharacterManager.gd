@@ -134,8 +134,10 @@ func _reset() -> void:
 
 
 func _on_server_round_started(round_index, latency) -> void:
+	_disable_ghosts()
+	_enable_ghosts()
 	_round_manager.start_round(round_index, latency)
-
+	
 
 func _on_server_round_ended(round_index) -> void:
 	_round_manager.stop_round()
@@ -208,17 +210,16 @@ func _on_round_ended():
 
 
 func _on_player_timeline_changed(timeline_index) -> void:
-
+	_disable_ghosts()
 	_player.spawn_point = _game_manager.get_spawn_point(_player.team_id, timeline_index)
 	_player.move_to_spawn_point()
-
+	_enable_ghosts()
 
 func _on_timeline_picks(timeline_index, enemy_pick):
 	Logger.info("Received ghost picks from server","ghost_picking")
-	_disable_ghosts()
 	_player.timeline_index = timeline_index
 	_enemy.timeline_index = enemy_pick
-	_enable_ghosts()
+
 
 
 func _on_player_ready(_button) -> void:
@@ -391,13 +392,11 @@ func _enable_ghosts() -> void:
 
 func _disable_ghosts() -> void:
 	for timeline_index in _enemy_ghosts:
-		if timeline_index == _enemy.timeline_index:
-			continue
-		remove_child(_enemy_ghosts[timeline_index])
+		if _enemy_ghosts[timeline_index].is_inside_tree():
+			remove_child(_enemy_ghosts[timeline_index])
 	for timeline_index in _player_ghosts:
-		if timeline_index == _player.timeline_index:
-			continue
-		remove_child(_player_ghosts[timeline_index])
+		if _player_ghosts[timeline_index].is_inside_tree():
+			remove_child(_player_ghosts[timeline_index])
 
 
 func _move_ghosts_to_spawn() -> void:
