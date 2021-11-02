@@ -41,6 +41,9 @@ func _physics_process(delta):
 				if input_frame.timestamp > base_time:
 					break
 				elif not player.previously_applied_packets.get_data().has(input_frame.timestamp):
+					# TODO: To prevent cheating, we also need to check whether the
+					# timestamp distances are sensible, otherwise the player could
+					# pack in additional packets
 					player.previously_applied_packets.append(input_frame.timestamp)
 					player.apply_input(input_frame.movement, input_frame.rotation, input_frame.buttons.mask)
 					player.timestamp_of_previous_packet = input_frame.timestamp
