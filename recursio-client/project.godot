@@ -324,6 +324,7 @@ player_dash={
 3d_render/layer_3="CapturePoints"
 3d_render/layer_4="MiniMap"
 3d_render/layer_6="Environment"
+3d_render/layer_10="Non-ASCII"
 
 [network]
 

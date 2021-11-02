@@ -13,7 +13,6 @@
 [ext_resource path="res://Characters/Visuals/CharacterModel_BackVariant.tscn" type="PackedScene" id=11]
 [ext_resource path="res://Characters/Visuals/CharacterModel_FrontVariant.tscn" type="PackedScene" id=12]
 
-
 [sub_resource type="ShaderMaterial" id=1]
 shader = ExtResource( 10 )
 shader_param/color = Color( 1, 1, 1, 1 )
@@ -92,9 +91,11 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.548254 )
 [node name="FrontVariant" parent="RootPivot/FrontPivot" instance=ExtResource( 12 )]
 transform = Transform( 0.00998566, 0, 0, 0, 0.00998566, 0, 0, 0, 0.00998566, 5.44914e-12, 0, -0.548256 )
 visible = false
+layers = 512
 
 [node name="Front" type="MeshInstance" parent="RootPivot/FrontPivot"]
 transform = Transform( 1.38886, 0, 0, 0, 1.38886, 0, 0, 0, 1.38886, 0, 0, -0.398254 )
+layers = 512
 material_override = SubResource( 1 )
 cast_shadow = 0
 mesh = SubResource( 3 )
@@ -105,6 +106,7 @@ transform = Transform( 0.998566, 0, 0, 0, 0.998566, 0, 0, 0, 0.998566, 0, 0, 0 )
 
 [node name="Middle" type="MeshInstance" parent="RootPivot/MiddlePivot"]
 transform = Transform( 0.976267, 0, 0.976267, 0, 1.38065, 0, -0.976267, 0, 0.976267, 0.0821635, 0, 0.104462 )
+layers = 512
 material_override = SubResource( 1 )
 cast_shadow = 0
 mesh = SubResource( 4 )
@@ -115,6 +117,7 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.566682 )
 
 [node name="Back" type="MeshInstance" parent="RootPivot/BackPivot"]
 transform = Transform( 1.38886, 0, 0, 0, 1.38886, 0, 0, 0, 1.38886, 0, 0, 0.438948 )
+layers = 512
 material_override = SubResource( 1 )
 cast_shadow = 0
 mesh = SubResource( 7 )
@@ -123,6 +126,7 @@ material/0 = null
 [node name="BackVariant" parent="RootPivot/BackPivot" instance=ExtResource( 11 )]
 transform = Transform( 0.01, 0, 0, 0, 0.01, 0, 0, 0, 0.01, 0, 0, 0.548 )
 visible = false
+layers = 512
 
 [node name="Animator" type="Node" parent="."]
 script = ExtResource( 1 )

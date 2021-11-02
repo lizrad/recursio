@@ -7,23 +7,34 @@ signal capture_point_status_changed(capture_progress, team_id, capture_point)
 signal capture_point_capture_lost(team_id, capture_point)
 signal game_result(team_id)
 
-var _level
+var _level setget set_level
 
-# Called when the room is full
-func start_game():
+
+func set_level(level):
+	if _level:
+		for i in range(_level.get_capture_points().size()):
+			_level.get_capture_points()[i].disconnect("capture_status_changed", self, "_on_capture_status_changed")
+			_level.get_capture_points()[i].disconnect("captured", self, "_on_captured")
+			_level.get_capture_points()[i].disconnect("capture_team_changed",self, "_on_capture_team_changed")
+			_level.get_capture_points()[i].disconnect("capture_lost",self, "_on_capture_lost")
+		
+	_level = level
+	
 	for i in range(_level.get_capture_points().size()):
 		_level.get_capture_points()[i].connect("capture_status_changed", self, "_on_capture_status_changed", [i])
 		_level.get_capture_points()[i].connect("captured", self, "_on_captured", [i])
 		_level.get_capture_points()[i].connect("capture_team_changed",self, "_on_capture_team_changed", [i])
 		_level.get_capture_points()[i].connect("capture_lost",self, "_on_capture_lost", [i])
 
+# Called when the room is full
+func start_game():
+	# TODO: Do we need this?
+	pass
+
 
 func reset():
 	for i in range(_level.get_capture_points().size()):
-		_level.get_capture_points()[i].disconnect("capture_status_changed", self, "_on_capture_status_changed")
-		_level.get_capture_points()[i].disconnect("captured", self, "_on_captured")
-		_level.get_capture_points()[i].disconnect("capture_team_changed",self, "_on_capture_team_changed")
-		_level.get_capture_points()[i].disconnect("capture_lost",self, "_on_capture_lost")
+		_level.get_capture_points()[i].reset()
 
 
 func get_spawn_point(team_id, timeline_index) -> Vector3:
