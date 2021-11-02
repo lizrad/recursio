@@ -10,6 +10,9 @@ var block_movement: bool = true
 
 var input_movement_direction: Vector3 = Vector3.ZERO
 
+var timestamp_of_previous_packet = -1
+var previously_applied_packets := RingBuffer.new(10)
+
 # Used for applying drag (e.g. moving platform velocity)
 var _target_velocity: Vector3 = Vector3.ZERO
 
@@ -68,9 +71,3 @@ func get_record_data() -> RecordData:
 	var record_data: RecordData = _record_manager.record_data
 	record_data.timeline_index = self.timeline_index
 	return record_data
-
-
-
-
-
-

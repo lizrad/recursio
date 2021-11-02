@@ -26,7 +26,7 @@ var team_id_to_player_id = {}
 # We don't process the latest player data, but the latest data which was sent in world_processing_offset or earlier.
 # That way, we avoid discrepancies between high- and low-latency players and don't need to rollback.
 # TODO: Could be set dynamically by using someting like max(player_pings)
-var world_processing_offset = 100
+var world_processing_offset = 50
 
 
 func _ready():

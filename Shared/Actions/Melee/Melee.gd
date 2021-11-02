@@ -42,11 +42,13 @@ func _process(delta):
 func _hit_body(collider):
 	Logger.debug("hit collider: %s" %[collider.get_class()] , "Melee")
 	
-	if collider is CharacterBase:
-		assert(collider.has_method("hit"))
-		if (not _hit_bodies_invincibilty_tracker.has(collider) or _hit_bodies_invincibilty_tracker[collider] <=0):
-			_hit_bodies_invincibilty_tracker[collider]=_damage_invincibility_time
-			collider.hit()
+	var character = collider.get_parent()
+	
+	if character is CharacterBase:
+		assert(character.has_method("hit"))
+		if (not _hit_bodies_invincibilty_tracker.has(character) or _hit_bodies_invincibilty_tracker[character] <=0):
+			_hit_bodies_invincibilty_tracker[character]=_damage_invincibility_time
+			character.hit()
 
 
 func _physics_process(_delta):

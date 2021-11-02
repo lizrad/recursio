@@ -220,14 +220,15 @@ func _on_player_timeline_picked(timeline_index) -> void:
 	# Enable new relevant ghosts
 	_enable_ghosts()
 	# Move player to new spawnpoint
+	_player.spawn_point = _game_manager.get_spawn_point(_player.team_id, timeline_index)
 	_player.move_to_spawn_point()
 
 
 func _on_timeline_picks(timeline_index, enemy_pick):
 	Logger.info("Received ghost picks from server","ghost_picking")
 	_disable_ghosts()
-	_player.timeline_index = timeline_index	
-	_enemy.timeline_index = enemy_pick
+	_player.timeline_index = timeline_index
+	_enemy.timeline_index = enemy_pick.values()[0]
 	_enable_ghosts()
 
 
@@ -265,9 +266,10 @@ func _on_spawn_player(player_id, spawn_point, team_id):
 	_player.set_name(str(player_id))
 	
 	# Apply visibility mask to all entities which have been here before the player
-	_apply_visibility_mask(_player)
+	_apply_visibility_always(_player)
 	for timeline_index in _enemy_ghosts:
 		_apply_visibility_mask(_enemy_ghosts[timeline_index])
+	if _enemy: _apply_visibility_mask(_enemy)
 	
 	# Initialize capture point HUD for current level
 	_player.setup_capture_point_hud(_game_manager.get_capture_points().size())
@@ -294,6 +296,7 @@ func _on_world_state_received(world_state: WorldState):
 
 		var player_states: Dictionary = world_state.player_states
 
+		if not _player: return
 		
 		if player_states.has(_player_rpc_id):
 			var server_player: PlayerState = player_states[_player_rpc_id]

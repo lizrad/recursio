@@ -21,6 +21,8 @@ var position: Vector3 setget set_position, get_position
 var rotation_y: float setget set_rotation_y, get_rotation_y
 var velocity: Vector3 setget set_velocity
 
+var _actions = {}
+
 
 # Underlying kinematic body
 onready var _kb: KinematicBody = get_node("KinematicBody")
@@ -88,12 +90,23 @@ func trigger_actions(buttons: int) -> void:
 			continue
 		
 		Logger.info("Handling action of type " + str(trigger), "actions")
-		var action = _action_manager.get_action_for_trigger(trigger, timeline_index)
+		var action = _get_action(trigger, timeline_index)
 		_action_manager.set_active(action, self, _kb, get_parent())
 
 
 func get_action_manager():
 	return _action_manager
+
+
+# Always returns the same Action instance for the same trigger and timeline index. This preserves ammo count etc.
+func _get_action(trigger, timeline_index):
+	var id = timeline_index * 10 + trigger
+	
+	# Cache the action if it hasn't been cached yet
+	if not _actions.has(id):
+		_actions[id] = _action_manager.get_action_for_trigger(trigger, timeline_index)
+	
+	return _actions[id]
 
 
 

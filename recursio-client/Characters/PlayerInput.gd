@@ -48,8 +48,8 @@ func _physics_process(delta):
 	_player.apply_input(movement_vector, rotate_vector, buttons_pressed)
 	InputManager.set_triggers_in_input_frame(buttons_pressed)
 	
-	# TODO: Limit this to prepare phase
-	if Input.is_action_pressed(_player_timeline_pick_trigger):
+
+	if Input.is_action_just_pressed(_player_ghost_pick_trigger):
 		var timeline_index: int = (_player.timeline_index + 1) % (Constants.get_value("ghosts","max_amount") + 1)
 		_player.timeline_index = timeline_index
 		_swap_weapon_type(timeline_index)
@@ -102,7 +102,7 @@ func _get_buttons_pressed() -> int:
 	for trigger in _trigger_dic:
 		var action = _trigger_dic[trigger]
 		
-		if Input.is_action_pressed(trigger):
+		if Input.is_action_just_pressed(trigger):
 			buttons.add(action)
 		
 	return buttons.mask
