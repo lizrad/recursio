@@ -48,6 +48,9 @@ func _physics_process(delta):
 		var buttons_pressed: int = _get_buttons_pressed()
 		_player.apply_input(movement_vector, rotate_vector, buttons_pressed)
 		InputManager.set_triggers_in_input_frame(buttons_pressed)
+		
+		InputManager.close_current_input_frame()
+		InputManager.send_player_input_data_to_server()
 	
 
 	if Input.is_action_just_pressed(_player_timeline_pick_trigger):

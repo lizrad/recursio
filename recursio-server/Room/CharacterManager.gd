@@ -35,7 +35,7 @@ func _physics_process(delta):
 			
 			var i = 0
 			
-			while i < InputData.RING_BUFFER_SIZE:
+			while i < input_data.size():
 				var input_frame: InputFrame = input_data.get_elemet(i)
 				
 				if input_frame.timestamp > base_time:

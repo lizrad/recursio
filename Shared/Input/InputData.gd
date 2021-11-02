@@ -30,6 +30,10 @@ func get_last():
 	return _data.get_last()
 
 
+func size() -> int:
+	return _data.size()
+
+
 # Returns the element closest to or earlier than the given time
 func get_closest_or_earlier(time):
 	for i in range(_data.size() - 1, -1, -1):
