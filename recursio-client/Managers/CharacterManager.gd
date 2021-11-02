@@ -379,7 +379,7 @@ func _enable_ghosts() -> void:
 		if timeline_index == _enemy.timeline_index:
 			continue
 		var enemy_ghost = _enemy_ghosts[timeline_index]
-		add_child(enemy_ghost)
+		enemy_ghost.enable_body()
 		# Apply visibility for enemies
 		_apply_visibility_mask(enemy_ghost)
 	for timeline_index in _player_ghosts:
@@ -387,9 +387,15 @@ func _enable_ghosts() -> void:
 		if timeline_index == _player.timeline_index:
 			continue
 		var player_ghost = _player_ghosts[timeline_index]
-		add_child(player_ghost)
+		player_ghost.enable_body()
 		# Apply visibility for own ghosts (always visible)
 		_apply_visibility_always(player_ghost)
+
+func _disable_ghosts() -> void:
+	for timeline_index in _enemy_ghosts:
+		_enemy_ghosts[timeline_index].disable_body()
+	for timeline_index in _player_ghosts:
+		_player_ghosts[timeline_index].disable_body()
 
 
 func _toggle_visbility_lights(value: bool):
@@ -397,14 +403,6 @@ func _toggle_visbility_lights(value: bool):
 	_player.toggle_visibility_light(value)
 	for timeline_index in _player_ghosts:
 		_player_ghosts[timeline_index].toggle_visibility_light(value)
-		
-func _disable_ghosts() -> void:
-	for timeline_index in _enemy_ghosts:
-		if _enemy_ghosts[timeline_index].is_inside_tree():
-			remove_child(_enemy_ghosts[timeline_index])
-	for timeline_index in _player_ghosts:
-		if _player_ghosts[timeline_index].is_inside_tree():
-			remove_child(_player_ghosts[timeline_index])
 
 
 func _move_ghosts_to_spawn() -> void:
