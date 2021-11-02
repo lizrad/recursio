@@ -227,6 +227,7 @@ func _on_player_hit(hit_player_id):
 
 func _on_ghost_hit(ghost_id, owning_player_id):
 	Logger.info("Ghost hit!", "attacking")
+	
 	for player_id in player_dic:
 		Server.send_ghost_hit(player_id, owning_player_id, ghost_id)
 
