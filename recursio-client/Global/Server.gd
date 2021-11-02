@@ -149,7 +149,7 @@ remote func receive_latency(player_time):
 		delta_latency = (new_latency) - latency
 		latency = new_latency
 		latency_array.clear()
-	Logger.debug("Receive latency (" + str(latency) + ")", "server")
+	Logger.info("Receive latency (" + str((OS.get_system_time_msecs() - player_time) / 2) + ")", "server")
 
 
 remote func receive_player_ghost_record(timeline_index, record_data):
@@ -171,7 +171,8 @@ remote func receive_world_state(world_state):
 # Receives the start of a round with the server time
 remote func receive_round_start(round_index, server_time):
 	Logger.debug("Receive round start", "server")
-	emit_signal("round_started", round_index, Server.get_server_time() - server_time)
+	# TODO: Not as accuarate -> Do separate latency calculation
+	emit_signal("round_started", round_index, max(0, float(latency) / 1000.0))
 
 
 # Receives the end of a round
