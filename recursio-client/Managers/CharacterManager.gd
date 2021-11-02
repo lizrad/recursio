@@ -37,7 +37,6 @@ func _ready():
 	assert(_round_manager.connect("countdown_phase_started", self, "_on_countdown_phase_started") == OK)
 	assert(_round_manager.connect("game_phase_started", self, "_on_game_phase_started") == OK)
 	
-	assert(InputManager.connect("player_timeline_picked", self, "_on_player_timeline_picked") == OK)
 	
 	# Connect to server signals
 	assert(Server.connect("spawning_player", self, "_on_spawn_player") == OK)
@@ -174,14 +173,11 @@ func _on_preparation_phase_started(latency) -> void:
 	_player.move_camera_to_overview()
 	
 	# Move player to next timeline spawn point
-	var next_timeline_index = min(_round_manager.round_index - 1, _max_ghosts)
+	var next_timeline_index = min(_round_manager.round_index, _max_ghosts)
 	_player.timeline_index = next_timeline_index
-	_player.move_to_spawn_point()
 	_enemy.timeline_index = next_timeline_index
 	_enemy.move_to_spawn_point()
-	
 	# Add ghosts to scene and set their start position
-	_enable_ghosts()
 	_move_ghosts_to_spawn()
 
 
@@ -213,10 +209,8 @@ func _on_round_ended():
 	_action_manager.clear_action_instances()
 
 
-func _on_player_timeline_picked(timeline_index) -> void:
+func _on_player_timeline_changed(timeline_index) -> void:
 	_disable_ghosts()
-	# Set player timeline
-	_player.timeline_index = timeline_index
 	# Enable new relevant ghosts
 	_enable_ghosts()
 	# Move player to new spawnpoint
@@ -228,7 +222,7 @@ func _on_timeline_picks(timeline_index, enemy_pick):
 	Logger.info("Received ghost picks from server","ghost_picking")
 	_disable_ghosts()
 	_player.timeline_index = timeline_index
-	_enemy.timeline_index = enemy_pick.values()[0]
+	_enemy.timeline_index = enemy_pick
 	_enable_ghosts()
 
 
@@ -258,7 +252,7 @@ func _on_enemy_ghost_record_received(timeline_index, record_data: RecordData):
 func _on_spawn_player(player_id, spawn_point, team_id):
 	set_physics_process(true)
 	_player = _spawn_character(_player_scene, spawn_point)
-	_player.player_init(_action_manager)
+	_player.player_init(_action_manager, _round_manager)
 	# TODO: Tunnel signal instead of accessing button overlay here
 	assert(_player.get_button_overlay().connect("button_pressed", self, "_on_player_ready") == OK)
 	_player_rpc_id = player_id
@@ -273,7 +267,7 @@ func _on_spawn_player(player_id, spawn_point, team_id):
 	
 	# Initialize capture point HUD for current level
 	_player.setup_capture_point_hud(_game_manager.get_capture_points().size())
-
+	assert(_player.connect("timeline_index_changed", self, "_on_player_timeline_changed") == OK)
 
 func _on_spawn_enemy(enemy_id, spawn_point):
 	_enemy = _spawn_character(_enemy_scene, spawn_point)

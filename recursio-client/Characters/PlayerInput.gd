@@ -49,12 +49,10 @@ func _physics_process(delta):
 	InputManager.set_triggers_in_input_frame(buttons_pressed)
 	
 
-	if Input.is_action_just_pressed(_player_ghost_pick_trigger):
-		var timeline_index: int = (_player.timeline_index + 1) % (Constants.get_value("ghosts","max_amount") + 1)
-		_player.timeline_index = timeline_index
-		_swap_weapon_type(timeline_index)
-		
-		InputManager.pick_player_timeline(timeline_index)
+	if Input.is_action_just_pressed(_player_timeline_pick_trigger):
+		if _player.get_round_manager().get_current_phase() == RoundManager.Phases.PREPARATION:
+			var timeline_index: int = (_player.timeline_index + 1) % (Constants.get_value("ghosts","max_amount") + 1)
+			_player.timeline_index = timeline_index
 
 
 func _on_player_initialized():

@@ -17,13 +17,14 @@ var _past_frames = {}
 var _just_corrected = false
 var _last_server_position
 var _last_server_time
-
+var _round_manager
 class MovementFrame:
 	var position: Vector3 = Vector3.ZERO
 
 
-func player_init(action_manager) -> void:
+func player_init(action_manager, round_manager) -> void:
 	.player_base_init(action_manager)
+	_round_manager = round_manager
 	emit_signal("initialized")
 
 
@@ -147,3 +148,5 @@ func handle_server_update(position, time):
 
 			_just_corrected = true
 
+func get_round_manager():
+	return _round_manager

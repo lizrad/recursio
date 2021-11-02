@@ -117,10 +117,10 @@ func _on_round_started(round_index, latency):
 		_character_manager.set_timeline_index(player_id, default_timeline_index)
 
 func _on_countdown_phase_started(countdown_time, latency):
-	_character_manager.propagate_player_picks()
-
+	pass
 
 func _on_game_phase_started(latency) -> void:
+	_character_manager.propagate_player_picks()
 	_character_manager.start_ghosts()
 	_character_manager.enable_ghosts()
 	_character_manager.move_players_to_spawn_point()

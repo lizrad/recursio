@@ -138,7 +138,8 @@ func set_block_player_input(blocked: bool) -> void:
 func set_timeline_index(player_id, timeline_index):
 	Logger.info("Setting ghost index for player "+str(player_id)+" to "+str(timeline_index),"ghost_picking")
 	player_dic[player_id].timeline_index = timeline_index
-
+	player_dic[player_id].spawn_point = _game_manager.get_spawn_point(player_dic[player_id].team_id, timeline_index)
+	player_dic[player_id].move_to_spawn_point()
 
 func propagate_player_picks():
 	Logger.info("Propagating ghost picks", "ghost_picking")

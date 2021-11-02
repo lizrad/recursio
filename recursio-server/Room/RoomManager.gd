@@ -20,6 +20,7 @@ func _ready():
 	assert(_server.connect("peer_connected", self, "_on_peer_connected") == OK)
 	assert(_server.connect("peer_disconnected", self, "_on_peer_disconnected") == OK)
 	assert(_server.connect("player_input_data_received", self, "_on_player_input_data_received") == OK)
+	assert(_server.connect("player_timeline_pick_received", self, "_on_player_timline_pick_received") == OK)
 
 
 func _create_room(room_name: String) -> int:
