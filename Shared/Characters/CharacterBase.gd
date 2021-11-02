@@ -70,7 +70,7 @@ func set_velocity(new_velocity):
 	velocity = new_velocity
 
 
-func set_timeline_index(new_timeline_index):
+func set_timeline_index(new_timeline_index: int):
 	emit_signal("timeline_index_changed", new_timeline_index)
 	timeline_index = new_timeline_index
 
