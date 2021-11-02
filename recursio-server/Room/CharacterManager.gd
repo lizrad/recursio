@@ -31,31 +31,21 @@ func _physics_process(delta):
 	for player_id in player_inputs:
 		if player_dic.has(player_id):
 			var input_data: InputData = player_inputs[player_id]
-			var input_frame: InputFrame = input_data.get_closest_or_earlier(base_time)
 			var player: PlayerBase = player_dic[player_id]
 			
-			# This shouldn't happen unless there's a very large difference between latencies
-			if not input_frame:
-				Logger.warn("No input frame for timestamp")
-				break
+			var i = 0
 			
-			# Check if we need to apply packets in-between due to packet loss
-			var time_diff_to_previous = abs(input_frame.timestamp - player.timestamp_of_previous_packet) \
-					if player.timestamp_of_previous_packet > 0 else 0
-			
-			var number_of_previous_to_apply = floor(time_diff_to_previous / physics_delta)
-			Logger.debug("Applying " + str(number_of_previous_to_apply) + " past packets for player " + str(player_id) + " this frame", "packet-loss")
-			
-			# Apply at least one packet or more (depending on the calculation above)
-			for i in range(-number_of_previous_to_apply, 1):
-				input_frame = input_data.get_closest_or_earlier(base_time + physics_delta * i)
+			while i < InputData.RING_BUFFER_SIZE:
+				var input_frame: InputFrame = input_data.get_elemet(i)
 				
-				# Only apply frames which we haven't applied yet - e.g. in the case of a lagspike, we don't want to
-				# repeatedly apply the last known frame; we wait and then apply all accumulated frames
-				if input_frame and not player.previously_applied_packets.get_data().has(input_frame.timestamp):
+				if input_frame.timestamp > base_time:
+					break
+				elif not player.previously_applied_packets.get_data().has(input_frame.timestamp):
 					player.previously_applied_packets.append(input_frame.timestamp)
 					player.apply_input(input_frame.movement, input_frame.rotation, input_frame.buttons.mask)
 					player.timestamp_of_previous_packet = input_frame.timestamp
+				
+				i += 1
 
 
 func reset() -> void:
