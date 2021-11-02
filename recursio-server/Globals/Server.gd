@@ -75,7 +75,7 @@ func send_capture_point_team_changed(player_id, capturing_player_id, capture_poi
 
 func send_capture_point_status_changed(player_id, capturing_player_id, capture_point, capture_progress):
 	Logger.info("Sending capture point status changed to client", "connection")
-	rpc_unreliable_id(player_id, "receive_capture_point_status_changed", capturing_player_id, capture_point, capture_progress )
+	rpc_id(player_id, "receive_capture_point_status_changed", capturing_player_id, capture_point, capture_progress )
 
 
 func send_capture_point_capture_lost(player_id, capturing_player_id, capture_point):

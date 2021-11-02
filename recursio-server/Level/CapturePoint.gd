@@ -35,7 +35,7 @@ func _ready():
 	_capture_time = Constants.get_value("capture","capture_time")
 
 
-func _process(delta):
+func _physics_process(delta):
 	if not active:
 		return
 	if _capturing_paused:
@@ -58,12 +58,18 @@ func _process(delta):
 
 
 func _on_body_entered_area(body):
+	if _just_reset:
+		return
+	
 	var character = body.get_parent()
 	if character is CharacterBase:
 		start_capturing(character.team_id)
 
 
 func _on_body_exited_area(body):
+	if _just_reset:
+		return
+	
 	var character = body.get_parent()
 	if character is CharacterBase:
 		stop_capturing(character.team_id)
