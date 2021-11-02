@@ -3,7 +3,7 @@ class_name Room
 
 # Connects all the specific managers together
 
-signal world_state_updated(world_state, id)
+signal world_state_updated(world_state, room_id)
 signal room_filled()
 
 const PLAYER_NUMBER_PER_ROOM = 2
@@ -30,7 +30,7 @@ var world_processing_offset = 50
 
 
 func _ready():
-	assert(_world_state_manager.connect("world_state_updated", self, "_on_world_state_update") == OK)	
+	assert(_character_manager.connect("world_state_updated", self, "_on_world_state_update") == OK)	
 	
 	assert(_round_manager.connect("round_started", self,"_on_round_started") == OK)
 	assert(_round_manager.connect("countdown_phase_started", self,"_on_countdown_phase_started") == OK)

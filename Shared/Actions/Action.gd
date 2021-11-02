@@ -15,6 +15,7 @@ export var attack: PackedScene
 var ammunition 
 var blocked := false
 var activation_time: int  # ts in ticks when the action was initially triggered
+var trigger_times: Array = []
 
 signal ammunition_changed
 signal action_triggered

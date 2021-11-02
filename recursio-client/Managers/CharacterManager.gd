@@ -108,6 +108,9 @@ func _physics_process(delta):
 		+ (projected_from_last_known - projected_from_start) * tick_progress
 	)
 	
+	_enemy.trigger_actions(_enemy.last_triggers.mask)
+	_enemy.last_triggers.mask = 0
+	
 	# Update CapturePoints in player HUD
 	_player.update_capture_point_hud(_game_manager.get_capture_points())
 
@@ -309,10 +312,11 @@ func _on_world_state_received(world_state: WorldState):
 				# Set parameters for interpolation
 				_enemy.last_position = _enemy.position
 				_enemy.last_velocity = _enemy.velocity
-				_enemy.rotation_y = player_states[id].rotation
+				_enemy.rotation_y = player_states[id].rotation_y
 				_enemy.server_position = player_states[id].position
 				_enemy.server_velocity = player_states[id].velocity
 				_enemy.server_acceleration = player_states[id].acceleration
+				_enemy.last_triggers.add(player_states[id].buttons.mask)
 
 
 func _on_player_hit(hit_player_id) -> void:
@@ -401,7 +405,6 @@ func _disable_ghosts() -> void:
 
 
 func _toggle_visbility_lights(value: bool):
-	print("toggle visbility lights to "+str(value))
 	_player.toggle_visibility_light(value)
 	for timeline_index in _player_ghosts:
 		_player_ghosts[timeline_index].toggle_visibility_light(value)

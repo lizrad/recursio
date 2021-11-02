@@ -28,6 +28,27 @@ var action_resources = {
 }
 
 var _instanced_actions = []
+var _actions = []
+
+
+func _process(delta):
+	for action in _actions:
+		if action.blocked && action.activation_time + action.cooldown * 1000 <= OS.get_system_time_msecs():
+			action.blocked = false
+
+		# Recharge is disabled
+		if action.recharge_time >= 0 && action.trigger_times.size() > 0:
+			var trigger_time = action.trigger_times[0]
+			# Check if recharge time is over
+			if trigger_time + action.recharge_time * 1000 <= OS.get_system_time_msecs()\
+			and action.ammunition < action.max_ammo:
+				action.ammunition += 1
+				action.emit_signal("ammunition_changed", action.ammunition)
+				action.trigger_times.remove(0)
+		
+		# If no need to track, remove from list
+		if not action.blocked and action.trigger_times.size() == 0:
+			_actions.erase(action)
 
 
 func get_action(action_type):
@@ -57,33 +78,22 @@ func clear_action_instances():
 	for instance in _instanced_actions:
 		if instance.get_ref():
 			instance.get_ref().queue_free()
+	
+	_instanced_actions.clear()
+	_actions.clear()
 
 
-func set_active(action: Action, character: CharacterBase, tree_position: Spatial, action_scene_parent: Node) -> void:
+func set_active(action: Action, character: CharacterBase, tree_position: Spatial, action_scene_parent: Node) -> bool:
 	Logger.debug("Action " + action.name + " set active", "actions")
 
 	if action.blocked:
-		return
-
-	if action.ammunition < 0:
-		# This action does not use ammo
-		pass
-	elif action.ammunition > 0:
-		Logger.info("Activate Action with remaining ammo: " + str(action.ammunition), "actions")
-	else:
-		# No ammo left
-		return
-
-	# block spaming
-	action.blocked = true
-
-	if action.sound:
-		# TODO: play attached action sound...
-		pass
-
-	action.activation_time = OS.get_ticks_msec()
+		return false
 	
-	# fire actual action -> TODO: maybe as class hierarchy?
+	# No ammo left
+	if action.ammunition == 0:
+		return false
+	
+	# Fire actual action
 	if action.attack:
 		Logger.info("instancing new attack named "+ action.name, "actions")
 		var spawn = action.attack.instance()
@@ -91,23 +101,23 @@ func set_active(action: Action, character: CharacterBase, tree_position: Spatial
 		spawn.global_transform = tree_position.global_transform
 		action_scene_parent.add_child(spawn)
 		_instanced_actions.append(weakref(spawn))
-
 		# TODO: if has recoil configured -> apply on player
 
 	action.emit_signal("action_triggered")
+	
+	# Block spaming
+	action.blocked = true
+	action.activation_time = OS.get_system_time_msecs()
+	
+	if action.recharge_time >= 0:
+		action.trigger_times.append(action.activation_time)
 
 	if action.ammunition > 0:
 		action.ammunition -= 1
 		action.emit_signal("ammunition_changed", action.ammunition)
-
-	# re-enable
-	if action.cooldown > 0:
-		yield(get_tree().create_timer(action.cooldown), "timeout")
-		action.blocked = false
-
-	# refill ammu
-	if action.recharge_time > 0 and action.ammunition < action.max_ammo:
-		yield(get_tree().create_timer(action.recharge_time), "timeout")
-		action.ammunition += 1
-		action.emit_signal("ammunition_changed", action.ammunition)
-
+	
+	if not _actions.has(action):
+		_actions.append(action)
+	
+	
+	return true

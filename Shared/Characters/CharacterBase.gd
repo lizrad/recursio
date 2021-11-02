@@ -2,9 +2,11 @@ extends Node
 class_name CharacterBase
 
 signal hit()
-signal action_status_changed(action_type, status)
 signal velocity_changed(velocity, front_vector, right_vector)
 signal timeline_index_changed(timeline_index)
+signal action_status_changed(action_type, status)
+signal action_trigger_success(trigger)
+signal action_trigger_fail(trigger)
 
 var player_id: int
 # The team id defines which side the player starts on
@@ -15,6 +17,8 @@ var timeline_index: int = -1 setget set_timeline_index
 var spawn_point: Vector3
 # The round this character got created in
 var round_index: int = -1
+
+var last_triggers: Bitmask = Bitmask.new(0)
 
 
 var position: Vector3 setget set_position, get_position
@@ -91,7 +95,12 @@ func trigger_actions(buttons: int) -> void:
 		
 		Logger.info("Handling action of type " + str(trigger), "actions")
 		var action = _get_action(trigger, timeline_index)
-		_action_manager.set_active(action, self, _kb, get_parent())
+		var success = _action_manager.set_active(action, self, _kb, get_parent())
+		if success:
+			emit_signal("action_trigger_success", trigger)
+			last_triggers.add(trigger)
+		else:
+			emit_signal("action_trigger_fail", trigger)
 
 
 func get_action_manager():
@@ -107,9 +116,6 @@ func _get_action(trigger, timeline_index):
 		_actions[id] = _action_manager.get_action_for_trigger(trigger, timeline_index)
 	
 	return _actions[id]
-
-
-
 
 
 

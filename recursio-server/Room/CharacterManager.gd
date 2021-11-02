@@ -1,6 +1,8 @@
 extends Node
 class_name CharacterManager
 
+signal world_state_updated(world_state)
+
 var _player_scene = preload("res://Shared/Characters/PlayerBase.tscn")
 var _ghost_scene = preload("res://Shared/Characters/GhostBase.tscn")
 
@@ -17,6 +19,7 @@ onready var Server = get_node("/root/Server")
 onready var _game_manager: GameManager = get_node("../GameManager")
 onready var _action_manager: ActionManager = get_node("../ActionManager")
 onready var _round_manager: RoundManager = get_node("../RoundManager")
+onready var _world_state_manager: WorldStateManager = get_node("../WorldStateManager")
 
 
 func _physics_process(_delta):
@@ -48,6 +51,9 @@ func _physics_process(_delta):
 					player.timestamp_of_previous_packet = input_frame.timestamp
 
 				i += 1
+	if player_inputs.size() == player_dic.size():
+		var world_state: WorldState = _world_state_manager.create_world_state(player_dic, player_inputs)
+		emit_signal("world_state_updated", world_state)
 
 
 func reset() -> void:
