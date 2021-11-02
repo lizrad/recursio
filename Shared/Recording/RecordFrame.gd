@@ -6,6 +6,12 @@ var position: Vector3 = Vector3.ZERO
 var rotation_y: float = -1
 var buttons: int = -1
 
+func copy(data: RecordFrame):
+	timestamp = data.timestamp
+	position = data.position
+	rotation_y = data.rotation_y
+	buttons = data.buttons
+	return self
 
 func from_array(data: Array) -> RecordFrame:
 	timestamp = data[0]

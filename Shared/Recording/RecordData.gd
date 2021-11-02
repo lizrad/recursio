@@ -12,8 +12,8 @@ var record_frames: Array = []
 func copy(record_data: RecordData) -> RecordData:
 	timestamp = record_data.timestamp
 	timeline_index = record_data.timeline_index
-	# TODO: Check if this really copies the underlying RecordFrame(s)
-	record_frames = record_data.record_frames.duplicate(true)
+	for frame in record_data.record_frames:
+		record_frames.append(RecordFrame.new().copy(frame))
 	return self
 
 

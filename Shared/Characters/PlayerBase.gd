@@ -33,6 +33,7 @@ func player_base_init(action_manager) -> void:
 # OVERRIDE #
 func reset() -> void:
 	.reset()
+	_record_manager.reset()
 	block_movement = true
 	acceleration = Vector3.ZERO
 	_target_velocity = Vector3.ZERO
@@ -66,8 +67,11 @@ func apply_input(movement_vector: Vector3, rotation_vector: Vector3, buttons: in
 	# Add everything to the recording
 	_record_manager.add_record_frame(.get_position(), .get_rotation_y(), buttons)
 
+func reset_record_data():
+	_record_manager.reset()
 
 func get_record_data() -> RecordData:
 	var record_data: RecordData = _record_manager.record_data
+	print("Creating record data with timeline index of "+str(self.timeline_index))
 	record_data.timeline_index = self.timeline_index
 	return record_data

@@ -19,7 +19,6 @@ enum Phases {
 
 var round_index: int = -1
 
-
 var _latency_delay_time: float = Constants.get_value("gameplay", "latency_delay")
 var _preparation_time: float = Constants.get_value("gameplay", "prep_phase_time")
 var _countdown_time: float = Constants.get_value("gameplay","countdown_phase_seconds")

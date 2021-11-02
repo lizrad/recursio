@@ -67,6 +67,7 @@ __meta__ = {
 }
 
 [node name="AsciiRenderer" parent="KinematicBody/TransformReset/LerpedFollow/Camera" index="0" instance=ExtResource( 14 )]
+visible = false
 
 [node name="OverviewTarget" type="Position3D" parent="KinematicBody/TransformReset" index="1"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10, 0 )

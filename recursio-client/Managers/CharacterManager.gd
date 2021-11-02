@@ -185,7 +185,6 @@ func _on_countdown_phase_started(countdown_time, latency) -> void:
 	# Delete ghost path visualization
 	for timeline_index in _player_ghosts:
 		_player_ghosts[timeline_index].delete_path()
-	
 	_player.follow_camera()
 	_player.show_countdown_hud(Server.get_server_time() - latency)
 	_game_manager.show_countdown_screen(countdown_time)
@@ -203,17 +202,13 @@ func _on_round_ended():
 	_player.block_movement = true
 	_player.move_to_spawn_point()
 	_stop_ghosts()
-	_disable_ghosts()
 	
 	_game_manager.reset()
 	_action_manager.clear_action_instances()
 
 
 func _on_player_timeline_changed(timeline_index) -> void:
-	_disable_ghosts()
-	# Enable new relevant ghosts
-	_enable_ghosts()
-	# Move player to new spawnpoint
+
 	_player.spawn_point = _game_manager.get_spawn_point(_player.team_id, timeline_index)
 	_player.move_to_spawn_point()
 
@@ -350,7 +345,7 @@ func _create_player_ghost(record_data: RecordData):
 	var ghost: PlayerGhost = _player_ghost_scene.instance()
 	add_child(ghost)
 	# TODO: Get color from ColorManager
-	ghost.player_ghost_init(_action_manager, record_data, "player_ghost")
+	ghost.player_ghost_init(_action_manager, record_data)
 	return ghost
 
 
@@ -358,7 +353,7 @@ func _create_enemy_ghost(record_data):
 	var ghost: Ghost = _ghost_scene.instance()
 	add_child(ghost)
 	# TODO: Get color from ColorManager
-	ghost.ghost_init(_action_manager, record_data, "enemy_ghost")
+	ghost.ghost_init(_action_manager, record_data)
 	return ghost
 
 
@@ -378,6 +373,8 @@ func _stop_ghosts() -> void:
 
 func _enable_ghosts() -> void:
 	for timeline_index in _enemy_ghosts:
+		if timeline_index == _enemy.timeline_index:
+			continue
 		var enemy_ghost = _enemy_ghosts[timeline_index]
 		add_child(enemy_ghost)
 		# Apply visibility for enemies
@@ -394,8 +391,12 @@ func _enable_ghosts() -> void:
 
 func _disable_ghosts() -> void:
 	for timeline_index in _enemy_ghosts:
+		if timeline_index == _enemy.timeline_index:
+			continue
 		remove_child(_enemy_ghosts[timeline_index])
 	for timeline_index in _player_ghosts:
+		if timeline_index == _player.timeline_index:
+			continue
 		remove_child(_player_ghosts[timeline_index])
 
 

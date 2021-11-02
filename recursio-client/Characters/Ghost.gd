@@ -8,9 +8,10 @@ onready var _minimap_icon_alive := load("res://Resources/Icons/icon_ghost_minima
 onready var _minimap_icon_dead := load("res://Resources/Icons/icon_dead_ghost_minimap.png")
 
 
-func ghost_init(action_manager, record_data: RecordData, color_scheme: String) -> void:
+func ghost_init(action_manager, record_data: RecordData) -> void:
 	.ghost_base_init(action_manager, record_data)
-	_character_model._set_color_scheme(color_scheme, record_data.timeline_index)
+	print("ghost_init with index of " +  str(record_data.timeline_index))
+	_character_model._set_color_scheme( "enemy_ghost", record_data.timeline_index)
 	
 
 # OVERRIDE #

@@ -184,14 +184,16 @@ func stop_ghosts() -> void:
 				ghost_dic[player_id][timeline_index].start_playing(Server.get_server_time())
 
 
-func _create_ghost_from_player(player: PlayerBase) -> void:
-	var ghost: GhostBase = _ghost_scene.instance()
-	ghost.ghost_base_init(_action_manager, player.get_record_data())
+func _create_ghost_from_player(player) -> void:
+	var record_data = player.get_record_data()
+	var ghost = _ghost_scene.instance()
+	ghost.ghost_base_init(_action_manager, record_data)
 	ghost.player_id = player.player_id
 	ghost.spawn_point = player.spawn_point
 	ghost.team_id = player.team_id
 	ghost.round_index = _round_manager.round_index
-
+	
+	print("Creating ghost with timeline index of "+str(player.timeline_index))
 	if ghost_dic[player.player_id].has(player.timeline_index):
 		ghost_dic[player.player_id][player.timeline_index].queue_free()
 	
@@ -199,11 +201,12 @@ func _create_ghost_from_player(player: PlayerBase) -> void:
 	
 	_add_ghost(ghost)
 	
-	Server.send_player_ghost_record_to_client(player.player_id, player.timeline_index, player.get_record_data())
+	Server.send_player_ghost_record_to_client(player.player_id, player.timeline_index, record_data)
 	for client_id in player_dic:
 		if client_id != player.player_id:
-			Server.send_enemy_ghost_record_to_client(client_id, player.timeline_index, player.get_record_data())
-
+			Server.send_enemy_ghost_record_to_client(client_id, player.timeline_index, record_data)
+		
+	player.reset_record_data()
 
 func _add_ghost(ghost) -> void:
 	add_child(ghost)

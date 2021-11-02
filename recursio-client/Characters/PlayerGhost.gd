@@ -2,9 +2,9 @@ extends Ghost
 class_name PlayerGhost
 
 
-func player_ghost_init(action_manager, record_data: RecordData, color_scheme: String) -> void:
-	.ghost_init(action_manager, record_data, color_scheme)
-
+func player_ghost_init(action_manager, record_data: RecordData) -> void:
+	.ghost_init(action_manager, record_data)
+	_character_model._set_color_scheme("player_ghost", record_data.timeline_index)
 
 func create_path():
 		var _curve = Curve3D.new()
