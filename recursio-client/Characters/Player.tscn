@@ -74,7 +74,6 @@ __meta__ = {
 "_editor_description_": ""
 }
 
-
 [node name="AsciiRenderer" parent="KinematicBody/AsciiViewportContainer/Viewport/LerpedFollow/Camera" index="0" instance=ExtResource( 14 )]
 
 [node name="RemoteTransform" type="RemoteTransform" parent="KinematicBody/AsciiViewportContainer/Viewport/LerpedFollow/Camera" index="1"]
