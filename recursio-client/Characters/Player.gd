@@ -10,6 +10,7 @@ onready var _overview_light = get_node("KinematicBody/TransformReset/OverviewLig
 onready var _overview_target = get_node("KinematicBody/TransformReset/OverviewTarget")
 onready var _lerped_follow: LerpedFollow = get_node("KinematicBody/AsciiViewportContainer/Viewport/LerpedFollow")
 onready var _view_target = get_node("KinematicBody/ViewTarget")
+onready var _visibility_light = get_node("KinematicBody/VisibilityLight")
 
 onready var _button_overlay: ButtonOverlay = get_node("KinematicBody/ButtonOverlay")
 
@@ -150,3 +151,6 @@ func handle_server_update(position, time):
 
 func get_round_manager():
 	return _round_manager
+
+func toggle_visibility_light(value: bool):
+	_visibility_light.visible = value

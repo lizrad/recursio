@@ -26,6 +26,7 @@ script = ExtResource( 15 )
 
 [node name="VisibilityLight" parent="KinematicBody" index="3" instance=ExtResource( 9 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.368213, -0.741072 )
+visible = false
 light_energy = 16.0
 
 [node name="LightViewport" type="Viewport" parent="KinematicBody" index="4"]
