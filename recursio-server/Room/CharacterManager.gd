@@ -19,14 +19,13 @@ onready var _action_manager: ActionManager = get_node("../ActionManager")
 onready var _round_manager: RoundManager = get_node("../RoundManager")
 
 
-func _physics_process(delta):
+func _physics_process(_delta):
 	# If the game phase hasn't started, skip
 	if _round_manager.get_current_phase() != _round_manager.Phases.GAME:
 		return
 	
 	var base_time = Server.get_server_time() - world_processing_offset
-	var physics_delta = get_physics_process_delta_time() * 1000
-	
+
 	# Apply received inputs to players
 	for player_id in player_inputs:
 		if player_dic.has(player_id):
@@ -47,7 +46,7 @@ func _physics_process(delta):
 					player.previously_applied_packets.append(input_frame.timestamp)
 					player.apply_input(input_frame.movement, input_frame.rotation, input_frame.buttons.mask)
 					player.timestamp_of_previous_packet = input_frame.timestamp
-				
+
 				i += 1
 
 
