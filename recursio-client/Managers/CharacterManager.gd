@@ -32,6 +32,7 @@ func _ready():
 	assert(Server.connect("round_ended", self, "_on_server_round_ended") == OK)
 	
 	assert(_round_manager.connect("round_started", self, "_on_round_started") == OK)
+	assert(_round_manager.connect("round_ended", self, "_on_round_ended") == OK)
 	assert(_round_manager.connect("latency_delay_phase_started", self, "_on_latency_delay_phase_started") == OK)
 	assert(_round_manager.connect("preparation_phase_started", self, "_on_preparation_phase_started") == OK)
 	assert(_round_manager.connect("countdown_phase_started", self, "_on_countdown_phase_started") == OK)
@@ -137,11 +138,29 @@ func _on_server_round_started(round_index, latency) -> void:
 	_disable_ghosts()
 	_enable_ghosts()
 	_round_manager.start_round(round_index, latency)
-	
+
 
 func _on_server_round_ended(round_index) -> void:
 	_round_manager.stop_round()
 	_toggle_visbility_lights(false)
+
+
+func _on_round_started(round_index, latency) -> void:
+	_game_manager.hide_game_result_screen()
+	_player.block_movement = false
+	_player.show_round_start_hud(round_index, Server.get_server_time() - latency)
+
+	# We have to disable this here because otherwise, the light never sees the ghosts for some reason
+	_player.set_overview_light_enabled(false)
+
+
+func _on_round_ended():
+	_player.block_movement = true
+	_player.move_to_spawn_point()
+	_stop_ghosts()
+
+	_game_manager.reset()
+	_action_manager.clear_action_instances()
 
 
 func _on_game_result(winning_player_index) -> void:
@@ -149,15 +168,6 @@ func _on_game_result(winning_player_index) -> void:
 		_game_manager.show_win()
 	else:
 		_game_manager.show_loss()
-
-
-func _on_round_started(round_index, latency) -> void:
-	_game_manager.hide_game_result_screen()
-	_player.block_movement = false
-	_player.show_round_start_hud(round_index, Server.get_server_time() - latency)
-	
-	# We have to disable this here because otherwise, the light never sees the ghosts for some reason
-	_player.set_overview_light_enabled(false)
 
 
 func _on_latency_delay_phase_started(latency) -> void:
@@ -200,15 +210,6 @@ func _on_game_phase_started(latency) -> void:
 	_player.show_game_hud(_round_manager.round_index, Server.get_server_time() - latency)
 	_game_manager.toggle_capture_points(true)
 	_start_ghosts()
-
-
-func _on_round_ended():
-	_player.block_movement = true
-	_player.move_to_spawn_point()
-	_stop_ghosts()
-	
-	_game_manager.reset()
-	_action_manager.clear_action_instances()
 
 
 func _on_player_timeline_changed(timeline_index) -> void:
