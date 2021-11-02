@@ -24,16 +24,10 @@ transform = Transform( -1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0
 [node name="PlayerInput" type="Node" parent="KinematicBody" index="2"]
 script = ExtResource( 15 )
 
-[node name="ButtonOverlay" parent="KinematicBody" index="3" instance=ExtResource( 13 )]
-visible = false
-margin_left = 363.57
-margin_top = 527.664
-margin_right = 363.57
-margin_bottom = 527.664
+[node name="VisibilityLight" parent="KinematicBody" index="3" instance=ExtResource( 9 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.368213, -0.741072 )
 
-[node name="VisibilityLight" parent="KinematicBody" index="4" instance=ExtResource( 9 )]
-
-[node name="LightViewport" type="Viewport" parent="KinematicBody" index="5"]
+[node name="LightViewport" type="Viewport" parent="KinematicBody" index="4"]
 size = Vector2( 2048, 2048 )
 handle_input_locally = false
 hdr = false
@@ -49,16 +43,29 @@ projection = 1
 current = true
 size = 70.0
 
-[node name="TransformReset" type="Node" parent="KinematicBody" index="6"]
+[node name="AsciiViewportContainer" type="ViewportContainer" parent="KinematicBody" index="5"]
+margin_right = 1024.0
+margin_bottom = 600.0
+stretch = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="LerpedFollow" parent="KinematicBody/TransformReset" index="0" instance=ExtResource( 7 )]
-target_node = NodePath("../../ViewTarget")
+[node name="Viewport" type="Viewport" parent="KinematicBody/AsciiViewportContainer" index="0"]
+size = Vector2( 1024, 600 )
+handle_input_locally = false
+debanding = true
+render_target_update_mode = 3
+shadow_atlas_size = 2048
+
+[node name="LerpedFollow" parent="KinematicBody/AsciiViewportContainer/Viewport" index="0" instance=ExtResource( 7 )]
+target_node = NodePath("../../../ViewTarget")
 lerp_factor = 0.05
 lock_y_rotation = true
 
-[node name="Camera" type="Camera" parent="KinematicBody/TransformReset/LerpedFollow" index="0"]
+[node name="Camera" type="Camera" parent="KinematicBody/AsciiViewportContainer/Viewport/LerpedFollow" index="0"]
 transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 12, 0 )
-cull_mask = 1048565
+cull_mask = 1048053
 environment = ExtResource( 5 )
 current = true
 fov = 90.0
@@ -66,12 +73,41 @@ __meta__ = {
 "_editor_description_": ""
 }
 
-[node name="AsciiRenderer" parent="KinematicBody/TransformReset/LerpedFollow/Camera" index="0" instance=ExtResource( 14 )]
+[node name="AsciiRenderer" parent="KinematicBody/AsciiViewportContainer/Viewport/LerpedFollow/Camera" index="0" instance=ExtResource( 14 )]
 
-[node name="OverviewTarget" type="Position3D" parent="KinematicBody/TransformReset" index="1"]
+[node name="RemoteTransform" type="RemoteTransform" parent="KinematicBody/AsciiViewportContainer/Viewport/LerpedFollow/Camera" index="1"]
+remote_path = NodePath("../../../../../NormalViewportContainer/Viewport/Camera")
+
+[node name="NormalViewportContainer" type="ViewportContainer" parent="KinematicBody" index="6"]
+margin_right = 1024.0
+margin_bottom = 600.0
+stretch = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Viewport" type="Viewport" parent="KinematicBody/NormalViewportContainer" index="0"]
+size = Vector2( 1024, 600 )
+transparent_bg = true
+handle_input_locally = false
+render_target_update_mode = 3
+
+[node name="Camera" type="Camera" parent="KinematicBody/NormalViewportContainer/Viewport" index="0"]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 12, 0 )
+cull_mask = 512
+environment = ExtResource( 5 )
+current = true
+fov = 90.0
+__meta__ = {
+"_editor_description_": ""
+}
+
+[node name="TransformReset" type="Node" parent="KinematicBody" index="7"]
+
+[node name="OverviewTarget" type="Position3D" parent="KinematicBody/TransformReset" index="0"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10, 0 )
 
-[node name="OverviewLight" type="OmniLight" parent="KinematicBody/TransformReset" index="2"]
+[node name="OverviewLight" type="OmniLight" parent="KinematicBody/TransformReset" index="1"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10, 0 )
 layers = 3
 light_color = Color( 0.556863, 0, 0.690196, 1 )
@@ -88,18 +124,29 @@ light_negative = true
 omni_range = 0.0
 omni_attenuation = 3.75716e-05
 
-[node name="ViewTarget" type="Position3D" parent="KinematicBody" index="7"]
+[node name="ViewTarget" type="Position3D" parent="KinematicBody" index="8"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -6 )
 script = ExtResource( 8 )
 
-[node name="MiniMapSprite" type="Sprite3D" parent="KinematicBody" index="8"]
+[node name="ViewTarget2" type="Position3D" parent="KinematicBody" index="9"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -6 )
+script = ExtResource( 8 )
+
+[node name="MiniMapSprite" type="Sprite3D" parent="KinematicBody" index="10"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.07854, 0 )
 layers = 8
 axis = 1
 texture = ExtResource( 12 )
 
-[node name="HUD" parent="KinematicBody" index="9" instance=ExtResource( 4 )]
+[node name="HUD" parent="KinematicBody" index="11" instance=ExtResource( 4 )]
+margin_left = 0.0
+margin_top = 0.0
+margin_right = 0.0
+margin_bottom = 0.0
 
-[node name="ViewTarget2" type="Position3D" parent="KinematicBody" index="10"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -6 )
-script = ExtResource( 8 )
+[node name="ButtonOverlay" parent="KinematicBody" index="12" instance=ExtResource( 13 )]
+visible = false
+margin_left = 363.57
+margin_top = 527.664
+margin_right = 363.57
+margin_bottom = 527.664
