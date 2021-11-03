@@ -47,6 +47,7 @@ func _physics_process(delta):
 # OVERRIDE #
 func hit() -> void:
 	stop_playing()
+	_move_out_of_the_way()
 	.hit()
 
 
@@ -74,3 +75,7 @@ func _apply_record_frame(record_frame: RecordFrame):
 	.set_position(record_frame.position)
 	.set_rotation_y(record_frame.rotation_y)
 	.trigger_actions(record_frame.buttons)
+
+#TODO: temporary solution to show death of ghosts until death animation is implemented
+func _move_out_of_the_way():
+	set_position(spawn_point+Vector3(0,0,1000000))

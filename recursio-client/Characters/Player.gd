@@ -85,9 +85,9 @@ func setup_capture_point_hud(number_of_capture_points) -> void:
 	_hud.set_team_id(self.team_id)
 
 
-func update_weapon_type_hud(weapon_action: Action) -> void:
-	_hud.update_weapon_type(weapon_action)
-	_hud.update_fire_action_ammo(weapon_action.max_ammo)
+func update_weapon_type_hud(max_ammo, img_bullet_bg, img_bullet) -> void:
+	_hud.update_weapon_type(img_bullet_bg, img_bullet)
+	_hud.update_fire_action_ammo(max_ammo)
 
 
 func update_fire_action_ammo_hud(amount: int) -> void:

@@ -92,11 +92,11 @@ func update_special_movement_ammo(amount: int) -> void:
 	_dash.text = str(amount)
 
 
-func update_weapon_type(weapon_action: Action) ->void:
+func update_weapon_type(img_bullet_bg, img_bullet) ->void:
 	Logger.info("Update ammo type", "HUD")
-	if weapon_action.img_bullet_bg:
-		_ammo_type_bg.texture = load(weapon_action.img_bullet_bg.resource_path)
-	_ammo_type.texture = load(weapon_action.img_bullet.resource_path)
+	if img_bullet_bg:
+		_ammo_type_bg.texture = load(img_bullet_bg.resource_path)
+	_ammo_type.texture = load(img_bullet.resource_path)
 
 
 # Sets the internal player id for the capture points

@@ -47,12 +47,6 @@ func _process(delta):
 				action.trigger_times.remove(0)
 
 
-func create_action_duplicate(action_type) -> Action:
-	var instance = action_resources[action_type].duplicate() as Action
-	instance.ammunition = instance.max_ammo
-	return instance
-
-
 func get_action_type_for_trigger(trigger, timeline_index):
 	if trigger == Trigger.FIRE_START:
 		if timeline_index == Constants.get_value("ghosts", "wall_placing_timeline_index"):
@@ -64,6 +58,14 @@ func get_action_type_for_trigger(trigger, timeline_index):
 	elif trigger == Trigger.DEFAULT_ATTACK_START:
 		return ActionType.MELEE
 
+
+func get_max_ammo_for_trigger(trigger, timeline_index):
+	return get_action_for_trigger(trigger, timeline_index).max_ammo
+func get_img_bullet_bg_for_trigger(trigger, timeline_index):
+	return get_action_for_trigger(trigger, timeline_index).img_bullet_bg
+func get_img_bullet_for_trigger(trigger, timeline_index):
+	return get_action_for_trigger(trigger, timeline_index).img_bullet
+
 func get_action_for_trigger(trigger, timeline_index) -> Action:
 	return get_action(get_action_type_for_trigger(trigger, timeline_index))
 	
@@ -72,6 +74,11 @@ func get_action(action_type) -> Action:
 	
 func create_action_duplicate_for_trigger(trigger, timeline_index) -> Action:
 	return create_action_duplicate(get_action_type_for_trigger(trigger, timeline_index))
+
+func create_action_duplicate(action_type) -> Action:
+	var instance = action_resources[action_type].duplicate() as Action
+	instance.ammunition = instance.max_ammo
+	return instance
 
 
 func clear_action_instances():
