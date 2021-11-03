@@ -65,9 +65,9 @@ func get_action_type_for_trigger(trigger, timeline_index):
 		return ActionType.MELEE
 
 func get_action_for_trigger(trigger, timeline_index) -> Action:
-	return get_action_duplicate(get_action_type_for_trigger(trigger, timeline_index))
+	return get_action(get_action_type_for_trigger(trigger, timeline_index))
 	
-func get_action_duplicate(action_type) -> Action:
+func get_action(action_type) -> Action:
 	return action_resources[action_type].duplicate()
 	
 func create_action_duplicate_for_trigger(trigger, timeline_index) -> Action:
