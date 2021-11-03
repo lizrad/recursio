@@ -17,7 +17,7 @@ var previously_applied_packets := RingBuffer.new(InputData.RING_BUFFER_SIZE)
 var _target_velocity: Vector3 = Vector3.ZERO
 
 # Values from constants.ini
-var _drag = Constants.get_value("movement", "drag")
+var _drag_factor = Constants.get_value("movement", "drag_factor")
 var _base = Constants.get_value("movement", "scale_to_view_base")
 var _factor = Constants.get_value("movement", "scale_to_view_factor")
 var _move_acceleration = Constants.get_value("movement", "acceleration")
@@ -41,6 +41,8 @@ func reset() -> void:
 
 # Should only be called in "physics_update()"
 func apply_input(movement_vector: Vector3, rotation_vector: Vector3, buttons: int) -> void:
+	var delta = get_physics_process_delta_time()
+	
 	# Nothing to do if player can't move
 	if block_movement:
 		return
@@ -56,9 +58,9 @@ func apply_input(movement_vector: Vector3, rotation_vector: Vector3, buttons: in
 	acceleration = movement_vector * _move_acceleration * scale
 	
 	# Lerp to target velocity to simulate drag
-	self.velocity = lerp(velocity, _target_velocity, _drag)
+	self.velocity = lerp(velocity, _target_velocity, _drag_factor * delta)
 	# Apply acceleration to velocity (important: after lerp)
-	self.velocity += acceleration * get_physics_process_delta_time()
+	self.velocity += acceleration * delta
 	_kb.move_and_slide(velocity)
 	
 	# Trigger all actions with base
