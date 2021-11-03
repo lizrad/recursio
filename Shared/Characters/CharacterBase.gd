@@ -99,8 +99,6 @@ func trigger_actions(buttons: int) -> void:
 			var type = _action_manager.get_action_type_for_trigger(trigger, timeline_index)
 			emit_signal("action_status_changed", type, true)
 			last_triggers.add(trigger)
-		else:
-			Logger.error("TODO: trigger can fail? or just not triggering because of cooldown?")
 
 
 func get_action_manager():

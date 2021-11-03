@@ -28,8 +28,10 @@ func _check_for_visibility() -> void:
 	var resolution = visibility_mask.get_data().get_size()
 	var visibility_image = visibility_mask.get_data()
 	visibility_image.lock()
-	if (uv.x * resolution.x >= visibility_image.get_width() or 
-		uv.y * resolution.y >= visibility_image.get_height()):
+	var image_x = uv.x * resolution.x
+	var image_y = uv.y * resolution.y
+	if (image_x >= visibility_image.get_width() or image_x < 0 or
+		image_y >= visibility_image.get_height() or image_y < 0):
 		return
 
 	var pixel = visibility_image.get_pixel(uv.x * resolution.x, uv.y * resolution.y)

@@ -2,7 +2,6 @@ extends StaticBody
 
 
 var placed_by_body
-var _current_health := 5
 var round_index
 
 func _init() -> void:
@@ -27,18 +26,8 @@ func initialize_visual(owning_player) -> void:
 
 func handle_hit(collider):
 	Logger.debug("hit collider: %s" %[collider.get_class()] , "HitscanShot")
+	var character = collider.get_parent()
 	
-	if collider is GhostBase and not collider == placed_by_body \
-			and collider.round_index < round_index:
-		collider.hit()
-
-
-func _hit_body(body) -> void:
-	if body is GhostBase and body != placed_by_body:
-		Logger.info("body hit -> TODO: kill enemy contact/ghost/robot", "Wall")
-		#body.daie()
-
-func _hit_area(area) -> void:
-	_current_health -= 1
-	if _current_health < 1:
-		queue_free()
+	if character is GhostBase and not character == placed_by_body \
+			and character.round_index < round_index:
+		character.hit()

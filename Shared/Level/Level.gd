@@ -18,7 +18,6 @@ func _ready():
 			add_child(new_scene)
 
 func reset():
-	print("Level reset")
 	for capture_point in _capture_points:
 		capture_point.reset()
 	toggle_capture_points(false)
@@ -29,7 +28,7 @@ func get_spawn_points(team_id):
 		var spawn_positions = []
 		for position in get_node(node_name).get_children():
 			spawn_positions.append(position.global_transform.origin)
-		
+
 		return spawn_positions
 	else:
 		Logger.error("Tried to get spawn positions for invalid node " + node_name)
