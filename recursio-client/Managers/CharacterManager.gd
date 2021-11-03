@@ -228,6 +228,15 @@ func _on_timeline_picks(timeline_index, enemy_pick):
 	Logger.info("Received ghost picks from server","ghost_picking")
 	_player.timeline_index = timeline_index
 	_enemy.timeline_index = enemy_pick
+	
+	# Free the ghosts that were at this position
+	if _player_ghosts.has(timeline_index):
+		_player_ghosts[timeline_index].queue_free()
+		_player_ghosts.erase(timeline_index)
+	
+	if _enemy_ghosts.has(enemy_pick):
+		_enemy_ghosts[enemy_pick].queue_free()
+		_enemy_ghosts.erase(enemy_pick)
 
 
 
