@@ -15,8 +15,10 @@ func _physics_process(delta):
 	if not _owning_player is PlayerBase:
 		return
 	
+	#always finish after 0.5 second
+	var max_time = 0.5
 	_time += delta
-	_time = min(_time, 1)
+	_time = min(_time, max_time)
 
 	var steepness = 2
 	var e_section = max(exp(-steepness*_time),0.0)
@@ -24,7 +26,5 @@ func _physics_process(delta):
 	var factor = 10
 	_owning_player.velocity += _owning_player.input_movement_direction * e_section * factor
 
-	#always finish after one second
-	if _time == 1:
-		_time = 1
+	if _time == max_time:
 		queue_free()
