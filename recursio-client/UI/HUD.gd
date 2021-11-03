@@ -5,6 +5,7 @@ onready var _timer_pb: TextureProgress = get_node("TimerProgressBar")
 onready var _phase = get_node("Phase")
 onready var _ammo = get_node("WeaponAmmo")
 onready var _ammo_type = get_node("WeaponAmmo/WeaponType")
+onready var _ammo_type_bg = get_node("WeaponAmmo/WeaponTypeBG")
 onready var _dash = get_node("DashAmmo")
 onready var _capture_point_hb = get_node("TimerProgressBar/CapturePoints")
 
@@ -93,6 +94,8 @@ func update_special_movement_ammo(amount: int) -> void:
 
 func update_weapon_type(weapon_action: Action) ->void:
 	Logger.info("Update ammo type", "HUD")
+	if weapon_action.img_bullet_bg:
+		_ammo_type_bg.texture = load(weapon_action.img_bullet_bg.resource_path)
 	_ammo_type.texture = load(weapon_action.img_bullet.resource_path)
 
 

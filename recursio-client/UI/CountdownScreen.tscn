@@ -1,0 +1,33 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Resources/Fonts/default_font.tres" type="DynamicFont" id=1]
+[ext_resource path="res://UI/CountdownScreen.gd" type="Script" id=2]
+
+[node name="CountdownScreen" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CountdownText" type="Label" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -213.0
+margin_top = -86.5
+margin_right = 213.0
+margin_bottom = 86.5
+custom_fonts/font = ExtResource( 1 )
+text = "1"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Tween" type="Tween" parent="."]

@@ -43,12 +43,23 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="WeaponTypeBG" type="TextureRect" parent="WeaponAmmo"]
+margin_left = 30.9084
+margin_top = -5.13712
+margin_right = 70.9084
+margin_bottom = 34.8629
+expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="WeaponType" type="TextureRect" parent="WeaponAmmo"]
 margin_left = 30.9084
 margin_top = -5.13712
 margin_right = 70.9084
 margin_bottom = 34.8629
 expand = true
+stretch_mode = 6
 __meta__ = {
 "_edit_use_anchors_": false
 }

@@ -5,7 +5,6 @@ export var level_path: NodePath
 
 onready var _game_result_screen = get_node("../../GameResultScreen")
 onready var _countdown_screen = get_node("../../CountdownScreen")
-onready var _countdown_screen_text = _countdown_screen.get_node("CountdownText")
 onready var _level: Level = get_node(level_path)
 
 var _countdown_time: float = 0.0
@@ -21,9 +20,9 @@ func _ready():
 	assert(Server.connect("capture_point_capture_lost", self, "_on_capture_point_capture_lost") == OK)
 
 
-func _process(delta):	
+func _process(delta):
 	if _countdown_screen.visible:
-		_countdown_screen_text.text = str(int(_countdown_time))
+		_countdown_screen.update_text(int(_countdown_time))
 		_countdown_time -= delta
 		# Hide if countdown is finished
 		if _countdown_time <= 0.0:
