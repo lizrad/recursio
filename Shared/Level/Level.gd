@@ -18,6 +18,7 @@ func _ready():
 			add_child(new_scene)
 
 func reset():
+	print("Level reset")
 	for capture_point in _capture_points:
 		capture_point.reset()
 	toggle_capture_points(false)
@@ -38,7 +39,14 @@ func get_spawn_points(team_id):
 func get_capture_points():
 	return _capture_points
 
-func toggle_capture_points(toggle:bool)->void:
-	Logger.info("Toggling capture points "+("on"if toggle else "off")+".", "capture_point")
+func toggle_capture_points(toggle:bool) -> void:
+	Logger.info("Toggling capture points " + ("on" if toggle else "off") + ".", "capture_point")
 	for capture_point in _capture_points:
 		capture_point.active = toggle
+
+	# also toggle spawn points visuals
+	for player in range(2):
+		var spawns = "Player" + str(player + 1) + "Spawns"
+		if has_node(spawns):
+			for spawn in get_node(spawns).get_children():
+				spawn.get_node("MeshInstance").visible = !toggle
