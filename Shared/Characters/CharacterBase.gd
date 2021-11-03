@@ -45,7 +45,8 @@ func reset() -> void:
 
 
 func move_to_spawn_point() -> void:
-	self.position = spawn_point
+	set_position(spawn_point)
+	set_rotation_y(0)
 
 
 # Returns the position of the underlying kinematic body

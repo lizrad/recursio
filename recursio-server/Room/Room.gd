@@ -108,7 +108,8 @@ func get_round_manager() -> RoundManager:
 
 
 func _on_world_state_update(world_state):
-	emit_signal("world_state_updated", world_state, id)
+	if _round_manager.get_current_phase() == RoundManager.Phases.GAME:
+		emit_signal("world_state_updated", world_state, id)
 
 
 func _on_round_started(round_index, latency):

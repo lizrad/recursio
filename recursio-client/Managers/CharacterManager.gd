@@ -145,7 +145,6 @@ func _on_server_round_started(round_index, latency) -> void:
 
 func _on_server_round_ended(round_index) -> void:
 	_round_manager.stop_round()
-	_toggle_visbility_lights(false)
 
 
 func _on_round_started(round_index, latency) -> void:
@@ -160,9 +159,11 @@ func _on_round_started(round_index, latency) -> void:
 # unused param, but event is shared with server
 func _on_round_ended(_round_index):
 	_player.block_movement = true
+	_player.clear_past_frames()
 	_player.move_to_spawn_point()
 	_stop_ghosts()
 
+	_toggle_visbility_lights(false)
 	_game_manager.reset()
 	_action_manager.clear_action_instances()
 
@@ -236,7 +237,7 @@ func _on_player_ready(_button) -> void:
 func _on_player_ghost_record_received(timeline_index, record_data):
 	var ghost = _create_player_ghost(record_data)
 	ghost.spawn_point = _game_manager.get_spawn_point(_player.team_id, timeline_index)
-	
+	ghost.move_to_spawn_point()
 	if _player_ghosts.has(timeline_index):
 		_player_ghosts[timeline_index] .queue_free()
 	_player_ghosts[timeline_index] = ghost
@@ -245,7 +246,7 @@ func _on_player_ghost_record_received(timeline_index, record_data):
 func _on_enemy_ghost_record_received(timeline_index, record_data: RecordData):	
 	var ghost = _create_enemy_ghost(record_data)
 	ghost.spawn_point = _game_manager.get_spawn_point(1 - _player.team_id, timeline_index)
-	
+	ghost.move_to_spawn_point()
 	# Check if there is already a ghost, and delete it
 	if _enemy_ghosts.has(timeline_index):
 		_enemy_ghosts[timeline_index].queue_free()
