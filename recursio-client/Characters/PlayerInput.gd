@@ -58,9 +58,10 @@ func _on_player_initialized():
 
 # Changes the weapon depending on the given timeline index
 func _swap_weapon_type(timeline_index) -> void:
-	var action = _action_manager.get_action_for_trigger(ActionManager.Trigger.FIRE_START, timeline_index)
-	Logger.info("Weapon selected: " + action.name, "actions")
-	_player.update_weapon_type_hud(action)
+	var max_ammo = _action_manager.get_max_ammo_for_trigger(ActionManager.Trigger.FIRE_START, timeline_index)
+	var img_bullet_bg = _action_manager.get_img_bullet_bg_for_trigger(ActionManager.Trigger.FIRE_START, timeline_index)
+	var img_bullet = _action_manager.get_img_bullet_for_trigger(ActionManager.Trigger.FIRE_START, timeline_index)
+	_player.update_weapon_type_hud(max_ammo, img_bullet_bg, img_bullet)
 
 
 
