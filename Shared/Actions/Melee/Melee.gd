@@ -14,12 +14,14 @@ var _hit_bodies_invincibilty_tracker = {}
 
 
 func initialize_visual() -> void:
+	Logger.info("initialize visual", "Melee")
 	# TODO: define and use player color
 	#$Visualization.get_surface_material(0).albedo_color = Constants.character_colors[owning_player.id]
 	$Visualization.get_surface_material(0).albedo_color = Color.red
 
 #func initialize(owning_player, attack_type) ->void:
 func initialize(owning_player) -> void:
+	Logger.info("initialize", "Melee")
 	#_damage = attack_type.damage
 	#_bounce_strength = attack_type.bounce_strength
 	#_continuously_damaging = attack_type.continuously_damaging

@@ -5,8 +5,6 @@ signal hit()
 signal velocity_changed(velocity, front_vector, right_vector)
 signal timeline_index_changed(timeline_index)
 signal action_status_changed(action_type, status)
-signal action_trigger_success(trigger)
-signal action_trigger_fail(trigger)
 
 var player_id: int
 # The team id defines which side the player starts on
@@ -93,14 +91,14 @@ func trigger_actions(buttons: int) -> void:
 		if not bit:
 			continue
 
-		Logger.info("Handling action of type " + str(trigger), "actions")
 		var action = _get_action(trigger, timeline_index)
 		var success = _action_manager.set_active(action, self, _kb, get_parent())
 		if success:
-			emit_signal("action_trigger_success", trigger)
+			var type = _action_manager.get_action_type_for_trigger(trigger, timeline_index)
+			emit_signal("action_status_changed", type, true)
 			last_triggers.add(trigger)
 		else:
-			emit_signal("action_trigger_fail", trigger)
+			Logger.error("TODO: trigger can fail? or just not triggering because of cooldown?")
 
 
 func get_action_manager():
@@ -114,10 +112,5 @@ func _get_action(trigger, timeline_index):
 	# Cache the action if it hasn't been cached yet
 	if not _actions.has(id):
 		_actions[id] = _action_manager.create_action_duplicate_for_trigger(trigger, timeline_index)
-	
+
 	return _actions[id]
-
-
-
-
-

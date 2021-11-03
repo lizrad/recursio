@@ -10,13 +10,13 @@ extends BaseAnimator
 #		-Death
 #		-Spawn
 
-onready var idle_animator  = get_node("../IdleAnimator")
-onready var turn_animator  = get_node("../TurnAnimator")
-onready var move_animator  = get_node("../MoveAnimator")
-onready var dash_animator  = get_node("../DashAnimator")
-onready var hitscan_animator  = get_node("../HitscanAnimator")
-onready var wall_animator  = get_node("../WallAnimator")
-onready var melee_animator  = get_node("../MeleeAnimator")
+onready var idle_animator = get_node("../IdleAnimator")
+onready var turn_animator = get_node("../TurnAnimator")
+onready var move_animator = get_node("../MoveAnimator")
+onready var dash_animator = get_node("../DashAnimator")
+onready var hitscan_animator = get_node("../HitscanAnimator")
+onready var wall_animator = get_node("../WallAnimator")
+onready var melee_animator = get_node("../MeleeAnimator")
 
 var _animation_status = {}
 var _action_animations = {}
@@ -25,27 +25,32 @@ var _priority_sorted = []
 func _ready():
 	_animation_status[idle_animator] = true
 	_priority_sorted.append(idle_animator)
+	
 	_animation_status[turn_animator] = true
 	_priority_sorted.append(turn_animator)
+	
 	_animation_status[move_animator] = false
 	_priority_sorted.append(move_animator)
 	
 	_animation_status[dash_animator] = false
 	_priority_sorted.append(dash_animator)
-	
 	_action_animations[ActionManager.ActionType.DASH] = dash_animator
+	
 	_animation_status[hitscan_animator] = false
 	_priority_sorted.append(hitscan_animator)
 	_action_animations[ActionManager.ActionType.HITSCAN] = hitscan_animator
+	
 	_animation_status[wall_animator] = false
 	_priority_sorted.append(wall_animator)
 	_action_animations[ActionManager.ActionType.WALL] = wall_animator
+	
 	_animation_status[melee_animator] = false
 	_priority_sorted.append(melee_animator)
 	_action_animations[ActionManager.ActionType.MELEE] = melee_animator
 
+
 func action_status_changed(action_type, status):
-	Logger.debug("Status of "+ str(action_type)+" changed to "+str(status), "animation")
+	Logger.debug("Status of " + str(action_type) + " changed to " + str(status), "animation")
 	var animator = _action_animations[action_type]
 	if status and not _animation_status[animator] :
 		animator.connect("animation_over", self, "_stop_animation", [animator])
