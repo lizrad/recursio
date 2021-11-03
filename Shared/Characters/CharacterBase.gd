@@ -32,6 +32,7 @@ onready var _collision_shape: CollisionShape = get_node("KinematicBody/Collision
 
 var _action_manager
 
+
 func character_base_init(action_manager) -> void:
 	_action_manager = action_manager
 
@@ -114,3 +115,6 @@ func _get_action(trigger, timeline_index):
 		_actions[id] = _action_manager.create_action_duplicate_for_trigger(trigger, timeline_index)
 
 	return _actions[id]
+
+func get_body():
+	return _kb
