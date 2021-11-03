@@ -39,7 +39,7 @@ func _check_for_visibility() -> void:
 
 	# TODO: validate pixel.v vs pixel.gray()
 	#visible = pixel.gray() > 0.05
-	visible = pixel.v > 0.5
+	visible = pixel.v > 0.2
 
 
 func set_texture(tex : Texture) -> void:
