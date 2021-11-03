@@ -13,11 +13,10 @@ func toggle_visibility_light(value: bool):
 
 func create_path():
 		var _curve = Curve3D.new()
-		
 		for frame in range(0, _record_data.record_frames.size(), 30):
 			var record_frame: RecordFrame = _record_data.record_frames[frame]
 			_curve.add_point(record_frame.position)
-		
+
 		$GhostPath.set_curve(_curve)
 		$GhostPath.set_color_for_index(timeline_index)
 
