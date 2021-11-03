@@ -86,11 +86,6 @@ func setup_capture_point_hud(number_of_capture_points) -> void:
 
 
 func update_weapon_type_hud(weapon_action: Action) -> void:
-	weapon_action.ammunition = weapon_action.max_ammo
-	if _actions.has(ActionManager.Trigger.FIRE_START):
-		_actions[ActionManager.Trigger.FIRE_START].disconnect("ammunition_changed", self, "update_fire_action_ammo_hud")
-		_actions[ActionManager.Trigger.FIRE_START] = weapon_action
-		weapon_action.connect("ammunition_changed", self, "update_fire_action_ammo_hud")
 	_hud.update_weapon_type(weapon_action)
 	_hud.update_fire_action_ammo(weapon_action.max_ammo)
 

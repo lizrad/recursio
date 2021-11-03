@@ -48,7 +48,7 @@ func _process(delta):
 
 
 func create_action_duplicate(action_type) -> Action:
-	var instance = action_resources[action_type].duplicate()
+	var instance = action_resources[action_type].duplicate() as Action
 	instance.ammunition = instance.max_ammo
 	return instance
 
@@ -78,7 +78,7 @@ func clear_action_instances():
 	for instance in _instanced_actions:
 		if instance.get_ref():
 			instance.get_ref().queue_free()
-	
+
 	_instanced_actions.clear()
 	for action in _actions:
 		action.ammunition = action.max_ammo

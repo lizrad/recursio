@@ -13,7 +13,7 @@ export var img_bullet_bg: StreamTexture
 export var player_accessory: PackedScene
 export var attack: PackedScene
 
-var ammunition 
+var ammunition: int
 var blocked := false
 var activation_time: int # ts in ticks when the action was initially triggered
 var trigger_times: Array = []
