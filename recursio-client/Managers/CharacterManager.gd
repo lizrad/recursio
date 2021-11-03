@@ -272,6 +272,7 @@ func _on_spawn_player(player_id, spawn_point, team_id):
 	# Initialize capture point HUD for current level
 	_player.setup_capture_point_hud(_game_manager.get_capture_points().size())
 	assert(_player.connect("timeline_index_changed", self, "_on_player_timeline_changed") == OK)
+	assert(Server.connect("wall_spawn", _player, "_on_wall_spawn_received") == OK)
 
 func _on_spawn_enemy(enemy_id, spawn_point):
 	_enemy = _spawn_character(_enemy_scene, spawn_point)

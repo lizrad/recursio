@@ -28,6 +28,7 @@ signal game_result(winning_player_id)
 signal player_hit(hit_player_id)
 signal ghost_hit(hit_ghost_player_owner, hit_ghost_id)
 signal timeline_picks(player_pick, enemy_picks)
+signal wall_spawn (position, rotation, wall_index)
 
 signal round_started(round_index, latency)
 signal round_ended(round_index)
@@ -149,7 +150,7 @@ remote func receive_latency(player_time):
 		delta_latency = (new_latency) - latency
 		latency = new_latency
 		latency_array.clear()
-	Logger.info("Receive latency (" + str((OS.get_system_time_msecs() - player_time) / 2) + ")", "server")
+	Logger.debug("Receive latency (" + str((OS.get_system_time_msecs() - player_time) / 2) + ")", "server")
 
 
 remote func receive_player_ghost_record(timeline_index, record_data):
@@ -224,3 +225,7 @@ remote func receive_player_action(action_player_id, action_type):
 remote func receive_timeline_picks(player_pick, enemy_pick):
 	Logger.debug("Ghost picks received", "server")
 	emit_signal("timeline_picks",player_pick, enemy_pick)
+
+remote func receive_wall_spawn(position, rotation, wall_index):
+	Logger.info("Wall spawn received", "server")
+	emit_signal("wall_spawn",position, rotation, wall_index)

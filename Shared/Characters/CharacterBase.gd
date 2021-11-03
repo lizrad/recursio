@@ -117,3 +117,6 @@ func _get_action(trigger, timeline_index):
 
 func get_body():
 	return _kb
+
+func wall_spawned(wall):
+	pass

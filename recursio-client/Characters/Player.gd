@@ -14,6 +14,7 @@ onready var _visibility_light = get_node("KinematicBody/VisibilityLight")
 
 onready var _button_overlay: ButtonOverlay = get_node("KinematicBody/ButtonOverlay")
 
+var _walls = []
 var _past_frames = {}
 var _just_corrected = false
 var _last_server_position
@@ -37,6 +38,11 @@ func reset() -> void:
 
 func clear_past_frames():
 	_past_frames.clear()
+
+func clear_walls():
+	_walls.clear()
+
+
 
 # OVERRIDE #
 func apply_input(movement_vector: Vector3, rotation_vector: Vector3, buttons: int) -> void:
@@ -65,7 +71,18 @@ func _get_action(trigger, timeline_index):
 	
 	return _actions[id]
 
+# OVERRIDE #
+func wall_spawned(wall):
+	_walls.append(wall)
 
+func _on_wall_spawn_received(position, rotation, wall_index):
+	if _walls.size()>wall_index:
+		if _walls[wall_index]:
+			Logger.info("correcting wall from " + str(_walls[wall_index].global_transform.origin) +" to "+ str(position), "wall_validation")
+			_walls[wall_index].global_transform.origin = position
+			#TODO: is rotation global here, could be dangerous if it isn't
+			_walls[wall_index].rotation.y = rotation
+			
 func get_visibility_mask():
 	return _light_viewport.get_texture()
 

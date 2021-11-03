@@ -107,9 +107,9 @@ func set_active(action: Action, character: CharacterBase, tree_position: Spatial
 	if action.attack:
 		Logger.info("instancing new attack named "+ action.name, "actions")
 		var spawn = action.attack.instance()
-		spawn.initialize(character)
 		spawn.global_transform = tree_position.global_transform
 		action_scene_parent.add_child(spawn)
+		spawn.initialize(character)
 		_instanced_actions.append(weakref(spawn))
 		# TODO: if has recoil configured -> apply on player
 

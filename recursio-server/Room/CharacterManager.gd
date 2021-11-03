@@ -100,6 +100,7 @@ func spawn_player(player_id, team_id) -> void:
 	ghost_dic[player_id] = {}
 	add_child(player)
 	player.connect("hit", self, "_on_player_hit", [player_id])
+	player.connect("wall_spawn", self, "_on_wall_spawn", [player_id])
 
 	# Triggering spawns of enemies on all clients
 	for other_player_id in player_dic:
@@ -122,7 +123,10 @@ func despawn_player(player_id) -> void:
 	for other_player_id in player_dic:
 		Server.despawn_enemy_on_client(other_player_id, player_id)
 
-
+func reset_wall_indices():
+	for player_id in player_dic:
+		player_dic[player_id].reset_wall_indices()
+		
 func create_ghosts() -> void:
 	for player_id in player_dic:
 		_create_ghost_from_player(player_dic[player_id])
@@ -230,8 +234,8 @@ func _on_ghost_hit(ghost_id, owning_player_id):
 		Server.send_ghost_hit(player_id, owning_player_id, ghost_id)
 
 
-
-
+func _on_wall_spawn(position, rotation, wall_index, player_id):
+	Server.send_wall_spawn(position, rotation, wall_index, player_id)
 
 
 

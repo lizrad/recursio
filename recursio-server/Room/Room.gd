@@ -135,6 +135,7 @@ func _on_game_phase_ended() -> void:
 func end_round(round_index) -> void:
 	_character_manager.create_ghosts()
 	_character_manager.disable_ghosts()
+	_character_manager.reset_wall_indices()
 	_character_manager.move_players_to_spawn_point()
 	_character_manager.set_block_player_input(true)
 	_game_manager.reset()

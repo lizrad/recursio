@@ -15,6 +15,7 @@ func _ready():
 func initialize(owning_player) -> void:
 	initialize_visual(owning_player)
 	placed_by_body = owning_player
+	owning_player.wall_spawned(self)
 	round_index = owning_player.round_index
 
 

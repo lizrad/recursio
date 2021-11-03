@@ -123,7 +123,10 @@ func send_ghost_pick(player_id, player_pick, enemy_pick):
 	Logger.info("Sending ghost picks", "connection")
 	rpc_id(player_id, "receive_timeline_picks", player_pick, enemy_pick)
 
-
+func send_wall_spawn(position, rotation, wall_index, player_id):
+	Logger.info("Sending wall spawn", "connection")
+	rpc_id(player_id, "receive_wall_spawn", position, rotation, wall_index)
+	
 remote func determine_latency(player_time):
 	var player_id = get_tree().get_rpc_sender_id()
 	rpc_id(player_id, "receive_latency", player_time)

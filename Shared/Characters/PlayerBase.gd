@@ -1,7 +1,8 @@
 extends CharacterBase
 class_name PlayerBase
 
-
+signal wall_spawn(position, rotation, wall_index)
+var _wall_index = 0
 # The acceleration applied to the velocity
 var acceleration: Vector3 = Vector3.ZERO
 
@@ -72,7 +73,16 @@ func apply_input(movement_vector: Vector3, rotation_vector: Vector3, buttons: in
 func reset_record_data():
 	_record_manager.reset()
 
+func reset_wall_indices():
+	_wall_index = 0
+
 func get_record_data() -> RecordData:
 	var record_data: RecordData = _record_manager.record_data
 	record_data.timeline_index = self.timeline_index
 	return record_data
+
+
+# OVERRIDE #
+func wall_spawned(wall):
+	emit_signal("wall_spawn",wall.global_transform.origin, wall.global_transform.basis.get_euler().y, _wall_index)
+	_wall_index=+1
