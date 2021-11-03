@@ -17,14 +17,15 @@ func _physics_process(delta):
 	
 	#always finish after 0.5 second
 	var max_time = 0.5
-	_time += delta
-	_time = min(_time, max_time)
-
-	var steepness = 2
-	var e_section = max(exp(-steepness*_time),0.0)
 	
-	var factor = 10
+	_time += delta * (1.0/max_time)
+	_time = min(_time, 1)
+
+	var steepness = 2.0
+	var e_section = max(exp(log((1 + 1 / steepness) / (steepness * _time + 1))) - 1.0 / steepness,0.0)
+	
+	var factor = 35
 	_owning_player.velocity += _owning_player.input_movement_direction * e_section * factor
 
-	if _time == max_time:
+	if _time == 1:
 		queue_free()
