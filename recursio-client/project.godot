@@ -214,8 +214,9 @@ config/icon="res://icon.png"
 [autoload]
 
 Constants="*res://Shared/Constants.gd"
-Server="*res://Global/Server.gd"
 Logger="*res://addons/recursio-loggerplugin/Logger.gd"
+LoggerPluginSingleton="*res://addons/recursio-loggerplugin/LoggerPluginSingleton.gd"
+Server="*res://Global/Server.gd"
 InputManager="*res://Global/InputManager.gd"
 
 [debug]

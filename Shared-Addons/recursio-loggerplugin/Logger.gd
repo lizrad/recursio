@@ -11,19 +11,6 @@ extends Node  # Needed to work as a singleton
 ##================##
 
 
-var _time_between_config_reloads = 3.0
-var _time_to_next_config_reload
-
-func _ready():
-	load_config()
-	_time_to_next_config_reload = _time_between_config_reloads
-
-func _process(delta):
-	_time_to_next_config_reload-=delta
-	if _time_to_next_config_reload<=0:
-		load_config()
-		_time_to_next_config_reload = _time_between_config_reloads
-
 class ExternalSink:
 	# Queue modes
 	enum QUEUE_MODES {
@@ -325,19 +312,18 @@ const ERROR_MESSAGES = {
 ##=============##
 
 # Configuration
-var default_all_config = [1, 1, 1, 1, 1]
 var default_output_level = INFO
 # TODO: Find (or implement in Godot) a more clever way to achieve that
 
 var default_output_strategies = [STRATEGY_PRINT, STRATEGY_PRINT, STRATEGY_PRINT, STRATEGY_PRINT, STRATEGY_PRINT]
 var default_logfile_path = "user://%s.log" % ProjectSettings.get_setting("application/config/name")  # TODO @File
-var default_configfile_path = "res://addons/recursio-loggerplugin/%s.cfg" % PLUGIN_NAME
+var default_configfile_path = "user://%s.cfg" % PLUGIN_NAME
 
 # e.g. "[INFO] [main] The young alpaca started growing a goatie."
 var output_format = "[{TIME}] [{LVL}] [{MOD}]{ERR_MSG} {MSG}"
 # Example with all supported placeholders: "YYYY.MM.DD hh.mm.ss"
 # would output e.g.: "2020.10.09 12:10:47".
-var time_format = "hh:mm:ss.ms"
+var time_format = "hh:mm:ss"
 
 # Holds the name of the debug module for easy usage across all logging functions.
 var default_module_name = "main"
@@ -416,7 +402,7 @@ func error(message, module = default_module_name, error_code = -1):
 # Module management
 # -----------------
 
-
+signal module_added
 func add_module(name, output_level = default_output_level, output_strategies = default_output_strategies, logfile = null):
 	"""Add a new module with the given parameter or (by default) the
 	default ones.
@@ -427,24 +413,14 @@ func add_module(name, output_level = default_output_level, output_strategies = d
 		if logfile == null:
 			logfile = get_external_sink(default_logfile_path)
 		modules[name] = Module.new(name, output_level, output_strategies, logfile)
-	var loggerconfig = ConfigFile.new()
-	
-	var err = loggerconfig.load("res://addons/recursio-loggerplugin/loggerconfig.ini")
-	if err != OK:
-		print("ERROR: Could not load config file!")
-	
-	for level in LEVELS:
-		if not loggerconfig.has_section_key(name, level):
-			loggerconfig.set_value(name, level, true)
-	loggerconfig.save("res://addons/recursio-loggerplugin/loggerconfig.ini")
-	
+		emit_signal("module_added")
 	return modules[name]
 
 
 func get_module(module = default_module_name):
 	"""Retrieve the given module if it exists; if not, it will be created."""
 	if not modules.has(module):
-		print("The requested module '%s' does not exist. It will be created with default values." % module)
+		info("The requested module '%s' does not exist. It will be created with default values." % module, PLUGIN_NAME)
 		add_module(module)
 	return modules[module]
 
@@ -571,16 +547,13 @@ func get_default_output_level():
 # * ss = Seconds
 func get_formatted_datetime():
 	var datetime = OS.get_datetime()
-	var ms = OS.get_system_time_msecs() % 1000
-	#var ms = OS.get_ticks_msec() % 1000
 	var result = time_format
-	result = result.replacen("YYYY", "%04d" % [datetime.year])
-	result = result.replacen("MM", "%02d" % [datetime.month])
-	result = result.replacen("DD", "%02d" % [datetime.day])
-	result = result.replacen("hh", "%02d" % [datetime.hour])
-	result = result.replacen("mm", "%02d" % [datetime.minute])
-	result = result.replacen("ss", "%02d" % [datetime.second])
-	result = result.replacen("ms", "%03d" % [ms])
+	result = result.replace("YYYY", "%04d" % [datetime.year])
+	result = result.replace("MM", "%02d" % [datetime.month])
+	result = result.replace("DD", "%02d" % [datetime.day])
+	result = result.replace("hh", "%02d" % [datetime.hour])
+	result = result.replace("mm", "%02d" % [datetime.minute])
+	result = result.replace("ss", "%02d" % [datetime.second])
 	return result
 
 
@@ -693,7 +666,6 @@ func clear_memory():
 # ----------------------------
 
 const config_fields := {
-	default_all_config = "default_all_config",
 	default_output_level = "default_output_level",
 	default_output_strategies = "default_output_strategies",
 	default_logfile_path = "default_logfile_path",
@@ -712,7 +684,6 @@ func save_config(configfile = default_configfile_path):
 	var config = ConfigFile.new()
 
 	# Store default config
-	config.set_value(PLUGIN_NAME, config_fields.default_all_config, default_all_config)
 	config.set_value(PLUGIN_NAME, config_fields.default_output_level, default_output_level)
 	config.set_value(PLUGIN_NAME, config_fields.default_output_strategies, default_output_strategies)
 	config.set_value(PLUGIN_NAME, config_fields.default_logfile_path, default_logfile_path)
@@ -751,18 +722,17 @@ func load_config(configfile = default_configfile_path):
 	# Look for the file
 	var dir = Directory.new()
 	if not dir.file_exists(configfile):
-		print("Could not load the config in '%s', the file does not exist." % configfile)
+		warn("Could not load the config in '%s', the file does not exist." % configfile, PLUGIN_NAME)
 		return ERR_FILE_NOT_FOUND
 
 	# Load its contents
 	var config = ConfigFile.new()
 	var err = config.load(configfile)
 	if err:
-		print("Could not load the config in '%s'; exited with error %d." % [configfile, err])
+		warn("Could not load the config in '%s'; exited with error %d." % [configfile, err], PLUGIN_NAME)
 		return err
 
 	# Load default config
-	default_all_config = config.get_value(PLUGIN_NAME, config_fields.default_all_config, default_all_config)
 	default_output_level = config.get_value(PLUGIN_NAME, config_fields.default_output_level, default_output_level)
 	default_output_strategies = config.get_value(PLUGIN_NAME, config_fields.default_output_strategies, default_output_strategies)
 	default_logfile_path = config.get_value(PLUGIN_NAME, config_fields.default_logfile_path, default_logfile_path)
@@ -781,6 +751,8 @@ func load_config(configfile = default_configfile_path):
 			module_cfg["name"], module_cfg["output_level"], module_cfg["output_strategies"], get_external_sink(module_cfg["external_sink"]["path"])
 		)
 		modules[module_cfg["name"]] = module
+
+	info("Successfully loaded the config from '%s'." % configfile, PLUGIN_NAME)
 	return OK
 
 

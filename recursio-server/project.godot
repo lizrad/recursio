@@ -166,6 +166,7 @@ config/icon="res://icon.png"
 [autoload]
 
 Logger="*res://addons/recursio-loggerplugin/Logger.gd"
+LoggerPluginSingleton="*res://addons/recursio-loggerplugin/LoggerPluginSingleton.gd"
 Constants="*res://Shared/Constants.gd"
 
 [editor_plugins]
