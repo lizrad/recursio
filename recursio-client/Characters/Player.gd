@@ -32,14 +32,17 @@ func player_init(action_manager, round_manager) -> void:
 # OVERRIDE #
 func reset() -> void:
 	.reset()
-	_past_frames.clear()
+	clear_past_frames()
 	_hud.reset()
+
+func clear_past_frames():
+	_past_frames.clear()
 
 # OVERRIDE #
 func apply_input(movement_vector: Vector3, rotation_vector: Vector3, buttons: int) -> void:
 	.apply_input(movement_vector, rotation_vector, buttons)
 	if _just_corrected:
-		_past_frames.clear()
+		clear_past_frames()
 		_just_corrected = false
 	else:
 		var frame = MovementFrame.new()
@@ -132,6 +135,7 @@ func get_button_overlay() -> ButtonOverlay:
 
 
 func handle_server_update(position, time):
+	
 	_last_server_position = position
 	_last_server_time = time
 	
@@ -154,7 +158,7 @@ func handle_server_update(position, time):
 		var position_diff = position - closest_frame.position
 
 		# If the difference is too large, correct it
-		if position_diff.length() > 0.1:
+		if position_diff.length() > 0.1 and _round_manager.get_current_phase() == RoundManager.Phases.GAME:
 			# TODO: Lerp there rather than setting it outright
 			var before = .get_position()
 			self.position += position_diff
@@ -163,7 +167,7 @@ func handle_server_update(position, time):
 				+ " (should be at " + str(position) + " according to server)"), "movement_validation")
 
 			# Hotfix for overcompensation - we could also fix all following past states, but is that required?
-			_past_frames.clear()
+			clear_past_frames()
 
 			_just_corrected = true
 
