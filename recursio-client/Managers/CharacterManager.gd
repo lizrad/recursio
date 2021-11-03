@@ -159,6 +159,7 @@ func _on_round_started(round_index, latency) -> void:
 # unused param, but event is shared with server
 func _on_round_ended(_round_index):
 	_player.block_movement = true
+	_player.clear_walls()
 	_player.clear_past_frames()
 	_player.move_to_spawn_point()
 	_stop_ghosts()
