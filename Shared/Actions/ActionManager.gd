@@ -51,10 +51,9 @@ func _process(delta):
 			_actions.erase(action)
 
 
-func get_action(action_type):
+func create_action_duplicate(action_type) -> Action:
 	var instance = action_resources[action_type].duplicate()
 	instance.ammunition = instance.max_ammo
-	
 	return instance
 
 
@@ -70,8 +69,8 @@ func get_action_type_for_trigger(trigger, timeline_index):
 		return ActionType.MELEE
 
 
-func get_action_for_trigger(trigger, timeline_index):
-	return get_action(get_action_type_for_trigger(trigger, timeline_index))
+func create_action_duplicate_for_trigger(trigger, timeline_index) -> Action:
+	return create_action_duplicate(get_action_type_for_trigger(trigger, timeline_index))
 
 
 func clear_action_instances():
@@ -115,9 +114,8 @@ func set_active(action: Action, character: CharacterBase, tree_position: Spatial
 	if action.ammunition > 0:
 		action.ammunition -= 1
 		action.emit_signal("ammunition_changed", action.ammunition)
-	
+
 	if not _actions.has(action):
 		_actions.append(action)
-	
-	
+
 	return true

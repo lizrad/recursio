@@ -75,7 +75,7 @@ func set_velocity(new_velocity):
 
 
 func set_timeline_index(new_timeline_index: int):
-	timeline_index = new_timeline_index	
+	timeline_index = new_timeline_index
 	emit_signal("timeline_index_changed", new_timeline_index)
 
 
@@ -92,7 +92,7 @@ func trigger_actions(buttons: int) -> void:
 		var bit = buttons & trigger
 		if not bit:
 			continue
-		
+
 		Logger.info("Handling action of type " + str(trigger), "actions")
 		var action = _get_action(trigger, timeline_index)
 		var success = _action_manager.set_active(action, self, _kb, get_parent())
@@ -113,7 +113,7 @@ func _get_action(trigger, timeline_index):
 	
 	# Cache the action if it hasn't been cached yet
 	if not _actions.has(id):
-		_actions[id] = _action_manager.get_action_for_trigger(trigger, timeline_index)
+		_actions[id] = _action_manager.create_action_duplicate_for_trigger(trigger, timeline_index)
 	
 	return _actions[id]
 

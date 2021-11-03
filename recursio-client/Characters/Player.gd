@@ -46,6 +46,23 @@ func apply_input(movement_vector: Vector3, rotation_vector: Vector3, buttons: in
 		frame.position = self.position
 		_past_frames[Server.get_server_time()] = frame
 
+# OVERRIDE #
+# Always returns the same Action instance for the same trigger and timeline index. This preserves ammo count etc.
+func _get_action(trigger, timeline_index):
+	var id = timeline_index * 10 + trigger
+	
+	# Cache the action if it hasn't been cached yet
+	if not _actions.has(id):
+		var action = _action_manager.create_action_duplicate_for_trigger(trigger, timeline_index)
+		_actions[id] = action
+		if trigger == ActionManager.Trigger.SPECIAL_MOVEMENT_START:
+			action.connect("ammunition_changed", self, "update_special_movement_ammo_hud")
+		elif trigger == ActionManager.Trigger.FIRE_START:
+			action.connect("ammunition_changed", self, "update_fire_action_ammo_hud")
+	
+	return _actions[id]
+
+
 func get_visibility_mask():
 	return _light_viewport.get_texture()
 
@@ -69,7 +86,13 @@ func setup_capture_point_hud(number_of_capture_points) -> void:
 
 
 func update_weapon_type_hud(weapon_action: Action) -> void:
+	weapon_action.ammunition = weapon_action.max_ammo
+	if _actions.has(ActionManager.Trigger.FIRE_START):
+		_actions[ActionManager.Trigger.FIRE_START].disconnect("ammunition_changed", self, "update_fire_action_ammo_hud")
+		_actions[ActionManager.Trigger.FIRE_START] = weapon_action
+		weapon_action.connect("ammunition_changed", self, "update_fire_action_ammo_hud")
 	_hud.update_weapon_type(weapon_action)
+	_hud.update_fire_action_ammo(weapon_action.max_ammo)
 
 
 func update_fire_action_ammo_hud(amount: int) -> void:
