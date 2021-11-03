@@ -45,10 +45,6 @@ func _process(delta):
 				action.ammunition += 1
 				action.emit_signal("ammunition_changed", action.ammunition)
 				action.trigger_times.remove(0)
-		
-		# If no need to track, remove from list
-		if not action.blocked and action.trigger_times.size() == 0:
-			_actions.erase(action)
 
 
 func create_action_duplicate(action_type) -> Action:
@@ -68,7 +64,12 @@ func get_action_type_for_trigger(trigger, timeline_index):
 	elif trigger == Trigger.DEFAULT_ATTACK_START:
 		return ActionType.MELEE
 
-
+func get_action_for_trigger(trigger, timeline_index) -> Action:
+	return get_action_duplicate(get_action_type_for_trigger(trigger, timeline_index))
+	
+func get_action_duplicate(action_type) -> Action:
+	return action_resources[action_type].duplicate()
+	
 func create_action_duplicate_for_trigger(trigger, timeline_index) -> Action:
 	return create_action_duplicate(get_action_type_for_trigger(trigger, timeline_index))
 
@@ -79,7 +80,10 @@ func clear_action_instances():
 			instance.get_ref().queue_free()
 	
 	_instanced_actions.clear()
-	_actions.clear()
+	for action in _actions:
+		action.ammunition = action.max_ammo
+		action.blocked = false
+		action.trigger_times = []
 
 
 func set_active(action: Action, character: CharacterBase, tree_position: Spatial, action_scene_parent: Node) -> bool:

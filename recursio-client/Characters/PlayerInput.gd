@@ -18,13 +18,6 @@ var _action_manager
 
 var _player_timeline_pick_trigger : String = "player_switch"
 
-# Action for pressing fire
-var _fire_action
-# Action for melee
-var _default_attack_action
-# Action for dash
-var _special_movement_action
-
 var _player_initialized: bool = false
 
 func _ready():
@@ -60,27 +53,14 @@ func _physics_process(delta):
 
 func _on_player_initialized():
 	_action_manager = _player.get_action_manager()
-	_fire_action = _action_manager.create_action_duplicate(ActionManager.ActionType.HITSCAN)
-	_default_attack_action = _action_manager.create_action_duplicate(ActionManager.ActionType.MELEE)
-	_special_movement_action = _action_manager.create_action_duplicate(ActionManager.ActionType.DASH)
-	
-	# Subscribe to Action Events
-	#_fire_action.connect("ammunition_changed", self, "_on_fire_ammo_changed")
-	#_special_movement_action.connect("ammunition_changed", self, "_on_special_movement_ammo_changed")
-	
 	_player_initialized = true
 
 
 # Changes the weapon depending on the given timeline index
 func _swap_weapon_type(timeline_index) -> void:
-	#_fire_action.disconnect("ammunition_changed", self, "_on_fire_ammo_changed")
-	_fire_action = _action_manager.create_action_duplicate(_action_manager.get_action_type_for_trigger(ActionManager.Trigger.FIRE_START, timeline_index))
-
-	# Re-subscribe to signals
-	#_fire_action.connect("ammunition_changed", self, "_on_fire_ammo_changed")
-	Logger.info("Weapon selected: " + _fire_action.name, "actions")
-
-	_player.update_weapon_type_hud(_fire_action)
+	var action = _action_manager.get_action_for_trigger(ActionManager.Trigger.FIRE_START, timeline_index)
+	Logger.info("Weapon selected: " + action.name, "actions")
+	_player.update_weapon_type_hud(action)
 
 
 
@@ -102,14 +82,3 @@ func _get_buttons_pressed() -> int:
 			buttons.add(action)
 		
 	return buttons.mask
-
-
-#func _on_fire_ammo_changed(ammo: int) -> void:
-#	Logger.debug("Fire ammunition changed to: " + str(ammo))
-#	_player.update_fire_action_ammo_hud(ammo)
-
-#func _on_special_movement_ammo_changed(ammo: int) -> void:
-#	Logger.debug("Special movement ammunition changed to: " + str(ammo))
-#	_player.update_special_movement_ammo_hud(ammo)
-
-
