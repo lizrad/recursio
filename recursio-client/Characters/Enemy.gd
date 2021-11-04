@@ -16,3 +16,11 @@ func enemy_init(action_manager: ActionManager) -> void:
 #TODO: Should be extrapolated input and called twice as often as we get info from server
 func apply_input(movement: Vector3, rotation: Vector3, buttons: int) -> void:
 	.apply_input(movement, rotation, buttons)
+
+
+# OVERRIDE #
+func hit():
+	pass
+
+func server_hit():
+	.hit()
