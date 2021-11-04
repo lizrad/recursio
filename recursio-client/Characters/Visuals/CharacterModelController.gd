@@ -1,7 +1,7 @@
 extends Node
 class_name CharacterModel
 
-signal color_scheme_changed(new_color_scheme)
+signal color_scheme_changed(new_color_scheme, timeline_index)
 export(String, "player", "enemy", "player_ghost", "enemy_ghost") var color_scheme = "player"
 
 onready var animator = get_node("Animator")
@@ -33,7 +33,6 @@ func set_shader_param(param, value):
 	_back_variant.material_override.set_shader_param(param, value)
 
 func _set_color_scheme(new_color_scheme:String, timeline_index):
-	emit_signal("color_scheme_changed", new_color_scheme)
 	var color_parameter = "color"
 	_front.material_override.set_shader_param(color_parameter, Color(Constants.get_value("colors", new_color_scheme+"_main"))) 
 	_front_variant.material_override.set_shader_param(color_parameter, Color(Constants.get_value("colors", new_color_scheme+"_main"))) 
@@ -44,7 +43,8 @@ func _set_color_scheme(new_color_scheme:String, timeline_index):
 	
 	_back.material_override.set_shader_param(color_parameter,Color(Constants.get_value("colors", new_color_scheme+"_main")))
 	_back_variant.material_override.set_shader_param(color_parameter,Color(Constants.get_value("colors", new_color_scheme+"_main")))
-
+	emit_signal("color_scheme_changed",new_color_scheme, timeline_index)
+	
 func _set_variant(timeline_index):
 	var wall_index = Constants.get_value("ghosts","wall_placing_timeline_index")
 	var variant_active = timeline_index == wall_index
