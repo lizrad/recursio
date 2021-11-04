@@ -30,14 +30,18 @@ func ghost_init(action_manager, record_data: RecordData) -> void:
 func start_playing(start_time: int) -> void:
 	.start_playing(start_time)
 
-# Displays ghost as dead and triggers the base classes hit function
 # OVERRIDE #
-func hit() -> void:
+# disable hit of base on client
+func hit():
+	pass
+
+# Displays ghost as dead
+# calls hit of base function triggered by server
+func server_hit():
 	.hit()
 	# TODO: apply death animation and mesh
 	_minimap_icon.set_texture(_minimap_icon_dead)
 	_character_model.visible = false
-
 
 func enable_body():
 	_kb.visible = true
