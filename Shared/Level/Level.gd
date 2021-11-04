@@ -16,6 +16,20 @@ func _ready():
 			new_scene.global_transform = point.global_transform
 			_capture_points.append(new_scene)
 			add_child(new_scene)
+	
+
+func color_spawn_points(player_team_id):
+	for player in range(2):
+		var spawns = "Player" + str(player + 1) + "Spawns"
+		if has_node(spawns):
+			var index = 0
+			for spawn in get_node(spawns).get_children():
+				var color_scheme = "player_" if player_team_id == player else "enemy_"
+				var wall_index = Constants.get_value("ghosts","wall_placing_timeline_index")
+				var accent_type = "primary" if wall_index != index else "secondary"
+				var color = Color(Constants.get_value("colors", color_scheme+accent_type+"_accent"))
+				spawn.get_node("MeshInstance").material_override.albedo_color = color
+				index += 1
 
 func reset():
 	for capture_point in _capture_points:
@@ -47,5 +61,6 @@ func toggle_capture_points(toggle:bool) -> void:
 	for player in range(2):
 		var spawns = "Player" + str(player + 1) + "Spawns"
 		if has_node(spawns):
+			var index = 0
 			for spawn in get_node(spawns).get_children():
 				spawn.get_node("MeshInstance").visible = !toggle
