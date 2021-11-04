@@ -269,6 +269,7 @@ func _on_spawn_player(player_id, spawn_point, team_id):
 	assert(_player.get_button_overlay().connect("button_pressed", self, "_on_player_ready") == OK)
 	_player_rpc_id = player_id
 	_player.team_id = team_id
+	_player.player_id = player_id
 	_player.set_name(str(player_id))
 	_game_manager.set_team_id(team_id)
 	
