@@ -1,6 +1,12 @@
 extends Spatial
 class_name CapturePoint
 
+onready var neutral_color = Color(Constants.get_value("colors", "neutral"))
+onready var player_in_capture_color = Color(Constants.get_value("colors", "player_ghost_primary_accent"))
+onready var player_captured_color = Color(Constants.get_value("colors", "player_ghost_main"))
+onready var enemy_in_capture_color = Color(Constants.get_value("colors", "enemy_ghost_primary_accent"))
+onready var enemy_captured_color = Color(Constants.get_value("colors", "enemy_ghost_main"))
+
 var active = true
 var _capture_progress = 0
 var _capturing_team = -1
@@ -15,6 +21,7 @@ var _release_speed
 var _recapture_speed
 var _capture_time
 
+
 func _ready():
 	player_id = get_tree().get_network_unique_id()
 	assert($Area.connect("body_entered", self, "_on_body_entered") == OK)
@@ -26,7 +33,7 @@ func _ready():
 	_capture_time = Constants.get_value("capture", "capture_time")
 
 func reset():
-	$MeshInstance.material_override.albedo_color = Color.gray
+	$MeshInstance.material_override.albedo_color = neutral_color
 	active = false
 	_capture_progress = 0
 	_capturing_team = -1
@@ -90,20 +97,20 @@ func capture(capturing_player_id):
 	_captured_by = capturing_player_id
 	_capture_progress = 1
 	if capturing_player_id == player_id:
-		$MeshInstance.material_override.albedo_color = Color.aquamarine
+		$MeshInstance.material_override.albedo_color = player_captured_color
 		Logger.info("I captured a point", "capture_point")
 	else:
-		$MeshInstance.material_override.albedo_color = Color.deeppink
+		$MeshInstance.material_override.albedo_color = enemy_captured_color
 		Logger.info("Enemy captured a point", "capture_point")
 
 func set_capturing_player(capturing_player_id):
 	_capturing_team = capturing_player_id
 	if capturing_player_id == -1:
-		$MeshInstance.material_override.albedo_color = Color.gray
+		$MeshInstance.material_override.albedo_color = neutral_color
 	elif capturing_player_id == player_id:
-		$MeshInstance.material_override.albedo_color = Color.green
+		$MeshInstance.material_override.albedo_color = player_in_capture_color
 	else:
-		$MeshInstance.material_override.albedo_color = Color.red
+		$MeshInstance.material_override.albedo_color = enemy_in_capture_color
 	
 func set_capture_status(capturing_player_id, capture_progress):
 	Logger.info("Capture progress of " +str(capture_progress)+" received", "capture_point")
@@ -112,10 +119,10 @@ func set_capture_status(capturing_player_id, capture_progress):
 func capture_lost(capturing_player_id):
 	_captured_by = -1
 	if capturing_player_id == player_id:
-		$MeshInstance.material_override.albedo_color = Color.green
+		$MeshInstance.material_override.albedo_color = player_in_capture_color
 		Logger.info("I lost a capture point", "capture_point")
 	else:
-		$MeshInstance.material_override.albedo_color = Color.red
+		$MeshInstance.material_override.albedo_color = enemy_in_capture_color
 		Logger.info("Enemy lost a capture point", "capture_point")
 
 func get_capture_progress():
