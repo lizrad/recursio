@@ -7,6 +7,7 @@ onready var _game_result_screen = get_node("../../GameResultScreen")
 onready var _countdown_screen = get_node("../../CountdownScreen")
 onready var _level: Level = get_node(level_path)
 
+var _team_id := -1
 var _countdown_time: float = 0.0
 
 func _ready():
@@ -65,6 +66,9 @@ func get_capture_points() -> Array:
 func toggle_capture_points(toggle: bool) -> void:
 	_level.toggle_capture_points(toggle)
 
+func set_team_id(team_id):
+	_team_id = team_id
+	_level.color_spawn_points(_team_id)
 
 func reset() -> void:
 	_game_result_screen.visible = false

@@ -1,6 +1,6 @@
 extends BaseAnimator
 
-export var animation_duration := 0.5
+onready var _max_time = Constants.get_value("hitscan", "max_time")
 export var hitscan_rotation_periods := 10
 export var hitscan_log_base := 3000
 export var middle_scale_extent := 0.35
@@ -15,11 +15,11 @@ func start_animation():
 func get_keyframe(delta):
 	_reset_keyframes()
 	_time_since_start += delta
-	if _time_since_start > animation_duration:
+	if _time_since_start > _max_time:
 		emit_signal("animation_over")
-		_time_since_start = animation_duration
+		_time_since_start = _max_time
 	
-	var ratio = _time_since_start/animation_duration
+	var ratio = _time_since_start/_max_time
 	
 	var remapped_rotation_ratio = logWithBase(1+(hitscan_log_base-1)*ratio,hitscan_log_base)
 	var remapped_scale_ratio = pow(ratio*2,2) if ratio<=0.5 else pow((ratio-1)*2,2)

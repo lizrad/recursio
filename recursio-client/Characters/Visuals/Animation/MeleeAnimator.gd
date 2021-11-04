@@ -1,6 +1,5 @@
 extends BaseAnimator
 
-export var animation_duration := 0.2
 export var front_extent := 0.75
 export var middle_z_extent := 0.375
 export var middle_scale_extent := 0.3
@@ -10,6 +9,7 @@ var _attack_color = Color.tomato
 
 onready var _front = get_node("../RootPivot/FrontPivot/Front")
 onready var _front_variant = get_node("../RootPivot/FrontPivot/FrontVariant")
+onready var _max_time = Constants.get_value("melee", "max_time")
 
 var _time_since_start = 0
 var _default_color 
@@ -31,15 +31,15 @@ func start_animation():
 func get_keyframe(delta):
 	_reset_keyframes()
 	
-	if _time_since_start > animation_duration:
+	if _time_since_start > _max_time:
 		emit_signal("animation_over")
 		_front.material_override.set_shader_param("color",_default_color)
 		_front_variant.material_override.set_shader_param("color",_default_color)
-		_time_since_start = animation_duration
+		_time_since_start = _max_time
 	else:
 		_time_since_start += delta
 	
-	var ratio = _time_since_start/animation_duration
+	var ratio = _time_since_start/_max_time
 	var remapped_ratio = pow(ratio*2,2) if ratio<=0.5 else pow((ratio-1)*2,2)
 	var z_front = front_extent * remapped_ratio + _default_positions[_front_pivot].z
 	_keyframes[_front_pivot].origin.z = z_front

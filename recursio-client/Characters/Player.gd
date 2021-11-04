@@ -102,7 +102,7 @@ func follow_camera():
 func setup_capture_point_hud(number_of_capture_points) -> void:
 	for i in number_of_capture_points:
 		_hud.add_capture_point()
-	_hud.set_team_id(self.team_id)
+	_hud.set_player_id(self.player_id)
 
 
 func update_weapon_type_hud(max_ammo, img_bullet_bg, img_bullet) -> void:

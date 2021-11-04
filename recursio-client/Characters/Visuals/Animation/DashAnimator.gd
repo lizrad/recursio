@@ -1,6 +1,8 @@
 extends BaseAnimator
 
 
+onready var _max_time = Constants.get_value("dash", "max_time")
+
 export var speed :=50.0
 
 var _rotate_to_zero = false
@@ -16,7 +18,7 @@ func stop_animation():
 func get_keyframe(delta):
 	#TODO: this is just a hacky solution so dash always stops after 0.5 second
 	_time_since_start += delta
-	if _time_since_start > 0.5:
+	if _time_since_start > _max_time:
 		stop_animation()
 	_reset_keyframes()
 	_angle += delta*speed
