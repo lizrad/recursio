@@ -16,4 +16,4 @@ static func apply_1D(value: float, inner: float, outer: float):
 	# Use absolute for calculation, then map back to actual sign
 	var absolute = abs(value)
 	# inverse_lerp returns t [0,1] which defines the interpolating value for c, between a and b
-	return inverse_lerp(inner, outer, absolute) * sign(value)
+	return clamp(inverse_lerp(inner, outer, absolute), 0, 1) * sign(value)
