@@ -32,13 +32,17 @@ func start_playing(start_time: int) -> void:
 	.start_playing(start_time)
 	_minimap_icon.set_texture(_minimap_alive)
 
-# Displays ghost as dead and triggers the base classes hit function
 # OVERRIDE #
+# disable hit of base on client
 func hit():
+	pass
+
+# Displays ghost as dead
+# calls hit of base function triggered by server
+func server_hit():
 	.hit()
 	_minimap_icon.set_texture(_minimap_icon_dead)
 	#_mesh.rotate_z(90)
-
 
 func enable_body():
 	_kb.visible = true

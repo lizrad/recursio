@@ -330,14 +330,14 @@ func _on_world_state_received(world_state: WorldState):
 
 
 func _on_player_hit(hit_player_id) -> void:
-	_player.hit() if hit_player_id == _player_rpc_id else _enemy.hit()
+	_player.server_hit() if hit_player_id == _player_rpc_id else _enemy.server_hit()
 
 
 func _on_ghost_hit(hit_ghost_player_owner, hit_ghost_id) -> void:
 	if hit_ghost_player_owner == _player_rpc_id:
-		_player_ghosts[hit_ghost_id].hit()
+		_player_ghosts[hit_ghost_id].server_hit()
 	else:
-		_enemy_ghosts[hit_ghost_id].hit()
+		_enemy_ghosts[hit_ghost_id].server_hit()
 
 
 func _on_capture_point_captured(capturing_player_id, capture_point):
