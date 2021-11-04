@@ -1,7 +1,7 @@
 extends Node
 
-export(float) var inner_deadzone := 0.1
-export(float) var outer_deadzone := 0.9
+export(float) var inner_deadzone := 0.3
+export(float) var outer_deadzone := 0.7
 export(float) var rotate_threshold := 0.0
 
 onready var _player: Player = get_parent().get_parent()
@@ -35,7 +35,7 @@ func _physics_process(delta):
 		var movement_vector = Vector3(input.y, 0.0, -input.x)
 		InputManager.add_movement_to_input_frame(movement_vector)
 
-		var rotate_input = DeadZones.apply_2D(_get_input("player_look"), inner_deadzone, outer_deadzone)
+		var rotate_input = DeadZones.apply_2D(_get_input("player_look"), 0.1, 1)
 		var rotate_vector = Vector3(rotate_input.y, 0.0, -rotate_input.x)
 		InputManager.add_rotation_to_input_frame(rotate_vector)
 
