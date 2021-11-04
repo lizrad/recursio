@@ -21,8 +21,8 @@ func initialize(owning_player) -> void:
 
 func initialize_visual(owning_player) -> void:
 	var color = Color(Constants.get_value("colors","neutral"))
-	var character_model_controller = owning_player.get_node("KinematicBody/CharacterModel")
-	if character_model_controller:
+	if owning_player.has_node("KinematicBody/CharacterModel"):
+		var character_model_controller = owning_player.get_node("KinematicBody/CharacterModel")
 		var color_scheme = character_model_controller.color_scheme
 		color = Color(Constants.get_value("colors",color_scheme+"_secondary_accent"))
 	$MeshInstance.material_override.albedo_color = color
