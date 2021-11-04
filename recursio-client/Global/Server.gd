@@ -32,6 +32,7 @@ signal wall_spawn (position, rotation, wall_index)
 
 signal round_started(round_index, latency)
 signal round_ended(round_index)
+signal phase_started(phase)
 
 func _ready():
 	set_physics_process(false)
@@ -169,17 +170,20 @@ remote func receive_world_state(world_state):
 	emit_signal("world_state_received", WorldState.new().from_array(world_state))
 
 
-# Receives the start of a round with the server time
 remote func receive_round_start(round_index, server_time):
 	Logger.debug("Receive round start", "server")
 	# TODO: Not as accuarate -> Do separate latency calculation
 	emit_signal("round_started", round_index, max(0, float(latency) / 1000.0))
 
 
-# Receives the end of a round
 remote func receive_round_end(round_index):
 	Logger.debug("Receive round end", "server")
 	emit_signal("round_ended", round_index)
+
+
+remote func receive_phase_start(phase):
+	Logger.debug("Receive phase start: " + str(phase), "server")
+	emit_signal("phase_started", phase)
 
 
 remote func receive_capture_point_captured(capturing_player_id, capture_point):
@@ -225,6 +229,7 @@ remote func receive_player_action(action_player_id, action_type):
 remote func receive_timeline_picks(player_pick, enemy_pick):
 	Logger.debug("Ghost picks received", "server")
 	emit_signal("timeline_picks",player_pick, enemy_pick)
+
 
 remote func receive_wall_spawn(position, rotation, wall_index):
 	Logger.info("Wall spawn received", "server")
