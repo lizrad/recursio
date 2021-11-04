@@ -135,7 +135,7 @@ func show_latency_delay_hud(start_time, latency) -> void:
 
 func show_preparation_hud(round_index, start_time) -> void:
 	_hud.prep_phase_start(round_index, start_time)
-	_button_overlay.show_buttons("ready", ButtonOverlay.BUTTONS.RIGHT, true)
+	_button_overlay.show_buttons("ready", ButtonOverlay.BUTTONS.DOWN, true)
 
 
 func show_countdown_hud(start_time) -> void:
