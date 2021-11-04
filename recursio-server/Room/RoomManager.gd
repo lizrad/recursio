@@ -20,6 +20,7 @@ func _ready():
 	assert(_server.connect("peer_connected", self, "_on_peer_connected") == OK)
 	assert(_server.connect("peer_disconnected", self, "_on_peer_disconnected") == OK)
 	assert(_server.connect("player_input_data_received", self, "_on_player_input_data_received") == OK)
+	assert(_server.connect("player_ready", self, "_on_player_ready_received") == OK)
 	assert(_server.connect("player_timeline_pick_received", self, "_on_player_timline_pick_received") == OK)
 
 
@@ -34,8 +35,11 @@ func _create_room(room_name: String) -> int:
 	$ViewportContainer.rect_clip_content = true
 
 	assert(room.connect("world_state_updated", self, "_on_world_state_update") == OK)
+	assert(room.connect("phase_started", self, "_on_phase_started", [room.id]) == OK)
+	
 	assert(room.get_round_manager().connect("round_started", self, "_on_round_started", [room.id]) == OK)
 	assert(room.get_round_manager().connect("round_ended", self, "_on_round_ended", [room.id]) == OK)
+	
 	assert(room.get_game_manager().connect("capture_point_team_changed", self, "_on_capture_point_team_changed", [room.id]) == OK)
 	assert(room.get_game_manager().connect("capture_point_captured", self, "_on_capture_point_captured", [room.id]) == OK)
 	assert(room.get_game_manager().connect("capture_point_status_changed", self, "_on_capture_point_status_changed", [room.id]) == OK)
@@ -115,6 +119,12 @@ func _on_player_input_data_received(player_id, input_data):
 	_get_room(room_id).update_player_input_data(player_id, data)
 
 
+func _on_player_ready_received(player_id):
+	Logger.info("received player ready for player " + str(player_id), "connection")
+	var room_id = _player_room_dic[player_id]
+	_get_room(room_id).handle_player_ready(player_id)
+
+
 func _on_player_timline_pick_received(player_id, timeline_index):
 	Logger.info("received timeline index of " + str(timeline_index)+" from player " + str(player_id), "connection")
 	var room_id = _player_room_dic[player_id]
@@ -144,6 +154,13 @@ func _on_round_ended(round_index, room_id):
 	for player_id in room.get_players():
 		_server.send_round_end_to_client(player_id, round_index)
 	room.get_round_manager().start_round(room.get_round_manager().round_index + 1, 0)
+
+
+func _on_phase_started(phase, room_id):
+	var room: Room = _room_dic[room_id]
+	for player_id in room.get_players():
+		_server.send_phase_start(player_id, phase)
+
 
 func _on_capture_point_team_changed(team_id, capture_point, room_id):
 	var room = _room_dic[room_id]

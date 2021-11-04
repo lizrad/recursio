@@ -52,7 +52,7 @@ func _calculate_current_time() -> String:
 	return ("%d:%0*d" % [floor(time/60), 2, time])
 
 func round_start(round_index, start_time) -> void:
-	_phase.text = "Round "+str(round_index)+" starting..."
+	_phase.text = "Round " + str(round_index + 1) + " starting..."
 	_max_time = Constants.get_value("gameplay", "latency_delay")
 	_start_time = start_time
 
@@ -63,7 +63,7 @@ func latency_delay_phase_start(start_time, latency) -> void:
 
 func prep_phase_start(round_index, start_time) -> void:
 	_start_time = start_time
-	_phase.text = "Preparation Phase "+str(round_index)
+	_phase.text = "Preparation Phase " + str(round_index + 1)
 	_max_time = Constants.get_value("gameplay", "prep_phase_time")
 
 func countdown_phase_start(start_time) -> void:
@@ -73,12 +73,12 @@ func countdown_phase_start(start_time) -> void:
 
 func game_phase_start(round_index, start_time) -> void:
 	_start_time = start_time
-	_phase.text = "Game Phase "+str(round_index)
+	_phase.text = "Game Phase " + str(round_index + 1)
 	_max_time = Constants.get_value("gameplay", "game_phase_time")
 
 func rewind_phase_start(round_index, start_time) -> void:
 	_start_time = start_time
-	_phase.text = "Rewind Phase "+str(round_index)
+	_phase.text = "Rewind Phase " + str(round_index + 1)
 	_max_time = Constants.get_value("gameplay", "rewind_phase_time")
 
 
@@ -100,9 +100,9 @@ func update_weapon_type(img_bullet_bg, img_bullet) ->void:
 
 
 # Sets the internal player id for the capture points
-func set_team_id(team_id) -> void:
+func set_player_id(player_id) -> void:
 	for capture_point in _capture_points:
-		capture_point.set_team_id(team_id)
+		capture_point.set_player_id(player_id)
 
 # Adds a new capture point HUD item to the HUD
 func add_capture_point() -> void:

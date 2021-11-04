@@ -30,6 +30,7 @@ var _time_since_last_world_state_update = 0.0
 func _ready():
 	assert(Server.connect("round_started", self, "_on_server_round_started") == OK)
 	assert(Server.connect("round_ended", self, "_on_server_round_ended") == OK)
+	assert(Server.connect("phase_started", self, "_on_server_phase_started") == OK)
 	
 	assert(_round_manager.connect("round_started", self, "_on_round_started") == OK)
 	assert(_round_manager.connect("round_ended", self, "_on_round_ended") == OK)
@@ -145,6 +146,12 @@ func _on_server_round_started(round_index, latency) -> void:
 
 func _on_server_round_ended(round_index) -> void:
 	_round_manager.stop_round()
+
+
+func _on_server_phase_started(phase) -> void:
+	# TODO: remove or fix, this is evil! >:-D
+	# !!!
+	_round_manager._timer = Constants.get_value("gameplay", "prep_phase_time")
 
 
 func _on_round_started(round_index, latency) -> void:
@@ -269,6 +276,7 @@ func _on_spawn_player(player_id, spawn_point, team_id):
 	assert(_player.get_button_overlay().connect("button_pressed", self, "_on_player_ready") == OK)
 	_player_rpc_id = player_id
 	_player.team_id = team_id
+	_player.player_id = player_id
 	_player.set_name(str(player_id))
 	_game_manager.set_team_id(team_id)
 	

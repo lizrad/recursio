@@ -10,6 +10,7 @@ var player_amount = 0
 signal peer_connected(player_id)
 signal peer_disconnected(player_id)
 signal player_input_data_received(player_id, input_data)
+signal player_ready(player_id)
 signal player_timeline_pick_received(player_id, timeline_index)
 
 
@@ -59,6 +60,11 @@ func send_player_ghost_record_to_client(player_id, timeline_index, record_data: 
 func send_enemy_ghost_record_to_client(player_id, timeline_index, record_data: RecordData):
 	record_data.timestamp = get_server_time()
 	rpc_id(player_id, "receive_enemy_ghost_record", timeline_index, record_data.to_array())
+
+
+func send_phase_start(player_id, phase):
+	Logger.info("Sending phase start", "server")
+	rpc_id(player_id, "receive_phase_start", phase)
 
 
 func get_server_time():
@@ -141,8 +147,12 @@ remote func receive_player_input_data(input_data):
 	emit_signal("player_input_data_received", get_tree().get_rpc_sender_id(), input_data)
 
 
+remote func receive_player_ready():
+	emit_signal("player_ready", get_tree().get_rpc_sender_id())
+
+
 remote func receive_timeline_pick(timeline_index):
-	emit_signal("player_timeline_pick_received", get_tree().get_rpc_sender_id(), timeline_index)	
+	emit_signal("player_timeline_pick_received", get_tree().get_rpc_sender_id(), timeline_index)
 
 
 
