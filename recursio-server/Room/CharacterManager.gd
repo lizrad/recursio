@@ -210,8 +210,9 @@ func _create_ghost_from_player(player) -> void:
 	player.reset_record_data()
 
 func _add_ghost(ghost) -> void:
-	add_child(ghost)
-	ghost.connect("hit", self, "_on_ghost_hit", [ghost.timeline_index, ghost.player_id])
+	if not ghost.is_inside_tree():
+		add_child(ghost)
+		ghost.connect("hit", self, "_on_ghost_hit", [ghost.timeline_index, ghost.player_id])
 
 
 func _remove_ghost(ghost) -> void:

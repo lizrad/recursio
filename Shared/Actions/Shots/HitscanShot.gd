@@ -11,6 +11,16 @@ func _init() -> void:
 
 func initialize(owning_player) -> void:
 	Logger.info("initialize action", "HitscanShot")
+	
+	var color = Color(Constants.get_value("colors","neutral"))
+	var character_model_controller = owning_player.get_node("KinematicBody/CharacterModel")
+	if character_model_controller:
+		var color_scheme = character_model_controller.color_scheme
+		color = Color(Constants.get_value("colors",color_scheme+"_primary_accent"))
+	$Visualisation.material_override.albedo_color = color
+	$HitPoint/FrontParticles.material_override.emission = color
+	$HitPoint/BackParticles.material_override.emission = color
+	
 	cast_to = Vector3(0,0,-_bullet_range)
 	_owning_player = owning_player
 	add_exception(owning_player.get_body())

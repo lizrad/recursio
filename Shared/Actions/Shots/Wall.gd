@@ -20,9 +20,13 @@ func initialize(owning_player) -> void:
 
 
 func initialize_visual(owning_player) -> void:
-	# TODO: define and use player color
-	#$MeshInstance.material_override.albedo_color = Constants.character_colors[owning_player.id]
-	$MeshInstance.material_override.albedo_color = Color.red
+	var color = Color(Constants.get_value("colors","neutral"))
+	var character_model_controller = owning_player.get_node("KinematicBody/CharacterModel")
+	if character_model_controller:
+		var color_scheme = character_model_controller.color_scheme
+		color = Color(Constants.get_value("colors",color_scheme+"_secondary_accent"))
+	$MeshInstance.material_override.albedo_color = color
+	$MeshInstance.material_override.emission = color
 
 
 func handle_hit(collider):
