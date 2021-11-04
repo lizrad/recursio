@@ -45,8 +45,8 @@ func clear_walls():
 
 
 # OVERRIDE #
-func apply_input(movement_vector: Vector3, rotation_vector: Vector3, buttons: int) -> void:
-	.apply_input(movement_vector, rotation_vector, buttons)
+func apply_input(movement_vector: Vector3, rotation_vector: Vector3, buttons: int, input_timestamp: int) -> void:
+	.apply_input(movement_vector, rotation_vector, buttons, input_timestamp)
 	if _just_corrected:
 		clear_past_frames()
 		_just_corrected = false

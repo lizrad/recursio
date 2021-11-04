@@ -33,7 +33,7 @@ func _physics_process(_delta):
 	var time_diff = _start_time - _record_data.record_frames[0].timestamp
 	while _current_frame_index < _record_data.record_frames.size():
 		var frame: RecordFrame = _record_data.record_frames[_current_frame_index]
-		if frame.timestamp + time_diff > OS.get_system_time_msecs():
+		if frame.timestamp + time_diff > get_tree().get_root().get_node("Server").get_server_time():
 			break
 
 		_apply_record_frame(frame)

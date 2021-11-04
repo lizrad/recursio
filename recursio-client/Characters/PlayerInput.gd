@@ -40,7 +40,7 @@ func _physics_process(delta):
 		InputManager.add_rotation_to_input_frame(rotate_vector)
 
 		var buttons_pressed: int = _get_buttons_pressed()
-		_player.apply_input(movement_vector, rotate_vector, buttons_pressed)
+		_player.apply_input(movement_vector, rotate_vector, buttons_pressed, Server.get_server_time())
 		InputManager.set_triggers_in_input_frame(buttons_pressed)
 
 		InputManager.close_current_input_frame()
