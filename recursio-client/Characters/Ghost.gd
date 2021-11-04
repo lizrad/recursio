@@ -2,7 +2,6 @@ extends GhostBase
 class_name Ghost
 
 onready var _character_model : CharacterModel = get_node("KinematicBody/CharacterModel")
-onready var _kinematic_body = get_node("KinematicBody")
 
 # TODO: move to Constants or make unique in any way
 onready var _minimap_icon : MiniMapIcon = get_node("KinematicBody/MiniMapIcon")
@@ -18,8 +17,7 @@ var _minimap_alive
 func ghost_init(action_manager, record_data: RecordData) -> void:
 	.ghost_base_init(action_manager, record_data)
 	_character_model._set_color_scheme("enemy_ghost", record_data.timeline_index)
-	
-	print("ghost init")
+
 	var wall_index = Constants.get_value("ghosts","wall_placing_timeline_index")
 	# TODO: find a better way to detect enemy... maybe with groups or owning team or smth?
 	var friendly = "PlayerGhost" in name
@@ -40,13 +38,13 @@ func hit() -> void:
 	_minimap_icon.set_texture(_minimap_icon_dead)
 	_character_model.visible = false
 
-func enable_body() -> void:
-	if not _kinematic_body.is_inside_tree():
-		add_child(_kinematic_body)
-	
+
+func enable_body():
+	_kb.visible = true
+
 	_minimap_icon.set_texture(_minimap_alive)
 	_character_model.visible = true
 
-func disable_body() -> void:
-	if _kinematic_body.is_inside_tree():
-		remove_child(_kinematic_body)
+
+func disable_body():
+	_kb.visible = false
