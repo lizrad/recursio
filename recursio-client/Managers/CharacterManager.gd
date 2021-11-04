@@ -401,6 +401,7 @@ func _enable_ghosts() -> void:
 	for timeline_index in _player_ghosts:
 		# Skip if player is currently replacing this ghost
 		if timeline_index == _player.timeline_index:
+			_player_ghosts[timeline_index].toggle_path_select(true)
 			continue
 		var player_ghost = _player_ghosts[timeline_index]
 		player_ghost.enable_body()
@@ -412,6 +413,7 @@ func _disable_ghosts() -> void:
 		_enemy_ghosts[timeline_index].disable_body()
 	for timeline_index in _player_ghosts:
 		_player_ghosts[timeline_index].disable_body()
+		_player_ghosts[timeline_index].toggle_path_select(false)
 
 
 func _toggle_visbility_lights(value: bool):

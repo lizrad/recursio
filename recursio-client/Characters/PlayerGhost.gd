@@ -16,10 +16,12 @@ func create_path():
 		for frame in range(0, _record_data.record_frames.size(), 30):
 			var record_frame: RecordFrame = _record_data.record_frames[frame]
 			_curve.add_point(record_frame.position)
-
 		$GhostPath.set_curve(_curve)
-		$GhostPath.set_color_for_index(timeline_index)
+		toggle_path_select(false)
+		$GhostPath.index = timeline_index
 
+func toggle_path_select(value):
+		$GhostPath.selected = value
 
 func delete_path():
 	$GhostPath.set_curve(Curve.new())
