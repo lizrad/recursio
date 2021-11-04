@@ -35,10 +35,10 @@ __meta__ = {
 }
 
 [node name="WeaponAmmo" type="Label" parent="."]
+margin_top = 10.0
 margin_right = 23.0
-margin_bottom = 31.0
+margin_bottom = 41.0
 custom_fonts/font = ExtResource( 2 )
-text = "%"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -55,7 +55,6 @@ __meta__ = {
 
 [node name="WeaponType" type="TextureRect" parent="WeaponAmmo"]
 margin_left = 30.9084
-margin_top = -5.13712
 margin_right = 70.9084
 margin_bottom = 34.8629
 expand = true
@@ -67,19 +66,20 @@ __meta__ = {
 [node name="DashAmmo" type="Label" parent="."]
 anchor_top = 0.07
 anchor_bottom = 0.07
+margin_top = 9.0
 margin_right = 23.0
-margin_bottom = 31.0
+margin_bottom = 40.0
 custom_fonts/font = ExtResource( 2 )
-text = "%"
+text = "2"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="DashTexture" type="TextureRect" parent="DashAmmo"]
 margin_left = 29.8626
-margin_top = -4.34314
+margin_top = -6.34314
 margin_right = 69.8626
-margin_bottom = 35.6569
+margin_bottom = 33.6569
 texture = ExtResource( 3 )
 expand = true
 __meta__ = {

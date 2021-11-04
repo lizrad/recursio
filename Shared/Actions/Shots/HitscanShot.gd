@@ -1,7 +1,7 @@
 extends RayCast
 
+onready var _max_time = Constants.get_value("hitscan", "max_time")
 var _bullet_range := 5
-var _attack_time := 0.5
 var _owning_player
 var _first_frame := true
 
@@ -26,8 +26,8 @@ func initialize(owning_player) -> void:
 	add_exception(owning_player.get_body())
 	
 func _physics_process(delta):
-	_attack_time -= delta
-	if _attack_time <= 0:
+	_max_time -= delta
+	if _max_time <= 0:
 		queue_free()
 		Logger.info("freeing action..." , "HitscanShot")
 		return

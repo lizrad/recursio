@@ -270,6 +270,7 @@ func _on_spawn_player(player_id, spawn_point, team_id):
 	_player_rpc_id = player_id
 	_player.team_id = team_id
 	_player.set_name(str(player_id))
+	_game_manager.set_team_id(team_id)
 	
 	# Apply visibility mask to all entities which have been here before the player
 	_apply_visibility_always(_player)

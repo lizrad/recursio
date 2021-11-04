@@ -1,16 +1,16 @@
 extends Area
 
-var _attack_time := 0.2
 var _owning_player
 var _hit_something = false
+onready var _max_time = Constants.get_value("melee", "max_time")
 
 func initialize(owning_player) -> void:
 	Logger.info("initialize", "Melee")
 	_owning_player = owning_player
 
 func _process(delta):
-	_attack_time -= delta
-	if _attack_time <= 0:
+	_max_time -= delta
+	if _max_time <= 0:
 		queue_free()
 		return
 
