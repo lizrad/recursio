@@ -248,8 +248,6 @@ func _on_player_ghost_record_received(timeline_index, record_data):
 	var ghost = _create_player_ghost(record_data)
 	ghost.spawn_point = _game_manager.get_spawn_point(_player.team_id, timeline_index)
 	ghost.move_to_spawn_point()
-	if _player_ghosts.has(timeline_index):
-		_player_ghosts[timeline_index] .queue_free()
 	_player_ghosts[timeline_index] = ghost
 
 
