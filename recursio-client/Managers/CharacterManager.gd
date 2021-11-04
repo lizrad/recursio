@@ -159,6 +159,7 @@ func _on_round_started(round_index, latency) -> void:
 # unused param, but event is shared with server
 func _on_round_ended(_round_index):
 	_player.block_movement = true
+	_player.clear_walls()
 	_player.clear_past_frames()
 	_player.move_to_spawn_point()
 	_stop_ghosts()
@@ -227,6 +228,15 @@ func _on_timeline_picks(timeline_index, enemy_pick):
 	Logger.info("Received ghost picks from server","ghost_picking")
 	_player.timeline_index = timeline_index
 	_enemy.timeline_index = enemy_pick
+	
+	# Free the ghosts that were at this position
+	if _player_ghosts.has(timeline_index):
+		_player_ghosts[timeline_index].queue_free()
+		_player_ghosts.erase(timeline_index)
+	
+	if _enemy_ghosts.has(enemy_pick):
+		_enemy_ghosts[enemy_pick].queue_free()
+		_enemy_ghosts.erase(enemy_pick)
 
 
 
@@ -238,8 +248,6 @@ func _on_player_ghost_record_received(timeline_index, record_data):
 	var ghost = _create_player_ghost(record_data)
 	ghost.spawn_point = _game_manager.get_spawn_point(_player.team_id, timeline_index)
 	ghost.move_to_spawn_point()
-	if _player_ghosts.has(timeline_index):
-		_player_ghosts[timeline_index] .queue_free()
 	_player_ghosts[timeline_index] = ghost
 
 
