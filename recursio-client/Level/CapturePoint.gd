@@ -24,8 +24,8 @@ var _capture_time
 
 func _ready():
 	player_id = get_tree().get_network_unique_id()
-	assert($Area.connect("body_entered", self, "_on_body_entered") == OK)
-	assert($Area.connect("body_exited", self, "_on_body_exited") == OK)
+	$Area.connect("body_entered", self, "_on_body_entered") 
+	$Area.connect("body_exited", self, "_on_body_exited") 
 	set_capturing_player(-1)
 	_capture_speed = Constants.get_value("capture", "capture_speed")
 	_release_speed = Constants.get_value("capture", "release_speed")

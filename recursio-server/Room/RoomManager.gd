@@ -17,11 +17,11 @@ var _player_room_dic: Dictionary = {}
 var _player_amount: int = 0
 
 func _ready():
-	assert(_server.connect("peer_connected", self, "_on_peer_connected") == OK)
-	assert(_server.connect("peer_disconnected", self, "_on_peer_disconnected") == OK)
-	assert(_server.connect("player_input_data_received", self, "_on_player_input_data_received") == OK)
-	assert(_server.connect("player_ready", self, "_on_player_ready_received") == OK)
-	assert(_server.connect("player_timeline_pick_received", self, "_on_player_timline_pick_received") == OK)
+	_server.connect("peer_connected", self, "_on_peer_connected") 
+	_server.connect("peer_disconnected", self, "_on_peer_disconnected") 
+	_server.connect("player_input_data_received", self, "_on_player_input_data_received") 
+	_server.connect("player_ready", self, "_on_player_ready_received") 
+	_server.connect("player_timeline_pick_received", self, "_on_player_timline_pick_received") 
 
 
 func _create_room(room_name: String) -> int:
@@ -34,17 +34,17 @@ func _create_room(room_name: String) -> int:
 	# Workaround for getting the viewport to update
 	$ViewportContainer.rect_clip_content = true
 
-	assert(room.connect("world_state_updated", self, "_on_world_state_update") == OK)
-	assert(room.connect("phase_started", self, "_on_phase_started", [room.id]) == OK)
+	room.connect("world_state_updated", self, "_on_world_state_update") 
+	room.connect("phase_started", self, "_on_phase_started", [room.id]) 
 	
-	assert(room.get_round_manager().connect("round_started", self, "_on_round_started", [room.id]) == OK)
-	assert(room.get_round_manager().connect("round_ended", self, "_on_round_ended", [room.id]) == OK)
+	room.get_round_manager().connect("round_started", self, "_on_round_started", [room.id]) 
+	room.get_round_manager().connect("round_ended", self, "_on_round_ended", [room.id]) 
 	
-	assert(room.get_game_manager().connect("capture_point_team_changed", self, "_on_capture_point_team_changed", [room.id]) == OK)
-	assert(room.get_game_manager().connect("capture_point_captured", self, "_on_capture_point_captured", [room.id]) == OK)
-	assert(room.get_game_manager().connect("capture_point_status_changed", self, "_on_capture_point_status_changed", [room.id]) == OK)
-	assert(room.get_game_manager().connect("capture_point_capture_lost", self, "_on_capture_point_capture_lost", [room.id]) == OK)
-	assert(room.get_game_manager().connect("game_result", self, "_on_game_result", [room.id]) == OK)
+	room.get_game_manager().connect("capture_point_team_changed", self, "_on_capture_point_team_changed", [room.id]) 
+	room.get_game_manager().connect("capture_point_captured", self, "_on_capture_point_captured", [room.id]) 
+	room.get_game_manager().connect("capture_point_status_changed", self, "_on_capture_point_status_changed", [room.id]) 
+	room.get_game_manager().connect("capture_point_capture_lost", self, "_on_capture_point_capture_lost", [room.id]) 
+	room.get_game_manager().connect("game_result", self, "_on_game_result", [room.id]) 
 	
 	_room_dic[_room_id_counter] = room
 	_room_id_counter += 1

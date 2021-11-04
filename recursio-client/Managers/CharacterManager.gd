@@ -28,35 +28,35 @@ var _time_since_last_server_update = 0.0
 var _time_since_last_world_state_update = 0.0
 
 func _ready():
-	assert(Server.connect("round_started", self, "_on_server_round_started") == OK)
-	assert(Server.connect("round_ended", self, "_on_server_round_ended") == OK)
-	assert(Server.connect("phase_started", self, "_on_server_phase_started") == OK)
+	Server.connect("round_started", self, "_on_server_round_started") 
+	Server.connect("round_ended", self, "_on_server_round_ended") 
+	Server.connect("phase_started", self, "_on_server_phase_started") 
 	
-	assert(_round_manager.connect("round_started", self, "_on_round_started") == OK)
-	assert(_round_manager.connect("round_ended", self, "_on_round_ended") == OK)
-	assert(_round_manager.connect("latency_delay_phase_started", self, "_on_latency_delay_phase_started") == OK)
-	assert(_round_manager.connect("preparation_phase_started", self, "_on_preparation_phase_started") == OK)
-	assert(_round_manager.connect("countdown_phase_started", self, "_on_countdown_phase_started") == OK)
-	assert(_round_manager.connect("game_phase_started", self, "_on_game_phase_started") == OK)
+	_round_manager.connect("round_started", self, "_on_round_started") 
+	_round_manager.connect("round_ended", self, "_on_round_ended") 
+	_round_manager.connect("latency_delay_phase_started", self, "_on_latency_delay_phase_started") 
+	_round_manager.connect("preparation_phase_started", self, "_on_preparation_phase_started") 
+	_round_manager.connect("countdown_phase_started", self, "_on_countdown_phase_started") 
+	_round_manager.connect("game_phase_started", self, "_on_game_phase_started") 
 	
 	
 	# Connect to server signals
-	assert(Server.connect("spawning_player", self, "_on_spawn_player") == OK)
-	assert(Server.connect("spawning_enemy", self, "_on_spawn_enemy") == OK)
-	assert(Server.connect("despawning_enemy", self, "_on_despawn_enemy") == OK)
-	assert(Server.connect("player_ghost_record_received", self, "_on_player_ghost_record_received") == OK)
-	assert(Server.connect("enemy_ghost_record_received", self, "_on_enemy_ghost_record_received") == OK)
+	Server.connect("spawning_player", self, "_on_spawn_player") 
+	Server.connect("spawning_enemy", self, "_on_spawn_enemy") 
+	Server.connect("despawning_enemy", self, "_on_despawn_enemy") 
+	Server.connect("player_ghost_record_received", self, "_on_player_ghost_record_received") 
+	Server.connect("enemy_ghost_record_received", self, "_on_enemy_ghost_record_received") 
 	
-	assert(Server.connect("world_state_received", self, "_on_world_state_received") == OK)
-	assert(Server.connect("player_hit", self, "_on_player_hit") == OK)
-	assert(Server.connect("ghost_hit", self, "_on_ghost_hit") == OK)
+	Server.connect("world_state_received", self, "_on_world_state_received") 
+	Server.connect("player_hit", self, "_on_player_hit") 
+	Server.connect("ghost_hit", self, "_on_ghost_hit") 
 	
-	assert(Server.connect("timeline_picks", self, "_on_timeline_picks") == OK)
+	Server.connect("timeline_picks", self, "_on_timeline_picks") 
 	
-	assert(Server.connect("capture_point_captured", self, "_on_capture_point_captured") == OK)
-	assert(Server.connect("capture_point_capture_lost", self, "_on_capture_point_capture_lost") == OK)
+	Server.connect("capture_point_captured", self, "_on_capture_point_captured") 
+	Server.connect("capture_point_capture_lost", self, "_on_capture_point_capture_lost") 
 	
-	assert(Server.connect("game_result", self, "_on_game_result") == OK)
+	Server.connect("game_result", self, "_on_game_result") 
 	
 	
 
@@ -273,7 +273,7 @@ func _on_spawn_player(player_id, spawn_point, team_id):
 	_player = _spawn_character(_player_scene, spawn_point)
 	_player.player_init(_action_manager, _round_manager)
 	# TODO: Tunnel signal instead of accessing button overlay here
-	assert(_player.get_button_overlay().connect("button_pressed", self, "_on_player_ready") == OK)
+	_player.get_button_overlay().connect("button_pressed", self, "_on_player_ready") 
 	_player_rpc_id = player_id
 	_player.team_id = team_id
 	_player.player_id = player_id
@@ -288,8 +288,8 @@ func _on_spawn_player(player_id, spawn_point, team_id):
 	
 	# Initialize capture point HUD for current level
 	_player.setup_capture_point_hud(_game_manager.get_capture_points().size())
-	assert(_player.connect("timeline_index_changed", self, "_on_player_timeline_changed") == OK)
-	assert(Server.connect("wall_spawn", _player, "_on_wall_spawn_received") == OK)
+	_player.connect("timeline_index_changed", self, "_on_player_timeline_changed") 
+	Server.connect("wall_spawn", _player, "_on_wall_spawn_received") 
 
 func _on_spawn_enemy(enemy_id, spawn_point):
 	_enemy = _spawn_character(_enemy_scene, spawn_point)

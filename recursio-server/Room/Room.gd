@@ -34,11 +34,11 @@ var world_processing_offset = 50
 
 
 func _ready():
-	assert(_character_manager.connect("world_state_updated", self, "_on_world_state_update") == OK)	
+	_character_manager.connect("world_state_updated", self, "_on_world_state_update") 	
 	
-	assert(_round_manager.connect("round_started", self,"_on_round_started") == OK)
-	assert(_round_manager.connect("game_phase_started", self,"_on_game_phase_started") == OK)
-	assert(_round_manager.connect("game_phase_ended", self,"_on_game_phase_ended") == OK)
+	_round_manager.connect("round_started", self,"_on_round_started") 
+	_round_manager.connect("game_phase_started", self,"_on_game_phase_started") 
+	_round_manager.connect("game_phase_ended", self,"_on_game_phase_ended") 
 	
 	_game_manager._level = _level
 	_world_state_manager.world_processing_offset = world_processing_offset

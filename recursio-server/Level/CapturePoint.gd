@@ -26,8 +26,8 @@ var _capture_time: float = 3.0
 
 
 func _ready():
-	assert($Area.connect("body_entered", self, "_on_body_entered_area") == OK)
-	assert($Area.connect("body_exited", self, "_on_body_exited_area") == OK)
+	$Area.connect("body_entered", self, "_on_body_entered_area") 
+	$Area.connect("body_exited", self, "_on_body_exited_area") 
 
 	_capture_speed = Constants.get_value("capture","capture_speed")
 	_recapture_speed = Constants.get_value("capture","recapture_speed")
