@@ -96,6 +96,7 @@ __meta__ = {
 size = Vector2( 1024, 600 )
 transparent_bg = true
 handle_input_locally = false
+render_target_update_mode = 3
 script = ExtResource( 3 )
 
 [node name="Camera" type="Camera" parent="KinematicBody/NormalViewportContainer/Viewport" index="0"]
