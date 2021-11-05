@@ -47,7 +47,7 @@ func _physics_process(_delta):
 					# timestamp distances are sensible, otherwise the player could
 					# pack in additional packets
 					player.previously_applied_packets.append(input_frame.timestamp)
-					player.apply_input(input_frame.movement, input_frame.rotation, input_frame.buttons.mask, input_frame.timestamp)
+					player.apply_input(input_frame.movement, input_frame.rotation, input_frame.buttons.mask)
 					player.timestamp_of_previous_packet = input_frame.timestamp
 
 				i += 1
@@ -183,7 +183,7 @@ func stop_ghosts() -> void:
 			for timeline_index in ghost_dic[player_id]:
 				if player_dic[player_id].timeline_index == timeline_index:
 					continue
-				ghost_dic[player_id][timeline_index].start_playing(Server.get_server_time())
+				ghost_dic[player_id][timeline_index].stop_playing()
 
 
 func _create_ghost_from_player(player) -> void:

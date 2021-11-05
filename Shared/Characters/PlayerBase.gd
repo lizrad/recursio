@@ -41,7 +41,7 @@ func reset() -> void:
 
 
 # Should only be called in "physics_update()"
-func apply_input(movement_vector: Vector3, rotation_vector: Vector3, buttons: int, input_timestamp: int) -> void:
+func apply_input(movement_vector: Vector3, rotation_vector: Vector3, buttons: int) -> void:
 	var delta = get_physics_process_delta_time()
 	
 	# Nothing to do if player can't move
@@ -68,7 +68,7 @@ func apply_input(movement_vector: Vector3, rotation_vector: Vector3, buttons: in
 	.trigger_actions(buttons)
 	
 	# Add everything to the recording
-	_record_manager.add_record_frame(.get_position(), .get_rotation_y(), buttons, input_timestamp)
+	_record_manager.add_record_frame(.get_position(), .get_rotation_y(), buttons)
 
 func reset_record_data():
 	_record_manager.reset()
