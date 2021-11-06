@@ -91,7 +91,7 @@ func send_capture_point_capture_lost(player_id, capturing_player_id, capture_poi
 	rpc_id(player_id, "receive_capture_point_capture_lost", capturing_player_id, capture_point )
 
 
-# Sends the current world state (of the players room) to the player
+# Sends the current world state (of the players game_room) to the player
 func send_world_state(player_id, world_state):
 	Logger.debug("Send world state", "server")
 	rpc_unreliable_id(player_id, "receive_world_state", world_state.to_array())

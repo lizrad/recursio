@@ -1,15 +1,15 @@
 extends Viewport
-class_name Room
+class_name GameRoom
 
 # Connects all the specific managers together
 
-signal world_state_updated(world_state, room_id)
-signal room_filled()
+signal world_state_updated(world_state, game_room_id)
+signal game_room_filled()
 signal phase_started(phase)
 
-const PLAYER_NUMBER_PER_ROOM = 2
+const PLAYER_NUMBER_PER_GAME_ROOM = 2
 
-var room_name: String
+var game_room_name: String
 var id: int
 var player_count: int = 0
 
@@ -60,8 +60,8 @@ func add_player(player_id: int) -> void:
 	team_id_to_player_id[player_count] = player_id
 	player_count += 1
 
-	# If the room is filled, start the game
-	if player_count >= PLAYER_NUMBER_PER_ROOM:
+	# If the game_room is filled, start the game
+	if player_count >= PLAYER_NUMBER_PER_GAME_ROOM:
 		start_game()
 
 
@@ -93,8 +93,8 @@ func update_player_input_data(player_id, input_data: InputData):
 
 func handle_player_ready(player_id):
 	_players_ready[player_id] = true
-	Logger.info("received player ready for player " + str(player_id) + " count: " + str(_players_ready.keys().size()), "rooms")
-	if _players_ready.keys().size() == PLAYER_NUMBER_PER_ROOM:
+	Logger.info("received player ready for player " + str(player_id) + " count: " + str(_players_ready.keys().size()), "game_rooms")
+	if _players_ready.keys().size() == PLAYER_NUMBER_PER_GAME_ROOM:
 		# TODO: remove or fix, this is evil! >:-D
 		# !!!
 		_round_manager._timer = Constants.get_value("gameplay", "prep_phase_time")

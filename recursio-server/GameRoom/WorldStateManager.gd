@@ -1,7 +1,7 @@
 extends Node
 class_name WorldStateManager
 
-var world_processing_offset = 0 # to be set from the Room
+var world_processing_offset = 0 # to be set from the GameRoom
 
 
 func create_world_state(player_dic, player_inputs) -> WorldState:
@@ -9,10 +9,10 @@ func create_world_state(player_dic, player_inputs) -> WorldState:
 	var player_states = {}
 	for player_id in player_dic:
 		
-		var last_processed_packet = player_inputs[player_id].get_closest_or_earlier(time - world_processing_offset)
+		var last_processed_packet_timestamp = player_dic[player_id].timestamp_of_previous_packet
 		
 		var player_state: PlayerState = PlayerState.new()
-		player_state.timestamp = last_processed_packet.timestamp if last_processed_packet else 0
+		player_state.timestamp = last_processed_packet_timestamp
 		player_state.id = player_id
 		player_state.position = player_dic[player_id].position
 		player_state.velocity = player_dic[player_id].velocity

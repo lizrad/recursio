@@ -1,15 +1,15 @@
 [gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://Globals/Server.gd" type="Script" id=1]
-[ext_resource path="res://Room/RoomManager.gd" type="Script" id=2]
+[ext_resource path="res://GameRoom/GameRoomManager.gd" type="Script" id=2]
 
 [node name="Server" type="Node"]
 script = ExtResource( 1 )
 
-[node name="RoomManager" type="Node" parent="."]
+[node name="GameRoomManager" type="Node" parent="."]
 script = ExtResource( 2 )
 
-[node name="ViewportContainer" type="ViewportContainer" parent="RoomManager"]
+[node name="ViewportContainer" type="ViewportContainer" parent="GameRoomManager"]
 margin_right = 1024.0
 margin_bottom = 600.0
 __meta__ = {

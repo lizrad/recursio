@@ -26,7 +26,7 @@ func set_level(level):
 		_level.get_capture_points()[i].connect("capture_team_changed",self, "_on_capture_team_changed", [i])
 		_level.get_capture_points()[i].connect("capture_lost",self, "_on_capture_lost", [i])
 
-# Called when the room is full
+# Called when the game_room is full
 func start_game():
 	# TODO: Do we need this?
 	pass
