@@ -14,9 +14,11 @@ func _ready():
 	$Sprite.texture = texture
 
 
-func _process(_delta):
-	if visibility_mask:
-		_check_for_visibility()
+# FIXME: Seems like this is really inefficient and causes lagspikes with heavy corrections.
+# We either need to find a way to make it work better, or remove the minimap as per playtest feedback.
+#func _process(_delta):
+#	if visibility_mask:
+#		_check_for_visibility()
 
 
 func _check_for_visibility() -> void:
