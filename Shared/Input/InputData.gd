@@ -28,6 +28,7 @@ func get_next() -> InputFrame:
 	return _data.get_next()
 
 
+# Gets the previous input frame (from old to new)
 func get_previous() -> InputFrame:
 	return _data.get_previous()
 
@@ -73,8 +74,9 @@ func to_array()-> Array:
 func from_array(data: Array)-> InputData:
 	timestamp = data[0]
 	_data._newest_index = data[1]
+	_data.reset_iteration_index()
 	
-	for i in range(2, _data.size()):
+	for i in range(2, _data.size() + 2):
 		if data[i] == null:
 			break
 		var frame: InputFrame = InputFrame.new().from_array(data[i])

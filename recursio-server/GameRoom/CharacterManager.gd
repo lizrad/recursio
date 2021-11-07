@@ -50,6 +50,7 @@ func _physics_process(_delta):
 					player.previously_applied_packets.append(input_frame.timestamp)
 					player.apply_input(input_frame.movement, input_frame.rotation, input_frame.buttons.mask)
 					player.timestamp_of_previous_packet = input_frame.timestamp
+			input_data.reset_iteration_index()
 
 	if player_inputs.size() == player_dic.size():
 		var world_state: WorldState = _world_state_manager.create_world_state(player_dic, player_inputs)
