@@ -35,10 +35,11 @@ func _physics_process(_delta):
 			var input_data: InputData = player_inputs[player_id]
 			var player: PlayerBase = player_dic[player_id]
 			
-			var i = 0
-			
-			while i < input_data.size():
-				var input_frame: InputFrame = input_data.get_elemet(i)
+			for i in input_data.size():
+				var input_frame: InputFrame = input_data.get_previous()
+				
+				if input_frame == null:
+					continue
 				
 				if input_frame.timestamp > base_time:
 					break
@@ -50,7 +51,6 @@ func _physics_process(_delta):
 					player.apply_input(input_frame.movement, input_frame.rotation, input_frame.buttons.mask)
 					player.timestamp_of_previous_packet = input_frame.timestamp
 
-				i += 1
 	if player_inputs.size() == player_dic.size():
 		var world_state: WorldState = _world_state_manager.create_world_state(player_dic, player_inputs)
 		emit_signal("world_state_updated", world_state)
