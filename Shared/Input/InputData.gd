@@ -76,11 +76,11 @@ func from_array(data: Array)-> InputData:
 	_data._newest_index = data[1]
 	_data.reset_iteration_index()
 	
-	for i in range(2, _data.size() + 2):
+	for i in range(_data.size()):
 		if data[i] == null:
 			break
-		var frame: InputFrame = InputFrame.new().from_array(data[i])
-		_data._data[i - 2] = frame
+		var frame: InputFrame = InputFrame.new().from_array(data[i + 2])
+		_data._data[i] = frame
 	
 	return self
 
