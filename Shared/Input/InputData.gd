@@ -77,7 +77,7 @@ func from_array(data: Array)-> InputData:
 	_data.reset_iteration_index()
 	
 	for i in range(_data.size()):
-		if data[i] == null:
+		if data[i + 2] == null:
 			break
 		var frame: InputFrame = InputFrame.new().from_array(data[i + 2])
 		_data._data[i] = frame
