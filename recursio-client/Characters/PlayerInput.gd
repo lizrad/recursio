@@ -21,11 +21,11 @@ var _player_timeline_pick_trigger : String = "player_switch"
 var _player_initialized: bool = false
 
 func _ready():
-	_player.connect("initialized", self, "_on_player_initialized")
-	_player.connect("timeline_index_changed", self, "_swap_weapon_type")
+	var _error = _player.connect("initialized", self, "_on_player_initialized")
+	_error = _player.connect("timeline_index_changed", self, "_swap_weapon_type")
 
 
-func _physics_process(delta):
+func _physics_process(_delta):
 	if not _player_initialized:
 		return
 

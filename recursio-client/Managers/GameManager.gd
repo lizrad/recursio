@@ -15,10 +15,10 @@ func _ready():
 	_game_result_screen.visible = false
 	_countdown_screen.visible = false
 	
-	Server.connect("capture_point_captured", self, "_on_capture_point_captured") 
-	Server.connect("capture_point_team_changed", self, "_on_capture_point_team_changed") 
-	Server.connect("capture_point_status_changed", self, "_on_capture_point_status_changed") 
-	Server.connect("capture_point_capture_lost", self, "_on_capture_point_capture_lost") 
+	var _error = Server.connect("capture_point_captured", self, "_on_capture_point_captured") 
+	_error = Server.connect("capture_point_team_changed", self, "_on_capture_point_team_changed") 
+	_error = Server.connect("capture_point_status_changed", self, "_on_capture_point_status_changed") 
+	_error = Server.connect("capture_point_capture_lost", self, "_on_capture_point_capture_lost") 
 
 
 func _process(delta):

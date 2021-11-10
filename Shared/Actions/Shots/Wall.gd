@@ -9,7 +9,7 @@ func _init() -> void:
 
 
 func _ready():
-	$KillGhostArea.connect("body_entered", self, "handle_hit") 
+	var _error = $KillGhostArea.connect("body_entered", self, "handle_hit") 
 
 
 func initialize(owning_player) -> void:

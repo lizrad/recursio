@@ -61,6 +61,5 @@ func toggle_capture_points(toggle:bool) -> void:
 	for player in range(2):
 		var spawns = "Player" + str(player + 1) + "Spawns"
 		if has_node(spawns):
-			var index = 0
 			for spawn in get_node(spawns).get_children():
 				spawn.get_node("MeshInstance").visible = !toggle

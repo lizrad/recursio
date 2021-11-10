@@ -15,7 +15,7 @@ var _time_since_start = 0
 var _default_color 
 
 func _ready():
-	get_parent().connect("color_scheme_changed",self,"_on_color_scheme_changed")
+	var _error =  get_parent().connect("color_scheme_changed",self,"_on_color_scheme_changed")
 
 func _on_color_scheme_changed(new_color_scheme, timeline_index):
 	var wall_index = Constants.get_value("ghosts","wall_placing_timeline_index")

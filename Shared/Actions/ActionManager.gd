@@ -31,7 +31,7 @@ var _instanced_actions = []
 var _actions = []
 
 
-func _process(delta):
+func _process(_delta):
 	for action in _actions:
 		if action.blocked && action.activation_time + action.cooldown * 1000 <= OS.get_system_time_msecs():
 			action.blocked = false

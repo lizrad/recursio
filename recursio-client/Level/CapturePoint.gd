@@ -24,8 +24,8 @@ var _capture_time
 
 func _ready():
 	player_id = get_tree().get_network_unique_id()
-	$Area.connect("body_entered", self, "_on_body_entered") 
-	$Area.connect("body_exited", self, "_on_body_exited") 
+	var _error = $Area.connect("body_entered", self, "_on_body_entered") 
+	_error = $Area.connect("body_exited", self, "_on_body_exited") 
 	set_capturing_player(-1)
 	_capture_speed = Constants.get_value("capture", "capture_speed")
 	_release_speed = Constants.get_value("capture", "release_speed")
@@ -115,6 +115,7 @@ func set_capturing_player(capturing_player_id):
 func set_capture_status(capturing_player_id, capture_progress):
 	Logger.info("Capture progress of " +str(capture_progress)+" received", "capture_point")
 	_capture_progress = capture_progress
+	_capturing_team = capturing_player_id
 
 func capture_lost(capturing_player_id):
 	_captured_by = -1

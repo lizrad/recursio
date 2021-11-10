@@ -46,9 +46,9 @@ func spawn_enemy_on_client(player_id, enemy_id, enemy_position):
 	rpc_id(player_id, "spawn_enemy", enemy_id, enemy_position)
 
 
-func despawn_enemy_on_client(player_id, enemy_id):
+func despawn_enemy_on_client(_player_id):
 	#TODO: disconnect is not handled properly yet anyway, and this causes a crash on client
-	#rpc_id(player_id, "despawn_enemy", enemy_id)
+	#rpc_id(player_id, "despawn_enemy")
 	pass
 
 
@@ -105,9 +105,9 @@ func send_round_start_to_client(player_id, round_index):
 
 
 # Notifies a player that a specific round has ended
-func send_round_end_to_client(player_id, round_index):
+func send_round_end_to_client(player_id):
 	Logger.info("Sending round end to client", "connection")
-	rpc_id(player_id, "receive_round_end", round_index)
+	rpc_id(player_id, "receive_round_end")
 
 
 func send_game_result(player_id, winning_player_id):

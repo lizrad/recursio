@@ -71,8 +71,8 @@ func _physics_process(delta):
 
 
 # Called to start the game loop
-func start_round(round_index, latency) -> void:
-	self.round_index = round_index
+func start_round(new_round_index, latency) -> void:
+	self.round_index = new_round_index
 	_latency = latency
 	_round_started = true
 	Logger.info("Round started","gameplay")

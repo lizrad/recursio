@@ -34,11 +34,11 @@ var world_processing_offset = 50
 
 
 func _ready():
-	_character_manager.connect("world_state_updated", self, "_on_world_state_update") 	
+	var _error = _character_manager.connect("world_state_updated", self, "_on_world_state_update") 	
 	
-	_round_manager.connect("round_started", self,"_on_round_started") 
-	_round_manager.connect("game_phase_started", self,"_on_game_phase_started") 
-	_round_manager.connect("game_phase_ended", self,"_on_game_phase_ended") 
+	_error = _round_manager.connect("round_started", self,"_on_round_started") 
+	_error = _round_manager.connect("game_phase_started", self,"_on_game_phase_started") 
+	_error = _round_manager.connect("game_phase_ended", self,"_on_game_phase_ended") 
 	
 	_game_manager._level = _level
 	_world_state_manager.world_processing_offset = world_processing_offset
@@ -144,7 +144,7 @@ func _on_game_phase_ended() -> void:
 	_round_manager.stop_round()
 
 
-func end_round(round_index) -> void:
+func end_round() -> void:
 	_character_manager.create_ghosts()
 	_character_manager.disable_ghosts()
 	_character_manager.stop_ghosts()
