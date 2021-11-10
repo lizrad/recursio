@@ -34,6 +34,17 @@ signal round_started(round_index, latency)
 signal round_ended(round_index)
 signal phase_started(phase)
 
+
+
+#########################
+#### Room Management ####
+#########################
+signal room_created(room_id, room_name)
+signal rooms_refreshed(room_dic)
+
+
+
+
 func _ready():
 	set_physics_process(false)
 	connect_to_server()
@@ -109,6 +120,9 @@ func send_player_ready():
 func send_timeline_pick(timeline_index):
 	Logger.debug("Send player timeline pick", "server")
 	rpc_id(1, "receive_timeline_pick",timeline_index)
+
+
+
 
 
 remote func spawn_player(player_id, spawn_point, team_id):
@@ -234,3 +248,44 @@ remote func receive_timeline_picks(player_pick, enemy_pick):
 remote func receive_wall_spawn(position, rotation, wall_index):
 	Logger.info("Wall spawn received", "server")
 	emit_signal("wall_spawn",position, rotation, wall_index)
+
+
+
+#########################
+#### Room Management ####
+#########################
+
+func send_create_room():
+	Logger.info("Send create room", "room_management")
+	rpc_id(1, "receive_create_room")
+
+
+remote func receive_create_room(room_id, room_name):
+	Logger.info("Received create room [ID: %s, Name: %s]" % [room_id, room_name], "room_management")
+	emit_signal("room_created", room_id, room_name)
+
+
+func send_refresh_rooms():
+	Logger.info("Send refresh rooms", "room_management")
+	rpc_id(1, "receive_refresh_rooms")
+
+
+remote func receive_refresh_rooms(room_dic):
+	Logger.info("Receive refresh rooms", "room_management")
+	emit_signal("rooms_refreshed", room_dic)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,8 +1,12 @@
-[gd_scene format=2]
+[gd_scene load_steps=3 format=2]
 
-[node name="StartScreen" type="Control"]
+[ext_resource path="res://UI/Menus/StartMenu.gd" type="Script" id=1]
+[ext_resource path="res://UI/Menus/GameRoomMenu.tscn" type="PackedScene" id=2]
+
+[node name="StartMenu" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -20,19 +24,22 @@ margin_top = 266.0
 margin_right = 557.0
 margin_bottom = 334.0
 
-[node name="TutorialButton" type="Button" parent="CenterContainer/Buttons"]
+[node name="Btn_PlayTutorial" type="Button" parent="CenterContainer/Buttons"]
 margin_right = 90.0
 margin_bottom = 20.0
 text = "Play Tutorial"
 
-[node name="PlayButton" type="Button" parent="CenterContainer/Buttons"]
+[node name="Btn_PlayOnline" type="Button" parent="CenterContainer/Buttons"]
 margin_top = 24.0
 margin_right = 90.0
 margin_bottom = 44.0
 text = "Play Online"
 
-[node name="ExitButton" type="Button" parent="CenterContainer/Buttons"]
+[node name="Btn_Exit" type="Button" parent="CenterContainer/Buttons"]
 margin_top = 48.0
 margin_right = 90.0
 margin_bottom = 68.0
 text = "Exit"
+
+[node name="GameRoomMenu" parent="." instance=ExtResource( 2 )]
+visible = false

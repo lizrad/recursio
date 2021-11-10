@@ -74,6 +74,21 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://Managers/GameManager.gd"
 }, {
+"base": "ItemList",
+"class": "GameRoomList",
+"language": "GDScript",
+"path": "res://UI/Menus/Room/GameRoomList.gd"
+}, {
+"base": "Control",
+"class": "GameRoomMenu",
+"language": "GDScript",
+"path": "res://UI/Menus/Room/GameRoomMenu.gd"
+}, {
+"base": "PanelContainer",
+"class": "GameRoomSearch",
+"language": "GDScript",
+"path": "res://UI/Menus/Room/GameRoomSearch.gd"
+}, {
 "base": "GhostBase",
 "class": "Ghost",
 "language": "GDScript",
@@ -159,6 +174,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://Shared/RoundManager.gd"
 }, {
+"base": "Control",
+"class": "StartMenu",
+"language": "GDScript",
+"path": "res://UI/Menus/StartMenu.gd"
+}, {
 "base": "Object",
 "class": "StaticInput",
 "language": "GDScript",
@@ -183,6 +203,9 @@ _global_script_class_icons={
 "DeadZones": "",
 "Enemy": "",
 "GameManager": "",
+"GameRoomList": "",
+"GameRoomMenu": "",
+"GameRoomSearch": "",
 "Ghost": "",
 "GhostBase": "",
 "HUD": "",
@@ -200,6 +223,7 @@ _global_script_class_icons={
 "RecordManager": "",
 "RingBuffer": "",
 "RoundManager": "",
+"StartMenu": "",
 "StaticInput": "",
 "WorldState": ""
 }
