@@ -10,8 +10,10 @@ script = ExtResource( 1 )
 script = ExtResource( 2 )
 
 [node name="ViewportContainer" type="ViewportContainer" parent="GameRoomManager"]
-margin_right = 1024.0
-margin_bottom = 600.0
+margin_left = -111.0
+margin_top = -23.0
+margin_right = 913.0
+margin_bottom = 577.0
 __meta__ = {
 "_edit_use_anchors_": false
 }

@@ -62,11 +62,6 @@ func send_enemy_ghost_record_to_client(player_id, timeline_index, record_data: R
 	rpc_id(player_id, "receive_enemy_ghost_record", timeline_index, record_data.to_array())
 
 
-func send_phase_start(player_id, phase):
-	Logger.info("Sending phase start", "server")
-	rpc_id(player_id, "receive_phase_start", phase)
-
-
 func get_server_time():
 	return OS.get_system_time_msecs()
 
@@ -97,17 +92,14 @@ func send_world_state(player_id, world_state):
 	rpc_unreliable_id(player_id, "receive_world_state", world_state.to_array())
 
 
-# Notifies a player that a specific round will start
-# Provides the server time to counteract latency
-func send_round_start_to_client(player_id, round_index):
-	Logger.info("Sending round start to client", "connection")
-	rpc_id(player_id, "receive_round_start", round_index, get_server_time())
+func send_game_start_to_client(player_id, start_time):
+	Logger.info("Sending game start to client", "connection")
+	rpc_id(player_id, "receive_game_start", start_time)
 
 
-# Notifies a player that a specific round has ended
-func send_round_end_to_client(player_id):
-	Logger.info("Sending round end to client", "connection")
-	rpc_id(player_id, "receive_round_end")
+func send_phase_switch_to_client(player_id, round_index, next_phase, switch_time):
+	Logger.info("Sending phase switch to " + str(next_phase) + " to client", "connection")
+	rpc_id(player_id, "receive_phase_switch", round_index, next_phase, switch_time)
 
 
 func send_game_result(player_id, winning_player_id):

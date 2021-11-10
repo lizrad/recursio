@@ -124,15 +124,6 @@ func update_capture_point_hud(capture_points: Array) -> void:
 		_hud.update_capture_point(index, capture_point.get_capture_progress(), capture_point.get_capture_team())
 		index += 1
 
-
-func show_round_start_hud(round_index, start_time) -> void:
-	_hud.round_start(round_index, start_time)
-
-
-func show_latency_delay_hud(start_time, latency) -> void:
-	_hud.latency_delay_phase_start(start_time, latency)
-
-
 func show_preparation_hud(round_index, start_time) -> void:
 	_hud.prep_phase_start(round_index, start_time)
 	_button_overlay.show_buttons("ready", ButtonOverlay.BUTTONS.DOWN, true)

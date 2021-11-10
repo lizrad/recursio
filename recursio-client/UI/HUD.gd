@@ -51,16 +51,6 @@ func _calculate_current_time() -> String:
 	# Give seconds a zero as padding if below 10 sekonds
 	return ("%d:%0*d" % [floor(time/60), 2, time])
 
-func round_start(round_index, start_time) -> void:
-	_phase.text = "Round " + str(round_index + 1) + " starting..."
-	_max_time = Constants.get_value("gameplay", "latency_delay")
-	_start_time = start_time
-
-func latency_delay_phase_start(start_time, latency) -> void:
-	_start_time = start_time
-	_phase.text = "Waiting for server..."
-	_max_time = Constants.get_value("gameplay", "latency_delay") - latency
-
 func prep_phase_start(round_index, start_time) -> void:
 	_start_time = start_time
 	_phase.text = "Preparation Phase " + str(round_index + 1)
@@ -75,12 +65,6 @@ func game_phase_start(round_index, start_time) -> void:
 	_start_time = start_time
 	_phase.text = "Game Phase " + str(round_index + 1)
 	_max_time = Constants.get_value("gameplay", "game_phase_time")
-
-func rewind_phase_start(round_index, start_time) -> void:
-	_start_time = start_time
-	_phase.text = "Rewind Phase " + str(round_index + 1)
-	_max_time = Constants.get_value("gameplay", "rewind_phase_time")
-
 
 func update_fire_action_ammo(amount: int) -> void:
 	Logger.info("Set fire ammo to: " + str(amount), "HUD")

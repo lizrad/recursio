@@ -8,7 +8,7 @@ onready var _countdown_screen = get_node("../../CountdownScreen")
 onready var _level: Level = get_node(level_path)
 
 var _team_id := -1
-var _countdown_time: float = 0.0
+var _countdown_time: float = Constants.get_value("gameplay","countdown_phase_seconds")
 
 func _ready():
 	# Hide screens
@@ -30,9 +30,8 @@ func _process(delta):
 			_countdown_screen.visible = false
 
 
-func show_countdown_screen(countdown_time) -> void:
+func show_countdown_screen() -> void:
 	_countdown_screen.visible = true
-	_countdown_time = countdown_time
 
 
 func hide_countdown_screen() -> void:
