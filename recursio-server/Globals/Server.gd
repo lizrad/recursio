@@ -13,6 +13,13 @@ signal player_input_data_received(player_id, input_data)
 signal player_ready(player_id)
 signal player_timeline_pick_received(player_id, timeline_index)
 
+##############################
+#### Game Room Management ####
+##############################
+signal create_game_room_received(game_room_name)
+signal get_game_rooms_received(player_id)
+signal join_game_room_received(player_id, game_room_id)
+
 
 func _ready():
 	start_server()
@@ -155,7 +162,33 @@ remote func receive_timeline_pick(timeline_index):
 	emit_signal("player_timeline_pick_received", get_tree().get_rpc_sender_id(), timeline_index)
 
 
+##############################
+#### Game Room Management ####
+##############################
+
+remote func receive_create_game_room(game_room_name):
+	var player_id = get_tree().get_rpc_sender_id()
+	Logger.info("Receive create game room", "room_management")
+	emit_signal("create_game_room_received", player_id, game_room_name)
 
 
+func send_game_room_created(player_id, game_room_id, game_room_name):
+	rpc_id(player_id, "receive_create_game_room", game_room_id, game_room_name)
 
+
+remote func receive_get_game_rooms():
+	var player_id = get_tree().get_rpc_sender_id()
+	Logger.info("Receive get game rooms", "room_management")
+	emit_signal("get_game_rooms_received", player_id)
+
+
+func send_game_rooms(player_id, game_room_dic):
+	Logger.info("Send get game rooms", "room_management")
+	rpc_id(player_id, "receive_get_game_rooms", game_room_dic)
+
+
+remote func receive_join_game_rooms(game_room_id):
+	var player_id = get_tree().get_rpc_sender_id()
+	Logger.info("Receive join game rooms", "room_management")
+	emit_signal("join_game_room_received", player_id, game_room_id)
 

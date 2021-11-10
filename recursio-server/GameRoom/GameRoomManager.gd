@@ -14,14 +14,17 @@ var _game_room_dic: Dictionary = {}
 # Player id <-> GameRoom id
 var _player_game_room_dic: Dictionary = {}
 
-var _player_amount: int = 0
 
 func _ready():
 	_server.connect("peer_connected", self, "_on_peer_connected") 
 	_server.connect("peer_disconnected", self, "_on_peer_disconnected") 
 	_server.connect("player_input_data_received", self, "_on_player_input_data_received") 
 	_server.connect("player_ready", self, "_on_player_ready_received") 
-	_server.connect("player_timeline_pick_received", self, "_on_player_timline_pick_received") 
+	_server.connect("player_timeline_pick_received", self, "_on_player_timline_pick_received")
+	
+	_server.connect("create_game_room_received", self, "_on_create_game_room_received")
+	_server.connect("get_game_rooms_received", self, "_on_get_game_rooms_received")
+	_server.connect("join_game_room_received", self, "_on_join_game_room_received")
 
 
 func _create_game_room(game_room_name: String) -> int:
@@ -64,10 +67,11 @@ func _delete_game_room(game_room_id: int) -> void:
 		$ViewportContainer.rect_clip_content = true
 
 
-func _join_game_room(game_room_id: int, player_id: int) -> void:
+func _join_game_room(player_id: int, game_room_id: int) -> void:
 	if _game_room_dic.has(game_room_id):
 		var game_room: GameRoom = _game_room_dic[game_room_id]
 		game_room.add_player(player_id)
+		_player_game_room_dic[player_id] = game_room_id
 
 
 func _leave_game_room(game_room_id: int, player_id: int) -> void:
@@ -95,22 +99,29 @@ func _is_current_game_room_full() -> bool:
 
 
 func _on_peer_connected(player_id):
-	_player_amount += 1
-
-	if _is_current_game_room_full():
-		var game_room_id = _create_game_room("GameRoom 1")
-		_join_game_room(game_room_id, player_id)
-		_player_game_room_dic[player_id] = game_room_id
-	else:
-		var game_room_id = _get_current_game_room_id()
-		_join_game_room(game_room_id, player_id)
-		_player_game_room_dic[player_id] = game_room_id
+	pass
 
 
 func _on_peer_disconnected(player_id):
-	_leave_game_room(_player_game_room_dic[player_id], player_id)
-	_player_game_room_dic.erase(player_id)
-	_player_amount -= 1
+	if _player_game_room_dic.has(player_id):
+		_leave_game_room(_player_game_room_dic[player_id], player_id)
+		_player_game_room_dic.erase(player_id)
+
+
+func _on_create_game_room_received(player_id, game_room_name) -> void:
+	var game_room_id = _create_game_room(game_room_name)
+	_server.send_game_room_created(player_id, game_room_id, game_room_name)
+
+
+func _on_get_game_rooms_received(player_id) -> void:
+	var game_rooms := {}
+	for game_room_id in _game_room_dic:
+		game_rooms[game_room_id] = _game_room_dic[game_room_id].game_room_name
+	_server.send_game_rooms(player_id, game_rooms)
+
+
+func _on_join_game_room_received(player_id, game_room_id) -> void:
+	_join_game_room(player_id, game_room_id)
 
 
 func _on_player_input_data_received(player_id, input_data):
@@ -202,3 +213,4 @@ func _on_game_result(team_id, game_room_id):
 		_server.send_game_result(player_id, winning_player_id)
 	game_room.reset()
 	game_room.start_game()
+

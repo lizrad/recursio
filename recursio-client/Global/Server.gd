@@ -39,8 +39,8 @@ signal phase_started(phase)
 #########################
 #### Room Management ####
 #########################
-signal room_created(room_id, room_name)
-signal rooms_refreshed(room_dic)
+signal game_room_created(room_id, game_room_name)
+signal game_rooms_received(game_room_dic)
 
 
 
@@ -251,28 +251,33 @@ remote func receive_wall_spawn(position, rotation, wall_index):
 
 
 
-#########################
-#### Room Management ####
-#########################
+##############################
+#### Game Room Management ####
+##############################
 
-func send_create_room():
+func send_create_game_room(game_room_name) -> void:
 	Logger.info("Send create room", "room_management")
-	rpc_id(1, "receive_create_room")
+	rpc_id(1, "receive_create_game_room", game_room_name)
 
 
-remote func receive_create_room(room_id, room_name):
-	Logger.info("Received create room [ID: %s, Name: %s]" % [room_id, room_name], "room_management")
-	emit_signal("room_created", room_id, room_name)
+remote func receive_create_game_room(game_room_id, game_room_name) -> void:
+	Logger.info("Received create room [ID: %s, Name: %s]" %[game_room_id, game_room_name], "room_management")
+	emit_signal("game_room_created", game_room_id, game_room_name)
 
 
-func send_refresh_rooms():
-	Logger.info("Send refresh rooms", "room_management")
-	rpc_id(1, "receive_refresh_rooms")
+func send_get_game_rooms() -> void:
+	Logger.info("Send get rooms", "room_management")
+	rpc_id(1, "receive_get_game_rooms")
 
 
-remote func receive_refresh_rooms(room_dic):
-	Logger.info("Receive refresh rooms", "room_management")
-	emit_signal("rooms_refreshed", room_dic)
+remote func receive_get_game_rooms(game_room_dic) -> void:
+	Logger.info("Receive get game rooms", "room_management")
+	emit_signal("game_rooms_received", game_room_dic)
+
+
+func send_join_game_room(game_room_id):
+	Logger.info("Send join game room [ID: %s]" %[game_room_id], "room_management")
+	rpc_id(1, "receive_join_game_rooms", game_room_id)
 
 
 
