@@ -194,8 +194,7 @@ func _create_ghost_from_player(player) -> void:
 	ghost.player_id = player.player_id
 	ghost.spawn_point = player.spawn_point
 	ghost.team_id = player.team_id
-	ghost.round_index = _round_manager.round_index
-	
+	ghost.round_index = _round_manager.round_index-1
 	if ghost_dic[player.player_id].has(player.timeline_index):
 		ghost_dic[player.player_id][player.timeline_index].queue_free()
 	
