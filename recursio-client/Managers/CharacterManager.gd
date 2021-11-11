@@ -234,6 +234,10 @@ func _on_player_ready(_button) -> void:
 func _on_player_ghost_record_received(timeline_index, record_data):
 	var ghost = _create_player_ghost(record_data)
 	ghost.spawn_point = _game_manager.get_spawn_point(_player.team_id, timeline_index)
+	if _round_manager.get_current_phase() == RoundManager.Phases.GAME:
+		ghost.round_index = _round_manager.round_index
+	else:
+		ghost.round_index = _round_manager.round_index-1
 	ghost.move_to_spawn_point()
 	_player_ghosts[timeline_index] = ghost
 
@@ -241,6 +245,10 @@ func _on_player_ghost_record_received(timeline_index, record_data):
 func _on_enemy_ghost_record_received(timeline_index, record_data: RecordData):	
 	var ghost = _create_enemy_ghost(record_data)
 	ghost.spawn_point = _game_manager.get_spawn_point(1 - _player.team_id, timeline_index)
+	if _round_manager.get_current_phase() == RoundManager.Phases.GAME:
+		ghost.round_index = _round_manager.round_index
+	else:
+		ghost.round_index = _round_manager.round_index-1
 	ghost.move_to_spawn_point()
 	_enemy_ghosts[timeline_index] = ghost
 
