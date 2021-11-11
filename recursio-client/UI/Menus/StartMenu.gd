@@ -12,6 +12,8 @@ onready var _game_room_creation: GameRoomCreation = get_node("CenterContainer/Ga
 onready var _game_room_ui: GameRoomUI = get_node("CenterContainer/GameRoom")
 
 onready var _character_manager: CharacterManager = get_node("../CharacterManager")
+onready var _debug_room = Constants.get_value("debug", "debug_room_enabled")
+
 var _in_game_room: bool = false
 
 func _ready():
@@ -33,8 +35,17 @@ func _ready():
 	Server.connect("game_room_created", self, "_on_game_room_created")
 	Server.connect("game_rooms_received", self, "_on_game_rooms_received")
 	Server.connect("game_room_joined", self, "_on_game_room_joined")
+	Server.connect("successfully_connected" , self, "_on_successfully_connected") 
 	
 	_character_manager.connect("game_started", self, "_on_game_started")
+
+
+func _on_successfully_connected():
+	if _debug_room:
+		_game_room_search.add_game_room(1, "GameRoom")
+		Server.send_join_game_room(1, "Player")
+		Server.send_game_room_ready(1)
+
 
 func _on_play_tutorial() -> void:
 	pass

@@ -3,6 +3,7 @@ extends Node
 class_name GameRoomManager
 
 onready var _server = get_parent()
+onready var _debug_room = Constants.get_value("debug", "debug_room_enabled")
 
 var game_room_count: int = 0
 
@@ -28,6 +29,9 @@ func _ready():
 	_server.connect("leave_game_room_received", self, "_on_leave_game_room_received")
 	
 	_server.connect("game_room_ready_received", self, "_on_game_room_ready_received")
+	
+	if _debug_room:
+		_create_game_room("GameRoom")
 
 
 func _create_game_room(game_room_name: String) -> int:

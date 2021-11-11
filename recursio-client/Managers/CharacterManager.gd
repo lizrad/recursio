@@ -57,9 +57,9 @@ func _ready():
 	_error = Server.connect("capture_point_captured", self, "_on_capture_point_captured") 
 	_error = Server.connect("capture_point_capture_lost", self, "_on_capture_point_capture_lost") 
 	
-	_error = Server.connect("game_result", self, "_on_game_result") 
-	
-	
+	_error = Server.connect("game_result", self, "_on_game_result")
+
+
 
 	_player_rpc_id = get_tree().get_network_unique_id()
 	randomize()
