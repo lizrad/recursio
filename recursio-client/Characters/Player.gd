@@ -106,8 +106,8 @@ func setup_capture_point_hud(number_of_capture_points) -> void:
 	_hud.set_player_id(self.player_id)
 
 
-func update_weapon_type_hud(max_ammo, img_bullet_bg, img_bullet) -> void:
-	_hud.update_weapon_type(img_bullet_bg, img_bullet)
+func update_weapon_type_hud(max_ammo, img_bullet, color) -> void:
+	_hud.update_weapon_type(img_bullet, color)
 	_hud.update_fire_action_ammo(max_ammo)
 
 

@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://UI/HUD.gd" type="Script" id=1]
 [ext_resource path="res://Resources/Fonts/default_font.tres" type="DynamicFont" id=2]
 [ext_resource path="res://Resources/Icons/icon_dash.png" type="Texture" id=3]
+[ext_resource path="res://Resources/Icons/circle_white_256x256.png" type="Texture" id=4]
 [ext_resource path="res://Resources/Icons/round_timer_1024x256.png" type="Texture" id=5]
 
 [node name="HUD" type="Control"]
@@ -48,6 +49,7 @@ margin_left = 30.9084
 margin_top = -5.13712
 margin_right = 70.9084
 margin_bottom = 34.8629
+texture = ExtResource( 4 )
 expand = true
 __meta__ = {
 "_edit_use_anchors_": false

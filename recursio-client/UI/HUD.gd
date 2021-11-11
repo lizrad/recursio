@@ -71,10 +71,9 @@ func update_special_movement_ammo(amount: int) -> void:
 	_dash.text = str(amount)
 
 
-func update_weapon_type(img_bullet_bg, img_bullet) ->void:
+func update_weapon_type(img_bullet, color) ->void:
 	Logger.info("Update ammo type", "HUD")
-	if img_bullet_bg:
-		_ammo_type_bg.texture = load(img_bullet_bg.resource_path)
+	_ammo_type_bg.modulate = color
 	_ammo_type.texture = load(img_bullet.resource_path)
 
 
