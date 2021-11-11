@@ -35,16 +35,15 @@ var _future_game_imminent = false
 var _future_game_start_time = -1.0
 
 
+func _physics_process(_delta):
+	_check_for_game_start()
+	_check_for_phase_switch()
+
 # Called to start the game loop
 func future_start_game(start_time):
 	_future_game_imminent = true
 	_future_game_start_time = start_time
 
-func _start_game():
-	_start_phase(Phases.PREPARATION)
-	_current_phase_index = 0
-	round_index = 0
-	_running = true
 
 func get_previous_phase(phase):
 	var index = _phase_order.find(phase)
@@ -52,17 +51,22 @@ func get_previous_phase(phase):
 	index = fposmod(index, _phase_order.size())
 	return _phase_order[index]
 
+
 func get_current_phase_time_left():
 	return (_phase_deadline - server.get_server_time())
+
 
 func get_deadline():
 	return _phase_deadline
 
+
 func get_current_phase() -> int:
 	return _phase_order[_current_phase_index]
 
+
 func is_running():
 	return _running
+
 
 func future_switch_to_phase(phase, switch_time):
 	assert(phase != Phases.NONE)
@@ -77,15 +81,19 @@ func switch_to_phase(phase, delay = 0):
 	_switch_to_phase_index(_phase_order.find(phase), delay)
 
 
-func _physics_process(_delta):
-	_check_for_game_start()
-	_check_for_phase_switch()
-
 func _check_for_game_start():
 	if _future_game_imminent:
 		if server.get_server_time() >= _future_game_start_time:
 			_future_game_imminent = false
 			_start_game()
+
+
+func _start_game():
+	_start_phase(Phases.PREPARATION)
+	_current_phase_index = 0
+	round_index = 0
+	_running = true
+
 
 func _check_for_phase_switch():
 	if _running:
