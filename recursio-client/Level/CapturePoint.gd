@@ -65,7 +65,6 @@ func _process(delta):
 	if not active:
 		return
 	
-	var adjusted_delta = delta
 	#cannot reach 1 on client only
 	var local_maxima = 0.95 if _capture_progress<=0.95 else _capture_progress
 	#cannot reach 0 on client only
@@ -74,22 +73,22 @@ func _process(delta):
 		if _capturing_team == -1:
 			set_capturing_player(player_id)
 		elif _capturing_team == player_id:
-			_capture_progress = min(local_maxima, _capture_progress + adjusted_delta * _capture_speed)
+			_capture_progress = min(local_maxima, _capture_progress + delta * _capture_speed)
 		else:
-			_capture_progress = max(local_minima, _capture_progress - adjusted_delta * _recapture_speed)
+			_capture_progress = max(local_minima, _capture_progress - delta * _recapture_speed)
 
 	if _local_enemy_inside:
 		if _capturing_team == -1:
 			#using anything differen from player_id because it doesnt really matter for visual purposes
 			set_capturing_player(player_id+1)
 		elif _capturing_team != player_id:
-			_capture_progress = min(local_maxima, _capture_progress + adjusted_delta * _capture_speed)
+			_capture_progress = min(local_maxima, _capture_progress + delta * _capture_speed)
 		else:
-			_capture_progress = max(local_minima, _capture_progress - adjusted_delta * _recapture_speed)
+			_capture_progress = max(local_minima, _capture_progress - delta * _recapture_speed)
 	
 	#TODO: for some reason this decreases when an enemy ghost should be standing on the point
 	if not _local_player_inside and not _local_enemy_inside and not _local_ghost_inside:
-		#_capture_progress = max(local_minima, _capture_progress - adjusted_delta * _release_speed)
+		#_capture_progress = max(local_minima, _capture_progress - delta * _release_speed)
 		pass
 
 func capture(capturing_player_id):

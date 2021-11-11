@@ -13,15 +13,9 @@ var _just_reset := false
 var _current_progress_team = -1
 var current_owning_team = -1
 
-var _capture_speed: float
-var _recapture_speed: float
-var _release_speed: float
-
-
-func _ready():
-	_capture_speed = Constants.get_value("capture","capture_speed")
-	_recapture_speed = Constants.get_value("capture","recapture_speed")
-	_release_speed = Constants.get_value("capture","release_speed")
+onready var _capture_speed: float = Constants.get_value("capture","capture_speed")
+onready var _recapture_speed: float = Constants.get_value("capture","recapture_speed")
+onready var _release_speed: float = Constants.get_value("capture","release_speed")
 
 
 func _physics_process(delta):
