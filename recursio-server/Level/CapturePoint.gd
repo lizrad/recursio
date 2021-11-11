@@ -8,143 +8,102 @@ signal capture_lost(team_id)
 
 var active = true
 var capture_progress: float = 0
-# Team that currently 'owns' the capturing point
-var capture_team: int = -1
-# Team that currently takes over the capturing point
-var _current_capture_team: int = -1
-
-var _being_captured: bool = false
-var _capturing_paused: bool = false
-var _is_captured: bool = false
-var _capturing_entities := [0, 0]
 var _just_reset := false
 
-var _capture_speed: float = 1.0
-var _recapture_speed: float = 2.0
-var _release_speed: float = 0.5
-var _capture_time: float = 3.0
+var _current_progress_team = -1
+var current_owning_team = -1
+
+var _capture_speed: float
+var _recapture_speed: float
+var _release_speed: float
 
 
 func _ready():
-	var _error = $Area.connect("body_entered", self, "_on_body_entered_area") 
-	_error = $Area.connect("body_exited", self, "_on_body_exited_area") 
-
 	_capture_speed = Constants.get_value("capture","capture_speed")
 	_recapture_speed = Constants.get_value("capture","recapture_speed")
 	_release_speed = Constants.get_value("capture","release_speed")
-	_capture_time = Constants.get_value("capture","capture_time")
 
 
 func _physics_process(delta):
 	if not active:
 		return
-	if _capturing_paused:
-		return
 	
 	if _just_reset:
 		_just_reset = false
 		return
+	
+	var bodies_inside = $Area.get_overlapping_bodies()
+	var current_capture_team = -1
+	
+	for body in bodies_inside:
+		var character = body.get_parent()
+		if character is CharacterBase:
+			if current_capture_team < 0:
+				current_capture_team = character.team_id
+			else:
+				if current_capture_team != character.team_id:
+					# Multiple different teams on here -> just return
+					return
+	
+	if current_capture_team >= 0:
+		# A player is standing on the capture point
+		if current_owning_team != current_capture_team and current_owning_team >= 0:
+			# The point is being taken from an enemy team
+			_lose_capture()
 		
-	if _being_captured:
-		if _current_capture_team == capture_team:
-			# Current team increases the capture process
-			_capture(delta / _capture_time)
+		if current_capture_team == _current_progress_team:
+			# The capturing player is equal to the progressing team
+			if capture_progress < 1:
+				capture_progress = min(1, capture_progress + delta * _capture_speed)
+				emit_signal("capture_status_changed", capture_progress, _current_progress_team)
+				
+				if capture_progress >= 1:
+					# The team has finished capturing the point
+					_gain_capture(current_capture_team)
 		else:
-			# Enemy team decreases capture process and takes over point
-			_recapture(delta / _capture_time)
+			# The capturing team differs from the previous owner
+			capture_progress = max(0, capture_progress - delta * _recapture_speed)
+			emit_signal("capture_status_changed", capture_progress, _current_progress_team)
+			
+			if capture_progress <= 0:
+				# The capturing team becomes the progressing team
+				_switch_capturer(current_capture_team)
 	else:
-		# No team is capturing -> progress decreases
-		_release(delta / _capture_time)
+		# No player is standing on the capture point
+		if current_owning_team >= 0:
+			_lose_capture()
+		
+		if capture_progress > 0:
+			capture_progress = max(0, capture_progress - delta * _release_speed)
+			emit_signal("capture_status_changed", capture_progress, _current_progress_team)
+			
+			if capture_progress <= 0:
+				_switch_capturer(-1)
 
 
-func _on_body_entered_area(body):
-	if _just_reset:
-		return
-	
-	var character = body.get_parent()
-	if character is CharacterBase:
-		start_capturing(character.team_id)
+func _lose_capture():
+	emit_signal("capture_lost", current_owning_team)
+	current_owning_team = -1
 
 
-func _on_body_exited_area(body):
-	if _just_reset:
-		return
-	
-	var character = body.get_parent()
-	if character is CharacterBase:
-		stop_capturing(character.team_id)
+func _gain_capture(new_owning_team):
+	current_owning_team = new_owning_team
+	emit_signal("captured", current_owning_team)
+
+
+func _switch_capturer(new_progress_team):
+	emit_signal("capture_status_changed", capture_progress, new_progress_team)
+	emit_signal("capture_team_changed", new_progress_team)
+	_current_progress_team = new_progress_team
 
 
 func reset():
-	if _is_captured:
-		emit_signal("capture_lost", capture_team)
-	_is_captured = false
-	_capturing_entities[0] = 0
-	_capturing_entities[1] = 0
-	capture_team = -1
+	if current_owning_team >= 0:
+		emit_signal("capture_lost", current_owning_team)
+	
+	current_owning_team = -1
 	capture_progress = 0
 	_just_reset = true
-	_check_capturing_status()
+	
 	emit_signal("capture_team_changed", -1)
-	emit_signal("capture_status_changed",0,-1)
-
-
-func _capture(delta: float):
-	capture_progress = min(1, capture_progress + delta * _capture_speed)
-	if not _is_captured:
-		Logger.debug("Capture progress: " + str(capture_progress), "capture_point")
-		emit_signal("capture_status_changed", capture_progress, capture_team)
-	if capture_progress == 1 and not _is_captured:
-		_is_captured = true
-		Logger.info("Point captured by " + str(capture_team), "capture_point")
-		emit_signal("captured", capture_team)
-
-
-func _recapture(delta: float):
-	if capture_progress > 0:
-		capture_progress = max(0, capture_progress - delta * _recapture_speed)
-		Logger.debug("Recapture progress: " + str(capture_progress), "capture_point")
-	else:
-		Logger.info("Capturing team changed to  " + str(_current_capture_team), "capture_point")
-		_switch_capturing_teams(_current_capture_team)
-		emit_signal("capture_status_changed", capture_progress, capture_team)
-
-
-func _release(delta: float):
-	if capture_progress > 0:
-		if capture_progress == 1:
-			_is_captured = false
-			emit_signal("capture_lost", capture_team)
-			Logger.info("Point lost by " + str(capture_team), "capture_point")
-		capture_progress = max(0, capture_progress - delta * _release_speed)
-		Logger.debug("Release progress: " + str(capture_progress), "capture_point")
-		emit_signal("capture_status_changed", capture_progress, capture_team)
-	elif capture_team != -1:
-		# Process reached zero with no team currently capturing
-		reset()
-		emit_signal("capture_status_changed", capture_progress, capture_team)
-
-
-func _switch_capturing_teams(new_team: int):
-	capture_team = new_team
-	emit_signal("capture_team_changed", new_team)
-
-
-func start_capturing(team_id: int):
-	_capturing_entities[team_id] += 1
-	_check_capturing_status()
-
-
-func _check_capturing_status():
-	_capturing_paused = _capturing_entities[0] > 0 and _capturing_entities[1] > 0
-	_being_captured = _capturing_entities[0] > 0 or _capturing_entities[1] > 0
-	_current_capture_team = 0 if _capturing_entities[0] > _capturing_entities[1] else 1
-
-
-
-
-
-func stop_capturing(team_id: int):
-	_capturing_entities[team_id] -= 1
-	_capturing_entities[team_id] = max(0, _capturing_entities[team_id])
-	_check_capturing_status()
+	emit_signal("capture_status_changed", 0, -1)
