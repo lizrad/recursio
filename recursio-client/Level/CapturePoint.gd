@@ -19,7 +19,6 @@ var _local_ghost_inside := false
 var _capture_speed
 var _release_speed
 var _recapture_speed
-var _capture_time
 
 
 func _ready():
@@ -30,7 +29,6 @@ func _ready():
 	_capture_speed = Constants.get_value("capture", "capture_speed")
 	_release_speed = Constants.get_value("capture", "release_speed")
 	_recapture_speed = Constants.get_value("capture", "recapture_speed")
-	_capture_time = Constants.get_value("capture", "capture_time")
 
 func reset():
 	$MeshInstance.material_override.albedo_color = neutral_color
@@ -66,31 +64,31 @@ func _on_body_exited(body):
 func _process(delta):
 	if not active:
 		return
-	var adjusted_delta = delta / _capture_time
+	
 	#cannot reach 1 on client only
 	var local_maxima = 0.95 if _capture_progress<=0.95 else _capture_progress
 	#cannot reach 0 on client only
-	var local_minima = 0.5 if _capture_progress>=0.05 else _capture_progress
+	var local_minima = 0.05 if _capture_progress>=0.05 else _capture_progress
 	if _local_player_inside:
 		if _capturing_team == -1:
 			set_capturing_player(player_id)
 		elif _capturing_team == player_id:
-			_capture_progress = min(local_maxima, _capture_progress + adjusted_delta * _capture_speed)
+			_capture_progress = min(local_maxima, _capture_progress + delta * _capture_speed)
 		else:
-			_capture_progress = max(local_minima, _capture_progress - adjusted_delta * _recapture_speed)
+			_capture_progress = max(local_minima, _capture_progress - delta * _recapture_speed)
 
 	if _local_enemy_inside:
 		if _capturing_team == -1:
 			#using anything differen from player_id because it doesnt really matter for visual purposes
 			set_capturing_player(player_id+1)
 		elif _capturing_team != player_id:
-			_capture_progress = min(local_maxima, _capture_progress + adjusted_delta * _capture_speed)
+			_capture_progress = min(local_maxima, _capture_progress + delta * _capture_speed)
 		else:
-			_capture_progress = max(local_minima, _capture_progress - adjusted_delta * _recapture_speed)
+			_capture_progress = max(local_minima, _capture_progress - delta * _recapture_speed)
 	
 	#TODO: for some reason this decreases when an enemy ghost should be standing on the point
 	if not _local_player_inside and not _local_enemy_inside and not _local_ghost_inside:
-		#_capture_progress = max(local_minima, _capture_progress - adjusted_delta * _release_speed)
+		#_capture_progress = max(local_minima, _capture_progress - delta * _release_speed)
 		pass
 
 func capture(capturing_player_id):
