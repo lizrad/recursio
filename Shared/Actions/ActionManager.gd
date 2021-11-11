@@ -31,7 +31,7 @@ var _instanced_actions = []
 var _actions = []
 
 
-func _process(delta):
+func _process(_delta):
 	for action in _actions:
 		if action.blocked && action.activation_time + action.cooldown * 1000 <= OS.get_system_time_msecs():
 			action.blocked = false
@@ -61,8 +61,6 @@ func get_action_type_for_trigger(trigger, timeline_index):
 
 func get_max_ammo_for_trigger(trigger, timeline_index):
 	return get_action_for_trigger(trigger, timeline_index).max_ammo
-func get_img_bullet_bg_for_trigger(trigger, timeline_index):
-	return get_action_for_trigger(trigger, timeline_index).img_bullet_bg
 func get_img_bullet_for_trigger(trigger, timeline_index):
 	return get_action_for_trigger(trigger, timeline_index).img_bullet
 

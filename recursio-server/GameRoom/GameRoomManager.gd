@@ -37,17 +37,13 @@ func _create_game_room(game_room_name: String) -> int:
 	# Workaround for getting the viewport to update
 	$ViewportContainer.rect_clip_content = true
 
-	game_room.connect("world_state_updated", self, "_on_world_state_update") 
-	game_room.connect("phase_started", self, "_on_phase_started", [game_room.id]) 
+	var _error = game_room.connect("world_state_updated", self, "_on_world_state_update") 
 	
-	game_room.get_round_manager().connect("round_started", self, "_on_round_started", [game_room.id]) 
-	game_room.get_round_manager().connect("round_ended", self, "_on_round_ended", [game_room.id]) 
-	
-	game_room.get_game_manager().connect("capture_point_team_changed", self, "_on_capture_point_team_changed", [game_room.id]) 
-	game_room.get_game_manager().connect("capture_point_captured", self, "_on_capture_point_captured", [game_room.id]) 
-	game_room.get_game_manager().connect("capture_point_status_changed", self, "_on_capture_point_status_changed", [game_room.id]) 
-	game_room.get_game_manager().connect("capture_point_capture_lost", self, "_on_capture_point_capture_lost", [game_room.id]) 
-	game_room.get_game_manager().connect("game_result", self, "_on_game_result", [game_room.id]) 
+	_error = game_room.get_game_manager().connect("capture_point_team_changed", self, "_on_capture_point_team_changed", [game_room.id]) 
+	_error = game_room.get_game_manager().connect("capture_point_captured", self, "_on_capture_point_captured", [game_room.id]) 
+	_error = game_room.get_game_manager().connect("capture_point_status_changed", self, "_on_capture_point_status_changed", [game_room.id]) 
+	_error = game_room.get_game_manager().connect("capture_point_capture_lost", self, "_on_capture_point_capture_lost", [game_room.id]) 
+	_error = game_room.get_game_manager().connect("game_result", self, "_on_game_result", [game_room.id]) 
 	
 	_game_room_dic[_game_room_id_counter] = game_room
 	_game_room_id_counter += 1
@@ -59,7 +55,7 @@ func _create_game_room(game_room_name: String) -> int:
 func _delete_game_room(game_room_id: int) -> void:
 	if _game_room_dic.has(game_room_id):
 		_game_room_dic[game_room_id].free()
-		_game_room_dic.erase(game_room_id)
+		var _success = _game_room_dic.erase(game_room_id)
 		game_room_count -= 1
 		Logger.info("GameRoom removed (ID:%s)" % game_room_id, "game_rooms")
 		
@@ -105,7 +101,7 @@ func _on_peer_connected(player_id):
 func _on_peer_disconnected(player_id):
 	if _player_game_room_dic.has(player_id):
 		_leave_game_room(_player_game_room_dic[player_id], player_id)
-		_player_game_room_dic.erase(player_id)
+		var _succes = _player_game_room_dic.erase(player_id)
 
 
 func _on_create_game_room_received(player_id, game_room_name) -> void:
@@ -147,30 +143,6 @@ func _on_world_state_update(world_state, game_room_id) -> void:
 	var game_room: GameRoom = _game_room_dic[game_room_id]
 	for player_id in game_room.get_players():
 		_server.send_world_state(player_id, world_state)
-
-
-# Sends the round start event to all players in the game_room
-func _on_round_started(round_index, latency, game_room_id):
-	var game_room: GameRoom = _game_room_dic[game_room_id]
-	for player_id in game_room.get_players():
-		game_room.get_players()[player_id].round_index = round_index
-		_server.send_round_start_to_client(player_id, round_index)
-
-
-# Sends the round end event to all players in the game_room
-func _on_round_ended(round_index, game_room_id):
-	var game_room: GameRoom = _game_room_dic[game_room_id]
-	game_room.get_node("ActionManager").clear_action_instances()
-	game_room.end_round(round_index)
-	for player_id in game_room.get_players():
-		_server.send_round_end_to_client(player_id, round_index)
-	game_room.get_round_manager().start_round(game_room.get_round_manager().round_index + 1, 0)
-
-
-func _on_phase_started(phase, game_room_id):
-	var game_room: GameRoom = _game_room_dic[game_room_id]
-	for player_id in game_room.get_players():
-		_server.send_phase_start(player_id, phase)
 
 
 func _on_capture_point_team_changed(team_id, capture_point, game_room_id):

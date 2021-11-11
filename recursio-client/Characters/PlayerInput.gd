@@ -21,11 +21,11 @@ var _player_timeline_pick_trigger : String = "player_switch"
 var _player_initialized: bool = false
 
 func _ready():
-	_player.connect("initialized", self, "_on_player_initialized")
-	_player.connect("timeline_index_changed", self, "_swap_weapon_type")
+	var _error = _player.connect("initialized", self, "_on_player_initialized")
+	_error = _player.connect("timeline_index_changed", self, "_swap_weapon_type")
 
 
-func _physics_process(delta):
+func _physics_process(_delta):
 	if not _player_initialized:
 		return
 
@@ -59,9 +59,12 @@ func _on_player_initialized():
 # Changes the weapon depending on the given timeline index
 func _swap_weapon_type(timeline_index) -> void:
 	var max_ammo = _action_manager.get_max_ammo_for_trigger(ActionManager.Trigger.FIRE_START, timeline_index)
-	var img_bullet_bg = _action_manager.get_img_bullet_bg_for_trigger(ActionManager.Trigger.FIRE_START, timeline_index)
 	var img_bullet = _action_manager.get_img_bullet_for_trigger(ActionManager.Trigger.FIRE_START, timeline_index)
-	_player.update_weapon_type_hud(max_ammo, img_bullet_bg, img_bullet)
+	var wall_index = Constants.get_value("ghosts","wall_placing_timeline_index")
+	var accent_type = "primary" if wall_index != timeline_index else "secondary"
+	var color= Color(Constants.get_value("colors", "player_"+accent_type+"_accent"))
+	
+	_player.update_weapon_type_hud(max_ammo, img_bullet, color)
 
 
 

@@ -1,7 +1,7 @@
 extends RayCast
 
 onready var _max_time = Constants.get_value("hitscan", "max_time")
-var _bullet_range := 5
+var _bullet_range = Constants.get_value("hitscan", "range")
 var _owning_player
 var _first_frame := true
 

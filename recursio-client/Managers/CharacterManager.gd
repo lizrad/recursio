@@ -28,35 +28,31 @@ var _time_since_last_server_update = 0.0
 var _time_since_last_world_state_update = 0.0
 
 func _ready():
-	Server.connect("round_started", self, "_on_server_round_started") 
-	Server.connect("round_ended", self, "_on_server_round_ended") 
-	Server.connect("phase_started", self, "_on_server_phase_started") 
+	var _error = Server.connect("phase_switch_received", self, "_on_phase_switch_received") 
+	_error = Server.connect("game_start_received", self, "_on_game_start_received") 
 	
-	_round_manager.connect("round_started", self, "_on_round_started") 
-	_round_manager.connect("round_ended", self, "_on_round_ended") 
-	_round_manager.connect("latency_delay_phase_started", self, "_on_latency_delay_phase_started") 
-	_round_manager.connect("preparation_phase_started", self, "_on_preparation_phase_started") 
-	_round_manager.connect("countdown_phase_started", self, "_on_countdown_phase_started") 
-	_round_manager.connect("game_phase_started", self, "_on_game_phase_started") 
+	_error = _round_manager.connect("preparation_phase_started", self, "_on_preparation_phase_started") 
+	_error = _round_manager.connect("countdown_phase_started", self, "_on_countdown_phase_started") 
+	_error = _round_manager.connect("game_phase_started", self, "_on_game_phase_started") 
 	
 	
 	# Connect to server signals
-	Server.connect("spawning_player", self, "_on_spawn_player") 
-	Server.connect("spawning_enemy", self, "_on_spawn_enemy") 
-	Server.connect("despawning_enemy", self, "_on_despawn_enemy") 
-	Server.connect("player_ghost_record_received", self, "_on_player_ghost_record_received") 
-	Server.connect("enemy_ghost_record_received", self, "_on_enemy_ghost_record_received") 
+	_error = Server.connect("spawning_player", self, "_on_spawn_player") 
+	_error = Server.connect("spawning_enemy", self, "_on_spawn_enemy") 
+	_error = Server.connect("despawning_enemy", self, "_on_despawn_enemy") 
+	_error = Server.connect("player_ghost_record_received", self, "_on_player_ghost_record_received") 
+	_error = Server.connect("enemy_ghost_record_received", self, "_on_enemy_ghost_record_received") 
 	
-	Server.connect("world_state_received", self, "_on_world_state_received") 
-	Server.connect("player_hit", self, "_on_player_hit") 
-	Server.connect("ghost_hit", self, "_on_ghost_hit") 
+	_error = Server.connect("world_state_received", self, "_on_world_state_received") 
+	_error = Server.connect("player_hit", self, "_on_player_hit") 
+	_error = Server.connect("ghost_hit", self, "_on_ghost_hit") 
 	
-	Server.connect("timeline_picks", self, "_on_timeline_picks") 
+	_error = Server.connect("timeline_picks", self, "_on_timeline_picks") 
 	
-	Server.connect("capture_point_captured", self, "_on_capture_point_captured") 
-	Server.connect("capture_point_capture_lost", self, "_on_capture_point_capture_lost") 
+	_error = Server.connect("capture_point_captured", self, "_on_capture_point_captured") 
+	_error = Server.connect("capture_point_capture_lost", self, "_on_capture_point_capture_lost") 
 	
-	Server.connect("game_result", self, "_on_game_result") 
+	_error = Server.connect("game_result", self, "_on_game_result") 
 	
 	
 
@@ -66,7 +62,7 @@ func _ready():
 
 
 func _physics_process(delta):
-	if not _round_manager.round_is_running():
+	if not _round_manager.is_running():
 		return
 	
 	_time_since_last_server_update += delta
@@ -138,33 +134,18 @@ func _reset() -> void:
 	_action_manager.clear_action_instances()
 
 
-func _on_server_round_started(round_index, latency) -> void:
-	_disable_ghosts()
-	_enable_ghosts()
-	_round_manager.start_round(round_index, latency)
+func _on_game_start_received(start_time):
+	_round_manager.future_start_game(start_time)
 
 
-func _on_server_round_ended(round_index) -> void:
-	_round_manager.stop_round()
+func _on_phase_switch_received(round_index, next_phase, switch_time):
+	_round_manager.round_index = round_index
+	_round_manager.get_previous_phase(next_phase)
+	_round_manager.future_switch_to_phase(next_phase, switch_time)
 
 
-func _on_server_phase_started(phase) -> void:
-	# TODO: remove or fix, this is evil! >:-D
-	# !!!
-	_round_manager._timer = Constants.get_value("gameplay", "prep_phase_time")
 
-
-func _on_round_started(round_index, latency) -> void:
-	_game_manager.hide_game_result_screen()
-	_player.block_movement = false
-	_player.show_round_start_hud(round_index, Server.get_server_time() - latency)
-
-	# We have to disable this here because otherwise, the light never sees the ghosts for some reason
-	_player.set_overview_light_enabled(false)
-
-
-# unused param, but event is shared with server
-func _on_round_ended(_round_index):
+func _on_preparation_phase_started() -> void:
 	_player.block_movement = true
 	_player.clear_walls()
 	_player.clear_past_frames()
@@ -174,21 +155,8 @@ func _on_round_ended(_round_index):
 	_toggle_visbility_lights(false)
 	_game_manager.reset()
 	_action_manager.clear_action_instances()
-
-
-func _on_game_result(winning_player_index) -> void:
-	if winning_player_index == _player_rpc_id:
-		_game_manager.show_win()
-	else:
-		_game_manager.show_loss()
-
-
-func _on_latency_delay_phase_started(latency) -> void:
-	_player.show_latency_delay_hud(Server.get_server_time() - latency, latency)
-
-
-func _on_preparation_phase_started(latency) -> void:
-	_player.show_preparation_hud(_round_manager.round_index, Server.get_server_time() - latency)
+	_game_manager.hide_game_result_screen()
+	_player.show_preparation_hud(_round_manager.round_index)
 	
 	# Display paths of my ghosts
 	for timeline_index in _player_ghosts:
@@ -207,22 +175,34 @@ func _on_preparation_phase_started(latency) -> void:
 	_move_ghosts_to_spawn()
 
 
-func _on_countdown_phase_started(countdown_time, latency) -> void:
+func _on_countdown_phase_started() -> void:
 	# Delete ghost path visualization
 	for timeline_index in _player_ghosts:
 		_player_ghosts[timeline_index].delete_path()
 	_player.follow_camera()
-	_player.show_countdown_hud(Server.get_server_time() - latency)
-	_game_manager.show_countdown_screen(countdown_time)
+	_player.show_countdown_hud()
+	_game_manager.show_countdown_screen()
 	# Send currently selected timeline to server
 	Server.send_timeline_pick(_player.timeline_index)
 
-func _on_game_phase_started(latency) -> void:
+func _on_game_phase_started() -> void:
+	
+	_player.block_movement = false
+	_player.set_overview_light_enabled(false)
+	_disable_ghosts()
+	_enable_ghosts()
 	_toggle_visbility_lights(true)
 	_game_manager.hide_countdown_screen()
-	_player.show_game_hud(_round_manager.round_index, Server.get_server_time() - latency)
+	_player.show_game_hud(_round_manager.round_index)
 	_game_manager.toggle_capture_points(true)
 	_start_ghosts()
+
+
+func _on_game_result(winning_player_index) -> void:
+	if winning_player_index == _player_rpc_id:
+		_game_manager.show_win()
+	else:
+		_game_manager.show_loss()
 
 
 func _on_player_timeline_changed(timeline_index) -> void:
@@ -239,11 +219,11 @@ func _on_timeline_picks(timeline_index, enemy_pick):
 	# Free the ghosts that were at this position
 	if _player_ghosts.has(timeline_index):
 		_player_ghosts[timeline_index].queue_free()
-		_player_ghosts.erase(timeline_index)
+		var _success = _player_ghosts.erase(timeline_index)
 	
 	if _enemy_ghosts.has(enemy_pick):
 		_enemy_ghosts[enemy_pick].queue_free()
-		_enemy_ghosts.erase(enemy_pick)
+		var _success =_enemy_ghosts.erase(enemy_pick)
 
 
 
@@ -262,9 +242,6 @@ func _on_enemy_ghost_record_received(timeline_index, record_data: RecordData):
 	var ghost = _create_enemy_ghost(record_data)
 	ghost.spawn_point = _game_manager.get_spawn_point(1 - _player.team_id, timeline_index)
 	ghost.move_to_spawn_point()
-	# Check if there is already a ghost, and delete it
-	if _enemy_ghosts.has(timeline_index):
-		_enemy_ghosts[timeline_index].queue_free()
 	_enemy_ghosts[timeline_index] = ghost
 
 
@@ -273,7 +250,7 @@ func _on_spawn_player(player_id, spawn_point, team_id):
 	_player = _spawn_character(_player_scene, spawn_point)
 	_player.player_init(_action_manager, _round_manager)
 	# TODO: Tunnel signal instead of accessing button overlay here
-	_player.get_button_overlay().connect("button_pressed", self, "_on_player_ready") 
+	var _error = _player.get_button_overlay().connect("button_pressed", self, "_on_player_ready") 
 	_player_rpc_id = player_id
 	_player.team_id = team_id
 	_player.player_id = player_id
@@ -288,8 +265,8 @@ func _on_spawn_player(player_id, spawn_point, team_id):
 	
 	# Initialize capture point HUD for current level
 	_player.setup_capture_point_hud(_game_manager.get_capture_points().size())
-	_player.connect("timeline_index_changed", self, "_on_player_timeline_changed") 
-	Server.connect("wall_spawn", _player, "_on_wall_spawn_received") 
+	_error = _player.connect("timeline_index_changed", self, "_on_player_timeline_changed") 
+	_error = Server.connect("wall_spawn", _player, "_on_wall_spawn_received") 
 
 func _on_spawn_enemy(enemy_id, spawn_point):
 	_enemy = _spawn_character(_enemy_scene, spawn_point)
@@ -298,7 +275,7 @@ func _on_spawn_enemy(enemy_id, spawn_point):
 	_apply_visibility_mask(_enemy)
 
 
-func _on_despawn_enemy(enemy_id):
+func _on_despawn_enemy():
 	_enemy.queue_free()
 	for timeline_index in _enemy_ghosts:
 		_enemy_ghosts[timeline_index].queue_free()
@@ -319,14 +296,14 @@ func _on_world_state_received(world_state: WorldState):
 			
 			_player.handle_server_update(server_player.position, server_player.timestamp)
 			
-			player_states.erase(_player_rpc_id)
+			var _success = player_states.erase(_player_rpc_id)
 
 		for id in player_states:
 			# Handle own player
 			if id == _player_rpc_id:
 				var server_player: PlayerState = player_states[_player_rpc_id]
 				_player.handle_server_update(server_player.position, server_player.timestamp)
-				player_states.erase(_player_rpc_id)
+				var _success = player_states.erase(_player_rpc_id)
 			else:
 				# Set parameters for interpolation
 				_enemy.last_position = _enemy.position
@@ -339,7 +316,10 @@ func _on_world_state_received(world_state: WorldState):
 
 
 func _on_player_hit(hit_player_id) -> void:
-	_player.server_hit() if hit_player_id == _player_rpc_id else _enemy.server_hit()
+	if hit_player_id == _player_rpc_id:
+		_player.server_hit() 
+	else:
+		 _enemy.server_hit()
 
 
 func _on_ghost_hit(hit_ghost_player_owner, hit_ghost_id) -> void:
@@ -349,13 +329,13 @@ func _on_ghost_hit(hit_ghost_player_owner, hit_ghost_id) -> void:
 		_enemy_ghosts[hit_ghost_id].server_hit()
 
 
-func _on_capture_point_captured(capturing_player_id, capture_point):
+func _on_capture_point_captured(capturing_player_id, _capture_point):
 	if capturing_player_id == _player_rpc_id:
 		_player.move_camera_to_overview()
 		_player.set_overview_light_enabled(true)
 
 
-func _on_capture_point_capture_lost(capturing_player_id, capture_point):
+func _on_capture_point_capture_lost(capturing_player_id, _capture_point):
 	if capturing_player_id == _player_rpc_id:
 		_player.follow_camera()
 		_player.set_overview_light_enabled(false)

@@ -53,7 +53,7 @@ func _physics_process(_delta):
 			input_data.reset_iteration_index()
 
 	if player_inputs.size() == player_dic.size():
-		var world_state: WorldState = _world_state_manager.create_world_state(player_dic, player_inputs)
+		var world_state: WorldState = _world_state_manager.create_world_state(player_dic)
 		emit_signal("world_state_updated", world_state)
 
 
@@ -67,7 +67,6 @@ func reset() -> void:
 	# Reset all players
 	for player_id in player_dic:
 		var player: PlayerBase = player_dic[player_id]
-		_game_manager.get_spawn_point(player.team_id, 0)
 		player.reset()
 
 	player_inputs.clear()
@@ -100,8 +99,8 @@ func spawn_player(player_id, team_id) -> void:
 	player.spawn_point = spawn_point
 	ghost_dic[player_id] = {}
 	add_child(player)
-	player.connect("hit", self, "_on_player_hit", [player_id])
-	player.connect("wall_spawn", self, "_on_wall_spawn", [player_id])
+	var _error = player.connect("hit", self, "_on_player_hit", [player_id])
+	_error =player.connect("wall_spawn", self, "_on_wall_spawn", [player_id])
 
 	# Triggering spawns of enemies on all clients
 	for other_player_id in player_dic:
@@ -122,7 +121,7 @@ func despawn_player(player_id) -> void:
 	player_dic[player_id].queue_free()
 	player_dic.erase(player_id)
 	for other_player_id in player_dic:
-		Server.despawn_enemy_on_client(other_player_id, player_id)
+		Server.despawn_enemy_on_client(other_player_id)
 
 func reset_wall_indices():
 	for player_id in player_dic:

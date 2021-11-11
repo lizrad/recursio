@@ -62,7 +62,7 @@ func apply_input(movement_vector: Vector3, rotation_vector: Vector3, buttons: in
 	self.velocity = lerp(velocity, _target_velocity, _drag_factor * delta)
 	# Apply acceleration to velocity (important: after lerp)
 	self.velocity += acceleration * delta
-	_kb.move_and_slide(velocity)
+	var _collision_velocity = _kb.move_and_slide(velocity)
 	
 	# Trigger all actions with base
 	.trigger_actions(buttons)

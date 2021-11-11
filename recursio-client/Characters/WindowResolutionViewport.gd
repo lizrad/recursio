@@ -2,7 +2,7 @@ extends Viewport
 
 
 func _ready():
-	get_tree().get_root().connect("size_changed", self, "resize_viewport")
+	var _error = get_tree().get_root().connect("size_changed", self, "resize_viewport")
 	resize_viewport()
 
 

@@ -88,7 +88,7 @@ func trigger_actions(buttons: int) -> void:
 	var number_of_bits = log(buttons) / log(2) + 1
 	for bit_index in number_of_bits:
 		# Triggers are represented as powers of two
-		var trigger: int = pow(2, bit_index)
+		var trigger = int(pow(2, bit_index))
 		var bit = buttons & trigger
 		if not bit:
 			continue
@@ -106,17 +106,17 @@ func get_action_manager():
 
 
 # Always returns the same Action instance for the same trigger and timeline index. This preserves ammo count etc.
-func _get_action(trigger, timeline_index):
-	var id = timeline_index * 10 + trigger
+func _get_action(trigger, action_timeline_index):
+	var id = action_timeline_index * 10 + trigger
 	
 	# Cache the action if it hasn't been cached yet
 	if not _actions.has(id):
-		_actions[id] = _action_manager.create_action_duplicate_for_trigger(trigger, timeline_index)
+		_actions[id] = _action_manager.create_action_duplicate_for_trigger(trigger, action_timeline_index)
 
 	return _actions[id]
 
 func get_body():
 	return _kb
 
-func wall_spawned(wall):
+func wall_spawned(_wall):
 	pass

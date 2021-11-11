@@ -4,7 +4,7 @@ class_name WorldStateManager
 var world_processing_offset = 0 # to be set from the GameRoom
 
 
-func create_world_state(player_dic, player_inputs) -> WorldState:
+func create_world_state(player_dic) -> WorldState:
 	var time = OS.get_system_time_msecs()
 	var player_states = {}
 	for player_id in player_dic:

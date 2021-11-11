@@ -44,7 +44,6 @@ func hide_buttons() -> void:
 func _process(_delta) -> void:
 	for trigger in _triggers:
 		if Input.is_action_pressed(trigger):
-			var keys = _conf.keys()
 			for key in _conf:
 				if _conf[key] == trigger:
 					emit_signal("button_pressed", key)

@@ -8,17 +8,17 @@ onready var _countdown_screen = get_node("../../CountdownScreen")
 onready var _level: Level = get_node(level_path)
 
 var _team_id := -1
-var _countdown_time: float = 0.0
+var _countdown_time: float = Constants.get_value("gameplay","countdown_phase_seconds")
 
 func _ready():
 	# Hide screens
 	_game_result_screen.visible = false
 	_countdown_screen.visible = false
 	
-	Server.connect("capture_point_captured", self, "_on_capture_point_captured") 
-	Server.connect("capture_point_team_changed", self, "_on_capture_point_team_changed") 
-	Server.connect("capture_point_status_changed", self, "_on_capture_point_status_changed") 
-	Server.connect("capture_point_capture_lost", self, "_on_capture_point_capture_lost") 
+	var _error = Server.connect("capture_point_captured", self, "_on_capture_point_captured") 
+	_error = Server.connect("capture_point_team_changed", self, "_on_capture_point_team_changed") 
+	_error = Server.connect("capture_point_status_changed", self, "_on_capture_point_status_changed") 
+	_error = Server.connect("capture_point_capture_lost", self, "_on_capture_point_capture_lost") 
 
 
 func _process(delta):
@@ -27,16 +27,16 @@ func _process(delta):
 		_countdown_time -= delta
 		# Hide if countdown is finished
 		if _countdown_time <= 0.0:
-			_countdown_screen.visible = false
+			hide_countdown_screen()
 
 
-func show_countdown_screen(countdown_time) -> void:
+func show_countdown_screen() -> void:
 	_countdown_screen.visible = true
-	_countdown_time = countdown_time
 
 
 func hide_countdown_screen() -> void:
 	_countdown_screen.visible = false
+	_countdown_time = Constants.get_value("gameplay","countdown_phase_seconds")
 
 
 func hide_game_result_screen() -> void:

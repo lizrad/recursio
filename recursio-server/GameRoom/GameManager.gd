@@ -65,8 +65,8 @@ func _on_capture_lost(team_id, capture_point):
 func _check_for_win():
 	var captured_points_score = [0,0]
 	for capture_point in _level.get_capture_points():
-		if capture_point.capture_progress==1:
-			captured_points_score[capture_point.capture_team]+=1
+		if capture_point.current_owning_team >= 0:
+			captured_points_score[capture_point.current_owning_team] += 1
 	
 	var win_score = floor(_level.get_capture_points().size()*0.5)+1
 	for i in range(captured_points_score.size()):

@@ -45,7 +45,7 @@ func size() -> int:
 
 # Returns the element closest to or earlier than the given time
 func get_closest_or_earlier(time):
-	for i in range(_data.size() - 1):
+	for _i in range(_data.size() - 1):
 		var element = _data.get_next()
 		
 		# Null element means everything afterwards is null as well

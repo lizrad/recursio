@@ -30,9 +30,9 @@ signal ghost_hit(hit_ghost_player_owner, hit_ghost_id)
 signal timeline_picks(player_pick, enemy_picks)
 signal wall_spawn (position, rotation, wall_index)
 
-signal round_started(round_index, latency)
-signal round_ended(round_index)
-signal phase_started(phase)
+signal phase_switch_received(round_index,next_phase, switch_time)
+signal game_start_received(start_time)
+
 
 
 
@@ -58,8 +58,8 @@ func connect_to_server():
 	Logger.info("Connecting to server...", "connection")
 	network.create_client(ip, port)
 	get_tree().set_network_peer(network)
-	get_tree().connect("connection_failed", self, "_on_connection_failed")
-	get_tree().connect("connected_to_server", self, "_on_connection_succeeded")
+	var _error = get_tree().connect("connection_failed", self, "_on_connection_failed")
+	_error = get_tree().connect("connected_to_server", self, "_on_connection_succeeded")
 
 func _notification(what):
 	if what == MainLoop.NOTIFICATION_WM_QUIT_REQUEST:
@@ -135,9 +135,9 @@ remote func spawn_enemy(enemy_id, spawn_point):
 	emit_signal("spawning_enemy", enemy_id, spawn_point)
 
 
-remote func despawn_enemy(enemy_id):
+remote func despawn_enemy():
 	Logger.debug("Receive despawn enemy", "server")
-	emit_signal("despawning_enemy", enemy_id)
+	emit_signal("despawning_enemy")
 
 
 remote func receive_server_time(server_time, player_time):
@@ -184,20 +184,13 @@ remote func receive_world_state(world_state):
 	emit_signal("world_state_received", WorldState.new().from_array(world_state))
 
 
-remote func receive_round_start(round_index, server_time):
-	Logger.debug("Receive round start", "server")
-	# TODO: Not as accuarate -> Do separate latency calculation
-	emit_signal("round_started", round_index, max(0, float(latency) / 1000.0))
-
-
-remote func receive_round_end(round_index):
-	Logger.debug("Receive round end", "server")
-	emit_signal("round_ended", round_index)
-
-
-remote func receive_phase_start(phase):
-	Logger.debug("Receive phase start: " + str(phase), "server")
-	emit_signal("phase_started", phase)
+remote func receive_game_start(start_time):
+	Logger.info("Receive game start", "server")
+	emit_signal("game_start_received", start_time)
+	
+remote func receive_phase_switch(round_index, next_phase, switch_time):
+	Logger.info("Receive phase switch to " + str(next_phase), "server")
+	emit_signal("phase_switch_received", round_index, next_phase, switch_time)
 
 
 remote func receive_capture_point_captured(capturing_player_id, capture_point):

@@ -1,98 +1,143 @@
 extends Node
 class_name RoundManager
 
-signal round_started(round_index, latency)
-signal latency_delay_phase_started(latency)
-signal preparation_phase_started(latency)
-signal countdown_phase_started(countdown_time, latency)
-signal game_phase_started(latency)
-signal game_phase_ended()
-signal round_ended(round_index)
+signal preparation_phase_started()
+signal countdown_phase_started()
+signal game_phase_started()
+signal preparation_phase_stopped()
+signal countdown_phase_stopped()
+signal game_phase_stopped()
 
 enum Phases {
-	LATENCY_DELAY,
 	PREPARATION,
 	COUNTDOWN,
 	GAME,
 	NONE
 }
 
-var round_index: int = -1
+onready var server = get_node("/root/Server")
 
-var _latency_delay_time: float = Constants.get_value("gameplay", "latency_delay")
-var _preparation_time: float = Constants.get_value("gameplay", "prep_phase_time")
-var _countdown_time: float = Constants.get_value("gameplay","countdown_phase_seconds")
-var _game_time: float = Constants.get_value("gameplay", "game_phase_time")
+var _phase_order = [Phases.PREPARATION, Phases.COUNTDOWN, Phases.GAME]
 
-var _timer: float = 0.0
-# Time difference due to latency. Used for synchronisation
-var _latency: float = 0.0
-var _phase = Phases.NONE
+var round_index: int = 0
 
-var _round_started: bool = false
+var _running = false
+
+var _preparation_phase_time: float = Constants.get_value("gameplay", "prep_phase_time")
+var _countdown_phase_time: float = Constants.get_value("gameplay","countdown_phase_seconds")
+var _game_phase_time: float = Constants.get_value("gameplay", "game_phase_time")
+
+var _phase_deadline = -1.0
+var _current_phase_index = -1
 
 
+var _future_game_imminent = false
+var _future_game_start_time = -1.0
 
-func _physics_process(delta):
-	_timer += delta
-	
-	match _phase:
-		Phases.NONE:
-			if _round_started:
-				_timer = 0
-				_phase = Phases.LATENCY_DELAY
-				Logger.info("Latency delay phase started","gameplay")
-				emit_signal("latency_delay_phase_started", _latency)
-		Phases.LATENCY_DELAY:
-			if _timer >= _latency_delay_time - _latency:
-				_timer -= _latency_delay_time
-				_phase = Phases.PREPARATION
-				Logger.info("Preparation phase started","gameplay")
-				emit_signal("preparation_phase_started", _latency)
-		Phases.PREPARATION:
-			if _timer >= _preparation_time:
-				_timer -= _preparation_time
-				_phase = Phases.COUNTDOWN
-				Logger.info("Countdown phase started","gameplay")
-				emit_signal("countdown_phase_started", _countdown_time, _latency)
-		Phases.COUNTDOWN:
-			if _timer >= _countdown_time:
-				_timer -= _countdown_time
-				_phase = Phases.GAME
-				Logger.info("Game phase started","gameplay")
-				emit_signal("game_phase_started", _latency)
-		Phases.GAME:
-			if _timer >= _game_time:
-				_timer -= _game_time
-				_phase = Phases.NONE
-				_round_started = false
-				Logger.info("Game phase ended","gameplay")
-				emit_signal("game_phase_ended")
 
+func _physics_process(_delta):
+	_check_for_game_start()
+	_check_for_phase_switch()
 
 # Called to start the game loop
-func start_round(round_index, latency) -> void:
-	self.round_index = round_index
-	_latency = latency
-	_round_started = true
-	Logger.info("Round started","gameplay")
-	emit_signal("round_started", round_index, latency)
+func future_start_game(start_time):
+	_future_game_imminent = true
+	_future_game_start_time = start_time
 
 
-func stop_round() -> void:
-	_round_started = false
-	_phase = Phases.NONE
-	Logger.info("Round ended","gameplay")
-	emit_signal("round_ended", round_index)
+func get_previous_phase(phase):
+	var index = _phase_order.find(phase)
+	index -= 1
+	index = fposmod(index, _phase_order.size())
+	return _phase_order[index]
 
 
-func round_is_running() -> bool:
-	return _round_started
+func get_current_phase_time_left():
+	return (_phase_deadline - server.get_server_time())
+
+
+func get_deadline():
+	return _phase_deadline
 
 
 func get_current_phase() -> int:
-	return _phase
+	return _phase_order[_current_phase_index]
 
 
-func get_latency() -> float:
-	return _latency
+func is_running():
+	return _running
+
+
+func future_switch_to_phase(phase, switch_time):
+	assert(phase != Phases.NONE)
+	_phase_deadline = switch_time
+	if _phase_order[_current_phase_index] == phase:
+		return
+	var previous_phase = get_previous_phase(phase)
+	if get_current_phase() != previous_phase:
+		switch_to_phase(previous_phase)
+
+
+func switch_to_phase(phase, delay = 0):
+	assert(phase != Phases.NONE)
+	_switch_to_phase_index(_phase_order.find(phase), delay)
+
+
+func _check_for_game_start():
+	if _future_game_imminent:
+		if server.get_server_time() >= _future_game_start_time:
+			_future_game_imminent = false
+			_start_game()
+
+
+func _start_game():
+	_start_phase(Phases.PREPARATION)
+	_current_phase_index = 0
+	round_index = 0
+	_running = true
+
+
+func _check_for_phase_switch():
+	if _running:
+		if server.get_server_time() >= _phase_deadline:
+			Logger.info("Current phase timer run out.","gameplay")
+			var next_phase_index = (_current_phase_index+1)%_phase_order.size()
+			if _phase_order[next_phase_index]==Phases.PREPARATION:
+				round_index += 1
+			var delay = server.get_server_time() - _phase_deadline
+			_switch_to_phase_index(next_phase_index, delay)
+
+
+func _switch_to_phase_index(next_phase_index, delay = 0):
+	assert(next_phase_index != -1)
+	while _current_phase_index != next_phase_index:
+		_stop_phase(_phase_order[_current_phase_index])
+		_current_phase_index += 1
+		_current_phase_index %= _phase_order.size()
+		_start_phase(_phase_order[_current_phase_index], delay)
+
+
+func _start_phase(phase, delay = 0):
+	Logger.info(str(phase)+" phase started","gameplay")
+	match phase:
+		Phases.PREPARATION:
+			_phase_deadline = server.get_server_time() + _preparation_phase_time * 1000 - delay
+			emit_signal("preparation_phase_started")
+		Phases.COUNTDOWN:
+			_phase_deadline = server.get_server_time() + _countdown_phase_time * 1000 - delay
+			emit_signal("countdown_phase_started")
+		Phases.GAME:
+			_phase_deadline = server.get_server_time() + _game_phase_time * 1000 - delay
+			emit_signal("game_phase_started")
+
+
+func _stop_phase(phase):
+	Logger.info(str(phase)+" phase stopped","gameplay")
+	match phase:
+		Phases.PREPARATION:
+				emit_signal("preparation_phase_stopped")
+		Phases.COUNTDOWN:
+				emit_signal("countdown_phase_stopped")
+		Phases.GAME:
+				emit_signal("game_phase_stopped")
+	pass
