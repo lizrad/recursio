@@ -19,9 +19,6 @@
 [node name="Player" instance=ExtResource( 1 )]
 script = ExtResource( 2 )
 
-[node name="CollisionShape" parent="KinematicBody" index="0"]
-transform = Transform( 0.75, 0, 0, 0, 0.75, -1.06581e-14, 0, -3.90799e-14, 1, 0, 0, 0 )
-
 [node name="CharacterModel" parent="KinematicBody" index="1" instance=ExtResource( 10 )]
 transform = Transform( -1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0 )
 
