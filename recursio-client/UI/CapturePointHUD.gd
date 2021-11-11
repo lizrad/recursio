@@ -15,6 +15,12 @@ onready var enemy_color = Color(Constants.get_value("colors", "enemy_main"))
 var _player_id :int = -1
 var _current_capture_team :int = -1
 
+func _ready():
+	reset()
+
+func reset():
+	_progress_bar.value = 0
+	_background.modulate = neutral_color
 
 func set_player_id(player_id):
 	_player_id = player_id

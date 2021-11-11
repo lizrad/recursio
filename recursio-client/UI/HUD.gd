@@ -34,6 +34,8 @@ func _ready() -> void:
 func reset():
 	_phase.text = "Waiting for game to start..."
 	_max_time = -1.0
+	_dash.visible = false
+	_ammo.visible = false
 
 func _process(_delta):
 	_timer_pb.value = _calculate_progress()
@@ -47,6 +49,8 @@ func _calculate_progress() -> float:
 func prep_phase_start(round_index) -> void:
 	_phase.text = "Preparation Phase " + str(round_index + 1)
 	_max_time = Constants.get_value("gameplay", "prep_phase_time")
+	_dash.visible = true
+	_ammo.visible = true
 
 func countdown_phase_start() -> void:
 	_phase.text = "Get ready!"
@@ -55,6 +59,7 @@ func countdown_phase_start() -> void:
 func game_phase_start(round_index) -> void:
 	_phase.text = "Game Phase " + str(round_index + 1)
 	_max_time = Constants.get_value("gameplay", "game_phase_time")
+
 
 func update_fire_action_ammo(amount: int) -> void:
 	Logger.info("Set fire ammo to: " + str(amount), "HUD")
