@@ -15,12 +15,11 @@ enum Phases {
 	NONE
 }
 
-export var autonomous := true
 onready var server = get_node("/root/Server")
 
 var _phase_order = [Phases.PREPARATION, Phases.COUNTDOWN, Phases.GAME]
 
-var round_index: int = -1
+var round_index: int = 0
 
 var _running = false
 
@@ -30,10 +29,6 @@ var _game_phase_time: float = Constants.get_value("gameplay", "game_phase_time")
 
 var _phase_deadline = -1.0
 var _current_phase_index = -1
-
-var _future_phase = Phases.NONE
-var _future_phase_switch_time = -1.0
-var _future_phase_switch_imminent = false
 
 
 var _future_game_imminent = false
@@ -51,13 +46,14 @@ func _start_game():
 	round_index = 0
 	_running = true
 
-
-func is_switch_imminent():
-	return _future_phase_switch_imminent
-
+func get_previous_phase(phase):
+	var index = _phase_order.find(phase)
+	index -= 1
+	index = fposmod(index, _phase_order.size())
+	return _phase_order[index]
 
 func get_current_phase_time_left():
-	return (_phase_deadline - server.get_server_time)
+	return (_phase_deadline - server.get_server_time())
 
 func get_deadline():
 	return _phase_deadline
@@ -70,9 +66,10 @@ func is_running():
 
 func future_switch_to_phase(phase, switch_time):
 	assert(phase != Phases.NONE)
-	_future_phase_switch_imminent = true
-	_future_phase = phase
-	_future_phase_switch_time = switch_time
+	var previous_phase = get_previous_phase(phase)
+	if get_current_phase() != previous_phase:
+		switch_to_phase(previous_phase)
+	_phase_deadline = switch_time
 
 
 func switch_to_phase(phase, delay = 0):
@@ -82,8 +79,7 @@ func switch_to_phase(phase, delay = 0):
 
 func _physics_process(_delta):
 	_check_for_game_start()
-	_check_for_external_phase_switch()
-	_check_for_internal_phase_switch()
+	_check_for_phase_switch()
 
 func _check_for_game_start():
 	if _future_game_imminent:
@@ -91,25 +87,15 @@ func _check_for_game_start():
 			_future_game_imminent = false
 			_start_game()
 
-
-func _check_for_external_phase_switch():
-	if _future_phase_switch_imminent:
-		assert(_future_phase_switch_time != -1.0)
-		if server.get_server_time() >= _future_phase_switch_time:
-			_future_phase_switch_imminent = false
-			_future_phase_switch_time = -1.0
-			assert(_future_phase != Phases.NONE)
-			var delay = server.get_server_time()-_future_phase_switch_time
-			switch_to_phase(_future_phase, delay)
-			_future_phase = Phases.NONE
-
-
-func _check_for_internal_phase_switch():
-	if autonomous and _running:
+func _check_for_phase_switch():
+	if _running:
 		if server.get_server_time() >= _phase_deadline:
 			Logger.info("Current phase timer run out.","gameplay")
 			var next_phase_index = (_current_phase_index+1)%_phase_order.size()
-			_switch_to_phase_index(next_phase_index)
+			if _phase_order[next_phase_index]==Phases.PREPARATION:
+				round_index += 1
+			var delay = server.get_server_time() - _phase_deadline
+			_switch_to_phase_index(next_phase_index, delay)
 
 
 func _switch_to_phase_index(next_phase_index, delay = 0):
@@ -125,7 +111,6 @@ func _start_phase(phase, delay = 0):
 	Logger.info(str(phase)+" phase started","gameplay")
 	match phase:
 		Phases.PREPARATION:
-			round_index += 1
 			_phase_deadline = server.get_server_time() + _preparation_phase_time * 1000 - delay
 			emit_signal("preparation_phase_started")
 		Phases.COUNTDOWN:

@@ -27,7 +27,7 @@ func _process(delta):
 		_countdown_time -= delta
 		# Hide if countdown is finished
 		if _countdown_time <= 0.0:
-			_countdown_screen.visible = false
+			hide_countdown_screen()
 
 
 func show_countdown_screen() -> void:
@@ -36,6 +36,7 @@ func show_countdown_screen() -> void:
 
 func hide_countdown_screen() -> void:
 	_countdown_screen.visible = false
+	_countdown_time = Constants.get_value("gameplay","countdown_phase_seconds")
 
 
 func hide_game_result_screen() -> void:

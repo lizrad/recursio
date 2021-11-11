@@ -104,8 +104,8 @@ func handle_player_ready(player_id):
 	Logger.info("received player ready for player " + str(player_id) + " count: " + str(_players_ready.keys().size()), "game_rooms")
 	if _players_ready.keys().size() == PLAYER_NUMBER_PER_GAME_ROOM:
 		var time_until_switch = 0.5
-		if _round_manager.get_current_phase_time_left()>time_until_switch and not _round_manager.is_switch_imminent():
-			var countdown_start_time = _server.get_server_time+time_until_switch
+		if _round_manager.get_current_phase_time_left()>time_until_switch and _round_manager.get_current_phase() == RoundManager.Phases.PREPARATION:
+			var countdown_start_time = _server.get_server_time()+time_until_switch
 			_round_manager.future_switch_to_phase(RoundManager.Phases.COUNTDOWN,countdown_start_time)
 			for client_id in _players_ready:
 				_server.send_phase_switch_to_client(client_id, _round_manager.round_index, RoundManager.Phases.COUNTDOWN, countdown_start_time)

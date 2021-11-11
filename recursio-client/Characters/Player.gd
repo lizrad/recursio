@@ -27,6 +27,7 @@ class MovementFrame:
 func player_init(action_manager, round_manager) -> void:
 	.player_base_init(action_manager)
 	_round_manager = round_manager
+	_hud.pass_round_manager(_round_manager)
 	emit_signal("initialized")
 
 
@@ -124,18 +125,18 @@ func update_capture_point_hud(capture_points: Array) -> void:
 		_hud.update_capture_point(index, capture_point.get_capture_progress(), capture_point.get_capture_team())
 		index += 1
 
-func show_preparation_hud(round_index, start_time) -> void:
-	_hud.prep_phase_start(round_index, start_time)
+func show_preparation_hud(round_index) -> void:
+	_hud.prep_phase_start(round_index)
 	_button_overlay.show_buttons("ready", ButtonOverlay.BUTTONS.DOWN, true)
 
 
-func show_countdown_hud(start_time) -> void:
-	_hud.countdown_phase_start(start_time)
+func show_countdown_hud() -> void:
+	_hud.countdown_phase_start()
 	_button_overlay.hide_buttons()
 
 
-func show_game_hud(round_index, start_time) -> void:
-	_hud.game_phase_start(round_index, start_time)
+func show_game_hud(round_index) -> void:
+	_hud.game_phase_start(round_index)
 
 
 func get_button_overlay() -> ButtonOverlay:
