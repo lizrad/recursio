@@ -70,6 +70,8 @@ func is_running():
 
 func future_switch_to_phase(phase, switch_time):
 	assert(phase != Phases.NONE)
+	if _phase_order[_current_phase_index] == phase:
+		return
 	var previous_phase = get_previous_phase(phase)
 	if get_current_phase() != previous_phase:
 		switch_to_phase(previous_phase)
