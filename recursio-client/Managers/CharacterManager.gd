@@ -1,9 +1,13 @@
 extends Node
 class_name CharacterManager
 
+signal game_started()
+
 onready var _action_manager: ActionManager = get_node("ActionManager")
 onready var _game_manager: GameManager = get_node("GameManager")
 onready var _round_manager: RoundManager = get_node("RoundManager")
+
+onready var _random_names = TextFileToArray.load_text_file("res://Resources/Data/animal_names.txt")
 
 # Scenes for instanciating 
 var _player_scene = preload("res://Characters/Player.tscn")
@@ -17,6 +21,7 @@ var _player: Player
 var _enemy: Enemy
 
 var _player_rpc_id: int
+var _player_user_name: String
 
 # Timeline index <-> ghost
 var _player_ghosts: Dictionary = {}
@@ -57,6 +62,9 @@ func _ready():
 	
 
 	_player_rpc_id = get_tree().get_network_unique_id()
+	randomize()
+	var random_index = randi() % _random_names.size()
+	_player_user_name = _random_names[random_index]
 	
 	set_physics_process(false)
 
@@ -136,6 +144,10 @@ func _reset() -> void:
 
 func _on_game_start_received(start_time):
 	_round_manager.future_start_game(start_time)
+
+
+func get_player_user_name() -> String:
+	return _player_user_name
 
 
 func _on_phase_switch_received(round_index, next_phase, switch_time):
@@ -256,7 +268,6 @@ func _on_spawn_player(player_id, spawn_point, team_id):
 	_player.player_id = player_id
 	_player.set_name(str(player_id))
 	_game_manager.set_team_id(team_id)
-	
 	# Apply visibility mask to all entities which have been here before the player
 	_apply_visibility_always(_player)
 	for timeline_index in _enemy_ghosts:
@@ -265,8 +276,12 @@ func _on_spawn_player(player_id, spawn_point, team_id):
 	
 	# Initialize capture point HUD for current level
 	_player.setup_capture_point_hud(_game_manager.get_capture_points().size())
+	
 	_error = _player.connect("timeline_index_changed", self, "_on_player_timeline_changed") 
 	_error = Server.connect("wall_spawn", _player, "_on_wall_spawn_received") 
+	
+	_player.user_name = _player_user_name
+	emit_signal("game_started")
 
 func _on_spawn_enemy(enemy_id, spawn_point):
 	_enemy = _spawn_character(_enemy_scene, spawn_point)

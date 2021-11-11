@@ -10,11 +10,15 @@ onready var _btn_back: Button = get_node("Content/BottomBar/Btn_Back")
 onready var _game_room_name: LineEdit = get_node("Content/VBoxContainer/GameRoomName")
 
 
-
-
 func _ready():
 	_btn_create_room.connect("pressed", self, "_on_create_game_room_pressed")
 	_btn_back.connect("pressed", self, "_on_back_pressed")
+
+
+# OVERRIDE #
+func show():
+	_game_room_name.grab_focus()
+	.show()
 
 
 func _on_create_game_room_pressed():

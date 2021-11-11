@@ -19,6 +19,8 @@ signal player_timeline_pick_received(player_id, timeline_index)
 signal create_game_room_received(game_room_name)
 signal get_game_rooms_received(player_id)
 signal join_game_room_received(player_id, game_room_id)
+signal leave_game_room_received(player_id, game_room_id)
+signal game_room_ready_received(player_id, game_room_id)
 
 
 func _ready():
@@ -169,18 +171,38 @@ func send_game_room_created(player_id, game_room_id, game_room_name):
 
 
 remote func receive_get_game_rooms():
-	var player_id = get_tree().get_rpc_sender_id()
+	var client_id = get_tree().get_rpc_sender_id()
 	Logger.info("Receive get game rooms", "room_management")
-	emit_signal("get_game_rooms_received", player_id)
+	emit_signal("get_game_rooms_received", client_id)
 
 
-func send_game_rooms(player_id, game_room_dic):
+func send_game_rooms(client_id, game_room_dic):
 	Logger.info("Send get game rooms", "room_management")
-	rpc_id(player_id, "receive_get_game_rooms", game_room_dic)
+	rpc_id(client_id, "receive_get_game_rooms", game_room_dic)
 
 
-remote func receive_join_game_rooms(game_room_id):
-	var player_id = get_tree().get_rpc_sender_id()
+remote func receive_join_game_rooms(game_room_id, player_user_name):
+	var client_id = get_tree().get_rpc_sender_id()
 	Logger.info("Receive join game rooms", "room_management")
-	emit_signal("join_game_room_received", player_id, game_room_id)
+	emit_signal("join_game_room_received", client_id, game_room_id, player_user_name)
+
+
+func send_game_room_joined(client_id, player_id_name_dic, game_room_id):
+	Logger.info("Send game room joined", "room_management")
+	rpc_id(client_id, "receive_game_room_joined", player_id_name_dic, game_room_id)
+
+
+remote func receive_game_room_ready(game_room_id):
+	Logger.info("Receive game room ready", "room_management")
+	var client_id = get_tree().get_rpc_sender_id()
+	emit_signal("game_room_ready_received", client_id, game_room_id)
+
+
+remote func receive_leave_game_room(game_room_id):
+	var client_id = get_tree().get_rpc_sender_id()
+	Logger.info("Receive leave game rooms", "room_management")
+	emit_signal("leave_game_room_received", client_id, game_room_id)
+
+
+
 

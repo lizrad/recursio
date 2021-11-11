@@ -89,11 +89,12 @@ func move_players_to_spawn_point() -> void:
 		player_dic[player_id].move_to_spawn_point()
 
 
-func spawn_player(player_id, team_id) -> void:
+func spawn_player(player_id, team_id, player_user_name) -> void:
 	var spawn_point = _game_manager.get_spawn_point(team_id, 0)
 	var player: PlayerBase = _player_scene.instance()
 	player.player_base_init(_action_manager)
 	player.player_id = player_id
+	player.user_name = player_user_name
 	player.team_id = team_id
 	player.timeline_index = 0
 	player.spawn_point = spawn_point

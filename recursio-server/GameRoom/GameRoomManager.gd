@@ -25,6 +25,9 @@ func _ready():
 	_server.connect("create_game_room_received", self, "_on_create_game_room_received")
 	_server.connect("get_game_rooms_received", self, "_on_get_game_rooms_received")
 	_server.connect("join_game_room_received", self, "_on_join_game_room_received")
+	_server.connect("leave_game_room_received", self, "_on_leave_game_room_received")
+	
+	_server.connect("game_room_ready_received", self, "_on_game_room_ready_received")
 
 
 func _create_game_room(game_room_name: String) -> int:
@@ -63,17 +66,19 @@ func _delete_game_room(game_room_id: int) -> void:
 		$ViewportContainer.rect_clip_content = true
 
 
-func _join_game_room(player_id: int, game_room_id: int) -> void:
+func _join_game_room(player_id: int, game_room_id: int, player_user_name: String) -> void:
 	if _game_room_dic.has(game_room_id):
 		var game_room: GameRoom = _game_room_dic[game_room_id]
-		game_room.add_player(player_id)
+		game_room.add_player(player_id, player_user_name)
 		_player_game_room_dic[player_id] = game_room_id
+		_update_game_room_on_client(game_room)
 
 
-func _leave_game_room(game_room_id: int, player_id: int) -> void:
+func _leave_game_room(player_id: int, game_room_id: int) -> void:
 	if _game_room_dic.has(game_room_id):
 		var game_room: GameRoom = _game_room_dic[game_room_id]
 		game_room.remove_player(player_id)
+		_update_game_room_on_client(game_room)
 		if game_room.player_count == 0:
 			_delete_game_room(game_room_id)
 
@@ -116,8 +121,12 @@ func _on_get_game_rooms_received(player_id) -> void:
 	_server.send_game_rooms(player_id, game_rooms)
 
 
-func _on_join_game_room_received(player_id, game_room_id) -> void:
-	_join_game_room(player_id, game_room_id)
+func _on_join_game_room_received(player_id, game_room_id, player_user_name) -> void:
+	_join_game_room(player_id, game_room_id, player_user_name)
+
+
+func _on_leave_game_room_received(player_id, game_room_id) -> void:
+	_leave_game_room(player_id, game_room_id)
 
 
 func _on_player_input_data_received(player_id, input_data):
@@ -186,3 +195,16 @@ func _on_game_result(team_id, game_room_id):
 	game_room.reset()
 	game_room.start_game()
 
+
+func _on_game_room_ready_received(player_id, game_room_id):
+	_get_game_room(game_room_id).handle_game_room_ready(player_id)
+
+
+func _update_game_room_on_client(game_room):
+	var player_dic = game_room.get_game_room_players()
+	var player_id_name_dic := {}
+	for player_id in player_dic:
+		player_id_name_dic[player_id] = player_dic[player_id]
+	
+	for player_id in player_dic:
+		_server.send_game_room_joined(player_id, player_id_name_dic, game_room.id)

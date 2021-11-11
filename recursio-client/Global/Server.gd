@@ -41,6 +41,7 @@ signal game_start_received(start_time)
 #########################
 signal game_room_created(room_id, game_room_name)
 signal game_rooms_received(game_room_dic)
+signal game_room_joined(player_id_name_dic, game_room_id)
 
 
 
@@ -268,13 +269,23 @@ remote func receive_get_game_rooms(game_room_dic) -> void:
 	emit_signal("game_rooms_received", game_room_dic)
 
 
-func send_join_game_room(game_room_id):
+func send_join_game_room(game_room_id, player_user_name):
 	Logger.info("Send join game room [ID: %s]" %[game_room_id], "room_management")
-	rpc_id(1, "receive_join_game_rooms", game_room_id)
+	rpc_id(1, "receive_join_game_rooms", game_room_id, player_user_name)
 
 
+remote func receive_game_room_joined(player_id_name_dic, game_room_id):
+	emit_signal("game_room_joined", player_id_name_dic, game_room_id)
 
 
+func send_game_room_ready(game_room_id):
+	Logger.info("Send game room ready", "room_management")
+	rpc_id(1, "receive_game_room_ready", game_room_id)
+
+
+func send_leave_game_room(game_room_id):
+	Logger.info("Send leave game room", "room_management")
+	rpc_id(1, "receive_leave_game_room", game_room_id)
 
 
 
