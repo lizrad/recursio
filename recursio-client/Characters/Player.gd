@@ -44,7 +44,6 @@ func clear_walls():
 	_walls.clear()
 
 
-
 # OVERRIDE #
 func apply_input(movement_vector: Vector3, rotation_vector: Vector3, buttons: int) -> void:
 	.apply_input(movement_vector, rotation_vector, buttons)
@@ -55,6 +54,7 @@ func apply_input(movement_vector: Vector3, rotation_vector: Vector3, buttons: in
 		var frame = MovementFrame.new()
 		frame.position = self.position
 		_past_frames[Server.get_server_time()] = frame
+
 
 # OVERRIDE #
 # Always returns the same Action instance for the same trigger and timeline index. This preserves ammo count etc.
