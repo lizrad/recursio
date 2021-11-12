@@ -105,8 +105,8 @@ func _physics_process(delta):
 		+ (projected_from_last_known - projected_from_start) * tick_progress
 	)
 	
-	_enemy.trigger_actions(_enemy.last_triggers.mask)
-	_enemy.last_triggers.mask = 0
+	_enemy.trigger_actions(_enemy.last_triggers)
+	_enemy.last_triggers = 0
 	
 	# Update CapturePoints in player HUD
 	_player.update_capture_point_hud(_game_manager.get_capture_points())
@@ -320,7 +320,7 @@ func _on_world_state_received(world_state: WorldState):
 				_enemy.server_position = player_states[id].position
 				_enemy.server_velocity = player_states[id].velocity
 				_enemy.server_acceleration = player_states[id].acceleration
-				_enemy.last_triggers.add(player_states[id].buttons.mask)
+				_enemy.last_triggers |= player_states[id].buttons
 
 
 func _on_player_hit(hit_player_id) -> void:

@@ -10,7 +10,7 @@ var _current_input_frame: InputFrame = InputFrame.new()
 
 # Sets the entire button bitmask with the given bits
 func set_triggers_in_input_frame(triggers: int) -> void:
-	_current_input_frame.buttons.set_bits(triggers)
+	_current_input_frame.buttons = triggers
 
 
 # Adds new movement data to the input frame

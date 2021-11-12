@@ -34,13 +34,13 @@ func _physics_process(_delta):
 		if player_dic.has(player_id):
 			var input_data: InputData = player_inputs[player_id]
 			var player: PlayerBase = player_dic[player_id]
-			
+
 			for i in input_data.size():
 				var input_frame: InputFrame = input_data.get_previous()
-				
+
 				if input_frame == null:
 					continue
-				
+
 				if input_frame.timestamp > base_time:
 					break
 				elif not player.previously_applied_packets.get_data().has(input_frame.timestamp):
@@ -48,7 +48,7 @@ func _physics_process(_delta):
 					# timestamp distances are sensible, otherwise the player could
 					# pack in additional packets
 					player.previously_applied_packets.append(input_frame.timestamp)
-					player.apply_input(input_frame.movement, input_frame.rotation, input_frame.buttons.mask)
+					player.apply_input(input_frame.movement, input_frame.rotation, input_frame.buttons)
 					player.timestamp_of_previous_packet = input_frame.timestamp
 			input_data.reset_iteration_index()
 

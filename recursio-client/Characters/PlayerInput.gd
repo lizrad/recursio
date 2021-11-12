@@ -78,9 +78,9 @@ func _get_input(type) -> Vector2:
 
 # Returns a binary representation of all buttons pressed
 func _get_buttons_pressed() -> int:
-	var buttons : Bitmask = Bitmask.new(0)
+	var buttons := 0
 	for trigger in _trigger_dic:
 		if Input.is_action_just_pressed(trigger):
-			buttons.add(_trigger_dic[trigger])
+			buttons |= _trigger_dic[trigger]
 
-	return buttons.mask
+	return buttons
