@@ -25,6 +25,13 @@ func _ready():
 	_btn_refresh_game_rooms.connect("pressed", self, "_on_send_get_game_rooms")
 	_btn_back.connect("pressed", self, "_on_back_pressed")
 	_btn_join_game_room.connect("pressed", self, "_on_join_game_room_pressed")
+	
+	
+	_game_room_list.connect("item_selected", self, "_on_item_selected")
+	_game_room_list.connect("item_activated", self, "_on_item_activated")
+	
+	# Disable join button until a room is selected
+	_btn_join_game_room.disabled = true
 
 
 func add_game_room(game_room_id, game_room_name) -> void:
@@ -75,3 +82,18 @@ func _on_join_game_room_pressed() -> void:
 	if get_selected_game_room() != -1:
 		emit_signal("btn_join_game_room_pressed")
 		self.hide()
+
+
+func _on_item_selected(item_index: int) -> void:
+	_btn_join_game_room.disabled = false
+	_game_room_list.disconnect("item_selected", self, "_on_item_selected")
+
+
+# Triggered when an item is double clicked
+func _on_item_activated(item_index: int) -> void:
+	_on_join_game_room_pressed()
+
+
+
+
+
