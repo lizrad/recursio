@@ -24,11 +24,6 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://Characters/Visuals/Animation/BaseAnimator.gd"
 }, {
-"base": "Object",
-"class": "Bitmask",
-"language": "GDScript",
-"path": "res://Shared/Util/Bitmask.gd"
-}, {
 "base": "Control",
 "class": "ButtonOverlay",
 "language": "GDScript",
@@ -173,7 +168,6 @@ _global_script_class_icons={
 "Action": "",
 "ActionManager": "",
 "BaseAnimator": "",
-"Bitmask": "",
 "ButtonOverlay": "",
 "CapturePoint": "",
 "CapturePointHUD": "",
