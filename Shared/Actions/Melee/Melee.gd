@@ -6,7 +6,7 @@ var _owning_player
 var _hit_something = false
 
 func initialize(owning_player) -> void:
-	Logger.info("initialize", "Melee")
+	Logger.debug("initialize", "Melee")
 	_owning_player = owning_player
 
 func _process(delta):
@@ -33,13 +33,14 @@ func _physics_process(_delta):
 
 	Logger.debug("melee hit " + str(bodies.size()) + (" bodies." if bodies.size() != 1 else " body."), "Melee")
 
-	var nearest_body
+	var nearest_body = null
 	var nearest_distance = INF
 	for body in bodies:
 		if not body.get_parent() is CharacterBase:
 			continue
 		if body == _owning_player.get_body():
 			continue
+
 		var distance = global_transform.origin.distance_to(body.global_transform.origin)
 		if distance < nearest_distance:
 			nearest_distance = distance
