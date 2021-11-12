@@ -50,20 +50,18 @@ func _ready():
 
 	_error = Server.connect("capture_point_captured", self, "_on_capture_point_captured") 
 	_error = Server.connect("capture_point_capture_lost", self, "_on_capture_point_capture_lost") 
-	
+
 	_error = Server.connect("game_result", self, "_on_game_result") 
-	
-	
 
 	_player_rpc_id = get_tree().get_network_unique_id()
-	
+
 	set_physics_process(false)
 
 
 func _physics_process(delta):
 	if not _round_manager.is_running():
 		return
-	
+
 	_time_since_last_server_update += delta
 	var server_delta = 1.0 / Server.tickrate
 
@@ -430,6 +428,7 @@ func _move_ghosts_to_spawn() -> void:
 func _apply_visibility_mask(character) -> void:
 	if not _player:
 		return
+
 	character.get_node("KinematicBody/CharacterModel").set_shader_param("visibility_mask", _player.get_visibility_mask())
 	if character.has_node("KinematicBody/MiniMapIcon"):
 		character.get_node("KinematicBody/MiniMapIcon").visibility_mask = _player.get_visibility_mask()
