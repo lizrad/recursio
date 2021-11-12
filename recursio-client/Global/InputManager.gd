@@ -1,12 +1,11 @@
 extends Node
 
 
-
 # All input frames for sending to the server
 # Consists of 15 
 var _input_data: InputData = InputData.new()
 
-var _current_input_frame: InputFrame = InputFrame.new()	
+var _current_input_frame: InputFrame = InputFrame.new()
 
 
 # Sets the entire button bitmask with the given bits

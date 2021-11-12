@@ -226,9 +226,9 @@ func _on_timeline_picks(timeline_index, enemy_pick):
 		var _success =_enemy_ghosts.erase(enemy_pick)
 
 
-
-func _on_player_ready(_button) -> void:
-	Server.send_player_ready()
+func _on_player_ready(button) -> void:
+	if button == ButtonOverlay.BUTTONS.DOWN:
+		Server.send_player_ready()
 
 
 func _on_player_ghost_record_received(timeline_index, record_data):

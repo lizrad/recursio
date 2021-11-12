@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://Shared/Characters/PlayerBase.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Characters/Player.gd" type="Script" id=2]
@@ -16,21 +16,38 @@
 [ext_resource path="res://addons/ascii-shader/AsciiRenderer.tscn" type="PackedScene" id=14]
 [ext_resource path="res://Characters/PlayerInput.gd" type="Script" id=15]
 
+[sub_resource type="PrismMesh" id=1]
+
 [node name="Player" instance=ExtResource( 1 )]
 script = ExtResource( 2 )
 
-[node name="CharacterModel" parent="KinematicBody" index="1" instance=ExtResource( 10 )]
+[node name="Selector" type="Spatial" parent="KinematicBody" index="0"]
+
+[node name="SelectorLeft" type="MeshInstance" parent="KinematicBody/Selector" index="0"]
+transform = Transform( -4.37114e-08, 1, 4.37114e-08, 0, -4.37114e-08, 1, 1, 4.37114e-08, 1.91069e-15, -2, 0, 0 )
+layers = 512
+mesh = SubResource( 1 )
+skeleton = NodePath("")
+material/0 = null
+
+[node name="SelectorRight" type="MeshInstance" parent="KinematicBody/Selector" index="1"]
+transform = Transform( -4.37114e-08, -1, 0, -4.37114e-08, 1.91069e-15, 1, -1, 4.37114e-08, -4.37114e-08, 2, 0, 0 )
+layers = 512
+mesh = SubResource( 1 )
+material/0 = null
+
+[node name="CharacterModel" parent="KinematicBody" index="2" instance=ExtResource( 10 )]
 transform = Transform( -1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0 )
 
-[node name="PlayerInput" type="Node" parent="KinematicBody" index="2"]
+[node name="PlayerInput" type="Node" parent="KinematicBody" index="3"]
 script = ExtResource( 15 )
 
-[node name="VisibilityLight" parent="KinematicBody" index="3" instance=ExtResource( 9 )]
+[node name="VisibilityLight" parent="KinematicBody" index="4" instance=ExtResource( 9 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.368213, -0.741072 )
 visible = false
 light_energy = 16.0
 
-[node name="LightViewport" type="Viewport" parent="KinematicBody" index="4"]
+[node name="LightViewport" type="Viewport" parent="KinematicBody" index="5"]
 size = Vector2( 2048, 2048 )
 handle_input_locally = false
 hdr = false
@@ -46,7 +63,7 @@ projection = 1
 current = true
 size = 70.0
 
-[node name="AsciiViewportContainer" type="ViewportContainer" parent="KinematicBody" index="5"]
+[node name="AsciiViewportContainer" type="ViewportContainer" parent="KinematicBody" index="6"]
 margin_right = 1024.0
 margin_bottom = 600.0
 stretch = true
@@ -81,7 +98,7 @@ __meta__ = {
 [node name="RemoteTransform" type="RemoteTransform" parent="KinematicBody/AsciiViewportContainer/Viewport/LerpedFollow/Camera" index="1"]
 remote_path = NodePath("../../../../../NormalViewportContainer/Viewport/Camera")
 
-[node name="NormalViewportContainer" type="ViewportContainer" parent="KinematicBody" index="6"]
+[node name="NormalViewportContainer" type="ViewportContainer" parent="KinematicBody" index="7"]
 margin_right = 1024.0
 margin_bottom = 600.0
 stretch = true
@@ -106,7 +123,7 @@ __meta__ = {
 "_editor_description_": ""
 }
 
-[node name="TransformReset" type="Node" parent="KinematicBody" index="7"]
+[node name="TransformReset" type="Node" parent="KinematicBody" index="8"]
 
 [node name="OverviewTarget" type="Position3D" parent="KinematicBody/TransformReset" index="0"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10, 0 )
@@ -128,27 +145,27 @@ light_negative = true
 omni_range = 0.0
 omni_attenuation = 3.75716e-05
 
-[node name="ViewTarget" type="Position3D" parent="KinematicBody" index="8"]
+[node name="ViewTarget" type="Position3D" parent="KinematicBody" index="9"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -6 )
 script = ExtResource( 8 )
 
-[node name="ViewTarget2" type="Position3D" parent="KinematicBody" index="9"]
+[node name="ViewTarget2" type="Position3D" parent="KinematicBody" index="10"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -6 )
 script = ExtResource( 8 )
 
-[node name="MiniMapSprite" type="Sprite3D" parent="KinematicBody" index="10"]
+[node name="MiniMapSprite" type="Sprite3D" parent="KinematicBody" index="11"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.07854, 0 )
 layers = 8
 axis = 1
 texture = ExtResource( 12 )
 
-[node name="HUD" parent="KinematicBody" index="11" instance=ExtResource( 4 )]
+[node name="HUD" parent="KinematicBody" index="12" instance=ExtResource( 4 )]
 margin_left = 0.0
 margin_top = 0.0
 margin_right = 0.0
 margin_bottom = 0.0
 
-[node name="ButtonOverlay" parent="KinematicBody" index="12" instance=ExtResource( 13 )]
+[node name="ButtonOverlay" parent="KinematicBody" index="13" instance=ExtResource( 13 )]
 visible = false
 margin_left = 363.57
 margin_top = 527.664

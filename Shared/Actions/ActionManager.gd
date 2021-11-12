@@ -61,6 +61,7 @@ func get_action_type_for_trigger(trigger, timeline_index):
 
 func get_max_ammo_for_trigger(trigger, timeline_index):
 	return get_action_for_trigger(trigger, timeline_index).max_ammo
+
 func get_img_bullet_for_trigger(trigger, timeline_index):
 	return get_action_for_trigger(trigger, timeline_index).img_bullet
 
