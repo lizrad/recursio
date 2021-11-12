@@ -30,25 +30,24 @@ var _time_since_last_world_state_update = 0.0
 func _ready():
 	var _error = Server.connect("phase_switch_received", self, "_on_phase_switch_received") 
 	_error = Server.connect("game_start_received", self, "_on_game_start_received") 
-	
+
 	_error = _round_manager.connect("preparation_phase_started", self, "_on_preparation_phase_started") 
 	_error = _round_manager.connect("countdown_phase_started", self, "_on_countdown_phase_started") 
 	_error = _round_manager.connect("game_phase_started", self, "_on_game_phase_started") 
-	
-	
+
 	# Connect to server signals
 	_error = Server.connect("spawning_player", self, "_on_spawn_player") 
 	_error = Server.connect("spawning_enemy", self, "_on_spawn_enemy") 
 	_error = Server.connect("despawning_enemy", self, "_on_despawn_enemy") 
 	_error = Server.connect("player_ghost_record_received", self, "_on_player_ghost_record_received") 
 	_error = Server.connect("enemy_ghost_record_received", self, "_on_enemy_ghost_record_received") 
-	
+
 	_error = Server.connect("world_state_received", self, "_on_world_state_received") 
 	_error = Server.connect("player_hit", self, "_on_player_hit") 
 	_error = Server.connect("ghost_hit", self, "_on_ghost_hit") 
-	
+
 	_error = Server.connect("timeline_picks", self, "_on_timeline_picks") 
-	
+
 	_error = Server.connect("capture_point_captured", self, "_on_capture_point_captured") 
 	_error = Server.connect("capture_point_capture_lost", self, "_on_capture_point_capture_lost") 
 	
@@ -104,16 +103,16 @@ func _physics_process(delta):
 		projected_from_start
 		+ (projected_from_last_known - projected_from_start) * tick_progress
 	)
-	
+
 	_enemy.trigger_actions(_enemy.last_triggers)
 	_enemy.last_triggers = 0
-	
+
 	# Update CapturePoints in player HUD
 	_player.update_capture_point_hud(_game_manager.get_capture_points())
 
 
 func _reset() -> void:
-	Logger.info("Full reset triggered.","gameplay")
+	Logger.info("Full reset triggered.", "gameplay")
 	# Reset player
 	_player.reset()
 	_player.spawn_point = _game_manager.get_spawn_point(_player.team_id, 0)
@@ -144,7 +143,6 @@ func _on_phase_switch_received(round_index, next_phase, switch_time):
 	_round_manager.future_switch_to_phase(next_phase, switch_time)
 
 
-
 func _on_preparation_phase_started() -> void:
 	_player.block_movement = true
 	_player.clear_walls()
@@ -159,9 +157,7 @@ func _on_preparation_phase_started() -> void:
 	_player.show_preparation_hud(_round_manager.round_index)
 	
 	# Display paths of my ghosts
-	for timeline_index in _player_ghosts:
-		var player_ghost: PlayerGhost = _player_ghosts[timeline_index]
-		player_ghost.create_path()
+	_update_ghost_paths()
 	
 	# Show player whole level
 	_player.move_camera_to_overview()
@@ -185,8 +181,8 @@ func _on_countdown_phase_started() -> void:
 	# Send currently selected timeline to server
 	Server.send_timeline_pick(_player.timeline_index)
 
+
 func _on_game_phase_started() -> void:
-	
 	_player.block_movement = false
 	_player.set_overview_light_enabled(false)
 	_disable_ghosts()
@@ -237,12 +233,19 @@ func _on_player_ghost_record_received(timeline_index, record_data):
 	if _round_manager.get_current_phase() == RoundManager.Phases.GAME:
 		ghost.round_index = _round_manager.round_index
 	else:
-		ghost.round_index = _round_manager.round_index-1
+		ghost.round_index = _round_manager.round_index - 1
 	ghost.move_to_spawn_point()
 	_player_ghosts[timeline_index] = ghost
+	_update_ghost_paths()
 
 
-func _on_enemy_ghost_record_received(timeline_index, record_data: RecordData):	
+func _update_ghost_paths():
+	for timeline_index in _player_ghosts:
+		var player_ghost: PlayerGhost = _player_ghosts[timeline_index]
+		player_ghost.create_path()
+
+
+func _on_enemy_ghost_record_received(timeline_index, record_data: RecordData):
 	var ghost = _create_enemy_ghost(record_data)
 	ghost.spawn_point = _game_manager.get_spawn_point(1 - _player.team_id, timeline_index)
 	if _round_manager.get_current_phase() == RoundManager.Phases.GAME:
@@ -295,15 +298,13 @@ func _on_world_state_received(world_state: WorldState):
 		_time_since_last_world_state_update = world_state.timestamp
 		_time_since_last_server_update = 0
 
-		var player_states: Dictionary = world_state.player_states
+		if not _player: 
+			return
 
-		if not _player: return
-		
+		var player_states: Dictionary = world_state.player_states
 		if player_states.has(_player_rpc_id):
 			var server_player: PlayerState = player_states[_player_rpc_id]
-			
 			_player.handle_server_update(server_player.position, server_player.timestamp)
-			
 			var _success = player_states.erase(_player_rpc_id)
 
 		for id in player_states:

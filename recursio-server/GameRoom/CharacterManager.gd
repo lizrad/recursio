@@ -180,10 +180,10 @@ func start_ghosts() -> void:
 
 func stop_ghosts() -> void:
 	for player_id in ghost_dic:
-			for timeline_index in ghost_dic[player_id]:
-				if player_dic[player_id].timeline_index == timeline_index:
-					continue
-				ghost_dic[player_id][timeline_index].stop_playing()
+		for timeline_index in ghost_dic[player_id]:
+			if player_dic[player_id].timeline_index == timeline_index:
+				continue
+			ghost_dic[player_id][timeline_index].stop_playing()
 
 
 func _create_ghost_from_player(player) -> void:
@@ -198,15 +198,16 @@ func _create_ghost_from_player(player) -> void:
 		ghost_dic[player.player_id][player.timeline_index].queue_free()
 	
 	ghost_dic[player.player_id][player.timeline_index] = ghost
-	
+
 	_add_ghost(ghost)
-	
+
 	Server.send_player_ghost_record_to_client(player.player_id, player.timeline_index, record_data)
 	for client_id in player_dic:
 		if client_id != player.player_id:
 			Server.send_enemy_ghost_record_to_client(client_id, player.timeline_index, record_data)
-		
+
 	player.reset_record_data()
+
 
 func _add_ghost(ghost) -> void:
 	if not ghost.is_inside_tree():

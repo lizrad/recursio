@@ -13,11 +13,8 @@ var _trigger_dic : Dictionary = {
 	"player_melee": ActionManager.Trigger.DEFAULT_ATTACK_START,
 	"player_dash": ActionManager.Trigger.SPECIAL_MOVEMENT_START
 }
-
 var _action_manager
-
 var _player_timeline_pick_trigger : String = "player_switch"
-
 var _player_initialized: bool = false
 
 func _ready():
@@ -63,9 +60,8 @@ func _swap_weapon_type(timeline_index) -> void:
 	var wall_index = Constants.get_value("ghosts", "wall_placing_timeline_index")
 	var accent_type = "primary" if wall_index != timeline_index else "secondary"
 	var color= Color(Constants.get_value("colors", "player_" + accent_type + "_accent"))
-	
-	_player.update_weapon_type_hud(max_ammo, img_bullet, color)
 
+	_player.update_weapon_type_hud(max_ammo, img_bullet, color)
 
 
 # Reads the input of the given type e.g. "player_move" or "player_look"

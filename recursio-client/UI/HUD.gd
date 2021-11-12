@@ -67,7 +67,7 @@ func update_fire_action_ammo(amount: int) -> void:
 
 
 func update_special_movement_ammo(amount: int) -> void:
-	Logger.info("Set fire ammo to: " + str(amount), "HUD")
+	Logger.info("Set special movement ammo to: " + str(amount), "HUD")
 	_dash.text = str(amount)
 
 

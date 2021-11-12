@@ -17,9 +17,9 @@ enum Phases {
 
 onready var server = get_node("/root/Server")
 
-var _phase_order = [Phases.PREPARATION, Phases.COUNTDOWN, Phases.GAME]
-
 var round_index: int = 0
+
+var _phase_order = [Phases.PREPARATION, Phases.COUNTDOWN, Phases.GAME]
 
 var _running = false
 
@@ -30,7 +30,6 @@ var _game_phase_time: float = Constants.get_value("gameplay", "game_phase_time")
 var _phase_deadline = -1.0
 var _current_phase_index = -1
 
-
 var _future_game_imminent = false
 var _future_game_start_time = -1.0
 
@@ -38,6 +37,7 @@ var _future_game_start_time = -1.0
 func _physics_process(_delta):
 	_check_for_game_start()
 	_check_for_phase_switch()
+
 
 # Called to start the game loop
 func future_start_game(start_time):
@@ -73,6 +73,7 @@ func future_switch_to_phase(phase, switch_time):
 	_phase_deadline = switch_time
 	if _phase_order[_current_phase_index] == phase:
 		return
+
 	var previous_phase = get_previous_phase(phase)
 	if get_current_phase() != previous_phase:
 		switch_to_phase(previous_phase)
@@ -118,7 +119,7 @@ func _switch_to_phase_index(next_phase_index, delay = 0):
 
 
 func _start_phase(phase, delay = 0):
-	Logger.info(str(phase)+" phase started","gameplay")
+	Logger.info(str(phase) + " phase started", "gameplay")
 	match phase:
 		Phases.PREPARATION:
 			_phase_deadline = server.get_server_time() + _preparation_phase_time * 1000 - delay
@@ -132,12 +133,11 @@ func _start_phase(phase, delay = 0):
 
 
 func _stop_phase(phase):
-	Logger.info(str(phase)+" phase stopped","gameplay")
+	Logger.info(str(phase) + " phase stopped", "gameplay")
 	match phase:
 		Phases.PREPARATION:
-				emit_signal("preparation_phase_stopped")
+			emit_signal("preparation_phase_stopped")
 		Phases.COUNTDOWN:
-				emit_signal("countdown_phase_stopped")
+			emit_signal("countdown_phase_stopped")
 		Phases.GAME:
-				emit_signal("game_phase_stopped")
-	pass
+			emit_signal("game_phase_stopped")
