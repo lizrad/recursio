@@ -54,6 +54,8 @@ func _on_play_tutorial() -> void:
 func _on_play_online() -> void:
 	_start_menu_buttons.hide()
 	_game_room_search.show()
+	# Load all rooms by default when opening search window
+	Server.send_get_game_rooms()
 
 
 func _on_exit() -> void:
