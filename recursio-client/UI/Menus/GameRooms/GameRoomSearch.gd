@@ -81,7 +81,6 @@ func _on_back_pressed() -> void:
 func _on_join_game_room_pressed() -> void:
 	if get_selected_game_room() != -1:
 		emit_signal("btn_join_game_room_pressed")
-		self.hide()
 
 
 func _on_item_selected(item_index: int) -> void:
