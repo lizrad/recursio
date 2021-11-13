@@ -32,7 +32,7 @@ func set_players(player_id_name_dic, client_id) -> void:
 	_player_id_index_dic.clear()
 	var index = 0
 	for player_id in player_id_name_dic:
-		_player_list.add_item(player_id_name_dic[player_id] + "#" + str(player_id), icon_not_ready)
+		_player_list.add_item(player_id_name_dic[player_id] + " (#%s)" %player_id, icon_not_ready, false)
 		if client_id == player_id:
 			_player_list.set_item_custom_bg_color(index, Color(1, 1, 1, 0.05))
 		_player_id_index_dic[player_id] = index

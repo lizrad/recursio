@@ -35,7 +35,7 @@ func _ready():
 
 
 func add_game_room(game_room_id, game_room_name) -> void:
-	_game_room_list.add_item(game_room_name + "#" + str(game_room_id))
+	_game_room_list.add_item(game_room_name + " (#%s)" % game_room_id)
 	_game_room_list.set_item_metadata(_game_room_list.get_item_count() - 1, game_room_id)
 	_game_room_dic[game_room_id] = game_room_name
 
@@ -44,7 +44,7 @@ func set_game_rooms(game_room_dic) -> void:
 	_game_room_list.clear()
 	for game_room_id in game_room_dic:
 		var game_room_name = game_room_dic[game_room_id]
-		_game_room_list.add_item(game_room_name + "#" + str(game_room_id))
+		_game_room_list.add_item(game_room_name + " (#%s)" % game_room_id)
 		_game_room_list.set_item_metadata(_game_room_list.get_item_count() - 1, game_room_id)
 		_game_room_dic[game_room_id] = game_room_name
 
