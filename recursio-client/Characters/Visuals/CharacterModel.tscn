@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=2]
+[gd_scene load_steps=21 format=2]
 
 [ext_resource path="res://Characters/Visuals/Animation/Animator.gd" type="Script" id=1]
 [ext_resource path="res://Characters/Visuals/Animation/TurnAnimator.gd" type="Script" id=2]
@@ -12,6 +12,7 @@
 [ext_resource path="res://Rendering/Visibility.gdshader" type="Shader" id=10]
 [ext_resource path="res://Characters/Visuals/CharacterModel_BackVariant.tscn" type="PackedScene" id=11]
 [ext_resource path="res://Characters/Visuals/CharacterModel_FrontVariant.tscn" type="PackedScene" id=12]
+[ext_resource path="res://Characters/Visuals/Animation/DeathAnimator.gd" type="Script" id=13]
 
 [sub_resource type="ShaderMaterial" id=1]
 shader = ExtResource( 10 )
@@ -155,3 +156,7 @@ script = ExtResource( 6 )
 front_extent = 1.5
 middle_z_extent = 0.5
 middle_scale_extent = 0.5
+
+[node name="DeathAnimator" type="Node" parent="."]
+script = ExtResource( 13 )
+middle_scale_extent = 2.5
