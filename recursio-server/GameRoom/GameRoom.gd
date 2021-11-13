@@ -4,7 +4,6 @@ class_name GameRoom
 # Connects all the specific managers together
 
 signal world_state_updated(world_state, game_room_id)
-signal game_room_filled()
 
 const PLAYER_NUMBER_PER_GAME_ROOM = 2
 
@@ -89,10 +88,10 @@ func start_game():
 
 func remove_player(player_id: int) -> void:
 	# Update id dictionary
-	_player_id_user_name_dic.erase(player_id)
-	_game_room_players_ready.erase(player_id)
-	team_id_to_player_id.erase(_player_id_to_team_id[player_id])
-	_player_id_to_team_id.erase(player_id)
+	var _success = _player_id_user_name_dic.erase(player_id)
+	_success = _game_room_players_ready.erase(player_id)
+	_success = team_id_to_player_id.erase(_player_id_to_team_id[player_id])
+	_success = _player_id_to_team_id.erase(player_id)
 	player_count -= 1
 
 
@@ -128,7 +127,7 @@ func handle_game_room_ready(player_id):
 
 
 func handle_game_room_not_ready(player_id):
-	_game_room_players_ready.erase(player_id)
+	var _success = _game_room_players_ready.erase(player_id)
 	# Update on all clients
 	for client_id in _player_id_user_name_dic:
 		_server.send_game_room_not_ready(client_id, player_id)

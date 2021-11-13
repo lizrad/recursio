@@ -11,8 +11,8 @@ onready var _game_room_name: LineEdit = get_node("Content/VBoxContainer/GameRoom
 
 
 func _ready():
-	_btn_create_room.connect("pressed", self, "_on_create_game_room_pressed")
-	_btn_back.connect("pressed", self, "_on_back_pressed")
+	var _error = _btn_create_room.connect("pressed", self, "_on_create_game_room_pressed")
+	_error = _btn_back.connect("pressed", self, "_on_back_pressed")
 
 
 # OVERRIDE #

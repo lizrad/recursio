@@ -18,8 +18,8 @@ var _game_room_id: int
 var _player_id_index_dic: Dictionary = {}
 
 func _ready():
-	_btn_ready.connect("pressed", self, "_on_ready_pressed")
-	_btn_leave.connect("pressed", self, "_on_leave_pressed")
+	var _error = _btn_ready.connect("pressed", self, "_on_ready_pressed")
+	_error = _btn_leave.connect("pressed", self, "_on_leave_pressed")
 
 
 func init(game_room_id, game_room_name) -> void:
@@ -45,14 +45,14 @@ func set_player_ready(player_id: int, is_ready: bool):
 
 func switch_to_not_ready_button() -> void:
 	_btn_ready.disconnect("pressed", self, "_on_ready_pressed")
-	_btn_ready.connect("pressed", self, "_on_not_ready_pressed")
+	var _error = _btn_ready.connect("pressed", self, "_on_not_ready_pressed")
 	_btn_ready.text = "Cancel"
 	_btn_ready.disabled = false
 
 
 func switch_to_ready_button() -> void:
 	_btn_ready.disconnect("pressed", self, "_on_not_ready_pressed")
-	_btn_ready.connect("pressed", self, "_on_ready_pressed")
+	var _error = _btn_ready.connect("pressed", self, "_on_ready_pressed")
 	_btn_ready.text = "Ready"
 	_btn_ready.disabled = false
 

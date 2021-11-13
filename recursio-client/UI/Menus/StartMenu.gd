@@ -17,28 +17,28 @@ onready var _debug_room = Constants.get_value("debug", "debug_room_enabled")
 var _in_game_room: bool = false
 
 func _ready():
-	btn_play_tutorial.connect("pressed", self, "_on_play_tutorial")
-	btn_play_online.connect("pressed", self, "_on_play_online")
-	btn_exit.connect("pressed", self, "_on_exit")
+	var _error = btn_play_tutorial.connect("pressed", self, "_on_play_tutorial")
+	_error = btn_play_online.connect("pressed", self, "_on_play_online")
+	_error = btn_exit.connect("pressed", self, "_on_exit")
 	
 	
-	_game_room_search.connect("btn_create_game_room_pressed", self, "_on_search_create_game_room_pressed")
-	_game_room_search.connect("btn_back_pressed", self, "_on_search_back_pressed")
-	_game_room_search.connect("btn_join_game_room_pressed", self, "_on_join_game_room_pressed")
+	_error = _game_room_search.connect("btn_create_game_room_pressed", self, "_on_search_create_game_room_pressed")
+	_error = _game_room_search.connect("btn_back_pressed", self, "_on_search_back_pressed")
+	_error = _game_room_search.connect("btn_join_game_room_pressed", self, "_on_join_game_room_pressed")
 	
-	_game_room_creation.connect("btn_create_game_room_pressed", self, "_on_creation_create_game_room_pressed")
-	_game_room_creation.connect("btn_back_pressed", self, "_on_creation_back_pressed")
+	_error = _game_room_creation.connect("btn_create_game_room_pressed", self, "_on_creation_create_game_room_pressed")
+	_error = _game_room_creation.connect("btn_back_pressed", self, "_on_creation_back_pressed")
 	
-	_game_room_ui.connect("btn_leave_pressed", self, "_on_game_room_leave_pressed")
+	_error = _game_room_ui.connect("btn_leave_pressed", self, "_on_game_room_leave_pressed")
 	
-	Server.connect("game_room_created", self, "_on_game_room_created")
-	Server.connect("game_rooms_received", self, "_on_game_rooms_received")
-	Server.connect("game_room_joined", self, "_on_game_room_joined")
-	Server.connect("successfully_connected" , self, "_on_successfully_connected")
-	Server.connect("game_room_ready_received" , self, "_on_game_room_ready_received")
-	Server.connect("game_room_not_ready_received" , self, "_on_game_room_not_ready_received")
+	_error = Server.connect("game_room_created", self, "_on_game_room_created")
+	_error = Server.connect("game_rooms_received", self, "_on_game_rooms_received")
+	_error = Server.connect("game_room_joined", self, "_on_game_room_joined")
+	_error = Server.connect("successfully_connected" , self, "_on_successfully_connected")
+	_error = Server.connect("game_room_ready_received" , self, "_on_game_room_ready_received")
+	_error = Server.connect("game_room_not_ready_received" , self, "_on_game_room_not_ready_received")
 	
-	_character_manager.connect("game_started", self, "_on_game_started")
+	_error = _character_manager.connect("game_started", self, "_on_game_started")
 
 
 func _on_successfully_connected():

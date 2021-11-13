@@ -32,7 +32,7 @@ func _ready():
 	_server.connect("game_room_not_ready_received", self, "_on_game_room_not_ready_received")
 	
 	if _debug_room:
-		_create_game_room("GameRoom")
+		var _game_room_id = _create_game_room("GameRoom")
 
 
 func _create_game_room(game_room_name: String) -> int:
@@ -103,10 +103,6 @@ func _is_current_game_room_full() -> bool:
 		return true
 	else:
 		return _game_room_dic[_game_room_id_counter - 1].player_count >= 2
-
-
-func _on_peer_connected(player_id):
-	pass
 
 
 func _on_peer_disconnected(player_id):

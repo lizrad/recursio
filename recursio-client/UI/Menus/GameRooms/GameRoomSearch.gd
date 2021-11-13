@@ -19,16 +19,16 @@ var _game_room_dic := {}
 
 
 func _ready():	
-	_room_filter.connect("text_changed", self, "_on_filter_text_changed")
+	var _error = _room_filter.connect("text_changed", self, "_on_filter_text_changed")
 	
-	_btn_create_room.connect("pressed", self, "_on_create_game_room_pressed")
-	_btn_refresh_game_rooms.connect("pressed", self, "_on_send_get_game_rooms")
-	_btn_back.connect("pressed", self, "_on_back_pressed")
-	_btn_join_game_room.connect("pressed", self, "_on_join_game_room_pressed")
+	_error = _btn_create_room.connect("pressed", self, "_on_create_game_room_pressed")
+	_error = _btn_refresh_game_rooms.connect("pressed", self, "_on_send_get_game_rooms")
+	_error = _btn_back.connect("pressed", self, "_on_back_pressed")
+	_error = _btn_join_game_room.connect("pressed", self, "_on_join_game_room_pressed")
 	
 	
-	_game_room_list.connect("item_selected", self, "_on_item_selected")
-	_game_room_list.connect("item_activated", self, "_on_item_activated")
+	_error = _game_room_list.connect("item_selected", self, "_on_item_selected")
+	_error = _game_room_list.connect("item_activated", self, "_on_item_activated")
 	
 	# Disable join button until a room is selected
 	_btn_join_game_room.disabled = true
@@ -83,13 +83,13 @@ func _on_join_game_room_pressed() -> void:
 		emit_signal("btn_join_game_room_pressed")
 
 
-func _on_item_selected(item_index: int) -> void:
+func _on_item_selected(_item_index: int) -> void:
 	_btn_join_game_room.disabled = false
 	_game_room_list.disconnect("item_selected", self, "_on_item_selected")
 
 
 # Triggered when an item is double clicked
-func _on_item_activated(item_index: int) -> void:
+func _on_item_activated(_item_index: int) -> void:
 	_on_join_game_room_pressed()
 
 
