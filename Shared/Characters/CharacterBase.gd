@@ -15,8 +15,8 @@ var timeline_index: int = -1 setget set_timeline_index
 var spawn_point: Vector3
 # The round this character got created in
 var round_index: int = -1
-
-var last_triggers: Bitmask = Bitmask.new(0)
+# tracks activation for triggers
+var last_triggers: int = 0
 
 
 var position: Vector3 setget set_position, get_position
@@ -98,7 +98,7 @@ func trigger_actions(buttons: int) -> void:
 		if success:
 			var type = _action_manager.get_action_type_for_trigger(trigger, timeline_index)
 			emit_signal("action_status_changed", type, true)
-			last_triggers.add(trigger)
+			last_triggers |= trigger
 
 
 func get_action_manager():

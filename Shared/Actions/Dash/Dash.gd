@@ -1,10 +1,10 @@
 extends Node
 
-var _owning_player: CharacterBase
+onready var _max_time = Constants.get_value("dash", "max_time")
 
+var _owning_player: CharacterBase
 var _time: float = 0.0
 var _factor = Constants.get_value("dash", "factor")
-onready var _max_time = Constants.get_value("dash", "max_time")
 
 
 func initialize(owning_player):

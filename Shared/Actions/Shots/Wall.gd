@@ -20,11 +20,11 @@ func initialize(owning_player) -> void:
 
 
 func initialize_visual(owning_player) -> void:
-	var color = Color(Constants.get_value("colors","neutral"))
+	var color = Color(Constants.get_value("colors", "neutral"))
 	if owning_player.has_node("KinematicBody/CharacterModel"):
 		var character_model_controller = owning_player.get_node("KinematicBody/CharacterModel")
 		var color_scheme = character_model_controller.color_scheme
-		color = Color(Constants.get_value("colors",color_scheme+"_secondary_accent"))
+		color = Color(Constants.get_value("colors", color_scheme + "_main"))
 	$MeshInstance.material_override.albedo_color = color
 	$MeshInstance.material_override.emission = color
 
@@ -32,7 +32,7 @@ func initialize_visual(owning_player) -> void:
 func handle_hit(collider):
 	Logger.debug("hit collider: %s" %[collider.get_class()] , "HitscanShot")
 	var character = collider.get_parent()
-	
+
 	if character is GhostBase and not character == placed_by_body \
 			and character.round_index < round_index:
 		character.hit()

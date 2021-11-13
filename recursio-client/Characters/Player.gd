@@ -4,14 +4,13 @@ class_name Player
 signal initialized()
 
 onready var _hud: HUD = get_node("KinematicBody/HUD")
-
+onready var _selector = get_node("KinematicBody/Selector")
 onready var _light_viewport = get_node("KinematicBody/LightViewport")
 onready var _overview_light = get_node("KinematicBody/TransformReset/OverviewLight")
 onready var _overview_target = get_node("KinematicBody/TransformReset/OverviewTarget")
 onready var _lerped_follow: LerpedFollow = get_node("KinematicBody/AsciiViewportContainer/Viewport/LerpedFollow")
 onready var _view_target = get_node("KinematicBody/ViewTarget")
 onready var _visibility_light = get_node("KinematicBody/VisibilityLight")
-
 onready var _button_overlay: ButtonOverlay = get_node("KinematicBody/ButtonOverlay")
 
 var _walls = []
@@ -20,6 +19,7 @@ var _just_corrected = false
 var _last_server_position
 var _last_server_time
 var _round_manager
+
 class MovementFrame:
 	var position: Vector3 = Vector3.ZERO
 
@@ -44,7 +44,6 @@ func clear_walls():
 	_walls.clear()
 
 
-
 # OVERRIDE #
 func apply_input(movement_vector: Vector3, rotation_vector: Vector3, buttons: int) -> void:
 	.apply_input(movement_vector, rotation_vector, buttons)
@@ -56,11 +55,12 @@ func apply_input(movement_vector: Vector3, rotation_vector: Vector3, buttons: in
 		frame.position = self.position
 		_past_frames[Server.get_server_time()] = frame
 
+
 # OVERRIDE #
 # Always returns the same Action instance for the same trigger and timeline index. This preserves ammo count etc.
 func _get_action(trigger, timeline_index):
 	var id = timeline_index * 10 + trigger
-	
+
 	# Cache the action if it hasn't been cached yet
 	if not _actions.has(id):
 		var action = _action_manager.create_action_duplicate_for_trigger(trigger, timeline_index)
@@ -69,7 +69,7 @@ func _get_action(trigger, timeline_index):
 			action.connect("ammunition_changed", self, "update_special_movement_ammo_hud")
 		elif trigger == ActionManager.Trigger.FIRE_START:
 			action.connect("ammunition_changed", self, "update_fire_action_ammo_hud")
-	
+
 	return _actions[id]
 
 # OVERRIDE #
@@ -83,7 +83,8 @@ func _on_wall_spawn_received(position, rotation, wall_index):
 			_walls[wall_index].global_transform.origin = position
 			#TODO: is rotation global here, could be dangerous if it isn't
 			_walls[wall_index].rotation.y = rotation
-			
+
+
 func get_visibility_mask():
 	return _light_viewport.get_texture()
 
@@ -126,11 +127,13 @@ func update_capture_point_hud(capture_points: Array) -> void:
 		index += 1
 
 func show_preparation_hud(round_index) -> void:
+	_selector.show()
 	_hud.prep_phase_start(round_index)
-	_button_overlay.show_buttons("ready", ButtonOverlay.BUTTONS.DOWN, true)
+	_button_overlay.show_buttons(["ready!", "swap"], ButtonOverlay.BUTTONS.DOWN | ButtonOverlay.BUTTONS.RIGHT, ButtonOverlay.BUTTONS.DOWN)
 
 
 func show_countdown_hud() -> void:
+	_selector.hide()
 	_hud.countdown_phase_start()
 	_button_overlay.hide_buttons()
 

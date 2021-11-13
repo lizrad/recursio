@@ -19,11 +19,6 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://Shared/Actions/ActionManager.gd"
 }, {
-"base": "Object",
-"class": "Bitmask",
-"language": "GDScript",
-"path": "res://Shared/Util/Bitmask.gd"
-}, {
 "base": "Spatial",
 "class": "CapturePoint",
 "language": "GDScript",
@@ -132,7 +127,6 @@ _global_script_classes=[ {
 _global_script_class_icons={
 "Action": "",
 "ActionManager": "",
-"Bitmask": "",
 "CapturePoint": "",
 "CharacterBase": "",
 "CharacterManager": "",

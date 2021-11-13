@@ -6,7 +6,7 @@ signal button_pressed(button)
 enum BUTTONS {
 	NONE = 	0,
 	UP = 	1,
-	DOWN =  2,
+	DOWN = 	2,
 	LEFT = 	4,
 	RIGHT = 8
 }
@@ -15,18 +15,23 @@ var _conf = {
 				BUTTONS.UP: "ui_select",
 				BUTTONS.DOWN: "player_shoot",
 				BUTTONS.LEFT: "player_melee",
-				BUTTONS.RIGHT: "ui_cancel"
+				BUTTONS.RIGHT: "player_switch"
 			}
 var _triggers := []
-var _close := false
+var _close := 0
 
-func show_buttons(text: String, buttons: int, close_on_activation: bool = false) -> void:
+# displays a dialog with given marked buttons as bitmask
+# supports array for text: are added in enum order
+# specify buttons which close the dialog
+func show_buttons(texts, buttons: int, close_on_activation: int = 0) -> void:
+	var i = 0
 	for button in BUTTONS.values():
 		if buttons & button:
 			$Buttons.get_node(str(button)).show()
 			_triggers.append(_conf[button])
+			$Labels.get_node("Label" + str(button)).text = texts[i]
+			i += 1
 
-	$Label.text = text
 	_close = close_on_activation
 
 	set_process(true)
@@ -38,6 +43,8 @@ func hide_buttons() -> void:
 	visible = false
 	for button in $Buttons.get_children():
 		button.hide()
+	for label in $Labels.get_children():
+		label.text = ""
 	_triggers.clear()
 
 
@@ -47,7 +54,8 @@ func _process(_delta) -> void:
 			for key in _conf:
 				if _conf[key] == trigger:
 					emit_signal("button_pressed", key)
-					break
 
-			if _close:
-				hide_buttons()
+					if _close & key:
+						hide_buttons()
+
+					break

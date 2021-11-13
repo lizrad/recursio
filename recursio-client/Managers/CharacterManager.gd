@@ -35,44 +35,41 @@ var _time_since_last_world_state_update = 0.0
 func _ready():
 	var _error = Server.connect("phase_switch_received", self, "_on_phase_switch_received") 
 	_error = Server.connect("game_start_received", self, "_on_game_start_received") 
-	
+
 	_error = _round_manager.connect("preparation_phase_started", self, "_on_preparation_phase_started") 
 	_error = _round_manager.connect("countdown_phase_started", self, "_on_countdown_phase_started") 
 	_error = _round_manager.connect("game_phase_started", self, "_on_game_phase_started") 
-	
-	
+
 	# Connect to server signals
 	_error = Server.connect("spawning_player", self, "_on_spawn_player") 
 	_error = Server.connect("spawning_enemy", self, "_on_spawn_enemy") 
 	_error = Server.connect("despawning_enemy", self, "_on_despawn_enemy") 
 	_error = Server.connect("player_ghost_record_received", self, "_on_player_ghost_record_received") 
 	_error = Server.connect("enemy_ghost_record_received", self, "_on_enemy_ghost_record_received") 
-	
+
 	_error = Server.connect("world_state_received", self, "_on_world_state_received") 
 	_error = Server.connect("player_hit", self, "_on_player_hit") 
 	_error = Server.connect("ghost_hit", self, "_on_ghost_hit") 
-	
+
 	_error = Server.connect("timeline_picks", self, "_on_timeline_picks") 
-	
+
 	_error = Server.connect("capture_point_captured", self, "_on_capture_point_captured") 
-	_error = Server.connect("capture_point_capture_lost", self, "_on_capture_point_capture_lost") 
+	_error = Server.connect("capture_point_capture_lost", self, "_on_capture_point_capture_lost")
 	
 	_error = Server.connect("game_result", self, "_on_game_result")
-
 
 
 	_player_rpc_id = get_tree().get_network_unique_id()
 	randomize()
 	var random_index = randi() % _random_names.size()
 	_player_user_name = _random_names[random_index]
-	
 	set_physics_process(false)
 
 
 func _physics_process(delta):
 	if not _round_manager.is_running():
 		return
-	
+
 	_time_since_last_server_update += delta
 	var server_delta = 1.0 / Server.tickrate
 
@@ -112,16 +109,16 @@ func _physics_process(delta):
 		projected_from_start
 		+ (projected_from_last_known - projected_from_start) * tick_progress
 	)
-	
-	_enemy.trigger_actions(_enemy.last_triggers.mask)
-	_enemy.last_triggers.mask = 0
-	
+
+	_enemy.trigger_actions(_enemy.last_triggers)
+	_enemy.last_triggers = 0
+
 	# Update CapturePoints in player HUD
 	_player.update_capture_point_hud(_game_manager.get_capture_points())
 
 
 func _reset() -> void:
-	Logger.info("Full reset triggered.","gameplay")
+	Logger.info("Full reset triggered.", "gameplay")
 	# Reset player
 	_player.reset()
 	_player.spawn_point = _game_manager.get_spawn_point(_player.team_id, 0)
@@ -160,7 +157,6 @@ func _on_phase_switch_received(round_index, next_phase, switch_time):
 	_round_manager.future_switch_to_phase(next_phase, switch_time)
 
 
-
 func _on_preparation_phase_started() -> void:
 	_player.block_movement = true
 	_player.clear_walls()
@@ -175,9 +171,7 @@ func _on_preparation_phase_started() -> void:
 	_player.show_preparation_hud(_round_manager.round_index)
 	
 	# Display paths of my ghosts
-	for timeline_index in _player_ghosts:
-		var player_ghost: PlayerGhost = _player_ghosts[timeline_index]
-		player_ghost.create_path()
+	_update_ghost_paths()
 	
 	# Show player whole level
 	_player.move_camera_to_overview()
@@ -201,8 +195,8 @@ func _on_countdown_phase_started() -> void:
 	# Send currently selected timeline to server
 	Server.send_timeline_pick(_player.timeline_index)
 
+
 func _on_game_phase_started() -> void:
-	
 	_player.block_movement = false
 	_player.set_overview_light_enabled(false)
 	_disable_ghosts()
@@ -242,9 +236,9 @@ func _on_timeline_picks(timeline_index, enemy_pick):
 		var _success =_enemy_ghosts.erase(enemy_pick)
 
 
-
-func _on_player_ready(_button) -> void:
-	Server.send_player_ready()
+func _on_player_ready(button) -> void:
+	if button == ButtonOverlay.BUTTONS.DOWN:
+		Server.send_player_ready()
 
 
 func _on_player_ghost_record_received(timeline_index, record_data):
@@ -253,12 +247,19 @@ func _on_player_ghost_record_received(timeline_index, record_data):
 	if _round_manager.get_current_phase() == RoundManager.Phases.GAME:
 		ghost.round_index = _round_manager.round_index
 	else:
-		ghost.round_index = _round_manager.round_index-1
+		ghost.round_index = _round_manager.round_index - 1
 	ghost.move_to_spawn_point()
 	_player_ghosts[timeline_index] = ghost
+	_update_ghost_paths()
 
 
-func _on_enemy_ghost_record_received(timeline_index, record_data: RecordData):	
+func _update_ghost_paths():
+	for timeline_index in _player_ghosts:
+		var player_ghost: PlayerGhost = _player_ghosts[timeline_index]
+		player_ghost.create_path()
+
+
+func _on_enemy_ghost_record_received(timeline_index, record_data: RecordData):
 	var ghost = _create_enemy_ghost(record_data)
 	ghost.spawn_point = _game_manager.get_spawn_point(1 - _player.team_id, timeline_index)
 	if _round_manager.get_current_phase() == RoundManager.Phases.GAME:
@@ -314,15 +315,13 @@ func _on_world_state_received(world_state: WorldState):
 		_time_since_last_world_state_update = world_state.timestamp
 		_time_since_last_server_update = 0
 
-		var player_states: Dictionary = world_state.player_states
+		if not _player: 
+			return
 
-		if not _player: return
-		
+		var player_states: Dictionary = world_state.player_states
 		if player_states.has(_player_rpc_id):
 			var server_player: PlayerState = player_states[_player_rpc_id]
-			
 			_player.handle_server_update(server_player.position, server_player.timestamp)
-			
 			var _success = player_states.erase(_player_rpc_id)
 
 		for id in player_states:
@@ -339,7 +338,7 @@ func _on_world_state_received(world_state: WorldState):
 				_enemy.server_position = player_states[id].position
 				_enemy.server_velocity = player_states[id].velocity
 				_enemy.server_acceleration = player_states[id].acceleration
-				_enemy.last_triggers.add(player_states[id].buttons.mask)
+				_enemy.last_triggers |= player_states[id].buttons
 
 
 func _on_player_hit(hit_player_id) -> void:
@@ -448,6 +447,7 @@ func _move_ghosts_to_spawn() -> void:
 func _apply_visibility_mask(character) -> void:
 	if not _player:
 		return
+
 	character.get_node("KinematicBody/CharacterModel").set_shader_param("visibility_mask", _player.get_visibility_mask())
 	if character.has_node("KinematicBody/MiniMapIcon"):
 		character.get_node("KinematicBody/MiniMapIcon").visibility_mask = _player.get_visibility_mask()
