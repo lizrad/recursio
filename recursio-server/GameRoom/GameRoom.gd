@@ -4,7 +4,6 @@ class_name GameRoom
 # Connects all the specific managers together
 
 signal world_state_updated(world_state, game_room_id)
-signal game_room_filled()
 
 const PLAYER_NUMBER_PER_GAME_ROOM = 2
 
@@ -26,6 +25,11 @@ var team_id_to_player_id = {}
 
 # track players ready -> skip prep phase if all player are
 var _players_ready = {}
+
+var _game_room_players_ready := {}
+
+var _player_id_user_name_dic: Dictionary = {}
+
 
 # We don't process the latest player data, but the latest data which was sent in world_processing_offset or earlier.
 # That way, we avoid discrepancies between high- and low-latency players and don't need to rollback.
@@ -54,19 +58,22 @@ func reset():
 	_level.reset()
 
 
-func add_player(player_id: int) -> void:
-	_character_manager.spawn_player(player_id, player_count)
-	#update id dictionary
+func add_player(player_id: int, player_user_name: String) -> void:
+	_player_id_user_name_dic[player_id] = player_user_name
+	# Update id dictionary
 	_player_id_to_team_id[player_id] = player_count
 	team_id_to_player_id[player_count] = player_id
 	player_count += 1
 
-	# If the game_room is filled, start the game
-	if player_count >= PLAYER_NUMBER_PER_GAME_ROOM:
-		start_game()
+
+func spawn_player(player_id: int) -> void:
+	_character_manager.spawn_player(player_id, _player_id_to_team_id[player_id], _player_id_user_name_dic[player_id])
 
 
 func start_game():
+	for player_id in _player_id_user_name_dic:
+		spawn_player(player_id)
+	
 	var server_clock_warm_up = 3.0
 	yield(get_tree().create_timer(server_clock_warm_up), "timeout")
 	
@@ -80,18 +87,16 @@ func start_game():
 
 
 func remove_player(player_id: int) -> void:
-	_character_manager.despawn_player(player_id)
-	#update id dictionary
-	_player_id_to_team_id.erase(player_id)
-	team_id_to_player_id.clear()
-	var team_id = 0
-	for player_id in _player_id_to_team_id:
-		_character_manager.player_dic[player_id].team_id = team_id
-		_player_id_to_team_id[player_id] = team_id
-		team_id_to_player_id[team_id] = player_id
-		team_id += 1
-
+	# Update id dictionary
+	var _success = _player_id_user_name_dic.erase(player_id)
+	_success = _game_room_players_ready.erase(player_id)
+	_success = team_id_to_player_id.erase(_player_id_to_team_id[player_id])
+	_success = _player_id_to_team_id.erase(player_id)
 	player_count -= 1
+
+
+func despawn_player(player_id: int) -> void:
+	_character_manager.despawn_player(player_id)
 
 
 func update_player_input_data(player_id, input_data: InputData):
@@ -111,6 +116,23 @@ func handle_player_ready(player_id):
 				_server.send_phase_switch_to_client(client_id, _round_manager.round_index, RoundManager.Phases.COUNTDOWN, countdown_start_time)
 
 
+func handle_game_room_ready(player_id):
+	_game_room_players_ready[player_id] = true
+	# Update on all clients
+	for client_id in _player_id_user_name_dic:
+		_server.send_game_room_ready(client_id, player_id)
+	
+	if _game_room_players_ready.keys().size() == PLAYER_NUMBER_PER_GAME_ROOM:
+		start_game()
+
+
+func handle_game_room_not_ready(player_id):
+	var _success = _game_room_players_ready.erase(player_id)
+	# Update on all clients
+	for client_id in _player_id_user_name_dic:
+		_server.send_game_room_not_ready(client_id, player_id)
+
+
 func handle_ghost_pick(player_id, timeline_index):
 	if _round_manager.get_current_phase() != RoundManager.Phases.COUNTDOWN:
 		Logger.error("Received ghost picks outside proper phase", "ghost_picking")
@@ -120,6 +142,14 @@ func handle_ghost_pick(player_id, timeline_index):
 
 func get_players():
 	return _character_manager.player_dic
+
+
+func get_game_room_players() -> Dictionary:
+	return _player_id_user_name_dic
+
+
+func get_game_room_players_ready() -> Dictionary:
+	return _game_room_players_ready
 
 
 func get_game_manager() -> GameManager:

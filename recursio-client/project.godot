@@ -69,6 +69,21 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://Managers/GameManager.gd"
 }, {
+"base": "PanelContainer",
+"class": "GameRoomCreation",
+"language": "GDScript",
+"path": "res://UI/Menus/GameRooms/GameRoomCreation.gd"
+}, {
+"base": "PanelContainer",
+"class": "GameRoomSearch",
+"language": "GDScript",
+"path": "res://UI/Menus/GameRooms/GameRoomSearch.gd"
+}, {
+"base": "PanelContainer",
+"class": "GameRoomUI",
+"language": "GDScript",
+"path": "res://UI/Menus/GameRoomUI.gd"
+}, {
 "base": "GhostBase",
 "class": "Ghost",
 "language": "GDScript",
@@ -154,10 +169,20 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://Shared/RoundManager.gd"
 }, {
+"base": "Control",
+"class": "StartMenu",
+"language": "GDScript",
+"path": "res://UI/Menus/StartMenu.gd"
+}, {
 "base": "Object",
 "class": "StaticInput",
 "language": "GDScript",
 "path": "res://Shared/Input/StaticInput.gd"
+}, {
+"base": "Object",
+"class": "TextFileToArray",
+"language": "GDScript",
+"path": "res://Util/TextFileToArray.gd"
 }, {
 "base": "Object",
 "class": "WorldState",
@@ -177,6 +202,9 @@ _global_script_class_icons={
 "DeadZones": "",
 "Enemy": "",
 "GameManager": "",
+"GameRoomCreation": "",
+"GameRoomSearch": "",
+"GameRoomUI": "",
 "Ghost": "",
 "GhostBase": "",
 "HUD": "",
@@ -194,7 +222,9 @@ _global_script_class_icons={
 "RecordManager": "",
 "RingBuffer": "",
 "RoundManager": "",
+"StartMenu": "",
 "StaticInput": "",
+"TextFileToArray": "",
 "WorldState": ""
 }
 

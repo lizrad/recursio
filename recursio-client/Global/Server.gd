@@ -36,6 +36,20 @@ signal phase_switch_received(round_index,next_phase, switch_time)
 signal game_start_received(start_time)
 
 
+
+
+#########################
+#### Room Management ####
+#########################
+signal game_room_created(room_id, game_room_name)
+signal game_rooms_received(game_room_dic)
+signal game_room_joined(player_id_name_dic, game_room_id)
+signal game_room_ready_received(player_id)
+signal game_room_not_ready_received(player_id)
+
+
+
+
 func _ready():
 	set_physics_process(false)
 	connect_to_server()
@@ -112,6 +126,9 @@ func send_player_ready():
 func send_timeline_pick(timeline_index):
 	Logger.debug("Send player timeline pick", "server")
 	rpc_id(1, "receive_timeline_pick",timeline_index)
+
+
+
 
 
 remote func spawn_player(player_id, spawn_point, team_id):
@@ -230,3 +247,72 @@ remote func receive_timeline_picks(player_pick, enemy_pick):
 remote func receive_wall_spawn(position, rotation, wall_index):
 	Logger.info("Wall spawn received", "server")
 	emit_signal("wall_spawn",position, rotation, wall_index)
+
+
+
+##############################
+#### Game Room Management ####
+##############################
+
+func send_create_game_room(game_room_name) -> void:
+	Logger.info("Send create room", "room_management")
+	rpc_id(1, "receive_create_game_room", game_room_name)
+
+
+remote func receive_create_game_room(game_room_id, game_room_name) -> void:
+	Logger.info("Received create room [ID: %s, Name: %s]" %[game_room_id, game_room_name], "room_management")
+	emit_signal("game_room_created", game_room_id, game_room_name)
+
+
+func send_get_game_rooms() -> void:
+	Logger.info("Send get rooms", "room_management")
+	rpc_id(1, "receive_get_game_rooms")
+
+
+remote func receive_get_game_rooms(game_room_dic) -> void:
+	Logger.info("Receive get game rooms", "room_management")
+	emit_signal("game_rooms_received", game_room_dic)
+
+
+func send_join_game_room(game_room_id, player_user_name):
+	Logger.info("Send join game room [ID: %s]" %[game_room_id], "room_management")
+	rpc_id(1, "receive_join_game_rooms", game_room_id, player_user_name)
+
+
+remote func receive_game_room_joined(player_id_name_dic, game_room_id):
+	Logger.info("Receive game room joined", "room_management")
+	emit_signal("game_room_joined", player_id_name_dic, game_room_id)
+
+
+func send_game_room_ready(game_room_id):
+	Logger.info("Send game room ready", "room_management")
+	rpc_id(1, "receive_game_room_ready", game_room_id)
+
+
+func send_game_room_not_ready(game_room_id):
+	Logger.info("Send game room not ready", "room_management")
+	rpc_id(1, "receive_game_room_not_ready", game_room_id)
+
+
+func send_leave_game_room(game_room_id):
+	Logger.info("Send leave game room", "room_management")
+	rpc_id(1, "receive_leave_game_room", game_room_id)
+
+
+remote func receive_game_room_ready(player_id):
+	Logger.info("Receive game_room ready", "room_management")
+	emit_signal("game_room_ready_received", player_id)
+
+
+remote func receive_game_room_not_ready(player_id):
+	Logger.info("Receive game_room not ready", "room_management")
+	emit_signal("game_room_not_ready_received", player_id)
+
+
+
+
+
+
+
+
+
