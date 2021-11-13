@@ -150,6 +150,10 @@ func get_player_user_name() -> String:
 	return _player_user_name
 
 
+func get_player_id() -> int:
+	return _player_rpc_id
+
+
 func _on_phase_switch_received(round_index, next_phase, switch_time):
 	_round_manager.round_index = round_index
 	_round_manager.get_previous_phase(next_phase)

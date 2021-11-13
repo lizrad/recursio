@@ -1,9 +1,11 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://UI/Menus/StartMenu.gd" type="Script" id=1]
 [ext_resource path="res://UI/Menus/GameRooms/GameRoomCreation.gd" type="Script" id=2]
+[ext_resource path="res://Resources/Icons/icon_ready.png" type="Texture" id=3]
 [ext_resource path="res://UI/Menus/GameRooms/GameRoomSearch.gd" type="Script" id=4]
 [ext_resource path="res://UI/Menus/GameRoomUI.gd" type="Script" id=5]
+[ext_resource path="res://Resources/Icons/icon_not_ready.png" type="Texture" id=6]
 
 [node name="StartMenu" type="Control"]
 anchor_right = 1.0
@@ -188,6 +190,8 @@ margin_top = 293.0
 margin_right = 519.0
 margin_bottom = 307.0
 script = ExtResource( 5 )
+icon_ready = ExtResource( 3 )
+icon_not_ready = ExtResource( 6 )
 
 [node name="Content" type="VBoxContainer" parent="CenterContainer/GameRoom"]
 margin_left = 7.0
@@ -216,6 +220,7 @@ margin_top = 42.0
 margin_right = 500.0
 margin_bottom = 342.0
 rect_min_size = Vector2( 500, 300 )
+fixed_icon_size = Vector2( 60, 15 )
 
 [node name="VBoxContainer" type="HBoxContainer" parent="CenterContainer/GameRoom/Content"]
 margin_top = 346.0
@@ -234,12 +239,12 @@ text = "Ready"
 
 [node name="Space" type="Control" parent="CenterContainer/GameRoom/Content/BottomBar"]
 margin_left = 54.0
-margin_right = 454.0
+margin_right = 447.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
 
 [node name="Btn_Leave" type="Button" parent="CenterContainer/GameRoom/Content/BottomBar"]
-margin_left = 458.0
+margin_left = 451.0
 margin_right = 500.0
 margin_bottom = 20.0
 text = "Leave"
