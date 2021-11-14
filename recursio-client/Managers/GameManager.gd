@@ -10,8 +10,9 @@ var _countdown_time: float = Constants.get_value("gameplay","countdown_phase_sec
 
 func _ready():
 	# Hide screens
-	_game_result_screen.visible = false
-	_countdown_screen.visible = false
+	if _game_result_screen and _countdown_screen:
+		_game_result_screen.visible = false
+		_countdown_screen.visible = false
 	
 	var _error = Server.connect("capture_point_captured", self, "_on_capture_point_captured") 
 	_error = Server.connect("capture_point_team_changed", self, "_on_capture_point_team_changed") 
@@ -20,7 +21,7 @@ func _ready():
 
 
 func _process(delta):
-	if _countdown_screen.visible:
+	if _countdown_screen and _countdown_screen.visible:
 		_countdown_screen.update_text(int(_countdown_time))
 		_countdown_time -= delta
 		# Hide if countdown is finished
@@ -33,28 +34,33 @@ func set_level(level: Level):
 
 
 func show_countdown_screen() -> void:
-	_countdown_screen.visible = true
+	if _game_result_screen and _countdown_screen:
+		_countdown_screen.visible = true
 
 
 func hide_countdown_screen() -> void:
-	_countdown_screen.visible = false
+	if _game_result_screen and _countdown_screen:
+		_countdown_screen.visible = false
 	_countdown_time = Constants.get_value("gameplay","countdown_phase_seconds")
 
 
 func hide_game_result_screen() -> void:
-	_game_result_screen.visible = false
+	if _game_result_screen and _countdown_screen:
+		_game_result_screen.visible = false
 
 
 func show_win() -> void:
 	Logger.info("Player won!", "gameplay")
-	_game_result_screen.get_node("ResultText").text = "You Won!"
-	_game_result_screen.visible = true
+	if _game_result_screen and _countdown_screen:
+		_game_result_screen.get_node("ResultText").text = "You Won!"
+		_game_result_screen.visible = true
 
 
 func show_loss() -> void:
 	Logger.info("Player lost!", "gameplay")
-	_game_result_screen.get_node("ResultText").text = "You Lost!"
-	_game_result_screen.visible = true
+	if _game_result_screen and _countdown_screen:
+		_game_result_screen.get_node("ResultText").text = "You Lost!"
+		_game_result_screen.visible = true
 
 
 func get_spawn_point(team_id, timeline_index) -> Vector3:
@@ -77,8 +83,9 @@ func set_team_id(team_id):
 	_level.color_spawn_points(_team_id)
 
 func reset() -> void:
-	_game_result_screen.visible = false
-	_countdown_screen.visible = false
+	if _game_result_screen and _countdown_screen:
+		_game_result_screen.visible = false
+		_countdown_screen.visible = false
 	# Reset level
 	_level.reset()
 	_level.toggle_capture_points(false)

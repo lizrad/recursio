@@ -69,6 +69,9 @@ anchor_bottom = 1.0
 margin_top = -14.0
 margin_right = 93.0
 text = "Latency: 40ms"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="FPSText" type="Label" parent="StatsHUD"]
 anchor_left = 1.0

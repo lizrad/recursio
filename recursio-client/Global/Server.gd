@@ -1,6 +1,12 @@
 extends Node
 
 var network = NetworkedMultiplayerENet.new()
+
+
+var use_local_server = false
+var remote_server_ip = "37.252.189.118"
+var local_server_ip = "127.0.0.1"
+
 var port = 1909
 
 var tickrate = 30
@@ -137,7 +143,8 @@ func _determine_latency():
 
 
 func get_server_time():
-	return server_clock
+	# Return the local time if there's no server time to allow local play
+	return server_clock if server_clock > 0 else OS.get_system_time_msecs()
 
 
 func send_player_input_data(input_data: InputData):
