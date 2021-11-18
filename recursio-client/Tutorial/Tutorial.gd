@@ -32,7 +32,8 @@ func _ready():
 	
 	$CharacterManager.get_player().kb.visible = true
 	
-	$CharacterManager._on_spawn_enemy(0, Vector3.FORWARD * 10.0)
+	$CharacterManager._on_spawn_enemy(1, Vector3.FORWARD * 10.0)
+	$CharacterManager.get_enemy().kb.visible = false
 	$CharacterManager/RoundManager._start_game()
 
 
@@ -70,5 +71,10 @@ func _update_phase2():
 			and $LevelH.get_capture_points()[1]._capture_progress < 1.0 \
 			and $LevelH.get_capture_points()[0]._capture_progress >= 0.9 \
 			and $LevelH.get_capture_points()[0]._capture_progress < 1.0:
+		$LevelH.get_capture_points()[0]._capture_progress = 1.0
+		$LevelH.get_capture_points()[1]._capture_progress = 1.0
+		
 		$TutorialUI/PanelContainer/TutorialText.visible = true
 		$TutorialUI/PanelContainer/TutorialText.text = "Good job!"
+		
+		current_phase = Phases.DONE

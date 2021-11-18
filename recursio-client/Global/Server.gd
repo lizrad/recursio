@@ -12,6 +12,7 @@ var port = 1909
 var tickrate = 30
 
 # For Clock Synchronization
+var is_connection_active := false
 var latency: int = 0
 var server_clock: int = 0
 var delta_latency: int = 0
@@ -109,6 +110,7 @@ func _on_connection_failed():
 
 func _on_connection_succeeded():
 	Logger.info("Successfully connected", "connection")
+	is_connection_active = true
 	_start_clock_synchronization()
 	emit_signal("connection_successful")
 

@@ -154,6 +154,10 @@ func get_player():
 	return _player
 
 
+func get_enemy():
+	return _enemy
+
+
 func _on_phase_switch_received(round_index, next_phase, switch_time):
 	_round_manager.round_index = round_index
 	_round_manager.get_previous_phase(next_phase)
@@ -209,8 +213,10 @@ func _on_countdown_phase_started() -> void:
 	_visual_kill_ghosts()
 	_visual_delay_spawn_ghosts(countdown_phase_seconds-spawn_time)
 	_game_manager.show_countdown_screen()
+	
 	# Send currently selected timeline to server
-	Server.send_timeline_pick(_player.timeline_index)
+	if Server.is_connection_active:
+		Server.send_timeline_pick(_player.timeline_index)
 
 
 func _on_game_phase_started() -> void:

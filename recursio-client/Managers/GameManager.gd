@@ -1,14 +1,24 @@
 extends Node
 class_name GameManager
 
-onready var _game_result_screen = get_node("../../GameResultScreen")
-onready var _countdown_screen = get_node("../../CountdownScreen")
+export var level_path: NodePath
 
-var _level: Level
+# These are optional
+var _game_result_screen
+var _countdown_screen
+
+onready var _level: Level = get_node(level_path)
+
 var _team_id := -1
 var _countdown_time: float = Constants.get_value("gameplay","countdown_phase_seconds")
 
 func _ready():
+	if has_node("../../GameResultScreen"):
+		_game_result_screen = get_node("../../GameResultScreen")
+	
+	if has_node("../../CountdownScreen"):
+		_countdown_screen = get_node("../../CountdownScreen")
+	
 	# Hide screens
 	if _game_result_screen and _countdown_screen:
 		_game_result_screen.visible = false
