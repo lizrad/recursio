@@ -11,6 +11,7 @@ func player_ghost_init(action_manager, record_data: RecordData) -> void:
 func toggle_visibility_light(value: bool):
 	_visibility_light.visible = value
 
+
 func create_path():
 		var _curve = Curve3D.new()
 		for frame in range(0, _record_data.record_frames.size(), 30):
@@ -20,8 +21,10 @@ func create_path():
 		toggle_path_select(false)
 		$GhostPath.index = timeline_index
 
+
 func toggle_path_select(value):
 		$GhostPath.selected = value
+
 
 func delete_path():
 	$GhostPath.set_curve(Curve.new())

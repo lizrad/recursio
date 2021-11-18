@@ -38,7 +38,14 @@ func reset():
 	_ammo.visible = false
 
 func _process(_delta):
-	_timer_pb.value = _calculate_progress()
+	var val = _calculate_progress()
+	_timer_pb.value = val
+	if val < 0.15:
+		_timer_pb.tint_progress = Color.red
+	elif val < 0.35:
+		_timer_pb.tint_progress = Color.yellow
+	else:
+		_timer_pb.tint_progress = Color.white
 
 # Calculates the remaining time and maps it between 0 and 1
 func _calculate_progress() -> float:
