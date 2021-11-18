@@ -18,20 +18,25 @@ onready var _btn_join_game_room: Button = get_node("Content/BottomBar/Btn_JoinGa
 var _game_room_dic := {}
 
 
-func _ready():	
+func _ready():
 	var _error = _room_filter.connect("text_changed", self, "_on_filter_text_changed")
-	
+
 	_error = _btn_create_room.connect("pressed", self, "_on_create_game_room_pressed")
 	_error = _btn_refresh_game_rooms.connect("pressed", self, "_on_send_get_game_rooms")
 	_error = _btn_back.connect("pressed", self, "_on_back_pressed")
 	_error = _btn_join_game_room.connect("pressed", self, "_on_join_game_room_pressed")
-	
-	
+
 	_error = _game_room_list.connect("item_selected", self, "_on_item_selected")
 	_error = _game_room_list.connect("item_activated", self, "_on_item_activated")
-	
+
 	# Disable join button until a room is selected
 	_btn_join_game_room.disabled = true
+
+	var _timer = Timer.new()
+	_timer.wait_time = 5.0
+	_timer.connect("timeout", self, "_on_send_get_game_rooms") 
+	add_child(_timer)
+	_timer.start()
 
 
 func add_game_room(game_room_id, game_room_name) -> void:
