@@ -28,7 +28,7 @@ func _ready():
 	yield(get_tree().create_timer(3.0), "timeout")
 	
 	$CharacterManager.get_player().follow_camera()
-	$TutorialUI/PanelContainer/TutorialText.visible = false
+	$TutorialUI.visible = false
 	
 	$CharacterManager.get_player().kb.visible = true
 	
@@ -51,7 +51,7 @@ func _update_phase1():
 	if $LevelH.get_capture_points()[1]._capture_progress >= 0.9 \
 			and $LevelH.get_capture_points()[1]._capture_progress < 1.0:
 		$LevelH.get_capture_points()[1]._capture_progress = 1.0
-		$TutorialUI/PanelContainer/TutorialText.visible = true
+		$TutorialUI.visible = true
 		$TutorialUI/PanelContainer/TutorialText.text = "Nice!"
 		
 		yield(get_tree().create_timer(3.0), "timeout")
@@ -74,7 +74,7 @@ func _update_phase2():
 		$LevelH.get_capture_points()[0]._capture_progress = 1.0
 		$LevelH.get_capture_points()[1]._capture_progress = 1.0
 		
-		$TutorialUI/PanelContainer/TutorialText.visible = true
+		$TutorialUI.visible = true
 		$TutorialUI/PanelContainer/TutorialText.text = "Good job!"
 		
 		current_phase = Phases.DONE
