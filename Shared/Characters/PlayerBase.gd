@@ -3,6 +3,7 @@ class_name PlayerBase
 
 signal wall_spawn(position, rotation, wall_index)
 var _wall_index = 0
+
 # The acceleration applied to the velocity
 var acceleration: Vector3 = Vector3.ZERO
 
@@ -31,6 +32,7 @@ var _record_manager: RecordManager = RecordManager.new()
 
 func player_base_init(action_manager) -> void:
 	.character_base_init(action_manager)
+	_auto_respawn_on_death = true
 
 
 # OVERRIDE #
@@ -47,7 +49,7 @@ func apply_input(movement_vector: Vector3, rotation_vector: Vector3, buttons: in
 	var delta = get_physics_process_delta_time()
 	
 	# Nothing to do if player can't move
-	if block_movement:
+	if block_movement or currently_dying or currently_spawning:
 		return
 	
 	input_movement_direction = movement_vector

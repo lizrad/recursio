@@ -44,7 +44,7 @@ func _physics_process(_delta):
 # Stops the ghost and triggers the base classes hit function
 # OVERRIDE #
 func hit() -> void:
-	stop_playing()
+	_is_playing = false
 	.hit()
 
 
