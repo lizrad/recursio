@@ -1,0 +1,22 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://GameRoom/WorldStateManager.gd" type="Script" id=2]
+[ext_resource path="res://GameRoom/CharacterManager.gd" type="Script" id=3]
+[ext_resource path="res://GameRoom/GameManager.gd" type="Script" id=5]
+[ext_resource path="res://GameRoom/GameRoomWorld.gd" type="Script" id=6]
+
+[node name="GameRoomWorld" type="Node"]
+script = ExtResource( 6 )
+
+[node name="RoundManager" type="Node" parent="."]
+
+[node name="ActionManager" type="Node" parent="."]
+
+[node name="CharacterManager" type="Node" parent="."]
+script = ExtResource( 3 )
+
+[node name="WorldStateManager" type="Node" parent="."]
+script = ExtResource( 2 )
+
+[node name="GameManager" type="Node" parent="."]
+script = ExtResource( 5 )

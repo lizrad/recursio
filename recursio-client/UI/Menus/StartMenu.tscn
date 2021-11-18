@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://UI/Menus/StartMenu.gd" type="Script" id=1]
 [ext_resource path="res://UI/Menus/GameRooms/GameRoomCreation.gd" type="Script" id=2]
@@ -6,6 +6,8 @@
 [ext_resource path="res://UI/Menus/GameRooms/GameRoomSearch.gd" type="Script" id=4]
 [ext_resource path="res://UI/Menus/GameRoomUI.gd" type="Script" id=5]
 [ext_resource path="res://Resources/Icons/icon_not_ready.png" type="Texture" id=6]
+[ext_resource path="res://World.tscn" type="PackedScene" id=7]
+[ext_resource path="res://Util/LatencyHUD.gd" type="Script" id=8]
 
 [node name="StartMenu" type="Control"]
 anchor_right = 1.0
@@ -14,6 +16,7 @@ script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+world = ExtResource( 7 )
 
 [node name="CenterContainer" type="CenterContainer" parent="."]
 anchor_right = 1.0
@@ -248,3 +251,31 @@ margin_left = 451.0
 margin_right = 500.0
 margin_bottom = 20.0
 text = "Leave"
+
+[node name="StatsHUD" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+script = ExtResource( 8 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="LatencyText" type="Label" parent="StatsHUD"]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_top = -14.0
+margin_right = 93.0
+text = "Latency: 40ms"
+
+[node name="FPSText" type="Label" parent="StatsHUD"]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -60.0
+margin_top = -14.0
+text = "FPS: -1"
+__meta__ = {
+"_edit_use_anchors_": false
+}

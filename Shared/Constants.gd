@@ -1,5 +1,7 @@
 extends Node
 
+const PLAYER_MAX_COUNT = 2
+
 var config
 
 func _init():

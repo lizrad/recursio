@@ -28,6 +28,7 @@ func _ready():
 	
 	_server.connect("game_room_ready_received", self, "_on_game_room_ready_received")
 	_server.connect("game_room_not_ready_received", self, "_on_game_room_not_ready_received")
+	_server.connect("level_loaded_received", self, "_on_level_loaded_received")
 	
 	if _debug_room:
 		var _game_room_id = _create_game_room("GameRoom")
@@ -44,12 +45,6 @@ func _create_game_room(game_room_name: String) -> int:
 	$ViewportContainer.rect_clip_content = true
 
 	var _error = game_room.connect("world_state_updated", self, "_on_world_state_update") 
-	
-	_error = game_room.get_game_manager().connect("capture_point_team_changed", self, "_on_capture_point_team_changed", [game_room.id]) 
-	_error = game_room.get_game_manager().connect("capture_point_captured", self, "_on_capture_point_captured", [game_room.id]) 
-	_error = game_room.get_game_manager().connect("capture_point_status_changed", self, "_on_capture_point_status_changed", [game_room.id]) 
-	_error = game_room.get_game_manager().connect("capture_point_capture_lost", self, "_on_capture_point_capture_lost", [game_room.id]) 
-	_error = game_room.get_game_manager().connect("game_result", self, "_on_game_result", [game_room.id]) 
 	
 	_game_room_dic[_game_room_id_counter] = game_room
 	_game_room_id_counter += 1
@@ -130,50 +125,9 @@ func _on_player_timline_pick_received(player_id, timeline_index):
 # Sends the world state of the game_room to all players in the game_room
 func _on_world_state_update(world_state, game_room_id) -> void:
 	var game_room: GameRoom = _game_room_dic[game_room_id]
-	for player_id in game_room.get_players():
+	for player_id in game_room.get_game_room_players():
 		_server.send_world_state(player_id, world_state)
 
-
-func _on_capture_point_team_changed(team_id, capture_point, game_room_id):
-	var game_room = _game_room_dic[game_room_id]
-	var capturing_player_id = -1
-	if team_id != -1:
-		capturing_player_id = game_room.team_id_to_player_id[team_id]
-	for player_id in game_room.get_players():
-		_server.send_capture_point_team_changed(player_id, capturing_player_id, capture_point)
-
-
-func _on_capture_point_captured(team_id, capture_point, game_room_id):
-	var game_room = _game_room_dic[game_room_id]
-	var capturing_player_id = -1
-	if team_id != -1:
-		capturing_player_id = game_room.team_id_to_player_id[team_id]
-	for player_id in game_room.get_players():
-		_server.send_capture_point_captured(player_id, capturing_player_id, capture_point)
-
-func _on_capture_point_status_changed(capture_progress, team_id, capture_point, game_room_id):
-	var game_room = _game_room_dic[game_room_id]
-	var capturing_player_id = -1
-	if team_id != -1:
-		capturing_player_id = game_room.team_id_to_player_id[team_id]
-	for player_id in game_room.get_players():
-		_server.send_capture_point_status_changed(player_id, capturing_player_id, capture_point, capture_progress)
-
-func _on_capture_point_capture_lost(team_id, capture_point, game_room_id):
-	var game_room = _game_room_dic[game_room_id]
-	var capturing_player_id = -1
-	if team_id != -1:
-		capturing_player_id = game_room.team_id_to_player_id[team_id]
-	for player_id in game_room.get_players():
-		_server.send_capture_point_capture_lost(player_id, capturing_player_id, capture_point)
-
-func _on_game_result(team_id, game_room_id):
-	var game_room = _game_room_dic[game_room_id]
-	var winning_player_id = game_room.team_id_to_player_id[team_id]
-	for player_id in game_room.get_players():
-		_server.send_game_result(player_id, winning_player_id)
-	game_room.reset()
-	game_room.start_game()
 
 ##############################
 #### Game Room Management ####
@@ -205,6 +159,10 @@ func _on_game_room_ready_received(player_id, game_room_id):
 
 func _on_game_room_not_ready_received(player_id, game_room_id):
 	_get_game_room(game_room_id).handle_game_room_not_ready(player_id)
+
+
+func _on_level_loaded_received(player_id):
+	_get_game_room(_player_game_room_dic[player_id]).handle_player_level_loaded(player_id)
 
 
 func _update_game_room_on_client(game_room):

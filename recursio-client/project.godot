@@ -231,7 +231,7 @@ _global_script_class_icons={
 [application]
 
 config/name="recursio"
-run/main_scene="res://World.tscn"
+run/main_scene="res://UI/Menus/StartMenu.tscn"
 boot_splash/image="res://lizrad_logo.png"
 config/icon="res://icon.png"
 
