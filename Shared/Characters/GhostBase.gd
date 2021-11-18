@@ -58,7 +58,11 @@ func start_playing(start_time: int) -> void:
 # Stops moving the ghost and disables collision
 func stop_playing() -> void:
 	_is_playing = false
+	
+	# Move down to call collision exits
+	kb.transform.origin.y -= 20
 	_collision_shape.disabled = true
+	kb.transform.origin.y += 20
 
 
 # Applies the given frame

@@ -44,11 +44,11 @@ func server_hit():
 	_minimap_icon.set_texture(_minimap_icon_dead)
 
 func enable_body():
-	_kb.visible = true
+	kb.visible = true
 
 	_minimap_icon.set_texture(_minimap_alive)
 	_character_model.visible = true
 
 
 func disable_body():
-	_kb.visible = false
+	kb.visible = false
