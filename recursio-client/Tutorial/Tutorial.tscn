@@ -30,15 +30,16 @@ level_path = NodePath("../../LevelH")
 [node name="TutorialUI" type="CenterContainer" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
+margin_top = 278.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="PanelContainer" type="PanelContainer" parent="TutorialUI"]
 margin_left = 426.0
-margin_top = 286.0
+margin_top = 147.0
 margin_right = 597.0
-margin_bottom = 314.0
+margin_bottom = 175.0
 
 [node name="TutorialText" type="Label" parent="TutorialUI/PanelContainer"]
 margin_left = 7.0

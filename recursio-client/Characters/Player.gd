@@ -114,6 +114,10 @@ func set_overview_light_enabled(enabled):
 	_overview_light.enabled = enabled
 
 
+func set_custom_view_target(node):
+	_lerped_follow.target = node
+
+
 func move_camera_to_overview():
 	_lerped_follow.target = _overview_target
 

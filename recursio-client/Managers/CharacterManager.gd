@@ -291,6 +291,7 @@ func _on_spawn_player(player_id, spawn_point, team_id):
 	set_physics_process(true)
 	_player = _spawn_character(_player_scene, spawn_point)
 	_player.player_init(_action_manager, _round_manager)
+	_player.set_overview_light_enabled(false)
 	# TODO: Tunnel signal instead of accessing button overlay here
 	var _error = _player.get_button_overlay().connect("button_pressed", self, "_on_player_ready") 
 	_player_rpc_id = player_id
