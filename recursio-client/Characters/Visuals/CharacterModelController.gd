@@ -29,7 +29,8 @@ func _ready():
 	var _error = _parent.connect("action_status_changed",self,"_on_action_status_changed")
 	_error = _parent.connect("velocity_changed",self,"_on_velocity_changed")
 	_error = _parent.connect("timeline_index_changed",self,"_on_timeline_index_changed")
-	_error = _parent.connect("hit",self,"_on_death")
+	_error = _parent.connect("dying",self,"_on_death")
+	_error = _parent.connect("spawning",self,"_on_spawn")
 	_error = _animator.connect("death_animation_over", self, "_on_death_animation_over")
 
 func set_shader_param(param, value):
@@ -80,6 +81,9 @@ func _on_timeline_index_changed(timeline_index):
 
 func _on_death():
 	_animator.death_active()
+
+func _on_spawn():
+	_animator.spawn_active()
 
 func _on_death_animation_over():
 	_death_particles.transform.origin = _parent.get_position()

@@ -11,6 +11,7 @@ extends BaseAnimator
 #		-Spawn
 
 signal death_animation_over
+signal spawn_animation_over
 
 onready var idle_animator = get_node("../IdleAnimator")
 onready var turn_animator = get_node("../TurnAnimator")
@@ -20,6 +21,7 @@ onready var hitscan_animator = get_node("../HitscanAnimator")
 onready var wall_animator = get_node("../WallAnimator")
 onready var melee_animator = get_node("../MeleeAnimator")
 onready var death_animator = get_node("../DeathAnimator")
+onready var spawn_animator = get_node("../SpawnAnimator")
 
 var _animation_status = {}
 var _action_animations = {}
@@ -53,6 +55,9 @@ func _ready():
 	
 	_animation_status[death_animator] = false
 	_priority_sorted.append(death_animator)
+	
+	_animation_status[spawn_animator] = false
+	_priority_sorted.append(spawn_animator)
 
 
 func action_status_changed(action_type, status):
@@ -70,6 +75,11 @@ func death_active():
 	death_animator.start_animation()
 	_animation_status[death_animator]=true
 	death_animator.connect("animation_over", self, "_stop_death_animation")
+
+func spawn_active():
+	spawn_animator.start_animation()
+	_animation_status[spawn_animator]=true
+	spawn_animator.connect("animation_over", self, "_stop_spawn_animation")
 
 func velocity_changed(velocity, front_vector, right_vector):
 	#because movement only aproaches 0 asymptotically
@@ -104,6 +114,11 @@ func _stop_death_animation():
 	death_animator.disconnect("animation_over", self, "_stop_death_animation")
 	_animation_status[death_animator] = false
 	emit_signal("death_animation_over")
+
+func _stop_spawn_animation():
+	spawn_animator.disconnect("animation_over", self, "_stop_spawn_animation")
+	_animation_status[spawn_animator] = false
+	emit_signal("spawn_animation_over")
 	
 func combine_keyframes(a,b,t):
 	var keyframes = {}

@@ -45,8 +45,8 @@ func character_base_init(action_manager) -> void:
 func _ready():
 	_death_timer = Timer.new()
 	_spawn_timer = Timer.new()
-	_death_timer.wait_time = 1.0
-	_spawn_timer.wait_time = 1.0
+	_death_timer.wait_time = Constants.get_value("gameplay", "death_time")
+	_spawn_timer.wait_time = Constants.get_value("gameplay", "spawn_time")
 	_death_timer.one_shot = true
 	_spawn_timer.one_shot = true
 	_death_timer.connect("timeout", self, "_on_death_timer_timeout")

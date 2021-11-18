@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=2]
+[gd_scene load_steps=28 format=2]
 
 [ext_resource path="res://Characters/Visuals/Animation/Animator.gd" type="Script" id=1]
 [ext_resource path="res://Characters/Visuals/Animation/TurnAnimator.gd" type="Script" id=2]
@@ -13,6 +13,7 @@
 [ext_resource path="res://Characters/Visuals/CharacterModel_BackVariant.tscn" type="PackedScene" id=11]
 [ext_resource path="res://Characters/Visuals/CharacterModel_FrontVariant.tscn" type="PackedScene" id=12]
 [ext_resource path="res://Characters/Visuals/Animation/DeathAnimator.gd" type="Script" id=13]
+[ext_resource path="res://Characters/Visuals/Animation/SpawnAnimator.gd" type="Script" id=14]
 
 [sub_resource type="ShaderMaterial" id=1]
 shader = ExtResource( 10 )
@@ -60,6 +61,42 @@ surfaces/0 = {
 [sub_resource type="SpatialMaterial" id=5]
 flags_unshaded = true
 albedo_color = Color( 1, 0, 0, 1 )
+
+[sub_resource type="SpatialMaterial" id=8]
+resource_local_to_scene = true
+emission_enabled = true
+emission = Color( 1, 1, 1, 1 )
+emission_energy = 500.0
+emission_operator = 0
+emission_on_uv2 = false
+
+[sub_resource type="SpatialMaterial" id=9]
+emission_enabled = true
+emission = Color( 1, 0, 0, 1 )
+emission_energy = 500.0
+emission_operator = 0
+emission_on_uv2 = false
+
+[sub_resource type="Curve" id=10]
+_data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 1, 0 ), -2.20433, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=11]
+curve = SubResource( 10 )
+
+[sub_resource type="ParticlesMaterial" id=12]
+spread = 15.0
+gravity = Vector3( 0, 0, 0 )
+initial_velocity = 15.0
+damping = 59.66
+damping_random = 1.0
+scale = 0.5
+scale_curve = SubResource( 11 )
+
+[sub_resource type="SphereMesh" id=13]
+radius = 0.2
+height = 0.4
+radial_segments = 10
+rings = 5
 
 [sub_resource type="SpatialMaterial" id=6]
 flags_unshaded = true
@@ -113,6 +150,40 @@ cast_shadow = 0
 mesh = SubResource( 4 )
 material/0 = SubResource( 5 )
 
+[node name="MiddleDeathVariant" type="MeshInstance" parent="RootPivot/MiddlePivot"]
+transform = Transform( 0.976267, 0, 0.976267, 0, 1.38065, 0, -0.976267, 0, 0.976267, 0.0821635, 0, 0.104462 )
+visible = false
+material_override = SubResource( 8 )
+cast_shadow = 0
+mesh = SubResource( 4 )
+material/0 = SubResource( 5 )
+
+[node name="MiddleDeathBackParticles" type="Particles" parent="RootPivot"]
+transform = Transform( -6.02636e-08, 0, 1.37867, 0, 1.37867, 0, -1.37867, 0, -6.02636e-08, 0, 0, 0.187088 )
+material_override = SubResource( 9 )
+cast_shadow = 0
+emitting = false
+amount = 10
+lifetime = 0.2
+one_shot = true
+explosiveness = 0.2
+randomness = 1.0
+process_material = SubResource( 12 )
+draw_pass_1 = SubResource( 13 )
+
+[node name="MiddleDeathFrontParticles" type="Particles" parent="RootPivot"]
+transform = Transform( -6.02636e-08, 0, -1.37867, 0, 1.37867, 0, 1.37867, 0, -6.02636e-08, 0, 0, -0.108128 )
+material_override = SubResource( 9 )
+cast_shadow = 0
+emitting = false
+amount = 10
+lifetime = 0.2
+one_shot = true
+explosiveness = 0.2
+randomness = 1.0
+process_material = SubResource( 12 )
+draw_pass_1 = SubResource( 13 )
+
 [node name="BackPivot" type="Spatial" parent="RootPivot"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.566682 )
 
@@ -160,3 +231,6 @@ middle_scale_extent = 0.5
 [node name="DeathAnimator" type="Node" parent="."]
 script = ExtResource( 13 )
 middle_scale_extent = 2.5
+
+[node name="SpawnAnimator" type="Node" parent="."]
+script = ExtResource( 14 )
