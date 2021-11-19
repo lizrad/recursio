@@ -75,7 +75,8 @@ func _on_create_game_room_pressed() -> void:
 
 
 func _on_send_get_game_rooms() -> void:
-	Server.send_get_game_rooms()
+	if visible:
+		Server.send_get_game_rooms()
 
 
 func _on_back_pressed() -> void:
