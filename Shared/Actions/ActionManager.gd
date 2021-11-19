@@ -97,17 +97,17 @@ func set_active(action: Action, character: CharacterBase, tree_position: Spatial
 
 	if action.blocked:
 		return false
-	
+
 	# No ammo left
 	if action.ammunition == 0:
 		return false
-	
+
 	# Fire actual action
 	if action.attack:
-		Logger.info("instancing new attack named "+ action.name, "actions")
+		Logger.info("instancing new attack named " + action.name, "actions")
 		var spawn = action.attack.instance()
 		action_scene_parent.add_child(spawn)
-		
+
 		spawn.global_transform = tree_position.global_transform
 		spawn.initialize(character)
 		_instanced_actions.append(weakref(spawn))

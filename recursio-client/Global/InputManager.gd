@@ -4,7 +4,6 @@ extends Node
 # All input frames for sending to the server
 # Consists of 15 
 var _input_data: InputData = InputData.new()
-
 var _current_input_frame: InputFrame = InputFrame.new()
 
 
@@ -16,6 +15,7 @@ func set_triggers_in_input_frame(triggers: int) -> void:
 # Adds new movement data to the input frame
 func add_movement_to_input_frame(movement: Vector3) -> void:
 	_current_input_frame.movement = movement
+
 
 # Adds new rotation data to the input frame
 func add_rotation_to_input_frame(rotation: Vector3) -> void:
