@@ -744,9 +744,10 @@ func load_config(configfile = default_configfile_path):
 
 	# Load external config and initialize them
 	external_sinks = {}
-	for logfile_cfg in config.get_value(PLUGIN_NAME, config_fields.external_sinks):
-		var logfile = Logfile.new(logfile_cfg["path"], logfile_cfg["queue_mode"])
-		external_sinks[logfile_cfg["path"]] = logfile
+	if config.get_value(PLUGIN_NAME, config_fields.external_sinks) != null:
+		for logfile_cfg in config.get_value(PLUGIN_NAME, config_fields.external_sinks):
+			var logfile = Logfile.new(logfile_cfg["path"], logfile_cfg["queue_mode"])
+			external_sinks[logfile_cfg["path"]] = logfile
 
 	# Load modules config and initialize them
 	modules = {}
