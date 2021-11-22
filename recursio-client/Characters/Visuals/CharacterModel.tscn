@@ -1,4 +1,4 @@
-[gd_scene load_steps=34 format=2]
+[gd_scene load_steps=42 format=2]
 
 [ext_resource path="res://Characters/Visuals/Animation/Animator.gd" type="Script" id=1]
 [ext_resource path="res://Characters/Visuals/Animation/TurnAnimator.gd" type="Script" id=2]
@@ -41,6 +41,73 @@ surfaces/0 = {
 "skeleton_aabb": [  ],
 "vertex_count": 352
 }
+
+[sub_resource type="SpatialMaterial" id=9]
+resource_local_to_scene = true
+emission_enabled = true
+emission = Color( 0, 0, 0, 1 )
+emission_energy = 10.0
+emission_operator = 0
+emission_on_uv2 = false
+
+[sub_resource type="SpatialMaterial" id=10]
+resource_local_to_scene = true
+emission_enabled = true
+emission = Color( 0, 0, 0, 1 )
+emission_energy = 10.0
+emission_operator = 0
+emission_on_uv2 = false
+
+[sub_resource type="SpatialMaterial" id=19]
+resource_local_to_scene = true
+params_billboard_mode = 3
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+emission_enabled = true
+emission = Color( 1, 0, 0.984314, 1 )
+emission_energy = 10.0
+emission_operator = 0
+emission_on_uv2 = false
+
+[sub_resource type="Curve" id=11]
+_data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 0.479757, 0.988636 ), -0.0236863, 0.0, 1, 0, Vector2( 1, 0 ), -3.06959, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=12]
+curve = SubResource( 11 )
+
+[sub_resource type="ParticlesMaterial" id=13]
+resource_local_to_scene = true
+lifetime_randomness = 1.0
+direction = Vector3( 1, 1, 1 )
+spread = 180.0
+flatness = 1.0
+gravity = Vector3( 0, 0, 0 )
+initial_velocity = 1.0
+angular_velocity = 720.0
+angular_velocity_random = 1.0
+tangential_accel = 1.0
+angle = 720.0
+angle_random = 1.0
+scale = 0.1
+scale_random = 0.1
+scale_curve = SubResource( 12 )
+
+[sub_resource type="SpatialMaterial" id=14]
+resource_local_to_scene = true
+params_billboard_mode = 3
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+emission_enabled = true
+emission = Color( 1, 0, 0.984314, 1 )
+emission_energy = 10.0
+emission_operator = 0
+emission_on_uv2 = false
+
+[sub_resource type="QuadMesh" id=15]
+resource_local_to_scene = true
+material = SubResource( 14 )
 
 [sub_resource type="ArrayMesh" id=4]
 blend_shape_mode = 0
@@ -173,14 +240,10 @@ material = SubResource( 18 )
 script = ExtResource( 9 )
 
 [node name="RootPivot" type="Spatial" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0149946, 0, 0.02999 )
 
 [node name="FrontPivot" type="Spatial" parent="RootPivot"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.548254 )
-
-[node name="FrontVariant" parent="RootPivot/FrontPivot" instance=ExtResource( 12 )]
-transform = Transform( 0.00998566, 0, 0, 0, 0.00998566, 0, 0, 0, 0.00998566, 5.44914e-12, 0, -0.548256 )
-visible = false
-layers = 512
 
 [node name="Front" type="MeshInstance" parent="RootPivot/FrontPivot"]
 transform = Transform( 1.38886, 0, 0, 0, 1.38886, 0, 0, 0, 1.38886, 0, 0, -0.398254 )
@@ -189,6 +252,48 @@ material_override = SubResource( 1 )
 cast_shadow = 0
 mesh = SubResource( 3 )
 material/0 = null
+
+[node name="FrontVariant" parent="RootPivot/FrontPivot" instance=ExtResource( 12 )]
+transform = Transform( 0.00998566, 0, 0, 0, 0.00998566, 0, 0, 0, 0.00998566, 5.44914e-12, 0, -0.548256 )
+visible = false
+layers = 512
+
+[node name="FrontMeleeAttack" type="MeshInstance" parent="RootPivot/FrontPivot"]
+transform = Transform( 1.38886, 0, 0, 0, 1.38886, 0, 0, 0, 1.38886, 0, 0, -0.398254 )
+visible = false
+layers = 512
+material_override = SubResource( 9 )
+cast_shadow = 0
+mesh = SubResource( 3 )
+material/0 = null
+
+[node name="FrontMeleeAttackVariant" parent="RootPivot/FrontPivot" instance=ExtResource( 12 )]
+transform = Transform( 0.00998566, 0, 0, 0, 0.00998566, 0, 0, 0, 0.00998566, 5.44914e-12, 0, -0.548256 )
+visible = false
+layers = 512
+material_override = SubResource( 10 )
+
+[node name="MeleeParticlesLeft" type="Particles" parent="RootPivot/FrontPivot"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.461423, 0, -0.375385 )
+layers = 512
+material_override = SubResource( 19 )
+emitting = false
+amount = 15
+lifetime = 0.2
+local_coords = false
+process_material = SubResource( 13 )
+draw_pass_1 = SubResource( 15 )
+
+[node name="MeleeParticlesRight" type="Particles" parent="RootPivot/FrontPivot"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.461, 0, -0.37501 )
+layers = 512
+material_override = SubResource( 19 )
+emitting = false
+amount = 15
+lifetime = 0.2
+local_coords = false
+process_material = SubResource( 13 )
+draw_pass_1 = SubResource( 15 )
 
 [node name="MiddlePivot" type="Spatial" parent="RootPivot"]
 transform = Transform( 0.998566, 0, 0, 0, 0.998566, 0, 0, 0, 0.998566, 0, 0, 0 )
