@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://Level/CapturePoint.gd" type="Script" id=1]
+[ext_resource path="res://Resources/Icons/circle_white_256x256.png" type="Texture" id=2]
 
 [sub_resource type="CylinderShape" id=1]
 
@@ -10,6 +11,9 @@ albedo_color = Color( 0, 1, 0.811765, 1 )
 
 [sub_resource type="CylinderMesh" id=3]
 height = 0.4
+
+[sub_resource type="ViewportTexture" id=4]
+viewport_path = NodePath("Sprite3D/Viewport")
 
 [node name="CapturePoint" type="Spatial"]
 script = ExtResource( 1 )
@@ -21,8 +25,29 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0 )
 shape = SubResource( 1 )
 
 [node name="MeshInstance" type="MeshInstance" parent="."]
-layers = 36
+transform = Transform( 1, 0, 0, 0, 0.2, 0, 0, 0, 1, 0, 0, 0 )
+layers = 548
 material_override = SubResource( 2 )
 cast_shadow = 0
 mesh = SubResource( 3 )
 material/0 = null
+
+[node name="Sprite3D" type="Sprite3D" parent="."]
+layers = 512
+axis = 1
+billboard = 2
+texture = SubResource( 4 )
+
+[node name="Viewport" type="Viewport" parent="Sprite3D"]
+size = Vector2( 260, 260 )
+transparent_bg = true
+usage = 0
+render_target_v_flip = true
+
+[node name="TextureProgress" type="TextureProgress" parent="Sprite3D/Viewport"]
+margin_right = 40.0
+margin_bottom = 40.0
+max_value = 1.0
+step = 0.05
+texture_progress = ExtResource( 2 )
+fill_mode = 4

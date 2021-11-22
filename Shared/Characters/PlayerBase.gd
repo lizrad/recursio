@@ -2,10 +2,14 @@ extends CharacterBase
 class_name PlayerBase
 
 signal wall_spawn(position, rotation, wall_index)
+
 var _wall_index = 0
 
 # The acceleration applied to the velocity
 var acceleration: Vector3 = Vector3.ZERO
+
+# only trigger shoot actions in aim_mode
+var aim_mode: bool = false
 
 # Blocks any movement applied to it (includes rotation-movement)
 var block_movement: bool = true
@@ -67,10 +71,11 @@ func apply_input(movement_vector: Vector3, rotation_vector: Vector3, buttons: in
 	# Apply acceleration to velocity (important: after lerp)
 	self.velocity += acceleration * delta
 	var _collision_velocity = _kb.move_and_slide(velocity)
-	
+
 	# Trigger all actions with base
-	.trigger_actions(buttons)
-	
+	if aim_mode == false:
+		.trigger_actions(buttons)
+
 	# Add everything to the recording
 	_record_manager.add_record_frame(.get_position(), .get_rotation_y(), buttons)
 
@@ -88,5 +93,5 @@ func get_record_data() -> RecordData:
 
 # OVERRIDE #
 func wall_spawned(wall):
-	emit_signal("wall_spawn",wall.global_transform.origin, wall.global_transform.basis.get_euler().y, _wall_index)
-	_wall_index=+1
+	emit_signal("wall_spawn", wall.global_transform.origin, wall.global_transform.basis.get_euler().y, _wall_index)
+	_wall_index += 1

@@ -14,7 +14,6 @@ var _trigger_dic : Dictionary = {
 	"player_dash": ActionManager.Trigger.SPECIAL_MOVEMENT_START
 }
 var _action_manager
-var _player_timeline_pick_trigger : String = "player_switch"
 var _player_initialized: bool = false
 
 func _ready():
@@ -37,14 +36,22 @@ func _physics_process(_delta):
 		InputManager.add_rotation_to_input_frame(rotate_vector)
 
 		var buttons_pressed: int = _get_buttons_pressed()
+		# invert pressed buttons for shooting here
+		# to delay ghosts triggering actions to button_released
+		if buttons_pressed & ActionManager.Trigger.FIRE_START:
+			_player.aim_mode = true
+			buttons_pressed &= ~(ActionManager.Trigger.FIRE_START)
+		elif _player.aim_mode == true:
+			_player.aim_mode = false
+			buttons_pressed |= ActionManager.Trigger.FIRE_START
+
 		_player.apply_input(movement_vector, rotate_vector, buttons_pressed)
 		InputManager.set_triggers_in_input_frame(buttons_pressed)
-
 		InputManager.close_current_input_frame()
 		InputManager.send_player_input_data_to_server()
 	elif cur_phase == RoundManager.Phases.PREPARATION:
-		if Input.is_action_just_pressed(_player_timeline_pick_trigger):
-			var timeline_index: int = (_player.timeline_index + 1) % (Constants.get_value("ghosts","max_amount") + 1)
+		if Input.is_action_just_pressed("player_switch"):
+			var timeline_index: int = (_player.timeline_index + 1) % (Constants.get_value("ghosts", "max_amount") + 1)
 			_player.timeline_index = timeline_index
 
 
@@ -59,7 +66,7 @@ func _swap_weapon_type(timeline_index) -> void:
 	var img_bullet = _action_manager.get_img_bullet_for_trigger(ActionManager.Trigger.FIRE_START, timeline_index)
 	var wall_index = Constants.get_value("ghosts", "wall_placing_timeline_index")
 	var accent_type = "primary" if wall_index != timeline_index else "secondary"
-	var color= Color(Constants.get_value("colors", "player_" + accent_type + "_accent"))
+	var color = Color(Constants.get_value("colors", "player_" + accent_type + "_accent"))
 
 	_player.update_weapon_type_hud(max_ammo, img_bullet, color)
 
@@ -76,7 +83,7 @@ func _get_input(type) -> Vector2:
 func _get_buttons_pressed() -> int:
 	var buttons := 0
 	for trigger in _trigger_dic:
-		if Input.is_action_just_pressed(trigger):
+		if Input.is_action_pressed(trigger):
 			buttons |= _trigger_dic[trigger]
 
 	return buttons

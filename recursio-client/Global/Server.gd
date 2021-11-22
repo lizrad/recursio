@@ -125,10 +125,7 @@ func send_player_ready():
 
 func send_timeline_pick(timeline_index):
 	Logger.debug("Send player timeline pick", "server")
-	rpc_id(1, "receive_timeline_pick",timeline_index)
-
-
-
+	rpc_id(1, "receive_timeline_pick", timeline_index)
 
 
 remote func spawn_player(player_id, spawn_point, team_id):
