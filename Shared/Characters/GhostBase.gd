@@ -10,7 +10,7 @@ var _start_time: int = -1
 
 func ghost_base_init(action_manager, record_data: RecordData) -> void:
 	_record_data = RecordData.new().copy(record_data)
-	timeline_index = record_data.timeline_index
+	self.timeline_index = record_data.timeline_index
 	.character_base_init(action_manager)
 
 
