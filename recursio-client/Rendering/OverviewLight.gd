@@ -5,7 +5,7 @@ export var max_radius := 50.0
 export var radius_diff := 7.0
 export var radius_grow_speed := 50.0
 
-var enabled = true
+var enabled = false
 
 
 func _physics_process(delta):
