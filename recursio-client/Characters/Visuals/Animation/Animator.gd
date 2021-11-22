@@ -23,6 +23,7 @@ onready var melee_animator = get_node("../MeleeAnimator")
 onready var death_animator = get_node("../DeathAnimator")
 onready var spawn_animator = get_node("../SpawnAnimator")
 
+var _animation_active = false;
 var _animation_status = {}
 var _action_animations = {}
 var _priority_sorted = []
@@ -59,6 +60,8 @@ func _ready():
 	_animation_status[spawn_animator] = false
 	_priority_sorted.append(spawn_animator)
 
+func toggle_animation(value):
+	_animation_active = value;
 
 func action_status_changed(action_type, status):
 	Logger.debug("Status of " + str(action_type) + " changed to " + str(status), "animation")
@@ -100,9 +103,10 @@ func velocity_changed(velocity, front_vector, right_vector):
 
 func _process(delta):
 	_reset_keyframes()
-	for animator in _priority_sorted:
-		if _animation_status[animator]:
-			_keyframes = combine_keyframes(_keyframes,animator.get_keyframe(delta),1)
+	if _animation_active:
+		for animator in _priority_sorted:
+			if _animation_status[animator]:
+				_keyframes = combine_keyframes(_keyframes,animator.get_keyframe(delta),1)
 	_apply_keyframes(_keyframes)
 
 func _stop_animation(animator):

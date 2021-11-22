@@ -1,37 +1,31 @@
 extends BaseAnimator
 
+onready var _spawn_particles = get_node("../RootPivot/SpawnParticles")
+onready var _middle = get_node("../RootPivot/MiddlePivot/Middle")
+
 var _max_time = Constants.get_value("gameplay", "spawn_time")
 var _time_since_start = 0
 
+
+func _ready():
+	var _error =  get_parent().connect("color_scheme_changed",self,"_on_color_scheme_changed")
+	_spawn_particles.lifetime = _max_time;
+
+func _on_color_scheme_changed(new_color_scheme, timeline_index):
+	var main_color = Color(Constants.get_value("colors",new_color_scheme + "_main"))
+	_spawn_particles.material_override.albedo_color = main_color
+	_spawn_particles.material_override.emission = main_color
+
+
 func start_animation():
 	_time_since_start = 0
+	_spawn_particles.restart()
 
-#from: https://easings.net/#easeInCirc
-func ease_in_circ(x: float) -> float:
-	return 1 - sqrt(1 - pow(x, 2));
-
-
-#from: https://easings.net/#easeOutElastic
-func ease_out_elastic(x: float) -> float:
+#adapted from: https://easings.net/#easeOutElastic
+func ease_out_elastic(x: float, wobble: float) -> float:
 	var c4 = (2.0 * PI) / 3.0
-	return  0.0 if x == 0 else (1.0 if x == 1 else  pow(2.0, -10.0 * x) * sin((x * 10.0 - 0.75) * c4) + 1.0);
+	return 0.0 if x == 0 else (1.0 if x == 1 else  pow(2.0, -10.0 * x) * sin((x * wobble - 0.75) * c4) + 1.0);
 
-#from: https://easings.net/#easeOutBounce
-func ease_out_bounce(x: float) -> float: 
-	var n1 = 7.5625
-	var d1 = 2.75
-
-	if x < 1 / d1 :
-		return n1 * x * x
-	elif x < 2 / d1:
-		x -= 1.5 / d1
-		return n1 * x * x + 0.75
-	elif x < 2.5 / d1:
-		x -= 2.25 / d1
-		return n1 * x * x + 0.9375
-	else:
-		x -= 2.625 / d1
-		return n1 * x * x + 0.984375
 
 func get_keyframe(delta):
 	if _time_since_start > _max_time:
@@ -46,9 +40,9 @@ func get_keyframe(delta):
 	_reset_keyframes()
 
 	var ratio = _time_since_start/_max_time
-	var remapped_ratio_middle = ease_out_elastic(min(ratio*2,1))
-	var remapped_ratio_outer_z = ease_out_elastic(max(ratio-0.5, 0)*2)
-	var remapped_ratio_outer_scale = ease_out_elastic(max(ratio-0.5, 0)*2)
+	var remapped_ratio_middle = pow(ease_out_elastic(min(ratio*2, 1), 20),2)
+	var remapped_ratio_outer_z = ease_out_elastic(max(ratio-0.5, 0)*2,10)
+	var remapped_ratio_outer_scale = ease_out_elastic(max(ratio-0.5, 0)*2,10)
 	
 	var middle_scale = _default_scales[_middle_pivot] * remapped_ratio_middle
 	_keyframes[_middle_pivot].basis = _keyframes[_middle_pivot].basis.scaled(middle_scale)
@@ -61,6 +55,7 @@ func get_keyframe(delta):
 	_keyframes[_back_pivot].origin.z = back_z
 	_keyframes[_front_pivot].basis = _keyframes[_front_pivot].basis.scaled(front_scale)
 	_keyframes[_back_pivot].basis = _keyframes[_back_pivot].basis.scaled(back_scale)
+
 	return _keyframes
 
 func _stop_animation():

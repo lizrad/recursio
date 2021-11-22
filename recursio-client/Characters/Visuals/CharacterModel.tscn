@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=2]
+[gd_scene load_steps=34 format=2]
 
 [ext_resource path="res://Characters/Visuals/Animation/Animator.gd" type="Script" id=1]
 [ext_resource path="res://Characters/Visuals/Animation/TurnAnimator.gd" type="Script" id=2]
@@ -118,6 +118,57 @@ surfaces/0 = {
 "vertex_count": 386
 }
 
+[sub_resource type="SpatialMaterial" id=22]
+resource_local_to_scene = true
+flags_do_not_receive_shadows = true
+params_billboard_mode = 3
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+albedo_color = Color( 1, 0, 0.815686, 1 )
+emission_enabled = true
+emission = Color( 0, 0, 0, 1 )
+emission_energy = 500.0
+emission_operator = 0
+emission_on_uv2 = false
+
+[sub_resource type="Curve" id=15]
+_data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 0.852234, 1 ), 0.0, 0.0, 0, 0, Vector2( 1, 0 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=16]
+curve = SubResource( 15 )
+
+[sub_resource type="ParticlesMaterial" id=20]
+resource_local_to_scene = true
+lifetime_randomness = 0.1
+emission_shape = 2
+emission_box_extents = Vector3( 0.25, 0.25, 0.25 )
+direction = Vector3( 0, 0, 0 )
+spread = 0.0
+gravity = Vector3( 0, 0, 0 )
+angular_velocity = 720.0
+angular_velocity_random = 1.0
+radial_accel = 10.0
+radial_accel_random = 0.25
+tangential_accel = 1.0
+angle = 360.0
+angle_random = 1.0
+scale = 0.1
+scale_random = 0.25
+scale_curve = SubResource( 16 )
+
+[sub_resource type="SpatialMaterial" id=18]
+resource_local_to_scene = true
+flags_unshaded = true
+params_billboard_mode = 3
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="QuadMesh" id=21]
+resource_local_to_scene = true
+material = SubResource( 18 )
+
 [node name="CharacterModel" type="Spatial"]
 script = ExtResource( 9 )
 
@@ -199,6 +250,15 @@ material/0 = null
 transform = Transform( 0.01, 0, 0, 0, 0.01, 0, 0, 0, 0.01, 0, 0, 0.548 )
 visible = false
 layers = 512
+
+[node name="SpawnParticles" type="Particles" parent="RootPivot"]
+material_override = SubResource( 22 )
+emitting = false
+amount = 15
+lifetime = 0.4
+one_shot = true
+process_material = SubResource( 20 )
+draw_pass_1 = SubResource( 21 )
 
 [node name="Animator" type="Node" parent="."]
 script = ExtResource( 1 )

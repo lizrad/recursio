@@ -20,27 +20,25 @@ var _max_time = Constants.get_value("gameplay", "death_time")
 var _time_since_start = 0
 var _default_color 
 
-var _accent_color
-var _main_color
+
 
 var _middle_scale_extents = []
 
 func _ready():
-	var _error =  get_parent().connect("color_scheme_changed",self,"_on_color_scheme_changed")
 	_middle_death_front_particles.lifetime = _max_time
 	_middle_death_back_particles.lifetime = _max_time
 
 func _on_color_scheme_changed(new_color_scheme, timeline_index):
 	var wall_index = Constants.get_value("ghosts","wall_placing_timeline_index")
 	var accent_type = "primary" if wall_index != timeline_index else "secondary"
-	_accent_color = Color(Constants.get_value("colors", new_color_scheme+"_"+accent_type+"_accent"))
-	_main_color = Color(Constants.get_value("colors",new_color_scheme + "_main"))
-	_middle_death_variant.material_override.emission = _accent_color
-	_middle_death_variant.material_override.albedo_color = _accent_color
-	_middle_death_front_particles.material_override.albedo_color = _main_color
-	_middle_death_front_particles.material_override.emission =_main_color
-	_middle_death_back_particles.material_override.albedo_color = _main_color
-	_middle_death_back_particles.material_override.emission = _main_color
+	var accent_color = Color(Constants.get_value("colors", new_color_scheme+"_"+accent_type+"_accent"))
+	var main_color = Color(Constants.get_value("colors",new_color_scheme + "_main"))
+	_middle_death_variant.material_override.emission = accent_color
+	_middle_death_variant.material_override.albedo_color = accent_color
+	_middle_death_front_particles.material_override.albedo_color = main_color
+	_middle_death_front_particles.material_override.emission =main_color
+	_middle_death_back_particles.material_override.albedo_color = main_color
+	_middle_death_back_particles.material_override.emission = main_color
 	
 func start_animation():
 	_time_since_start = 0
@@ -101,13 +99,10 @@ func get_keyframe(delta):
 	return _keyframes
 
 func _stop_animation():
+	print("a;lskdfja;lsj")
 	_front_pivot.visible = false
 	_middle_pivot.visible = false
 	_back_pivot.visible = false
-	_front.material_override.set_shader_param("color",_main_color)
-	_front_variant.material_override.set_shader_param("color",_main_color)
-	_back.material_override.set_shader_param("color",_main_color)
-	_back_variant.material_override.set_shader_param("color",_main_color)
 	_front.set_layer_mask_bit(0, false)
 	_front.set_layer_mask_bit(9, true)
 	_front_variant.set_layer_mask_bit(0, false)

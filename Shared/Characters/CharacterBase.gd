@@ -7,6 +7,7 @@ signal spawning()
 signal velocity_changed(velocity, front_vector, right_vector)
 signal timeline_index_changed(timeline_index)
 signal action_status_changed(action_type, status)
+signal animation_status_changed(status)
 
 var currently_dying: bool = false setget set_dying
 var currently_spawning: bool = false setget set_spawning
@@ -38,6 +39,18 @@ var _action_manager
 var _death_timer
 var _auto_respawn_on_death = false
 var _spawn_timer
+
+
+var _spawn_imminent = false;
+var _spawn_deadline = -1;
+
+
+func _process(delta):
+	if _spawn_imminent:
+		_spawn_deadline -= delta
+		if _spawn_deadline <= 0:
+			_spawn_imminent = false
+			emit_signal("spawning")
 
 func character_base_init(action_manager) -> void:
 	_action_manager = action_manager
@@ -103,7 +116,6 @@ func set_dying(new_dying_status: bool):
 	Logger.info("Setting currently_dying to "+str(new_dying_status)+".", "death_and_spawn")
 	currently_dying = new_dying_status
 	if currently_dying:
-		print(name)
 		_collision_shape.disabled = true
 		_death_timer.start()
 		emit_signal("dying")
@@ -127,7 +139,8 @@ func _on_spawn_timer_timeout():
 	_collision_shape.disabled = false
 	set_spawning(false)
 
-
+func toggle_animation(value):
+	emit_signal("animation_status_changed", value)
 
 func trigger_actions(buttons: int) -> void:
 	if currently_dying or currently_spawning:
@@ -168,3 +181,10 @@ func get_body():
 
 func wall_spawned(_wall):
 	pass
+
+func delayed_spawn(delay: float):
+	_spawn_imminent = true
+	_spawn_deadline = delay
+
+func kill():
+	emit_signal("dying")

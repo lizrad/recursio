@@ -32,6 +32,7 @@ func _ready():
 	_error = _parent.connect("dying",self,"_on_death")
 	_error = _parent.connect("spawning",self,"_on_spawn")
 	_error = _animator.connect("death_animation_over", self, "_on_death_animation_over")
+	_error = _parent.connect("animation_status_changed",self,"_on_animation_status_changed")
 
 func set_shader_param(param, value):
 	_front.material_override.set_shader_param(param, value)
@@ -78,13 +79,15 @@ func _on_timeline_index_changed(timeline_index):
 	_set_color_scheme(color_scheme, timeline_index)
 	_set_variant(timeline_index)
 
+func _on_animation_status_changed(value):
+	_animator.toggle_animation(value)
 
 func _on_death():
+	_death_particles.transform.origin = _parent.get_position()
 	_animator.death_active()
 
 func _on_spawn():
 	_animator.spawn_active()
 
 func _on_death_animation_over():
-	_death_particles.transform.origin = _parent.get_position()
 	_death_particles.emitting = true
