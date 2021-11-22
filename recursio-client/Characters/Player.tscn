@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=2]
+[gd_scene load_steps=24 format=2]
 
 [ext_resource path="res://Shared/Characters/PlayerBase.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Characters/Player.gd" type="Script" id=2]
@@ -16,8 +16,16 @@
 [ext_resource path="res://addons/ascii-shader/AsciiRenderer.tscn" type="PackedScene" id=14]
 [ext_resource path="res://Characters/PlayerInput.gd" type="Script" id=15]
 [ext_resource path="res://Shared/Actions/Shots/WallMesh.tres" type="CubeMesh" id=16]
+[ext_resource path="res://Characters/Visuals/Selector.gd" type="Script" id=17]
+[ext_resource path="res://Characters/Visuals/Selector.obj" type="ArrayMesh" id=18]
 
-[sub_resource type="PrismMesh" id=1]
+[sub_resource type="SpatialMaterial" id=7]
+albedo_color = Color( 1, 0, 0.866667, 1 )
+emission_enabled = true
+emission = Color( 1, 0.482353, 0.929412, 1 )
+emission_energy = 1.61
+emission_operator = 0
+emission_on_uv2 = false
 
 [sub_resource type="SpatialMaterial" id=3]
 resource_local_to_scene = true
@@ -49,19 +57,33 @@ emission_on_uv2 = false
 script = ExtResource( 2 )
 
 [node name="Selector" type="Spatial" parent="KinematicBody" index="0"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.27928, 0 )
 
 [node name="SelectorLeft" type="MeshInstance" parent="KinematicBody/Selector" index="0"]
-transform = Transform( -4.37114e-08, 1, 4.37114e-08, 0, -4.37114e-08, 1, 1, 4.37114e-08, 1.91069e-15, -2, 0, 0 )
+transform = Transform( -3.27835e-08, 0.53033, 0.53033, 0, 0.53033, -0.53033, -0.75, -2.31815e-08, -2.31815e-08, -3, 0, 0 )
+visible = false
 layers = 512
-mesh = SubResource( 1 )
+material_override = SubResource( 7 )
+mesh = ExtResource( 18 )
 skeleton = NodePath("")
 material/0 = null
+script = ExtResource( 17 )
+speed = 3.0
+min_positon = Vector3( -2, 0, 0 )
+max_positon = Vector3( -1.75, 0, 0 )
 
 [node name="SelectorRight" type="MeshInstance" parent="KinematicBody/Selector" index="1"]
-transform = Transform( -4.37114e-08, -1, 0, -4.37114e-08, 1.91069e-15, 1, -1, 4.37114e-08, -4.37114e-08, 2, 0, 0 )
+transform = Transform( -3.27835e-08, -0.53033, -0.53033, 0, 0.53033, -0.53033, 0.75, -2.31815e-08, -2.31815e-08, 3, 0, 0 )
+visible = false
 layers = 512
-mesh = SubResource( 1 )
+material_override = SubResource( 7 )
+mesh = ExtResource( 18 )
+skeleton = NodePath("")
 material/0 = null
+script = ExtResource( 17 )
+speed = 3.0
+min_positon = Vector3( 1.75, 0, 0 )
+max_positon = Vector3( 2, 0, 0 )
 
 [node name="CharacterModel" parent="KinematicBody" index="2" instance=ExtResource( 10 )]
 transform = Transform( -1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0 )
