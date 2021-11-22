@@ -129,37 +129,38 @@ surfaces/0 = {
 flags_unshaded = true
 albedo_color = Color( 1, 0, 0, 1 )
 
-[sub_resource type="SpatialMaterial" id=8]
+[sub_resource type="SpatialMaterial" id=24]
 resource_local_to_scene = true
+albedo_color = Color( 1, 0.513726, 0, 1 )
 emission_enabled = true
-emission = Color( 1, 1, 1, 1 )
-emission_energy = 500.0
+emission = Color( 1, 0.513726, 0, 1 )
+emission_energy = 15.0
 emission_operator = 0
 emission_on_uv2 = false
 
-[sub_resource type="SpatialMaterial" id=9]
+[sub_resource type="SpatialMaterial" id=25]
 emission_enabled = true
 emission = Color( 1, 0, 0, 1 )
 emission_energy = 500.0
 emission_operator = 0
 emission_on_uv2 = false
 
-[sub_resource type="Curve" id=10]
+[sub_resource type="Curve" id=26]
 _data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 1, 0 ), -2.20433, 0.0, 0, 0 ]
 
-[sub_resource type="CurveTexture" id=11]
-curve = SubResource( 10 )
+[sub_resource type="CurveTexture" id=27]
+curve = SubResource( 26 )
 
-[sub_resource type="ParticlesMaterial" id=12]
-spread = 15.0
+[sub_resource type="ParticlesMaterial" id=28]
+resource_local_to_scene = true
 gravity = Vector3( 0, 0, 0 )
-initial_velocity = 15.0
-damping = 59.66
+initial_velocity = 10.0
+initial_velocity_random = 1.0
+damping = 50.0
 damping_random = 1.0
-scale = 0.5
-scale_curve = SubResource( 11 )
+scale_curve = SubResource( 27 )
 
-[sub_resource type="SphereMesh" id=13]
+[sub_resource type="SphereMesh" id=29]
 radius = 0.2
 height = 0.4
 radial_segments = 10
@@ -199,11 +200,11 @@ emission_energy = 500.0
 emission_operator = 0
 emission_on_uv2 = false
 
-[sub_resource type="Curve" id=15]
-_data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 0.852234, 1 ), 0.0, 0.0, 0, 0, Vector2( 1, 0 ), 0.0, 0.0, 0, 0 ]
+[sub_resource type="Curve" id=23]
+_data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 1, 1 ), 0.0, 0.0, 0, 0 ]
 
 [sub_resource type="CurveTexture" id=16]
-curve = SubResource( 15 )
+curve = SubResource( 23 )
 
 [sub_resource type="ParticlesMaterial" id=20]
 resource_local_to_scene = true
@@ -260,7 +261,6 @@ layers = 512
 
 [node name="FrontMeleeAttack" type="MeshInstance" parent="RootPivot/FrontPivot"]
 transform = Transform( 1.38886, 0, 0, 0, 1.38886, 0, 0, 0, 1.38886, 0, 0, -0.398254 )
-visible = false
 layers = 512
 material_override = SubResource( 9 )
 cast_shadow = 0
@@ -269,7 +269,6 @@ material/0 = null
 
 [node name="FrontMeleeAttackVariant" parent="RootPivot/FrontPivot" instance=ExtResource( 12 )]
 transform = Transform( 0.00998566, 0, 0, 0, 0.00998566, 0, 0, 0, 0.00998566, 5.44914e-12, 0, -0.548256 )
-visible = false
 layers = 512
 material_override = SubResource( 10 )
 
@@ -309,36 +308,36 @@ material/0 = SubResource( 5 )
 [node name="MiddleDeathVariant" type="MeshInstance" parent="RootPivot/MiddlePivot"]
 transform = Transform( 0.976267, 0, 0.976267, 0, 1.38065, 0, -0.976267, 0, 0.976267, 0.0821635, 0, 0.104462 )
 visible = false
-material_override = SubResource( 8 )
+material_override = SubResource( 24 )
 cast_shadow = 0
 mesh = SubResource( 4 )
 material/0 = SubResource( 5 )
 
 [node name="MiddleDeathBackParticles" type="Particles" parent="RootPivot"]
-transform = Transform( -6.02636e-08, 0, 1.37867, 0, 1.37867, 0, -1.37867, 0, -6.02636e-08, 0, 0, 0.187088 )
-material_override = SubResource( 9 )
+transform = Transform( -6.02636e-08, 0, 1.37867, 0, 1.37867, 0, -1.37867, 0, -6.02636e-08, 6.51926e-09, 0, 0.162483 )
+material_override = SubResource( 25 )
 cast_shadow = 0
 emitting = false
-amount = 10
+amount = 20
 lifetime = 0.2
 one_shot = true
-explosiveness = 0.2
+explosiveness = 0.7
 randomness = 1.0
-process_material = SubResource( 12 )
-draw_pass_1 = SubResource( 13 )
+process_material = SubResource( 28 )
+draw_pass_1 = SubResource( 29 )
 
 [node name="MiddleDeathFrontParticles" type="Particles" parent="RootPivot"]
-transform = Transform( -6.02636e-08, 0, -1.37867, 0, 1.37867, 0, 1.37867, 0, -6.02636e-08, 0, 0, -0.108128 )
-material_override = SubResource( 9 )
+transform = Transform( -6.02636e-08, 0, -1.37867, 0, 1.37867, 0, 1.37867, 0, -6.02636e-08, 6.51926e-09, 0, -0.0833578 )
+material_override = SubResource( 25 )
 cast_shadow = 0
 emitting = false
-amount = 10
+amount = 20
 lifetime = 0.2
 one_shot = true
-explosiveness = 0.2
+explosiveness = 0.7
 randomness = 1.0
-process_material = SubResource( 12 )
-draw_pass_1 = SubResource( 13 )
+process_material = SubResource( 28 )
+draw_pass_1 = SubResource( 29 )
 
 [node name="BackPivot" type="Spatial" parent="RootPivot"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.566682 )
@@ -395,6 +394,7 @@ middle_scale_extent = 0.5
 
 [node name="DeathAnimator" type="Node" parent="."]
 script = ExtResource( 13 )
+emission_energy_extent = 10.0
 middle_scale_extent = 2.5
 
 [node name="SpawnAnimator" type="Node" parent="."]

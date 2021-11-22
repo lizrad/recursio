@@ -2,6 +2,10 @@
 
 [sub_resource type="SpatialMaterial" id=4]
 resource_local_to_scene = true
+params_billboard_mode = 3
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
 emission_enabled = true
 emission = Color( 1, 0, 0, 1 )
 emission_energy = 500.0

@@ -25,10 +25,12 @@ var _default_color
 var _middle_scale_extents = []
 
 func _ready():
+	var _error =  get_parent().connect("color_scheme_changed",self,"_on_color_scheme_changed")
 	_middle_death_front_particles.lifetime = _max_time
 	_middle_death_back_particles.lifetime = _max_time
 
 func _on_color_scheme_changed(new_color_scheme, timeline_index):
+	print(timeline_index)
 	var wall_index = Constants.get_value("ghosts","wall_placing_timeline_index")
 	var accent_type = "primary" if wall_index != timeline_index else "secondary"
 	var accent_color = Color(Constants.get_value("colors", new_color_scheme+"_"+accent_type+"_accent"))
@@ -94,7 +96,7 @@ func get_keyframe(delta):
 	
 	_middle_death_back_particles.material_override.emission_energy = remapped_ratio * emission_energy_extent
 	_middle_death_front_particles.material_override.emission_energy = remapped_ratio * emission_energy_extent
-	_middle_death_variant.material_override.emission_energy = remapped_ratio * emission_energy_extent
+	_middle_death_variant.material_override.emission_energy = 1+ remapped_ratio * max(0,emission_energy_extent-1)
 	
 	return _keyframes
 
