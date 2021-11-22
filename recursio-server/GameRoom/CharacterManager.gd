@@ -223,7 +223,6 @@ func _remove_ghost(ghost) -> void:
 
 func _on_player_hit(hit_player_id):
 	Logger.info("Player hit!", "attacking")
-	player_dic[hit_player_id].move_to_spawn_point()
 	
 	for player_id in player_dic:
 		Server.send_player_hit(player_id, hit_player_id)

@@ -37,9 +37,10 @@ func get_keyframe(delta):
 	_keyframes[_front_pivot].origin.z = _calculate_position_z(delta, _front_pivot, front_idle_movement_speed, front_idle_movement_offset, front_idle_movement_extent)
 	_keyframes[_back_pivot].origin.z = _calculate_position_z(delta, _back_pivot, back_idle_movement_speed, back_idle_movement_offset, back_idle_movement_extent)
 	
-	_middle_shiver_timer-=delta
-	if _middle_shiver_timer<=0:
-		_keyframes[_middle_pivot].basis = _keyframes[_middle_pivot].basis.rotated(Vector3(0,0,1),_calculate_shiver_angle(delta))
+	#TODO: Not really a fan of how this worked, maybe rework it or maybe just scrap it
+	#_middle_shiver_timer-=delta
+	#if _middle_shiver_timer<=0:
+	#	_keyframes[_middle_pivot].basis = _keyframes[_middle_pivot].basis.rotated(Vector3(0,0,1),_calculate_shiver_angle(delta))
 	return _keyframes
 
 

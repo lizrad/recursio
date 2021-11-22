@@ -1,7 +1,6 @@
 extends Node
 
 var network = NetworkedMultiplayerENet.new()
-var use_local_server = true
 var remote_server_ip = "37.252.189.118"
 var local_server_ip = "127.0.0.1"
 var port = 1909
@@ -62,6 +61,7 @@ func _physics_process(delta):
 
 func connect_to_server():
 	Logger.info("Connecting to server...", "connection")
+	var use_local_server = Constants.get_value("debug","use_local_server")
 	var ip = local_server_ip if use_local_server else remote_server_ip
 	network.create_client(ip, port)
 	get_tree().set_network_peer(network)

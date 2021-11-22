@@ -28,17 +28,16 @@ func _ready():
 	var _error = btn_play_tutorial.connect("pressed", self, "_on_play_tutorial")
 	_error = btn_play_online.connect("pressed", self, "_on_play_online")
 	_error = btn_exit.connect("pressed", self, "_on_exit")
-	
-	
+
 	_error = _game_room_search.connect("btn_create_game_room_pressed", self, "_on_search_create_game_room_pressed")
 	_error = _game_room_search.connect("btn_back_pressed", self, "_on_search_back_pressed")
 	_error = _game_room_search.connect("btn_join_game_room_pressed", self, "_on_join_game_room_pressed")
-	
+
 	_error = _game_room_creation.connect("btn_create_game_room_pressed", self, "_on_creation_create_game_room_pressed")
 	_error = _game_room_creation.connect("btn_back_pressed", self, "_on_creation_back_pressed")
-	
+
 	_error = _game_room_ui.connect("btn_leave_pressed", self, "_on_game_room_leave_pressed")
-	
+
 	_error = Server.connect("game_room_created", self, "_on_game_room_created")
 	_error = Server.connect("game_rooms_received", self, "_on_game_rooms_received")
 	_error = Server.connect("game_room_joined", self, "_on_game_room_joined")
@@ -113,6 +112,8 @@ func _on_game_room_leave_pressed() -> void:
 func _on_game_room_created(game_room_id, game_room_name) -> void:
 	_game_room_search.add_game_room(game_room_id, game_room_name)
 	_game_room_creation.hide()
+
+	Server.send_join_game_room(game_room_id, _character_manager.get_player_user_name())
 
 
 func _on_game_rooms_received(game_room_dic) -> void:

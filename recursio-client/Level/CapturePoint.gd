@@ -2,16 +2,26 @@ extends Spatial
 class_name CapturePoint
 
 onready var neutral_color = Color(Constants.get_value("colors", "neutral"))
+# TODO: better use main schema for all coloring?
+onready var player_color = Color(Constants.get_value("colors", "player_main"))
+onready var enemy_color = Color(Constants.get_value("colors", "enemy_main"))
 onready var player_in_capture_color = Color(Constants.get_value("colors", "player_ghost_primary_accent"))
 onready var player_captured_color = Color(Constants.get_value("colors", "player_ghost_main"))
 onready var enemy_in_capture_color = Color(Constants.get_value("colors", "enemy_ghost_primary_accent"))
 onready var enemy_captured_color = Color(Constants.get_value("colors", "enemy_ghost_main"))
 
+# TODO: should set Sprite3D texture in code because of errors:
+# "get_path: Cannot get path of node as it is not in a scene tree."
+# and "get_node: (Node not found: "Sprite3D/Viewport" (relative to "").)"
+# caused by setup ViewportTexture in Sprite3D
+onready var _progress = $Sprite3D/Viewport/TextureProgress
+
 var active = true
+var player_id :=-1
+
 var _capture_progress = 0
 var _capturing_team = -1
 var _captured_by = -1
-var player_id :=-1
 
 var _local_player_inside := false
 var _local_enemy_inside := false
@@ -29,6 +39,11 @@ func _ready():
 	_capture_speed = Constants.get_value("capture", "capture_speed")
 	_release_speed = Constants.get_value("capture", "release_speed")
 	_recapture_speed = Constants.get_value("capture", "recapture_speed")
+	
+	# TODO: should set Sprite3D texture in code 
+	#var texture = ViewportTexture.new()
+	#texture.set_viewport_path_in_scene("Sprite3D/Viewport")
+	#$Sprite3D.texture = texture
 
 func reset():
 	$MeshInstance.material_override.albedo_color = neutral_color
@@ -66,9 +81,9 @@ func _process(delta):
 		return
 	
 	#cannot reach 1 on client only
-	var local_maxima = 0.95 if _capture_progress<=0.95 else _capture_progress
+	var local_maxima = 0.95 if _capture_progress <= 0.95 else _capture_progress
 	#cannot reach 0 on client only
-	var local_minima = 0.05 if _capture_progress>=0.05 else _capture_progress
+	var local_minima = 0.05 if _capture_progress >= 0.05 else _capture_progress
 	if _local_player_inside:
 		if _capturing_team == -1:
 			set_capturing_player(player_id)
@@ -79,8 +94,8 @@ func _process(delta):
 
 	if _local_enemy_inside:
 		if _capturing_team == -1:
-			#using anything differen from player_id because it doesnt really matter for visual purposes
-			set_capturing_player(player_id+1)
+			#using anything different from player_id because it doesnt really matter for visual purposes
+			set_capturing_player(player_id + 1)
 		elif _capturing_team != player_id:
 			_capture_progress = min(local_maxima, _capture_progress + delta * _capture_speed)
 		else:
@@ -105,15 +120,20 @@ func set_capturing_player(capturing_player_id):
 	_capturing_team = capturing_player_id
 	if capturing_player_id == -1:
 		$MeshInstance.material_override.albedo_color = neutral_color
+		_progress.tint_progress = neutral_color
 	elif capturing_player_id == player_id:
 		$MeshInstance.material_override.albedo_color = player_in_capture_color
+		_progress.tint_progress = player_color
 	else:
 		$MeshInstance.material_override.albedo_color = enemy_in_capture_color
+		_progress.tint_progress = enemy_color
 	
 func set_capture_status(capturing_player_id, capture_progress):
-	Logger.info("Capture progress of " +str(capture_progress)+" received", "capture_point")
+	Logger.info("Capture progress of " + str(capture_progress) + " received", "capture_point")
 	_capture_progress = capture_progress
 	_capturing_team = capturing_player_id
+
+	_progress.value = _capture_progress
 
 func capture_lost(capturing_player_id):
 	_captured_by = -1

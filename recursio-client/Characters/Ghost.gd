@@ -42,7 +42,6 @@ func server_hit():
 	.hit()
 	# TODO: apply death animation and mesh
 	_minimap_icon.set_texture(_minimap_icon_dead)
-	_character_model.visible = false
 
 func enable_body():
 	_kb.visible = true

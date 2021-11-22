@@ -153,6 +153,8 @@ func _on_preparation_phase_started() -> void:
 	_player.clear_walls()
 	_player.clear_past_frames()
 	_player.move_to_spawn_point()
+	_player.toggle_animation(false)
+	_enemy.toggle_animation(false)
 	_stop_ghosts()
 
 	_toggle_visbility_lights(false)
@@ -177,11 +179,23 @@ func _on_preparation_phase_started() -> void:
 
 
 func _on_countdown_phase_started() -> void:
+	_game_manager.toggle_spawn_points(false)
 	# Delete ghost path visualization
 	for timeline_index in _player_ghosts:
 		_player_ghosts[timeline_index].delete_path()
+	_player.toggle_animation(true)
+	_enemy.toggle_animation(true)
+	_toggle_ghost_animation(true)
 	_player.follow_camera()
 	_player.show_countdown_hud()
+	var countdown_phase_seconds = Constants.get_value("gameplay","countdown_phase_seconds")
+	var spawn_time = Constants.get_value("gameplay","spawn_time")
+	_player.visual_kill()
+	_player.visual_delayed_spawn(countdown_phase_seconds-spawn_time)
+	_enemy.visual_kill()
+	_enemy.visual_delayed_spawn(countdown_phase_seconds-spawn_time)
+	_visual_kill_ghosts()
+	_visual_delay_spawn_ghosts(countdown_phase_seconds-spawn_time)
 	_game_manager.show_countdown_screen()
 	# Send currently selected timeline to server
 	Server.send_timeline_pick(_player.timeline_index)
@@ -271,6 +285,7 @@ func _on_spawn_player(player_id, spawn_point, team_id):
 	_player.team_id = team_id
 	_player.player_id = player_id
 	_player.set_name(str(player_id))
+	_player.toggle_animation(false)
 	_game_manager.set_team_id(team_id)
 	# Apply visibility mask to all entities which have been here before the player
 	_apply_visibility_always(_player)
@@ -290,6 +305,7 @@ func _on_spawn_enemy(enemy_id, spawn_point):
 	_enemy = _spawn_character(_enemy_scene, spawn_point)
 	_enemy.enemy_init(_action_manager)
 	_enemy.set_name(str(enemy_id))
+	_enemy.toggle_animation(false)
 	_apply_visibility_mask(_enemy)
 
 
@@ -381,18 +397,40 @@ func _create_enemy_ghost(record_data):
 	return ghost
 
 
+func _visual_kill_ghosts() -> void:
+	for timeline_id in _enemy_ghosts:
+		_enemy_ghosts[timeline_id].visual_kill()
+	for timeline_id in _player_ghosts:
+		_player_ghosts[timeline_id].visual_kill()
+
+func _toggle_ghost_animation(value) -> void:
+	for timeline_id in _enemy_ghosts:
+		_enemy_ghosts[timeline_id].toggle_animation(value)
+	for timeline_id in _player_ghosts:
+		_player_ghosts[timeline_id].toggle_animation(value)
+
+func _visual_delay_spawn_ghosts(delay) -> void:
+	for timeline_id in _enemy_ghosts:
+		_enemy_ghosts[timeline_id].visual_delayed_spawn(delay)
+	for timeline_id in _player_ghosts:
+		_player_ghosts[timeline_id].visual_delayed_spawn(delay)
+
 func _start_ghosts() -> void:
 	for timeline_id in _enemy_ghosts:
 		_enemy_ghosts[timeline_id].start_playing(Server.get_server_time())
+		_enemy_ghosts[timeline_id].toggle_animation(true)
 	for timeline_id in _player_ghosts:
 		_player_ghosts[timeline_id].start_playing(Server.get_server_time())
+		_player_ghosts[timeline_id].toggle_animation(true)
 
 
 func _stop_ghosts() -> void:
 	for timeline_id in _enemy_ghosts:
 		_enemy_ghosts[timeline_id].stop_playing()
+		_enemy_ghosts[timeline_id].toggle_animation(false)
 	for timeline_id in _player_ghosts:
 		_player_ghosts[timeline_id].stop_playing()
+		_player_ghosts[timeline_id].toggle_animation(false)
 
 
 func _enable_ghosts() -> void:

@@ -2,10 +2,15 @@ extends Node
 class_name CharacterBase
 
 signal hit()
+signal dying()
+signal spawning()
 signal velocity_changed(velocity, front_vector, right_vector)
 signal timeline_index_changed(timeline_index)
 signal action_status_changed(action_type, status)
+signal animation_status_changed(status)
 
+var currently_dying: bool = false setget set_dying
+var currently_spawning: bool = false setget set_spawning
 var player_id: int
 # The team id defines which side the player starts on
 var team_id: int = -1
@@ -31,11 +36,35 @@ onready var _kb: KinematicBody = get_node("KinematicBody")
 onready var _collision_shape: CollisionShape = get_node("KinematicBody/CollisionShape")
 
 var _action_manager
+var _death_timer
+var _auto_respawn_on_death = false
+var _spawn_timer
 
+
+var _spawn_imminent = false;
+var _spawn_deadline = -1;
+
+func _ready():
+	_death_timer = Timer.new()
+	_spawn_timer = Timer.new()
+	_death_timer.wait_time = Constants.get_value("gameplay", "death_time")
+	_spawn_timer.wait_time = Constants.get_value("gameplay", "spawn_time")
+	_death_timer.one_shot = true
+	_spawn_timer.one_shot = true
+	_death_timer.connect("timeout", self, "_on_death_timer_timeout")
+	_spawn_timer.connect("timeout", self, "_on_spawn_timer_timeout")
+	add_child(_death_timer)
+	add_child(_spawn_timer)
+
+func _process(delta):
+	if _spawn_imminent:
+		_spawn_deadline -= delta
+		if _spawn_deadline <= 0:
+			_spawn_imminent = false
+			emit_signal("spawning")
 
 func character_base_init(action_manager) -> void:
 	_action_manager = action_manager
-
 
 func reset() -> void:
 	self.velocity = Vector3.ZERO
@@ -78,12 +107,43 @@ func set_timeline_index(new_timeline_index: int):
 	timeline_index = new_timeline_index
 	emit_signal("timeline_index_changed", new_timeline_index)
 
-
 func hit() -> void:
 	emit_signal("hit")
+	set_dying(true)
 
+func set_dying(new_dying_status: bool):
+	Logger.info("Setting currently_dying to "+str(new_dying_status)+".", "death_and_spawn")
+	currently_dying = new_dying_status
+	if currently_dying:
+		_collision_shape.disabled = true
+		_death_timer.start()
+		emit_signal("dying")
+
+func _on_death_timer_timeout():
+	Logger.info("Death timer timeout.", "death_and_spawn")
+	set_dying(false)
+	if _auto_respawn_on_death:
+		set_spawning(true)
+
+func set_spawning(new_spawning_status: bool):
+	Logger.info("Setting currently_spawning to "+str(new_spawning_status)+".", "death_and_spawn")
+	currently_spawning = new_spawning_status
+	if currently_spawning:
+		move_to_spawn_point()
+		_spawn_timer.start()
+		emit_signal("spawning")
+
+func _on_spawn_timer_timeout():
+	Logger.info("Spawn timer timeout.", "death_and_spawn")
+	_collision_shape.disabled = false
+	set_spawning(false)
+
+func toggle_animation(value):
+	emit_signal("animation_status_changed", value)
 
 func trigger_actions(buttons: int) -> void:
+	if currently_dying or currently_spawning:
+		return
 	# Go through buttons and trigger actions for them
 	var number_of_bits = log(buttons) / log(2) + 1
 	for bit_index in number_of_bits:
@@ -120,3 +180,10 @@ func get_body():
 
 func wall_spawned(_wall):
 	pass
+
+func visual_delayed_spawn(delay: float):
+	_spawn_imminent = true
+	_spawn_deadline = delay
+
+func visual_kill():
+	emit_signal("dying")

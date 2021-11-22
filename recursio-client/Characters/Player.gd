@@ -4,7 +4,8 @@ class_name Player
 signal initialized()
 
 onready var _hud: HUD = get_node("KinematicBody/HUD")
-onready var _selector = get_node("KinematicBody/Selector")
+onready var _selector_left = get_node("KinematicBody/Selector/SelectorLeft")
+onready var _selector_right = get_node("KinematicBody/Selector/SelectorRight")
 onready var _light_viewport = get_node("KinematicBody/LightViewport")
 onready var _overview_light = get_node("KinematicBody/TransformReset/OverviewLight")
 onready var _overview_target = get_node("KinematicBody/TransformReset/OverviewTarget")
@@ -12,6 +13,7 @@ onready var _lerped_follow: LerpedFollow = get_node("KinematicBody/AsciiViewport
 onready var _view_target = get_node("KinematicBody/ViewTarget")
 onready var _visibility_light = get_node("KinematicBody/VisibilityLight")
 onready var _button_overlay: ButtonOverlay = get_node("KinematicBody/ButtonOverlay")
+onready var _aim_visuals = get_node("KinematicBody/AimVisuals")
 
 var _walls = []
 var _past_frames = {}
@@ -36,6 +38,8 @@ func reset() -> void:
 	.reset()
 	clear_past_frames()
 	_hud.reset()
+	_selector_left.deactivate()
+	_selector_right.deactivate()
 
 func clear_past_frames():
 	_past_frames.clear()
@@ -54,6 +58,19 @@ func apply_input(movement_vector: Vector3, rotation_vector: Vector3, buttons: in
 		var frame = MovementFrame.new()
 		frame.position = self.position
 		_past_frames[Server.get_server_time()] = frame
+
+	# visual appearance for aim_mode
+	# TODO: update drag_factor
+	# _drag_factor = 2*Constants.get_value("movement", "drag_factor") -> needs to be updated also on server
+	if aim_mode:
+		var action = _get_action(ActionManager.Trigger.FIRE_START, timeline_index) as Action
+		if action.ammunition > 0:
+			_aim_visuals.visible = true
+			_aim_visuals.get_child(timeline_index % 2).visible = aim_mode
+	elif _aim_visuals.visible:
+		_aim_visuals.visible = false
+		for child in _aim_visuals.get_children():
+			child.visible = false
 
 
 # OVERRIDE #
@@ -126,14 +143,19 @@ func update_capture_point_hud(capture_points: Array) -> void:
 		_hud.update_capture_point(index, capture_point.get_capture_progress(), capture_point.get_capture_team())
 		index += 1
 
+
 func show_preparation_hud(round_index) -> void:
-	_selector.show()
+	if team_id == 0:
+		_selector_right.activate()
+	else:
+		_selector_left.activate()
 	_hud.prep_phase_start(round_index)
 	_button_overlay.show_buttons(["ready!", "swap"], ButtonOverlay.BUTTONS.DOWN | ButtonOverlay.BUTTONS.RIGHT, ButtonOverlay.BUTTONS.DOWN)
 
 
 func show_countdown_hud() -> void:
-	_selector.hide()
+	_selector_left.deactivate()
+	_selector_right.deactivate()
 	_hud.countdown_phase_start()
 	_button_overlay.hide_buttons()
 
@@ -147,10 +169,10 @@ func get_button_overlay() -> ButtonOverlay:
 
 
 func handle_server_update(position, time):
-	
+
 	_last_server_position = position
 	_last_server_time = time
-	
+
 	# Find the most fitting timestamp
 	var time_with_data = time
 	var closest_frame = null
@@ -160,11 +182,11 @@ func handle_server_update(position, time):
 			closest_frame = _past_frames[time_with_data]
 		else:
 			time_with_data -= 1
-		
+
 		# Exit condition (e.g. for the first time)
 		if time - time_with_data > 100:
 			break
-	
+
 	if closest_frame:
 		# Get value we had at that time
 		var position_diff = position - closest_frame.position

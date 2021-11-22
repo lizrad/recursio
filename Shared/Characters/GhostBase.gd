@@ -10,7 +10,7 @@ var _start_time: int = -1
 
 func ghost_base_init(action_manager, record_data: RecordData) -> void:
 	_record_data = RecordData.new().copy(record_data)
-	timeline_index = record_data.timeline_index
+	self.timeline_index = record_data.timeline_index
 	.character_base_init(action_manager)
 
 
@@ -44,7 +44,7 @@ func _physics_process(_delta):
 # Stops the ghost and triggers the base classes hit function
 # OVERRIDE #
 func hit() -> void:
-	stop_playing()
+	_is_playing = false
 	.hit()
 
 
@@ -58,11 +58,7 @@ func start_playing(start_time: int) -> void:
 # Stops moving the ghost and disables collision
 func stop_playing() -> void:
 	_is_playing = false
-	
-	# Move down to call collision exits
-	_kb.transform.origin.y -= 20
 	_collision_shape.disabled = true
-	_kb.transform.origin.y += 20
 
 
 # Applies the given frame
