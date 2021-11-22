@@ -199,12 +199,12 @@ func _on_countdown_phase_started() -> void:
 	_player.show_countdown_hud()
 	var countdown_phase_seconds = Constants.get_value("gameplay","countdown_phase_seconds")
 	var spawn_time = Constants.get_value("gameplay","spawn_time")
-	_player.kill()
-	_player.delayed_spawn(countdown_phase_seconds-spawn_time)
-	_enemy.kill()
-	_enemy.delayed_spawn(countdown_phase_seconds-spawn_time)
-	_kill_ghosts()
-	_delay_spawn_ghosts(countdown_phase_seconds-spawn_time)
+	_player.visual_kill()
+	_player.visual_delayed_spawn(countdown_phase_seconds-spawn_time)
+	_enemy.visual_kill()
+	_enemy.visual_delayed_spawn(countdown_phase_seconds-spawn_time)
+	_visual_kill_ghosts()
+	_visual_delay_spawn_ghosts(countdown_phase_seconds-spawn_time)
 	_game_manager.show_countdown_screen()
 	# Send currently selected timeline to server
 	Server.send_timeline_pick(_player.timeline_index)
@@ -407,11 +407,11 @@ func _create_enemy_ghost(record_data):
 	return ghost
 
 
-func _kill_ghosts() -> void:
+func _visual_kill_ghosts() -> void:
 	for timeline_id in _enemy_ghosts:
-		_enemy_ghosts[timeline_id].kill()
+		_enemy_ghosts[timeline_id].visual_kill()
 	for timeline_id in _player_ghosts:
-		_player_ghosts[timeline_id].kill()
+		_player_ghosts[timeline_id].visual_kill()
 
 func _toggle_ghost_animation(value) -> void:
 	for timeline_id in _enemy_ghosts:
@@ -419,11 +419,11 @@ func _toggle_ghost_animation(value) -> void:
 	for timeline_id in _player_ghosts:
 		_player_ghosts[timeline_id].toggle_animation(value)
 
-func _delay_spawn_ghosts(delay) -> void:
+func _visual_delay_spawn_ghosts(delay) -> void:
 	for timeline_id in _enemy_ghosts:
-		_enemy_ghosts[timeline_id].delayed_spawn(delay)
+		_enemy_ghosts[timeline_id].visual_delayed_spawn(delay)
 	for timeline_id in _player_ghosts:
-		_player_ghosts[timeline_id].delayed_spawn(delay)
+		_player_ghosts[timeline_id].visual_delayed_spawn(delay)
 
 func _start_ghosts() -> void:
 	for timeline_id in _enemy_ghosts:

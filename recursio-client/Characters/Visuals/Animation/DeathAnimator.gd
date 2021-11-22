@@ -99,7 +99,6 @@ func get_keyframe(delta):
 	return _keyframes
 
 func _stop_animation():
-	print("a;lskdfja;lsj")
 	_front_pivot.visible = false
 	_middle_pivot.visible = false
 	_back_pivot.visible = false

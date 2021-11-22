@@ -44,17 +44,6 @@ var _spawn_timer
 var _spawn_imminent = false;
 var _spawn_deadline = -1;
 
-
-func _process(delta):
-	if _spawn_imminent:
-		_spawn_deadline -= delta
-		if _spawn_deadline <= 0:
-			_spawn_imminent = false
-			emit_signal("spawning")
-
-func character_base_init(action_manager) -> void:
-	_action_manager = action_manager
-
 func _ready():
 	_death_timer = Timer.new()
 	_spawn_timer = Timer.new()
@@ -66,6 +55,16 @@ func _ready():
 	_spawn_timer.connect("timeout", self, "_on_spawn_timer_timeout")
 	add_child(_death_timer)
 	add_child(_spawn_timer)
+
+func _process(delta):
+	if _spawn_imminent:
+		_spawn_deadline -= delta
+		if _spawn_deadline <= 0:
+			_spawn_imminent = false
+			emit_signal("spawning")
+
+func character_base_init(action_manager) -> void:
+	_action_manager = action_manager
 
 func reset() -> void:
 	self.velocity = Vector3.ZERO
@@ -182,9 +181,9 @@ func get_body():
 func wall_spawned(_wall):
 	pass
 
-func delayed_spawn(delay: float):
+func visual_delayed_spawn(delay: float):
 	_spawn_imminent = true
 	_spawn_deadline = delay
 
-func kill():
+func visual_kill():
 	emit_signal("dying")
