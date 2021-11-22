@@ -9,10 +9,25 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "Resource",
+"class": "Action",
+"language": "GDScript",
+"path": "res://Shared/Actions/Action.gd"
+}, {
+"base": "Node",
+"class": "ActionManager",
+"language": "GDScript",
+"path": "res://Shared/Actions/ActionManager.gd"
+}, {
 "base": "Spatial",
 "class": "CapturePoint",
 "language": "GDScript",
 "path": "res://Level/CapturePoint.gd"
+}, {
+"base": "Node",
+"class": "CharacterBase",
+"language": "GDScript",
+"path": "res://Shared/Characters/CharacterBase.gd"
 }, {
 "base": "Node",
 "class": "CharacterManager",
@@ -39,10 +54,75 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://GameRoom/GameRoomWorld.gd"
 }, {
+"base": "CharacterBase",
+"class": "GhostBase",
+"language": "GDScript",
+"path": "res://Shared/Characters/GhostBase.gd"
+}, {
+"base": "Object",
+"class": "InputData",
+"language": "GDScript",
+"path": "res://Shared/Input/InputData.gd"
+}, {
+"base": "Object",
+"class": "InputFrame",
+"language": "GDScript",
+"path": "res://Shared/Input/InputFrame.gd"
+}, {
+"base": "Spatial",
+"class": "Level",
+"language": "GDScript",
+"path": "res://Shared/Level/Level.gd"
+}, {
+"base": "CharacterBase",
+"class": "PlayerBase",
+"language": "GDScript",
+"path": "res://Shared/Characters/PlayerBase.gd"
+}, {
+"base": "Object",
+"class": "PlayerState",
+"language": "GDScript",
+"path": "res://Shared/Player/PlayerState.gd"
+}, {
+"base": "Object",
+"class": "RecordData",
+"language": "GDScript",
+"path": "res://Shared/Recording/RecordData.gd"
+}, {
+"base": "Object",
+"class": "RecordFrame",
+"language": "GDScript",
+"path": "res://Shared/Recording/RecordFrame.gd"
+}, {
+"base": "Object",
+"class": "RecordManager",
+"language": "GDScript",
+"path": "res://Shared/Recording/RecordManager.gd"
+}, {
+"base": "Object",
+"class": "RingBuffer",
+"language": "GDScript",
+"path": "res://Shared/Input/Ringbuffer.gd"
+}, {
+"base": "Node",
+"class": "RoundManager",
+"language": "GDScript",
+"path": "res://Shared/RoundManager.gd"
+}, {
 "base": "Node",
 "class": "Server",
 "language": "GDScript",
 "path": "res://Globals/Server.gd"
+}, {
+"base": "Object",
+"class": "StaticInput",
+"language": "GDScript",
+"path": "res://Shared/Input/StaticInput.gd"
+}, {
+"base": "Object",
+"class": "WorldState",
+"language": "GDScript",
+"path": "res://Shared/Player/WorldState.gd"
 }, {
 "base": "Node",
 "class": "WorldStateManager",
@@ -50,13 +130,29 @@ _global_script_classes=[ {
 "path": "res://GameRoom/WorldStateManager.gd"
 } ]
 _global_script_class_icons={
+"Action": "",
+"ActionManager": "",
 "CapturePoint": "",
+"CharacterBase": "",
 "CharacterManager": "",
 "GameManager": "",
 "GameRoom": "",
 "GameRoomManager": "",
 "GameRoomWorld": "",
+"GhostBase": "",
+"InputData": "",
+"InputFrame": "",
+"Level": "",
+"PlayerBase": "",
+"PlayerState": "",
+"RecordData": "",
+"RecordFrame": "",
+"RecordManager": "",
+"RingBuffer": "",
+"RoundManager": "",
 "Server": "",
+"StaticInput": "",
+"WorldState": "",
 "WorldStateManager": ""
 }
 
@@ -71,7 +167,7 @@ config/icon="res://icon.png"
 
 Logger="*res://addons/recursio-loggerplugin/Logger.gd"
 LoggerPluginSingleton="*res://addons/recursio-loggerplugin/LoggerPluginSingleton.gd"
-Constants="*res://Level/Shared/Constants.gd"
+Constants="*res://Shared/Constants.gd"
 
 [editor_plugins]
 

@@ -3,6 +3,7 @@ class_name GameRoom
 
 export(PackedScene) var game_room_world_scene
 export(PackedScene) var level_scene
+export(PackedScene) var capture_point_scene
 
 signal world_state_updated(world_state, game_room_id)
 
@@ -22,12 +23,15 @@ var _player_count:int = 0
 var _player_levels_loaded := {}
 
 var _game_room_world: GameRoomWorld
+var _game_room_world_exists = false
 
 
 func spawn_world():
 	_game_room_world = game_room_world_scene.instance()
 	self.add_child(_game_room_world)
+	_game_room_world_exists = true
 	var level = level_scene.instance()
+	level.capture_point_scene = capture_point_scene
 	_game_room_world.add_child(level)
 	_game_room_world.set_level(level)
 	
@@ -57,6 +61,7 @@ func spawn_world():
 func despawn_world():
 	_game_room_players_ready.clear()
 	_game_room_world.queue_free()
+	_game_room_world_exists = false
 
 
 func get_game_room_players() -> Dictionary:
@@ -111,15 +116,18 @@ func handle_player_level_loaded(player_id):
 
 
 func update_player_input_data(player_id, input_data: InputData):
-	_game_room_world.update_player_input_data(player_id, input_data)
+	if _game_room_world_exists:
+		_game_room_world.update_player_input_data(player_id, input_data)
 
 
 func handle_player_ready(player_id):
-	_game_room_world.handle_player_ready(player_id)
+	if _game_room_world_exists:
+		_game_room_world.handle_player_ready(player_id)
 
 
 func handle_ghost_pick(player_id, timeline_index):
-	_game_room_world.handle_ghost_pick(player_id, timeline_index)
+	if _game_room_world_exists:
+		_game_room_world.handle_ghost_pick(player_id, timeline_index)
 
 
 func _on_world_state_updated(world_state):

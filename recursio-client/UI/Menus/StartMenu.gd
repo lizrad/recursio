@@ -150,7 +150,7 @@ func _on_load_level_received():
 	add_child(_world)
 
 
-func _on_game_result_received():
+func _on_game_result_received(winning_player_id):
 	yield(get_tree().create_timer(3), "timeout")
 	_world.queue_free()
 	$CenterContainer.show()
