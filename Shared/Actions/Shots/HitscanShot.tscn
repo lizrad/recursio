@@ -30,14 +30,14 @@ emission_on_uv2 = false
 [sub_resource type="Curve" id=4]
 _data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 1, 0 ), -2.20433, 0.0, 0, 0 ]
 
-[sub_resource type="CurveTexture" id=5]
+[sub_resource type="CurveTexture" id=9]
 curve = SubResource( 4 )
 
 [sub_resource type="ParticlesMaterial" id=6]
 spread = 15.0
 gravity = Vector3( 0, 0, 0 )
 initial_velocity = 30.0
-scale_curve = SubResource( 5 )
+scale_curve = SubResource( 9 )
 
 [sub_resource type="SphereMesh" id=7]
 radius = 0.2

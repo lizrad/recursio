@@ -63,6 +63,10 @@ func get_capture_points() -> Array:
 	return _level.get_capture_points()
 
 
+func toggle_spawn_points(toggle: bool) -> void:
+	_level.toggle_spawn_points(toggle)
+	
+	
 func toggle_capture_points(toggle: bool) -> void:
 	_level.toggle_capture_points(toggle)
 
@@ -76,6 +80,7 @@ func reset() -> void:
 	# Reset level
 	_level.reset()
 	_level.toggle_capture_points(false)
+	_level.toggle_spawn_points(true)
 
 
 func _on_capture_point_captured(capturing_player_id, capture_point):

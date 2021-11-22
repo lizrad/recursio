@@ -10,6 +10,9 @@ extends BaseAnimator
 #		-Death
 #		-Spawn
 
+signal death_animation_over
+signal spawn_animation_over
+
 onready var idle_animator = get_node("../IdleAnimator")
 onready var turn_animator = get_node("../TurnAnimator")
 onready var move_animator = get_node("../MoveAnimator")
@@ -17,7 +20,10 @@ onready var dash_animator = get_node("../DashAnimator")
 onready var hitscan_animator = get_node("../HitscanAnimator")
 onready var wall_animator = get_node("../WallAnimator")
 onready var melee_animator = get_node("../MeleeAnimator")
+onready var death_animator = get_node("../DeathAnimator")
+onready var spawn_animator = get_node("../SpawnAnimator")
 
+var _animation_active = false;
 var _animation_status = {}
 var _action_animations = {}
 var _priority_sorted = []
@@ -47,18 +53,36 @@ func _ready():
 	_animation_status[melee_animator] = false
 	_priority_sorted.append(melee_animator)
 	_action_animations[ActionManager.ActionType.MELEE] = melee_animator
+	
+	_animation_status[death_animator] = false
+	_priority_sorted.append(death_animator)
+	
+	_animation_status[spawn_animator] = false
+	_priority_sorted.append(spawn_animator)
 
+func toggle_animation(value):
+	_animation_active = value;
 
 func action_status_changed(action_type, status):
 	Logger.debug("Status of " + str(action_type) + " changed to " + str(status), "animation")
 	var animator = _action_animations[action_type]
 	if status and not _animation_status[animator] :
-		animator.connect("animation_over", self, "_stop_animation", [animator])
+		var _error = animator.connect("animation_over", self, "_stop_animation", [animator])
 		animator.start_animation()
 		_animation_status[animator] = true
 	else:
 		if animator.has_method("stop_animation"):
 			animator.stop_animation()
+
+func death_active():
+	death_animator.start_animation()
+	_animation_status[death_animator]=true
+	death_animator.connect("animation_over", self, "_stop_death_animation")
+
+func spawn_active():
+	spawn_animator.start_animation()
+	_animation_status[spawn_animator]=true
+	spawn_animator.connect("animation_over", self, "_stop_spawn_animation")
 
 func velocity_changed(velocity, front_vector, right_vector):
 	#because movement only aproaches 0 asymptotically
@@ -79,15 +103,27 @@ func velocity_changed(velocity, front_vector, right_vector):
 
 func _process(delta):
 	_reset_keyframes()
-	for animator in _priority_sorted:
-		if _animation_status[animator]:
-			_keyframes = combine_keyframes(_keyframes,animator.get_keyframe(delta),1)
+	if _animation_active:
+		for animator in _priority_sorted:
+			if _animation_status[animator]:
+				_keyframes = combine_keyframes(_keyframes,animator.get_keyframe(delta),1)
 	_apply_keyframes(_keyframes)
 
 func _stop_animation(animator):
 	animator.disconnect("animation_over", self, "_stop_animation")
 	_animation_status[animator] = false
 
+
+func _stop_death_animation():
+	death_animator.disconnect("animation_over", self, "_stop_death_animation")
+	_animation_status[death_animator] = false
+	emit_signal("death_animation_over")
+
+func _stop_spawn_animation():
+	spawn_animator.disconnect("animation_over", self, "_stop_spawn_animation")
+	_animation_status[spawn_animator] = false
+	emit_signal("spawn_animation_over")
+	
 func combine_keyframes(a,b,t):
 	var keyframes = {}
 	if not a:
