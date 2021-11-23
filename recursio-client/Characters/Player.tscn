@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=2]
+[gd_scene load_steps=25 format=2]
 
 [ext_resource path="res://Shared/Characters/PlayerBase.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Characters/Player.gd" type="Script" id=2]
@@ -26,6 +26,9 @@ emission = Color( 1, 0.482353, 0.929412, 1 )
 emission_energy = 1.61
 emission_operator = 0
 emission_on_uv2 = false
+
+[sub_resource type="CapsuleShape" id=1]
+height = 0.4
 
 [sub_resource type="SpatialMaterial" id=3]
 resource_local_to_scene = true
@@ -84,6 +87,11 @@ script = ExtResource( 17 )
 speed = 3.0
 min_positon = Vector3( 1.75, 0, 0 )
 max_positon = Vector3( 2, 0, 0 )
+
+[node name="CollisionShape" parent="KinematicBody" index="1"]
+transform = Transform( 0.75, 0, 0, 0, 0.75, -1.06581e-14, 0, -3.90799e-14, 1, 0, 0, 0 )
+visible = false
+shape = SubResource( 1 )
 
 [node name="CharacterModel" parent="KinematicBody" index="2" instance=ExtResource( 10 )]
 transform = Transform( -1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0 )
@@ -204,6 +212,7 @@ script = ExtResource( 8 )
 
 [node name="MiniMapSprite" type="Sprite3D" parent="KinematicBody" index="11"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.07854, 0 )
+visible = false
 layers = 8
 axis = 1
 texture = ExtResource( 12 )
@@ -225,7 +234,7 @@ margin_bottom = 527.664
 visible = false
 
 [node name="Hitscan" type="MeshInstance" parent="KinematicBody/AimVisuals" index="0"]
-transform = Transform( 0.01, 0, 0, 0, -2.18557e-07, -0.01, 0, 5, -4.37114e-10, 0, 0, -5 )
+transform = Transform( 0.01, 0, 0, 0, 0, -0.01, 0, 5, 0, 0, 0, -6 )
 visible = false
 layers = 512
 material_override = SubResource( 3 )
