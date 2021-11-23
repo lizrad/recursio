@@ -11,7 +11,7 @@ onready var btn_exit = get_node("CenterContainer/MainMenu/Btn_Exit")
 
 onready var _game_room_search: GameRoomSearch = get_node("CenterContainer/GameRoomSearch")
 onready var _game_room_creation: GameRoomCreation = get_node("CenterContainer/GameRoomCreation")
-onready var _game_room_ui: GameRoomUI = get_node("CenterContainer/GameRoom")
+onready var _game_room_lobby: GameRoomLobby = get_node("CenterContainer/GameRoom")
 
 onready var _debug_room = Constants.get_value("debug", "debug_room_enabled")
 
@@ -36,7 +36,7 @@ func _ready():
 	_error = _game_room_creation.connect("btn_create_game_room_pressed", self, "_on_creation_create_game_room_pressed")
 	_error = _game_room_creation.connect("btn_back_pressed", self, "_on_creation_back_pressed")
 
-	_error = _game_room_ui.connect("btn_leave_pressed", self, "_on_game_room_leave_pressed")
+	_error = _game_room_lobby.connect("btn_leave_pressed", self, "_on_game_room_leave_pressed")
 
 	_error = Server.connect("game_room_created", self, "_on_game_room_created")
 	_error = Server.connect("game_rooms_received", self, "_on_game_rooms_received")
@@ -121,7 +121,7 @@ func _on_game_rooms_received(game_room_dic) -> void:
 
 
 func _on_game_room_joined(player_id_name_dic, game_room_id):
-	_game_room_ui.set_players(player_id_name_dic, _player_rpc_id)
+	_game_room_lobby.set_players(player_id_name_dic, _player_rpc_id)
 	
 	if _in_game_room:
 		return
@@ -129,20 +129,20 @@ func _on_game_room_joined(player_id_name_dic, game_room_id):
 	
 	_game_room_creation.hide()
 	_game_room_search.hide()
-	_game_room_ui.show()
-	_game_room_ui.init(game_room_id, _game_room_search.get_game_room_name(game_room_id))
+	_game_room_lobby.show()
+	_game_room_lobby.init(game_room_id, _game_room_search.get_game_room_name(game_room_id))
 
 
 func _on_game_room_ready_received(player_id):
 	if player_id == _player_rpc_id:
-		_game_room_ui.switch_to_not_ready_button()
-	_game_room_ui.set_player_ready(player_id, true)
+		_game_room_lobby.switch_to_not_ready_button()
+	_game_room_lobby.set_player_ready(player_id, true)
 
 
 func _on_game_room_not_ready_received(player_id):
 	if player_id == _player_rpc_id:
-		_game_room_ui.switch_to_ready_button()
-	_game_room_ui.set_player_ready(player_id, false)
+		_game_room_lobby.switch_to_ready_button()
+	_game_room_lobby.set_player_ready(player_id, false)
 
 
 func _on_load_level_received():

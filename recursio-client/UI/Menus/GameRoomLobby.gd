@@ -1,5 +1,5 @@
 extends PanelContainer
-class_name GameRoomUI
+class_name GameRoomLobby
 
 export var icon_ready: Texture
 export var icon_not_ready: Texture
