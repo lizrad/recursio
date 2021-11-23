@@ -11,7 +11,7 @@ onready var btn_exit = get_node("CenterContainer/MainMenu/Btn_Exit")
 
 onready var _game_room_search: GameRoomSearch = get_node("CenterContainer/GameRoomSearch")
 onready var _game_room_creation: GameRoomCreation = get_node("CenterContainer/GameRoomCreation")
-onready var _game_room_lobby: GameRoomLobby = get_node("CenterContainer/GameRoom")
+onready var _game_room_lobby: GameRoomLobby = get_node("CenterContainer/GameRoomLobby")
 
 onready var _debug_room = Constants.get_value("debug", "debug_room_enabled")
 
@@ -113,7 +113,7 @@ func _on_game_room_created(game_room_id, game_room_name) -> void:
 	_game_room_search.add_game_room(game_room_id, game_room_name)
 	_game_room_creation.hide()
 
-	Server.send_join_game_room(game_room_id, _character_manager.get_player_user_name())
+	Server.send_join_game_room(game_room_id, _player_rpc_id)
 
 
 func _on_game_rooms_received(game_room_dic) -> void:
@@ -135,13 +135,13 @@ func _on_game_room_joined(player_id_name_dic, game_room_id):
 
 func _on_game_room_ready_received(player_id):
 	if player_id == _player_rpc_id:
-		_game_room_lobby.switch_to_not_ready_button()
+		_game_room_lobby.toggle_ready_button(true)
 	_game_room_lobby.set_player_ready(player_id, true)
 
 
 func _on_game_room_not_ready_received(player_id):
 	if player_id == _player_rpc_id:
-		_game_room_lobby.switch_to_ready_button()
+		_game_room_lobby.toggle_ready_button(false)
 	_game_room_lobby.set_player_ready(player_id, false)
 
 
@@ -154,5 +154,6 @@ func _on_load_level_received():
 func _on_game_result_received(winning_player_id):
 	yield(get_tree().create_timer(3), "timeout")
 	_world.queue_free()
+	_game_room_lobby.reset()
 	$CenterContainer.show()
 

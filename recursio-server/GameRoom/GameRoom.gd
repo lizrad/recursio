@@ -18,12 +18,16 @@ var _player_id_user_name_dic: Dictionary = {}
 var _player_id_to_team_id = {}
 var _team_id_to_player_id = {}
 
-var _player_count:int = 0
+var _player_count: int = 0
 
 var _player_levels_loaded := {}
 
 var _game_room_world: GameRoomWorld
 var _game_room_world_exists = false
+
+
+func get_player_count():
+	return _player_count
 
 
 func spawn_world():
