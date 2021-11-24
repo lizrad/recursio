@@ -30,6 +30,10 @@ func get_player_count():
 	return _player_count
 
 
+func get_game_room_world_exists():
+	return _game_room_world_exists
+
+
 func spawn_world():
 	_game_room_world = game_room_world_scene.instance()
 	self.add_child(_game_room_world)

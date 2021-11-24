@@ -14,7 +14,9 @@ var delta_latency: int = 0
 var decimal_collector: float = 0.0
 var latency_array = []
 
-signal successfully_connected()
+signal connection_successful()
+signal connection_failed()
+signal server_disconnected()
 signal spawning_enemy(enemy_id, spawn_point)
 signal despawning_enemy(enemy_id)
 signal spawning_player(player_id, spawn_point)
@@ -34,7 +36,7 @@ signal wall_spawn (position, rotation, wall_index)
 signal phase_switch_received(round_index,next_phase, switch_time)
 signal game_start_received(start_time)
 
-
+var _clock_update_timer
 
 
 #########################
@@ -52,7 +54,6 @@ signal load_level_received()
 
 func _ready():
 	set_physics_process(false)
-	connect_to_server()
 
 
 func _physics_process(delta):
@@ -67,6 +68,25 @@ func connect_to_server():
 	get_tree().set_network_peer(network)
 	var _error = get_tree().connect("connection_failed", self, "_on_connection_failed")
 	_error = get_tree().connect("connected_to_server", self, "_on_connection_succeeded")
+	_error = get_tree().connect("server_disconnected", self, "_on_server_disconnected")
+
+
+func disconnect_from_server():
+	Logger.info("Disconnecting from server", "connection")
+	set_physics_process(false)
+	get_tree().network_peer = null
+	var _error = get_tree().disconnect("connection_failed", self, "_on_connection_failed")
+	_error = get_tree().disconnect("connected_to_server", self, "_on_connection_succeeded")
+	_error = get_tree().disconnect("server_disconnected", self, "_on_server_disconnected")
+	# Reset variables
+	latency = 0
+	server_clock = 0
+	delta_latency = 0
+	decimal_collector = 0.0
+	latency_array.clear()
+	if _clock_update_timer != null:
+		_clock_update_timer.queue_free()
+
 
 func _notification(what):
 	if what == MainLoop.NOTIFICATION_WM_QUIT_REQUEST:
@@ -74,26 +94,33 @@ func _notification(what):
 		network.close_connection()
 		get_tree().quit() # default behavior
 
+
 func _on_connection_failed():
 	Logger.info("Failed to connect to server", "connection")
-	# TODO: reconnect (call create_client again and connect signals?) or shutdown...
+	disconnect_from_server()
+	emit_signal("connection_failed")
 
 
 func _on_connection_succeeded():
 	Logger.info("Successfully connected", "connection")
 	_start_clock_synchronization()
-	emit_signal("successfully_connected")
+	emit_signal("connection_successful")
+
+
+func _on_server_disconnected():
+	disconnect_from_server()
+	emit_signal("server_disconnected")
 
 
 func _start_clock_synchronization():
 	Logger.debug("Start clock synchronization", "server")
 	rpc_id(1, "fetch_server_time", OS.get_system_time_msecs())
-	var timer = Timer.new()
+	_clock_update_timer = Timer.new()
 	var clock_update_per_seconds = 2.0
-	timer.wait_time = (1.0 / clock_update_per_seconds)
-	timer.autostart = true
-	timer.connect("timeout", self, "_determine_latency")
-	self.add_child(timer)
+	_clock_update_timer.wait_time = (1.0 / clock_update_per_seconds)
+	_clock_update_timer.autostart = true
+	_clock_update_timer.connect("timeout", self, "_determine_latency")
+	self.add_child(_clock_update_timer)
 
 
 func _run_server_clock(delta):
