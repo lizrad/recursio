@@ -1,11 +1,9 @@
 extends Node
 class_name GameManager
 
-export var level_path: NodePath
-
 onready var _game_result_screen = get_node("../../GameResultScreen")
 onready var _countdown_screen = get_node("../../CountdownScreen")
-onready var _level: Level = get_node(level_path)
+onready var _level: Level
 
 var _team_id := -1
 var _countdown_time: float = Constants.get_value("gameplay","countdown_phase_seconds")
@@ -28,6 +26,10 @@ func _process(delta):
 		# Hide if countdown is finished
 		if _countdown_time <= 0.0:
 			hide_countdown_screen()
+
+
+func set_level(level: Level):
+	_level = level
 
 
 func show_countdown_screen() -> void:
