@@ -101,6 +101,7 @@ func _on_server_disconnected():
 	_start_menu_buttons.show()
 	$CenterContainer.show()
 	_toggle_enabled_start_menu_buttons(true)
+	_btn_play_tutorial.grab_focus()
 
 
 func _on_connection_failed():
