@@ -56,7 +56,7 @@ func _ready():
 	_player_user_name = _random_names[random_index]
 
 
-func show_lobby(game_room_id):
+func show_lobby(_game_room_id):
 	Server.send_get_game_rooms()
 
 
@@ -151,7 +151,7 @@ func _on_load_level_received():
 	add_child(_world)
 
 
-func _on_game_result_received(winning_player_id):
+func _on_game_result_received(_winning_player_id):
 	yield(get_tree().create_timer(3), "timeout")
 	_world.queue_free()
 	_game_room_lobby.reset()
