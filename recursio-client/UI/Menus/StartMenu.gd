@@ -68,9 +68,9 @@ func _return_to_game_room_lobby():
 
 
 func _toggle_enabled_start_menu_buttons(enabled: bool):
-	btn_play_online.disabled = !enabled
-	btn_play_tutorial.disabled = !enabled
-	btn_exit.disabled = !enabled
+	_btn_play_online.disabled = !enabled
+	_btn_play_tutorial.disabled = !enabled
+	_btn_exit.disabled = !enabled
 
 
 func _on_connection_successful():
