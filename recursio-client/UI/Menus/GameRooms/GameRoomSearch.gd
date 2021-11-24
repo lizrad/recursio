@@ -41,6 +41,12 @@ func _ready():
 	_timer.start()
 
 
+func reset():
+	_btn_join_game_room.disabled = true
+	_game_room_dic.clear()
+	_game_room_list.clear()
+
+
 func add_game_room(game_room_id, game_room_name) -> void:
 	_game_room_list.add_item(game_room_name + " (#%s)" % game_room_id)
 	_game_room_list.set_item_metadata(_game_room_list.get_item_count() - 1, game_room_id)

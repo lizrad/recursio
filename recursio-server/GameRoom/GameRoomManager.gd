@@ -17,6 +17,8 @@ var _player_game_room_dic: Dictionary = {}
 
 
 func _ready():
+	_server.connect("peer_disconnected", self, "_on_peer_disconnected")
+	
 	_server.connect("player_input_data_received", self, "_on_player_input_data_received") 
 	_server.connect("player_ready", self, "_on_player_ready_received") 
 	_server.connect("player_timeline_pick_received", self, "_on_player_timline_pick_received")
@@ -80,6 +82,8 @@ func _leave_game_room(player_id: int, game_room_id: int) -> void:
 		if game_room.get_player_count() == 0:
 			_delete_game_room(game_room_id)
 		else:
+			if game_room.get_game_room_world_exists():
+				game_room.despawn_world()
 			_update_game_room_on_client(game_room)
 
 

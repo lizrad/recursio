@@ -30,6 +30,11 @@ func init(game_room_id, game_room_name) -> void:
 
 
 func reset():
+	_player_id_index_dic.clear()
+	toggle_ready_button(false)
+
+
+func reset_players():
 	for player_id in _player_id_index_dic:
 		set_player_ready(player_id, false)
 	toggle_ready_button(false)
