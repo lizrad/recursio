@@ -301,7 +301,7 @@ remote func receive_get_game_rooms(game_room_dic) -> void:
 
 func send_join_game_room(game_room_id, player_user_name):
 	Logger.info("Send join game room [ID: %s]" %[game_room_id], "room_management")
-	rpc_id(1, "receive_join_game_rooms", game_room_id, player_user_name)
+	rpc_id(1, "receive_join_game_room", game_room_id, player_user_name)
 
 
 remote func receive_game_room_joined(player_id_name_dic, game_room_id):

@@ -29,6 +29,8 @@ func _ready():
 	_error = _game_room_list.connect("item_selected", self, "_on_item_selected")
 	_error = _game_room_list.connect("item_activated", self, "_on_item_activated")
 
+	_error = connect("visibility_changed", self, "_on_visibility_changed")
+
 	# Disable join button until a room is selected
 	_btn_join_game_room.disabled = true
 
@@ -72,7 +74,7 @@ func get_game_room_name(game_room_id) -> String:
 	return _game_room_dic[game_room_id]
 
 
-func _on_filter_text_changed(new_text) -> void:
+func _on_filter_text_changed(_new_text) -> void:
 	pass
 
 
@@ -105,6 +107,8 @@ func _on_item_activated(_item_index: int) -> void:
 	_on_join_game_room_pressed()
 
 
-
+func _on_visibility_changed() -> void:
+	if visible:
+		_btn_create_room.grab_focus()
 
 
