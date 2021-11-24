@@ -21,6 +21,8 @@ func _ready():
 	var _error = _btn_ready.connect("pressed", self, "_on_btn_ready_pressed")
 	_error = _btn_leave.connect("pressed", self, "_on_leave_pressed")
 
+	_error = connect("visibility_changed", self, "_on_visibility_changed")
+
 
 func init(game_room_id, game_room_name) -> void:
 	_game_room_id = game_room_id
@@ -68,3 +70,8 @@ func _on_leave_pressed() -> void:
 	self.hide()
 	toggle_ready_button(false)
 	emit_signal("btn_leave_pressed")
+
+
+func _on_visibility_changed() -> void:
+	if visible:
+		_btn_ready.grab_focus()
