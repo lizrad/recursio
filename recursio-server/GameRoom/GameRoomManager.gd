@@ -77,7 +77,7 @@ func _leave_game_room(player_id: int, game_room_id: int) -> void:
 		var game_room: GameRoom = _game_room_dic[game_room_id]
 		game_room.remove_player(player_id)
 		
-		if game_room.player_count == 0:
+		if game_room.get_player_count() == 0:
 			_delete_game_room(game_room_id)
 		else:
 			_update_game_room_on_client(game_room)
