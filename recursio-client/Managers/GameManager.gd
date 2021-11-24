@@ -3,8 +3,8 @@ class_name GameManager
 
 onready var _game_result_screen = get_node("../../GameResultScreen")
 onready var _countdown_screen = get_node("../../CountdownScreen")
-onready var _level: Level
 
+var _level: Level
 var _team_id := -1
 var _countdown_time: float = Constants.get_value("gameplay","countdown_phase_seconds")
 
