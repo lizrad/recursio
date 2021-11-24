@@ -11,7 +11,7 @@ func _ready():
 	var _error =  get_parent().connect("color_scheme_changed",self,"_on_color_scheme_changed")
 	_spawn_particles.lifetime = _max_time;
 
-func _on_color_scheme_changed(new_color_scheme, timeline_index):
+func _on_color_scheme_changed(new_color_scheme, _timeline_index):
 	var main_color = Color(Constants.get_value("colors",new_color_scheme + "_main"))
 	_spawn_particles.material_override.albedo_color = main_color
 	_spawn_particles.material_override.emission = main_color

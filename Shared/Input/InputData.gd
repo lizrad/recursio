@@ -51,7 +51,7 @@ func get_closest_or_earlier(time):
 		# Null element means everything afterwards is null as well
 		if element == null:
 			return null
-		
+
 		if element.timestamp <= time:
 			return element
 
@@ -65,6 +65,7 @@ func to_array()-> Array:
 		var frame: InputFrame = _data.get_element(i)
 		if frame == null:
 			break
+
 		array[i + 2] = frame.to_array()
 	
 	return array
@@ -79,6 +80,7 @@ func from_array(data: Array)-> InputData:
 	for i in range(_data.size()):
 		if data[i + 2] == null:
 			break
+
 		var frame: InputFrame = InputFrame.new().from_array(data[i + 2])
 		_data._data[i] = frame
 	
