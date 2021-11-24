@@ -1,4 +1,4 @@
-[gd_scene load_steps=50 format=2]
+[gd_scene load_steps=51 format=2]
 
 [ext_resource path="res://Characters/Visuals/Animation/Animator.gd" type="Script" id=1]
 [ext_resource path="res://Characters/Visuals/Animation/TurnAnimator.gd" type="Script" id=2]
@@ -202,7 +202,8 @@ shader_param/visibility_threshold = 0.2
 shader_param/camera_size = 70.0
 shader_param/always_draw = false
 
-[sub_resource type="SpatialMaterial" id=30]
+[sub_resource type="SpatialMaterial" id=38]
+resource_local_to_scene = true
 params_billboard_mode = 3
 particles_anim_h_frames = 1
 particles_anim_v_frames = 1
@@ -229,6 +230,13 @@ scale_curve = SubResource( 32 )
 
 [sub_resource type="QuadMesh" id=35]
 material = SubResource( 34 )
+
+[sub_resource type="SpatialMaterial" id=39]
+resource_local_to_scene = true
+params_billboard_mode = 3
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
 
 [sub_resource type="SpatialMaterial" id=22]
 resource_local_to_scene = true
@@ -402,7 +410,7 @@ visible = false
 layers = 512
 
 [node name="BackDash" type="MeshInstance" parent="RootPivot/BackPivot"]
-transform = Transform( 1.38886, 0, 0, 0, 1.38886, 0, 0, 0, 1.38886, 0, 0, 0.413236 )
+transform = Transform( 1.38886, 0, 0, 0, 1.38886, 0, 0, 0, 1.38886, 0, 0, 0.400201 )
 visible = false
 material_override = SubResource( 36 )
 cast_shadow = 0
@@ -416,7 +424,7 @@ material_override = SubResource( 37 )
 
 [node name="DashParticlesRight" type="Particles" parent="RootPivot/BackPivot"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.75766, 0.063201, -0.549645 )
-material_override = SubResource( 30 )
+material_override = SubResource( 38 )
 emitting = false
 amount = 50
 lifetime = 2.0
@@ -427,7 +435,7 @@ draw_pass_1 = SubResource( 35 )
 
 [node name="DashParticlesLeft" type="Particles" parent="RootPivot/BackPivot"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.758, 0.063, -0.55 )
-material_override = SubResource( 30 )
+material_override = SubResource( 39 )
 emitting = false
 amount = 50
 lifetime = 2.0

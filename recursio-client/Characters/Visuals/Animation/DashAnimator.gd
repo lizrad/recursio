@@ -37,9 +37,15 @@ func start_animation():
 		_back_dash_variant.show()
 
 func _on_color_scheme_changed(new_color_scheme, timeline_index):
+	
+	var wall_index = Constants.get_value("ghosts","wall_placing_timeline_index")
+	var accent_type = "primary" if wall_index != timeline_index else "secondary"
+	var accent_color = Color(Constants.get_value("colors", new_color_scheme+"_"+accent_type+"_accent"))
 	var main_color = Color(Constants.get_value("colors",new_color_scheme + "_main"))
 	_back_dash_variant.material_override.set_shader_param("color", main_color)
 	_back_dash.material_override.set_shader_param("color", main_color)
+	_dash_particles_left.material_override.albedo_color = accent_color
+	_dash_particles_right.material_override.albedo_color = accent_color
 	_timeline_index = timeline_index
 
 func stop_animation():
