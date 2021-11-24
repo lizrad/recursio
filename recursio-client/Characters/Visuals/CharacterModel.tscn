@@ -1,4 +1,4 @@
-[gd_scene load_steps=51 format=2]
+[gd_scene load_steps=57 format=2]
 
 [ext_resource path="res://Characters/Visuals/Animation/Animator.gd" type="Script" id=1]
 [ext_resource path="res://Characters/Visuals/Animation/TurnAnimator.gd" type="Script" id=2]
@@ -137,6 +137,48 @@ emission = Color( 1, 0.513726, 0, 1 )
 emission_energy = 15.0
 emission_operator = 0
 emission_on_uv2 = false
+
+[sub_resource type="SpatialMaterial" id=40]
+resource_local_to_scene = true
+params_billboard_mode = 3
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+emission_enabled = true
+emission = Color( 0, 0, 0, 1 )
+emission_energy = 12.0
+emission_operator = 0
+emission_on_uv2 = false
+
+[sub_resource type="Curve" id=44]
+_data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 0.850877, 1 ), 0.0, 0.0, 0, 0, Vector2( 1, 0 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=45]
+curve = SubResource( 44 )
+
+[sub_resource type="ParticlesMaterial" id=41]
+resource_local_to_scene = true
+direction = Vector3( 1, 1, 1 )
+spread = 180.0
+gravity = Vector3( 0, 0, 0 )
+initial_velocity = 10.0
+angular_velocity = 720.0
+angular_velocity_random = 1.0
+radial_accel = 22.91
+radial_accel_random = 1.0
+tangential_accel = 5.0
+tangential_accel_random = 1.0
+damping = 40.15
+damping_random = 1.0
+scale = 0.2
+scale_random = 0.35
+scale_curve = SubResource( 45 )
+
+[sub_resource type="SpatialMaterial" id=42]
+
+[sub_resource type="QuadMesh" id=43]
+resource_local_to_scene = true
+material = SubResource( 42 )
 
 [sub_resource type="SpatialMaterial" id=25]
 emission_enabled = true
@@ -366,6 +408,16 @@ material_override = SubResource( 24 )
 cast_shadow = 0
 mesh = SubResource( 4 )
 material/0 = SubResource( 5 )
+
+[node name="WallParticles" type="Particles" parent="RootPivot/MiddlePivot"]
+material_override = SubResource( 40 )
+emitting = false
+lifetime = 0.4
+one_shot = true
+explosiveness = 1.0
+local_coords = false
+process_material = SubResource( 41 )
+draw_pass_1 = SubResource( 43 )
 
 [node name="MiddleDeathBackParticles" type="Particles" parent="RootPivot"]
 transform = Transform( -6.02636e-08, 0, 1.37867, 0, 1.37867, 0, -1.37867, 0, -6.02636e-08, 6.51926e-09, 0, 0.162483 )
