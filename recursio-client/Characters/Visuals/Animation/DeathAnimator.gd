@@ -30,7 +30,6 @@ func _ready():
 	_middle_death_back_particles.lifetime = _max_time
 
 func _on_color_scheme_changed(new_color_scheme, timeline_index):
-	print(timeline_index)
 	var wall_index = Constants.get_value("ghosts","wall_placing_timeline_index")
 	var accent_type = "primary" if wall_index != timeline_index else "secondary"
 	var accent_color = Color(Constants.get_value("colors", new_color_scheme+"_"+accent_type+"_accent"))
