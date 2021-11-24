@@ -1,4 +1,4 @@
-[gd_scene load_steps=42 format=2]
+[gd_scene load_steps=50 format=2]
 
 [ext_resource path="res://Characters/Visuals/Animation/Animator.gd" type="Script" id=1]
 [ext_resource path="res://Characters/Visuals/Animation/TurnAnimator.gd" type="Script" id=2]
@@ -186,6 +186,50 @@ surfaces/0 = {
 "vertex_count": 386
 }
 
+[sub_resource type="ShaderMaterial" id=36]
+resource_local_to_scene = true
+shader = ExtResource( 10 )
+shader_param/color = Color( 1, 1, 1, 1 )
+shader_param/visibility_threshold = 0.2
+shader_param/camera_size = 70.0
+shader_param/always_draw = false
+
+[sub_resource type="ShaderMaterial" id=37]
+resource_local_to_scene = true
+shader = ExtResource( 10 )
+shader_param/color = Color( 1, 1, 1, 1 )
+shader_param/visibility_threshold = 0.2
+shader_param/camera_size = 70.0
+shader_param/always_draw = false
+
+[sub_resource type="SpatialMaterial" id=30]
+params_billboard_mode = 3
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="Curve" id=31]
+_data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 0.578947, 1 ), 0.0, 0.0, 0, 0, Vector2( 1, 0 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=32]
+curve = SubResource( 31 )
+
+[sub_resource type="ParticlesMaterial" id=33]
+lifetime_randomness = 1.0
+direction = Vector3( 0, 0, -1 )
+spread = 21.49
+gravity = Vector3( 0, 0, 0 )
+initial_velocity = 3.0
+initial_velocity_random = 1.0
+scale = 0.1
+scale_random = 0.2
+scale_curve = SubResource( 32 )
+
+[sub_resource type="SpatialMaterial" id=34]
+
+[sub_resource type="QuadMesh" id=35]
+material = SubResource( 34 )
+
 [sub_resource type="SpatialMaterial" id=22]
 resource_local_to_scene = true
 flags_do_not_receive_shadows = true
@@ -356,6 +400,41 @@ material/0 = null
 transform = Transform( 0.01, 0, 0, 0, 0.01, 0, 0, 0, 0.01, 0, 0, 0.548 )
 visible = false
 layers = 512
+
+[node name="BackDash" type="MeshInstance" parent="RootPivot/BackPivot"]
+transform = Transform( 1.38886, 0, 0, 0, 1.38886, 0, 0, 0, 1.38886, 0, 0, 0.413236 )
+visible = false
+material_override = SubResource( 36 )
+cast_shadow = 0
+mesh = SubResource( 7 )
+material/0 = null
+
+[node name="BackDashVariant" parent="RootPivot/BackPivot" instance=ExtResource( 11 )]
+transform = Transform( 0.01, 0, 0, 0, 0.01, 0, 0, 0, 0.01, 0, 0, 0.522288 )
+visible = false
+material_override = SubResource( 37 )
+
+[node name="DashParticlesRight" type="Particles" parent="RootPivot/BackPivot"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.75766, 0.063201, -0.549645 )
+material_override = SubResource( 30 )
+emitting = false
+amount = 50
+lifetime = 2.0
+preprocess = 0.1
+local_coords = false
+process_material = SubResource( 33 )
+draw_pass_1 = SubResource( 35 )
+
+[node name="DashParticlesLeft" type="Particles" parent="RootPivot/BackPivot"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.758, 0.063, -0.55 )
+material_override = SubResource( 30 )
+emitting = false
+amount = 50
+lifetime = 2.0
+preprocess = 0.1
+local_coords = false
+process_material = SubResource( 33 )
+draw_pass_1 = SubResource( 35 )
 
 [node name="SpawnParticles" type="Particles" parent="RootPivot"]
 material_override = SubResource( 22 )
