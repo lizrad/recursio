@@ -5,9 +5,9 @@ export(PackedScene) var world
 
 onready var _start_menu_buttons: VBoxContainer = get_node("CenterContainer/MainMenu")
 
-onready var btn_play_tutorial = get_node("CenterContainer/MainMenu/Btn_PlayTutorial")
-onready var btn_play_online = get_node("CenterContainer/MainMenu/Btn_PlayOnline")
-onready var btn_exit = get_node("CenterContainer/MainMenu/Btn_Exit")
+onready var _btn_play_tutorial = get_node("CenterContainer/MainMenu/Btn_PlayTutorial")
+onready var _btn_play_online = get_node("CenterContainer/MainMenu/Btn_PlayOnline")
+onready var _btn_exit = get_node("CenterContainer/MainMenu/Btn_Exit")
 
 onready var _game_room_search: GameRoomSearch = get_node("CenterContainer/GameRoomSearch")
 onready var _game_room_creation: GameRoomCreation = get_node("CenterContainer/GameRoomCreation")
@@ -25,13 +25,14 @@ var _in_game_room: bool = false
 var _world
 
 func _ready():
-	var _error = btn_play_tutorial.connect("pressed", self, "_on_play_tutorial")
-	_error = btn_play_online.connect("pressed", self, "_on_play_online")
-	_error = btn_exit.connect("pressed", self, "_on_exit")
+	var _error = _btn_play_tutorial.connect("pressed", self, "_on_play_tutorial")
+	_error = _btn_play_online.connect("pressed", self, "_on_play_online")
+	_error = _btn_exit.connect("pressed", self, "_on_exit")
 
 	_error = _game_room_search.connect("btn_create_game_room_pressed", self, "_on_search_create_game_room_pressed")
 	_error = _game_room_search.connect("btn_back_pressed", self, "_on_search_back_pressed")
 	_error = _game_room_search.connect("btn_join_game_room_pressed", self, "_on_join_game_room_pressed")
+	_error = _game_room_search.connect("visibility_changed", self, "_on_room_search_visibility_changed")
 
 	_error = _game_room_creation.connect("btn_create_game_room_pressed", self, "_on_creation_create_game_room_pressed")
 	_error = _game_room_creation.connect("btn_back_pressed", self, "_on_creation_back_pressed")
@@ -44,12 +45,11 @@ func _ready():
 	_error = Server.connect("successfully_connected" , self, "_on_successfully_connected")
 	_error = Server.connect("game_room_ready_received" , self, "_on_game_room_ready_received")
 	_error = Server.connect("game_room_not_ready_received" , self, "_on_game_room_not_ready_received")
-	
 	_error = Server.connect("load_level_received", self, "_on_load_level_received")
-	
 	_error = Server.connect("game_result", self, "_on_game_result_received")
-	
-	
+
+	_btn_play_tutorial.grab_focus()
+
 	_player_rpc_id = get_tree().get_network_unique_id()
 	randomize()
 	var random_index = randi() % _random_names.size()
@@ -83,7 +83,10 @@ func _on_exit() -> void:
 
 
 func _on_search_create_game_room_pressed() -> void:
-	_game_room_creation.show()
+	# just create room with default naming
+	# 	otherwise would need virtual keyboard vor controller support
+	#_game_room_creation.show()
+	_on_creation_create_game_room_pressed("GameRoom")
 
 
 func _on_creation_create_game_room_pressed(game_room_name) -> void:
@@ -103,6 +106,9 @@ func _on_join_game_room_pressed() -> void:
 	if selected_room != -1:
 		Server.send_join_game_room(selected_room, _player_user_name)
 
+func _on_room_search_visibility_changed() -> void:
+	_btn_play_tutorial.grab_focus()
+
 
 func _on_game_room_leave_pressed() -> void:
 	_in_game_room = false
@@ -113,7 +119,7 @@ func _on_game_room_created(game_room_id, game_room_name) -> void:
 	_game_room_search.add_game_room(game_room_id, game_room_name)
 	_game_room_creation.hide()
 
-	Server.send_join_game_room(game_room_id, _player_rpc_id)
+	Server.send_join_game_room(game_room_id, _player_user_name)
 
 
 func _on_game_rooms_received(game_room_dic) -> void:
@@ -122,9 +128,10 @@ func _on_game_rooms_received(game_room_dic) -> void:
 
 func _on_game_room_joined(player_id_name_dic, game_room_id):
 	_game_room_lobby.set_players(player_id_name_dic, _player_rpc_id)
-	
+
 	if _in_game_room:
 		return
+
 	_in_game_room = true
 	
 	_game_room_creation.hide()

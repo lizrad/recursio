@@ -154,7 +154,8 @@ func _on_leave_game_room_received(player_id, game_room_id) -> void:
 
 
 func _on_game_room_ready_received(player_id, game_room_id):
-	_get_game_room(game_room_id).handle_game_room_ready(player_id)
+	if _game_room_dic.has(game_room_id):
+		_get_game_room(game_room_id).handle_game_room_ready(player_id)
 
 
 func _on_game_room_not_ready_received(player_id, game_room_id):
@@ -174,6 +175,6 @@ func _update_game_room_on_client(game_room):
 	
 	for player_id in player_dic:
 		_server.send_game_room_joined(player_id, player_id_name_dic, game_room.id)
-		
+
 		for other_player_id in players_ready_dic:
 			_server.send_game_room_ready(player_id, other_player_id)

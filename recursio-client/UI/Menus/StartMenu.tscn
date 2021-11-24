@@ -34,18 +34,21 @@ margin_bottom = 334.0
 [node name="Btn_PlayTutorial" type="Button" parent="CenterContainer/MainMenu"]
 margin_right = 90.0
 margin_bottom = 20.0
+shortcut_in_tooltip = false
 text = "Play Tutorial"
 
 [node name="Btn_PlayOnline" type="Button" parent="CenterContainer/MainMenu"]
 margin_top = 24.0
 margin_right = 90.0
 margin_bottom = 44.0
+shortcut_in_tooltip = false
 text = "Play Online"
 
 [node name="Btn_Exit" type="Button" parent="CenterContainer/MainMenu"]
 margin_top = 48.0
 margin_right = 90.0
 margin_bottom = 68.0
+shortcut_in_tooltip = false
 text = "Exit"
 
 [node name="GameRoomSearch" type="PanelContainer" parent="CenterContainer"]
@@ -59,19 +62,21 @@ script = ExtResource( 4 )
 [node name="Content" type="VBoxContainer" parent="CenterContainer/GameRoomSearch"]
 margin_left = 7.0
 margin_top = 7.0
-margin_right = 457.0
-margin_bottom = 259.0
+margin_right = 253.0
+margin_bottom = 255.0
 
 [node name="TopBar" type="HBoxContainer" parent="CenterContainer/GameRoomSearch/Content"]
-margin_right = 450.0
-margin_bottom = 24.0
+margin_right = 246.0
+margin_bottom = 20.0
 
 [node name="Btn_CreateGameRoom" type="Button" parent="CenterContainer/GameRoomSearch/Content/TopBar"]
 margin_right = 136.0
-margin_bottom = 24.0
+margin_bottom = 20.0
+shortcut_in_tooltip = false
 text = "Create Game Room"
 
 [node name="LineEdit_GameRoomFilter" type="LineEdit" parent="CenterContainer/GameRoomSearch/Content/TopBar"]
+visible = false
 margin_left = 140.0
 margin_right = 340.0
 margin_bottom = 24.0
@@ -82,31 +87,34 @@ __meta__ = {
 }
 
 [node name="Btn_Refresh" type="Button" parent="CenterContainer/GameRoomSearch/Content/TopBar"]
-margin_left = 344.0
-margin_right = 404.0
-margin_bottom = 24.0
+margin_left = 140.0
+margin_right = 200.0
+margin_bottom = 20.0
+shortcut_in_tooltip = false
 text = "Refresh"
 
 [node name="Btn_Back" type="Button" parent="CenterContainer/GameRoomSearch/Content/TopBar"]
-margin_left = 408.0
-margin_right = 450.0
-margin_bottom = 24.0
+margin_left = 204.0
+margin_right = 246.0
+margin_bottom = 20.0
+shortcut_in_tooltip = false
 text = "Back"
 
 [node name="ItemList_GameRooms" type="ItemList" parent="CenterContainer/GameRoomSearch/Content"]
-margin_top = 28.0
-margin_right = 450.0
-margin_bottom = 228.0
+margin_top = 24.0
+margin_right = 246.0
+margin_bottom = 224.0
 rect_min_size = Vector2( 0, 200 )
 
 [node name="BottomBar" type="HBoxContainer" parent="CenterContainer/GameRoomSearch/Content"]
-margin_top = 232.0
-margin_right = 450.0
-margin_bottom = 252.0
+margin_top = 228.0
+margin_right = 246.0
+margin_bottom = 248.0
 
 [node name="Btn_JoinGameRoom" type="Button" parent="CenterContainer/GameRoomSearch/Content/BottomBar"]
 margin_right = 118.0
 margin_bottom = 20.0
+shortcut_in_tooltip = false
 text = "Join Game Room"
 
 [node name="GameRoomCreation" type="PanelContainer" parent="CenterContainer"]
@@ -171,6 +179,7 @@ margin_bottom = 108.0
 [node name="Btn_CreateRoom" type="Button" parent="CenterContainer/GameRoomCreation/Content/BottomBar"]
 margin_right = 94.0
 margin_bottom = 20.0
+shortcut_in_tooltip = false
 text = "Create Room"
 
 [node name="Space" type="Control" parent="CenterContainer/GameRoomCreation/Content/BottomBar"]
@@ -184,6 +193,7 @@ size_flags_horizontal = 3
 margin_left = 209.0
 margin_right = 251.0
 margin_bottom = 20.0
+shortcut_in_tooltip = false
 text = "Back"
 
 [node name="GameRoomLobby" type="PanelContainer" parent="CenterContainer"]
@@ -200,7 +210,7 @@ icon_not_ready = ExtResource( 6 )
 margin_left = 7.0
 margin_top = 7.0
 margin_right = 507.0
-margin_bottom = 377.0
+margin_bottom = 397.0
 
 [node name="TopBar" type="VBoxContainer" parent="CenterContainer/GameRoomLobby/Content"]
 margin_right = 500.0
@@ -223,21 +233,33 @@ margin_top = 42.0
 margin_right = 500.0
 margin_bottom = 342.0
 rect_min_size = Vector2( 500, 300 )
+focus_mode = 0
 fixed_icon_size = Vector2( 60, 15 )
 
-[node name="VBoxContainer" type="HBoxContainer" parent="CenterContainer/GameRoomLobby/Content"]
+[node name="Space2" type="Control" parent="CenterContainer/GameRoomLobby/Content"]
 margin_top = 346.0
 margin_right = 500.0
-margin_bottom = 346.0
+margin_bottom = 366.0
+rect_min_size = Vector2( 0, 20 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="BottomBar" type="HBoxContainer" parent="CenterContainer/GameRoomLobby/Content"]
-margin_top = 350.0
+margin_top = 370.0
 margin_right = 500.0
-margin_bottom = 370.0
+margin_bottom = 390.0
 
 [node name="Btn_Ready" type="Button" parent="CenterContainer/GameRoomLobby/Content/BottomBar"]
 margin_right = 50.0
 margin_bottom = 20.0
+focus_neighbour_left = NodePath("../Btn_Leave")
+focus_neighbour_top = NodePath("../Btn_Leave")
+focus_neighbour_right = NodePath("../Btn_Leave")
+focus_neighbour_bottom = NodePath("../Btn_Leave")
+focus_next = NodePath("../Btn_Leave")
+focus_previous = NodePath("../Btn_Leave")
+shortcut_in_tooltip = false
 text = "Ready"
 
 [node name="Space" type="Control" parent="CenterContainer/GameRoomLobby/Content/BottomBar"]
@@ -250,6 +272,13 @@ size_flags_horizontal = 3
 margin_left = 451.0
 margin_right = 500.0
 margin_bottom = 20.0
+focus_neighbour_left = NodePath("../Btn_Ready")
+focus_neighbour_top = NodePath("../Btn_Ready")
+focus_neighbour_right = NodePath("../Btn_Ready")
+focus_neighbour_bottom = NodePath("../Btn_Ready")
+focus_next = NodePath("../Btn_Ready")
+focus_previous = NodePath("../Btn_Ready")
+shortcut_in_tooltip = false
 text = "Leave"
 
 [node name="StatsHUD" type="Control" parent="."]

@@ -183,9 +183,9 @@ func send_game_rooms(client_id, game_room_dic):
 	rpc_id(client_id, "receive_get_game_rooms", game_room_dic)
 
 
-remote func receive_join_game_rooms(game_room_id, player_user_name):
+remote func receive_join_game_room(game_room_id, player_user_name):
 	var client_id = get_tree().get_rpc_sender_id()
-	Logger.info("Receive join game rooms", "room_management")
+	Logger.info("Receive join game room", "room_management")
 	emit_signal("join_game_room_received", client_id, game_room_id, player_user_name)
 
 
