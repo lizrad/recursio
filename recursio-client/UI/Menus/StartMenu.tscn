@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://UI/Menus/StartMenu.gd" type="Script" id=1]
 [ext_resource path="res://UI/Menus/GameRooms/GameRoomCreation.gd" type="Script" id=2]
@@ -8,6 +8,8 @@
 [ext_resource path="res://Resources/Icons/icon_not_ready.png" type="Texture" id=6]
 [ext_resource path="res://World.tscn" type="PackedScene" id=7]
 [ext_resource path="res://Util/LatencyHUD.gd" type="Script" id=8]
+[ext_resource path="res://Shared/Level/LevelH.tscn" type="PackedScene" id=9]
+[ext_resource path="res://Level/CapturePoint.tscn" type="PackedScene" id=10]
 
 [node name="StartMenu" type="Control"]
 anchor_right = 1.0
@@ -16,7 +18,9 @@ script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
-world = ExtResource( 7 )
+world_scene = ExtResource( 7 )
+level_scene = ExtResource( 9 )
+capture_point_scene = ExtResource( 10 )
 
 [node name="CenterContainer" type="CenterContainer" parent="."]
 anchor_right = 1.0

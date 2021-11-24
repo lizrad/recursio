@@ -32,12 +32,13 @@ func _physics_process(delta):
 	for body in bodies_inside:
 		var character = body.get_parent()
 		if character is CharacterBase:
-			if current_capture_team < 0:
-				current_capture_team = character.team_id
-			else:
-				if current_capture_team != character.team_id:
-					# Multiple different teams on here -> just return
-					return
+			if character.is_collision_active():
+				if current_capture_team < 0:
+					current_capture_team = character.team_id
+				else:
+					if current_capture_team != character.team_id:
+						# Multiple different teams on here -> just return
+						return
 	
 	if current_capture_team >= 0:
 		# A player is standing on the capture point
