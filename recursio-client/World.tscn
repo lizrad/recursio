@@ -1,8 +1,6 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Managers/CharacterManager.gd" type="Script" id=1]
-[ext_resource path="res://Shared/Level/LevelH.tscn" type="PackedScene" id=2]
-[ext_resource path="res://Level/CapturePoint.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Resources/Fonts/default_font.tres" type="DynamicFont" id=4]
 [ext_resource path="res://Shared/Actions/ActionManager.gd" type="Script" id=5]
 [ext_resource path="res://Managers/GameManager.gd" type="Script" id=6]
@@ -14,9 +12,6 @@
 [node name="World" type="Spatial"]
 script = ExtResource( 10 )
 
-[node name="LevelH" parent="." instance=ExtResource( 2 )]
-capture_point_scene = ExtResource( 3 )
-
 [node name="CharacterManager" type="Node" parent="."]
 script = ExtResource( 1 )
 
@@ -25,7 +20,6 @@ script = ExtResource( 5 )
 
 [node name="GameManager" type="Node" parent="CharacterManager"]
 script = ExtResource( 6 )
-level_path = NodePath("../../LevelH")
 
 [node name="RoundManager" type="Node" parent="CharacterManager"]
 script = ExtResource( 7 )

@@ -112,6 +112,14 @@ func _physics_process(delta):
 	_player.update_capture_point_hud(_game_manager.get_capture_points())
 
 
+func set_level(level: Level):
+	_game_manager.set_level(level)
+
+
+func get_player_id() -> int:
+	return _player_rpc_id
+
+
 func _reset() -> void:
 	Logger.info("Full reset triggered.", "gameplay")
 	# Reset player
@@ -136,10 +144,6 @@ func _reset() -> void:
 
 func _on_game_start_received(start_time):
 	_round_manager.future_start_game(start_time)
-
-
-func get_player_id() -> int:
-	return _player_rpc_id
 
 
 func _on_phase_switch_received(round_index, next_phase, switch_time):
