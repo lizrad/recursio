@@ -59,11 +59,11 @@ func spawn_world():
 	yield(get_tree().create_timer(server_clock_warm_up), "timeout")
 	
 	var game_warm_up = 1.0
-	_game_room_world.start_game()
 	for player_id in _player_id_to_team_id:
 		_server.send_game_start_to_client(player_id, _server.get_server_time()+game_warm_up*1000)
 		
 	yield(get_tree().create_timer(game_warm_up), "timeout")
+	_game_room_world.start_game()
 
 
 func despawn_world():
