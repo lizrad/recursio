@@ -1,6 +1,8 @@
 extends Control
 class_name StartMenu
 
+export(PackedScene) var world
+
 onready var _start_menu_buttons: VBoxContainer = get_node("CenterContainer/MainMenu")
 
 onready var btn_play_tutorial = get_node("CenterContainer/MainMenu/Btn_PlayTutorial")
@@ -9,12 +11,18 @@ onready var btn_exit = get_node("CenterContainer/MainMenu/Btn_Exit")
 
 onready var _game_room_search: GameRoomSearch = get_node("CenterContainer/GameRoomSearch")
 onready var _game_room_creation: GameRoomCreation = get_node("CenterContainer/GameRoomCreation")
-onready var _game_room_ui: GameRoomUI = get_node("CenterContainer/GameRoom")
+onready var _game_room_lobby: GameRoomLobby = get_node("CenterContainer/GameRoomLobby")
 
-onready var _character_manager: CharacterManager = get_node("../CharacterManager")
 onready var _debug_room = Constants.get_value("debug", "debug_room_enabled")
 
+onready var _random_names = TextFileToArray.load_text_file("res://Resources/Data/animal_names.txt")
+
+var _player_user_name: String
+var _player_rpc_id: int
+
 var _in_game_room: bool = false
+
+var _world
 
 func _ready():
 	var _error = btn_play_tutorial.connect("pressed", self, "_on_play_tutorial")
@@ -28,7 +36,7 @@ func _ready():
 	_error = _game_room_creation.connect("btn_create_game_room_pressed", self, "_on_creation_create_game_room_pressed")
 	_error = _game_room_creation.connect("btn_back_pressed", self, "_on_creation_back_pressed")
 
-	_error = _game_room_ui.connect("btn_leave_pressed", self, "_on_game_room_leave_pressed")
+	_error = _game_room_lobby.connect("btn_leave_pressed", self, "_on_game_room_leave_pressed")
 
 	_error = Server.connect("game_room_created", self, "_on_game_room_created")
 	_error = Server.connect("game_rooms_received", self, "_on_game_rooms_received")
@@ -37,7 +45,19 @@ func _ready():
 	_error = Server.connect("game_room_ready_received" , self, "_on_game_room_ready_received")
 	_error = Server.connect("game_room_not_ready_received" , self, "_on_game_room_not_ready_received")
 	
-	_error = _character_manager.connect("game_started", self, "_on_game_started")
+	_error = Server.connect("load_level_received", self, "_on_load_level_received")
+	
+	_error = Server.connect("game_result", self, "_on_game_result_received")
+	
+	
+	_player_rpc_id = get_tree().get_network_unique_id()
+	randomize()
+	var random_index = randi() % _random_names.size()
+	_player_user_name = _random_names[random_index]
+
+
+func show_lobby(_game_room_id):
+	Server.send_get_game_rooms()
 
 
 func _on_successfully_connected():
@@ -81,7 +101,7 @@ func _on_creation_back_pressed() -> void:
 func _on_join_game_room_pressed() -> void:
 	var selected_room = _game_room_search.get_selected_game_room()
 	if selected_room != -1:
-		Server.send_join_game_room(selected_room, _character_manager.get_player_user_name())
+		Server.send_join_game_room(selected_room, _player_user_name)
 
 
 func _on_game_room_leave_pressed() -> void:
@@ -93,7 +113,7 @@ func _on_game_room_created(game_room_id, game_room_name) -> void:
 	_game_room_search.add_game_room(game_room_id, game_room_name)
 	_game_room_creation.hide()
 
-	Server.send_join_game_room(game_room_id, _character_manager.get_player_user_name())
+	Server.send_join_game_room(game_room_id, _player_rpc_id)
 
 
 func _on_game_rooms_received(game_room_dic) -> void:
@@ -101,33 +121,39 @@ func _on_game_rooms_received(game_room_dic) -> void:
 
 
 func _on_game_room_joined(player_id_name_dic, game_room_id):
-	_game_room_ui.set_players(player_id_name_dic, _character_manager.get_player_id())
-
+	_game_room_lobby.set_players(player_id_name_dic, _player_rpc_id)
+	
 	if _in_game_room:
 		return
 	_in_game_room = true
 	
 	_game_room_creation.hide()
 	_game_room_search.hide()
-	_game_room_ui.show()
-	_game_room_ui.init(game_room_id, _game_room_search.get_game_room_name(game_room_id))
+	_game_room_lobby.show()
+	_game_room_lobby.init(game_room_id, _game_room_search.get_game_room_name(game_room_id))
 
 
 func _on_game_room_ready_received(player_id):
-	if player_id == _character_manager.get_player_id():
-		_game_room_ui.switch_to_not_ready_button()
-	_game_room_ui.set_player_ready(player_id, true)
+	if player_id == _player_rpc_id:
+		_game_room_lobby.toggle_ready_button(true)
+	_game_room_lobby.set_player_ready(player_id, true)
 
 
 func _on_game_room_not_ready_received(player_id):
-	if player_id == _character_manager.get_player_id():
-		_game_room_ui.switch_to_ready_button()
-	_game_room_ui.set_player_ready(player_id, false)
+	if player_id == _player_rpc_id:
+		_game_room_lobby.toggle_ready_button(false)
+	_game_room_lobby.set_player_ready(player_id, false)
 
 
-func _on_game_started():
-	self.hide()
+func _on_load_level_received():
+	$CenterContainer.hide()
+	_world = world.instance()
+	add_child(_world)
 
 
-
+func _on_game_result_received(_winning_player_id):
+	yield(get_tree().create_timer(3), "timeout")
+	_world.queue_free()
+	_game_room_lobby.reset()
+	$CenterContainer.show()
 

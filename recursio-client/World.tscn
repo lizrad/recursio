@@ -9,9 +9,10 @@
 [ext_resource path="res://Shared/RoundManager.gd" type="Script" id=7]
 [ext_resource path="res://Util/LatencyHUD.gd" type="Script" id=8]
 [ext_resource path="res://UI/CountdownScreen.tscn" type="PackedScene" id=9]
-[ext_resource path="res://UI/Menus/StartMenu.tscn" type="PackedScene" id=10]
+[ext_resource path="res://World.gd" type="Script" id=10]
 
 [node name="World" type="Spatial"]
+script = ExtResource( 10 )
 
 [node name="LevelH" parent="." instance=ExtResource( 2 )]
 capture_point_scene = ExtResource( 3 )
@@ -62,6 +63,7 @@ visible = false
 [node name="StatsHUD" type="Control" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
+mouse_filter = 2
 script = ExtResource( 8 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -85,5 +87,3 @@ text = "FPS: -1"
 __meta__ = {
 "_edit_use_anchors_": false
 }
-
-[node name="StartMenu" parent="." instance=ExtResource( 10 )]

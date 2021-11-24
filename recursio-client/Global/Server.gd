@@ -45,6 +45,7 @@ signal game_rooms_received(game_room_dic)
 signal game_room_joined(player_id_name_dic, game_room_id)
 signal game_room_ready_received(player_id)
 signal game_room_not_ready_received(player_id)
+signal load_level_received()
 
 
 
@@ -306,10 +307,11 @@ remote func receive_game_room_not_ready(player_id):
 	emit_signal("game_room_not_ready_received", player_id)
 
 
+remote func receive_load_level():
+	Logger.info("Receive load level", "room_management")
+	emit_signal("load_level_received")
 
 
-
-
-
-
-
+func send_level_loaded():
+	Logger.info("Send level loaded", "room_management")
+	rpc_id(1, "receive_level_loaded")

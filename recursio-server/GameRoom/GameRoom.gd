@@ -1,147 +1,72 @@
 extends Viewport
 class_name GameRoom
 
-# Connects all the specific managers together
+export(PackedScene) var game_room_world_scene
+export(PackedScene) var level_scene
+export(PackedScene) var capture_point_scene
 
 signal world_state_updated(world_state, game_room_id)
 
-const PLAYER_NUMBER_PER_GAME_ROOM = 2
-
 var game_room_name: String
 var id: int
-var player_count: int = 0
 
 onready var _server = get_node("/root/Server")
-onready var _character_manager: CharacterManager = get_node("CharacterManager")
-onready var _world_state_manager: WorldStateManager = get_node("WorldStateManager")
-onready var _game_manager: GameManager = get_node("GameManager")
-onready var _action_manager: ActionManager = get_node("ActionManager")
-onready var _round_manager: RoundManager = get_node("RoundManager")
-onready var _level = get_node("LevelH") # TODO: Should be configurable later
 
-# id dictionary -> translates network id to game id (0 or 1)
-var _player_id_to_team_id = {}
-var team_id_to_player_id = {}
-
-# track players ready -> skip prep phase if all player are
-var _players_ready = {}
-
-var _game_room_players_ready := {}
-
+var _game_room_players_ready: Dictionary = {}
 var _player_id_user_name_dic: Dictionary = {}
 
+var _player_id_to_team_id = {}
+var _team_id_to_player_id = {}
 
-# We don't process the latest player data, but the latest data which was sent in world_processing_offset or earlier.
-# That way, we avoid discrepancies between high- and low-latency players and don't need to rollback.
-# TODO: Could be set dynamically by using someting like max(player_pings)
-var world_processing_offset = 50
+var _player_count: int = 0
+
+var _player_levels_loaded := {}
+
+var _game_room_world: GameRoomWorld
+var _game_room_world_exists = false
 
 
-func _ready():
-	var _error = _character_manager.connect("world_state_updated", self, "_on_world_state_update") 	
+func get_player_count():
+	return _player_count
+
+
+func spawn_world():
+	_game_room_world = game_room_world_scene.instance()
+	self.add_child(_game_room_world)
+	_game_room_world_exists = true
+	var level = level_scene.instance()
+	level.capture_point_scene = capture_point_scene
+	_game_room_world.add_child(level)
+	_game_room_world.set_level(level)
 	
-	_error = _round_manager.connect("preparation_phase_started", self,"_on_preparation_phase_started")
-	_error = _round_manager.connect("countdown_phase_started", self,"_on_countdown_phase_started")
-	_error = _round_manager.connect("game_phase_started", self,"_on_game_phase_started") 
-	_error = _round_manager.connect("game_phase_stopped", self,"_on_game_phase_stopped") 
+	var _error = _game_room_world.connect("world_state_updated", self, "_on_world_state_updated")
+	_error = _game_room_world.get_game_manager().connect("capture_point_team_changed", self, "_on_capture_point_team_changed") 
+	_error = _game_room_world.get_game_manager().connect("capture_point_captured", self, "_on_capture_point_captured") 
+	_error = _game_room_world.get_game_manager().connect("capture_point_status_changed", self, "_on_capture_point_status_changed") 
+	_error = _game_room_world.get_game_manager().connect("capture_point_capture_lost", self, "_on_capture_point_capture_lost") 
+	_error = _game_room_world.get_game_manager().connect("game_result", self, "_on_game_result") 
 	
-	_game_manager._level = _level
-	_world_state_manager.world_processing_offset = world_processing_offset
-	_character_manager.world_processing_offset = world_processing_offset
-
-
-func reset():
-	Logger.info("Full reset triggered.","gameplay")
-	_action_manager.clear_action_instances()
-	_character_manager.reset()
-	_game_manager.reset()
-	_level.reset()
-
-
-func add_player(player_id: int, player_user_name: String) -> void:
-	_player_id_user_name_dic[player_id] = player_user_name
-	# Update id dictionary
-	_player_id_to_team_id[player_id] = player_count
-	team_id_to_player_id[player_count] = player_id
-	player_count += 1
-
-
-func spawn_player(player_id: int) -> void:
-	_character_manager.spawn_player(player_id, _player_id_to_team_id[player_id], _player_id_user_name_dic[player_id])
-
-
-func start_game():
 	for player_id in _player_id_user_name_dic:
-		spawn_player(player_id)
+		var team_id = _player_id_to_team_id[player_id]
+		var player_user_name = _player_id_user_name_dic[player_id]
+		_game_room_world.spawn_player(player_id, team_id, player_user_name)
 	
 	var server_clock_warm_up = 3.0
 	yield(get_tree().create_timer(server_clock_warm_up), "timeout")
 	
 	var game_warm_up = 1.0
-	_game_manager.start_game()
+	_game_room_world.start_game()
 	for player_id in _player_id_to_team_id:
 		_server.send_game_start_to_client(player_id, _server.get_server_time()+game_warm_up*1000)
 		
 	yield(get_tree().create_timer(game_warm_up), "timeout")
-	_round_manager.future_start_game(_server.get_server_time())
 
 
-func remove_player(player_id: int) -> void:
-	# Update id dictionary
-	var _success = _player_id_user_name_dic.erase(player_id)
-	_success = _game_room_players_ready.erase(player_id)
-	_success = team_id_to_player_id.erase(_player_id_to_team_id[player_id])
-	_success = _player_id_to_team_id.erase(player_id)
-	player_count -= 1
-
-
-func despawn_player(player_id: int) -> void:
-	_character_manager.despawn_player(player_id)
-
-
-func update_player_input_data(player_id, input_data: InputData):
-	if _round_manager.get_current_phase() == RoundManager.Phases.GAME:
-		_character_manager.update_player_input_data(player_id, input_data)
-
-
-func handle_player_ready(player_id):
-	_players_ready[player_id] = true
-	Logger.info("received player ready for player " + str(player_id) + " count: " + str(_players_ready.keys().size()), "game_rooms")
-	if _players_ready.keys().size() == PLAYER_NUMBER_PER_GAME_ROOM:
-		var time_until_switch = 0.5
-		if _round_manager.get_current_phase_time_left()>time_until_switch and _round_manager.get_current_phase() == RoundManager.Phases.PREPARATION:
-			var countdown_start_time = _server.get_server_time()+time_until_switch
-			_round_manager.future_switch_to_phase(RoundManager.Phases.COUNTDOWN,countdown_start_time)
-			for client_id in _players_ready:
-				_server.send_phase_switch_to_client(client_id, _round_manager.round_index, RoundManager.Phases.COUNTDOWN, countdown_start_time)
-
-
-func handle_game_room_ready(player_id):
-	_game_room_players_ready[player_id] = true
-	# Update on all clients
-	for client_id in _player_id_user_name_dic:
-		_server.send_game_room_ready(client_id, player_id)
-	
-	if _game_room_players_ready.keys().size() == PLAYER_NUMBER_PER_GAME_ROOM:
-		start_game()
-
-
-func handle_game_room_not_ready(player_id):
-	var _success = _game_room_players_ready.erase(player_id)
-	# Update on all clients
-	for client_id in _player_id_user_name_dic:
-		_server.send_game_room_not_ready(client_id, player_id)
-
-
-func handle_ghost_pick(player_id, timeline_index):
-	if _round_manager.get_current_phase() != RoundManager.Phases.COUNTDOWN:
-		Logger.error("Received ghost picks outside proper phase", "ghost_picking")
-		return
-	_character_manager.set_timeline_index(player_id, timeline_index)
-
-
-func get_players():
-	return _character_manager.player_dic
+func despawn_world():
+	_game_room_players_ready.clear()
+	_game_room_world.queue_free()
+	_player_levels_loaded.clear()
+	_game_room_world_exists = false
 
 
 func get_game_room_players() -> Dictionary:
@@ -152,54 +77,105 @@ func get_game_room_players_ready() -> Dictionary:
 	return _game_room_players_ready
 
 
-func get_game_manager() -> GameManager:
-	return _game_manager
+func add_player(player_id: int, player_user_name: String) -> void:
+	_player_id_user_name_dic[player_id] = player_user_name
+	# Update id dictionary
+	_player_id_to_team_id[player_id] = _player_count
+	_team_id_to_player_id[_player_count] = player_id
+	_player_count += 1
 
 
-func get_round_manager() -> RoundManager:
-	return _round_manager
+func remove_player(player_id: int) -> void:
+	# Update id dictionary
+	var _success = _player_id_user_name_dic.erase(player_id)
+	_success = _game_room_players_ready.erase(player_id)
+	_success = _team_id_to_player_id.erase(_player_id_to_team_id[player_id])
+	_success = _player_id_to_team_id.erase(player_id)
+	_player_count -= 1
 
 
-func _on_world_state_update(world_state):
-	if _round_manager.get_current_phase() == RoundManager.Phases.GAME:
-		emit_signal("world_state_updated", world_state, id)
-
-
-func _on_preparation_phase_started():
-	var round_index = _round_manager.round_index
-	var switch_time = _round_manager.get_deadline()
-	var default_timeline_index = min(round_index,Constants.get_value("ghosts", "max_amount"))
-	for player_id in _character_manager.player_dic:
-		_character_manager.player_dic[player_id].round_index = round_index
-		_character_manager.set_timeline_index(player_id, default_timeline_index)
-		_server.send_phase_switch_to_client(player_id, round_index, RoundManager.Phases.COUNTDOWN, switch_time)
+func handle_game_room_ready(player_id):
+	_game_room_players_ready[player_id] = true
+	# Update on all clients
+	for client_id in _player_id_user_name_dic:
+		_server.send_game_room_ready(client_id, player_id)
 	
+	# If all players are ready, load level
+	if _game_room_players_ready.keys().size() == Constants.PLAYER_MAX_COUNT:
+		for client_id in _player_id_user_name_dic:
+			_server.send_load_level(client_id)
 
-func _on_countdown_phase_started():
-	var round_index = _round_manager.round_index
-	var switch_time = _round_manager.get_deadline()
-	for player_id in _character_manager.player_dic:
-		_server.send_phase_switch_to_client(player_id, round_index, RoundManager.Phases.GAME, switch_time)
+
+func handle_game_room_not_ready(player_id):
+	var _success = _game_room_players_ready.erase(player_id)
+	# Update on all clients
+	for client_id in _player_id_user_name_dic:
+		_server.send_game_room_not_ready(client_id, player_id)
+
+
+func handle_player_level_loaded(player_id):
+	_player_levels_loaded[player_id] = true
 	
-func _on_game_phase_started() -> void:
-	var round_index = _round_manager.round_index
-	var switch_time = _round_manager.get_deadline()
-	for player_id in _character_manager.player_dic:
-		_server.send_phase_switch_to_client(player_id, round_index, RoundManager.Phases.PREPARATION, switch_time)
-	_character_manager.propagate_player_picks()
-	_character_manager.enable_ghosts()
-	_character_manager.start_ghosts()
-	_character_manager.move_players_to_spawn_point()
-	_character_manager.set_block_player_input(false)
+	if _player_levels_loaded.size() == Constants.PLAYER_MAX_COUNT:
+		spawn_world()
 
 
-func _on_game_phase_stopped():
-	_action_manager.clear_action_instances()
-	_character_manager.create_ghosts()
-	_character_manager.disable_ghosts()
-	_character_manager.stop_ghosts()
-	_character_manager.reset_wall_indices()
-	_character_manager.move_players_to_spawn_point()
-	_character_manager.set_block_player_input(true)
-	_game_manager.reset()
-	_players_ready.clear()
+func update_player_input_data(player_id, input_data: InputData):
+	if _game_room_world_exists:
+		_game_room_world.update_player_input_data(player_id, input_data)
+
+
+func handle_player_ready(player_id):
+	if _game_room_world_exists:
+		_game_room_world.handle_player_ready(player_id)
+
+
+func handle_ghost_pick(player_id, timeline_index):
+	if _game_room_world_exists:
+		_game_room_world.handle_ghost_pick(player_id, timeline_index)
+
+
+func _on_world_state_updated(world_state):
+	emit_signal("world_state_updated", world_state, id)
+
+
+##############################
+####### Capture Points #######
+##############################
+
+func _on_capture_point_team_changed(team_id, capture_point):
+	var capturing_player_id = -1
+	if team_id != -1:
+		capturing_player_id = _team_id_to_player_id[team_id]
+	for player_id in _player_id_user_name_dic:
+		_server.send_capture_point_team_changed(player_id, capturing_player_id, capture_point)
+
+
+func _on_capture_point_captured(team_id, capture_point):
+	var capturing_player_id = -1
+	if team_id != -1:
+		capturing_player_id = _team_id_to_player_id[team_id]
+	for player_id in _player_id_user_name_dic:
+		_server.send_capture_point_captured(player_id, capturing_player_id, capture_point)
+
+func _on_capture_point_status_changed(capture_progress, team_id, capture_point):
+	var capturing_player_id = -1
+	if team_id != -1:
+		capturing_player_id = _team_id_to_player_id[team_id]
+	for player_id in _player_id_user_name_dic:
+		_server.send_capture_point_status_changed(player_id, capturing_player_id, capture_point, capture_progress)
+
+func _on_capture_point_capture_lost(team_id, capture_point):
+	var capturing_player_id = -1
+	if team_id != -1:
+		capturing_player_id = _team_id_to_player_id[team_id]
+	for player_id in _player_id_user_name_dic:
+		_server.send_capture_point_capture_lost(player_id, capturing_player_id, capture_point)
+
+func _on_game_result(team_id):
+	var winning_player_id = _team_id_to_player_id[team_id]
+	for player_id in _player_id_user_name_dic:
+		_server.send_game_result(player_id, winning_player_id)
+	
+	yield(get_tree().create_timer(3), "timeout")
+	despawn_world()

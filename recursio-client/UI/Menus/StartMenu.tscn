@@ -1,11 +1,13 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://UI/Menus/StartMenu.gd" type="Script" id=1]
 [ext_resource path="res://UI/Menus/GameRooms/GameRoomCreation.gd" type="Script" id=2]
 [ext_resource path="res://Resources/Icons/icon_ready.png" type="Texture" id=3]
 [ext_resource path="res://UI/Menus/GameRooms/GameRoomSearch.gd" type="Script" id=4]
-[ext_resource path="res://UI/Menus/GameRoomUI.gd" type="Script" id=5]
+[ext_resource path="res://UI/Menus/GameRoomLobby.gd" type="Script" id=5]
 [ext_resource path="res://Resources/Icons/icon_not_ready.png" type="Texture" id=6]
+[ext_resource path="res://World.tscn" type="PackedScene" id=7]
+[ext_resource path="res://Util/LatencyHUD.gd" type="Script" id=8]
 
 [node name="StartMenu" type="Control"]
 anchor_right = 1.0
@@ -14,6 +16,7 @@ script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+world = ExtResource( 7 )
 
 [node name="CenterContainer" type="CenterContainer" parent="."]
 anchor_right = 1.0
@@ -183,7 +186,7 @@ margin_right = 251.0
 margin_bottom = 20.0
 text = "Back"
 
-[node name="GameRoom" type="PanelContainer" parent="CenterContainer"]
+[node name="GameRoomLobby" type="PanelContainer" parent="CenterContainer"]
 visible = false
 margin_left = 505.0
 margin_top = 293.0
@@ -193,58 +196,86 @@ script = ExtResource( 5 )
 icon_ready = ExtResource( 3 )
 icon_not_ready = ExtResource( 6 )
 
-[node name="Content" type="VBoxContainer" parent="CenterContainer/GameRoom"]
+[node name="Content" type="VBoxContainer" parent="CenterContainer/GameRoomLobby"]
 margin_left = 7.0
 margin_top = 7.0
 margin_right = 507.0
 margin_bottom = 377.0
 
-[node name="TopBar" type="VBoxContainer" parent="CenterContainer/GameRoom/Content"]
+[node name="TopBar" type="VBoxContainer" parent="CenterContainer/GameRoomLobby/Content"]
 margin_right = 500.0
 margin_bottom = 14.0
 
-[node name="GameRoomName" type="Label" parent="CenterContainer/GameRoom/Content/TopBar"]
+[node name="GameRoomName" type="Label" parent="CenterContainer/GameRoomLobby/Content/TopBar"]
 margin_right = 500.0
 margin_bottom = 14.0
 text = "Room1"
 align = 1
 
-[node name="Space" type="Control" parent="CenterContainer/GameRoom/Content"]
+[node name="Space" type="Control" parent="CenterContainer/GameRoomLobby/Content"]
 margin_top = 18.0
 margin_right = 500.0
 margin_bottom = 38.0
 rect_min_size = Vector2( 0, 20 )
 
-[node name="PlayerList" type="ItemList" parent="CenterContainer/GameRoom/Content"]
+[node name="PlayerList" type="ItemList" parent="CenterContainer/GameRoomLobby/Content"]
 margin_top = 42.0
 margin_right = 500.0
 margin_bottom = 342.0
 rect_min_size = Vector2( 500, 300 )
 fixed_icon_size = Vector2( 60, 15 )
 
-[node name="VBoxContainer" type="HBoxContainer" parent="CenterContainer/GameRoom/Content"]
+[node name="VBoxContainer" type="HBoxContainer" parent="CenterContainer/GameRoomLobby/Content"]
 margin_top = 346.0
 margin_right = 500.0
 margin_bottom = 346.0
 
-[node name="BottomBar" type="HBoxContainer" parent="CenterContainer/GameRoom/Content"]
+[node name="BottomBar" type="HBoxContainer" parent="CenterContainer/GameRoomLobby/Content"]
 margin_top = 350.0
 margin_right = 500.0
 margin_bottom = 370.0
 
-[node name="Btn_Ready" type="Button" parent="CenterContainer/GameRoom/Content/BottomBar"]
+[node name="Btn_Ready" type="Button" parent="CenterContainer/GameRoomLobby/Content/BottomBar"]
 margin_right = 50.0
 margin_bottom = 20.0
 text = "Ready"
 
-[node name="Space" type="Control" parent="CenterContainer/GameRoom/Content/BottomBar"]
+[node name="Space" type="Control" parent="CenterContainer/GameRoomLobby/Content/BottomBar"]
 margin_left = 54.0
 margin_right = 447.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
 
-[node name="Btn_Leave" type="Button" parent="CenterContainer/GameRoom/Content/BottomBar"]
+[node name="Btn_Leave" type="Button" parent="CenterContainer/GameRoomLobby/Content/BottomBar"]
 margin_left = 451.0
 margin_right = 500.0
 margin_bottom = 20.0
 text = "Leave"
+
+[node name="StatsHUD" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+script = ExtResource( 8 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="LatencyText" type="Label" parent="StatsHUD"]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_top = -14.0
+margin_right = 93.0
+text = "Latency: 40ms"
+
+[node name="FPSText" type="Label" parent="StatsHUD"]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -60.0
+margin_top = -14.0
+text = "FPS: -1"
+__meta__ = {
+"_edit_use_anchors_": false
+}

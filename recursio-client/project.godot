@@ -75,14 +75,14 @@ _global_script_classes=[ {
 "path": "res://UI/Menus/GameRooms/GameRoomCreation.gd"
 }, {
 "base": "PanelContainer",
+"class": "GameRoomLobby",
+"language": "GDScript",
+"path": "res://UI/Menus/GameRoomLobby.gd"
+}, {
+"base": "PanelContainer",
 "class": "GameRoomSearch",
 "language": "GDScript",
 "path": "res://UI/Menus/GameRooms/GameRoomSearch.gd"
-}, {
-"base": "PanelContainer",
-"class": "GameRoomUI",
-"language": "GDScript",
-"path": "res://UI/Menus/GameRoomUI.gd"
 }, {
 "base": "GhostBase",
 "class": "Ghost",
@@ -203,8 +203,8 @@ _global_script_class_icons={
 "Enemy": "",
 "GameManager": "",
 "GameRoomCreation": "",
+"GameRoomLobby": "",
 "GameRoomSearch": "",
-"GameRoomUI": "",
 "Ghost": "",
 "GhostBase": "",
 "HUD": "",
@@ -231,7 +231,7 @@ _global_script_class_icons={
 [application]
 
 config/name="recursio"
-run/main_scene="res://World.tscn"
+run/main_scene="res://UI/Menus/StartMenu.tscn"
 boot_splash/image="res://lizrad_logo.png"
 config/icon="res://icon.png"
 
