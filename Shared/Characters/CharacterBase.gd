@@ -187,3 +187,6 @@ func visual_delayed_spawn(delay: float):
 
 func visual_kill():
 	emit_signal("dying")
+
+func is_collision_active() -> bool:
+	return !_collision_shape.disabled
