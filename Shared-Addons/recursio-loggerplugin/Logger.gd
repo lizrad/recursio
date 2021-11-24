@@ -751,11 +751,13 @@ func load_config(configfile = default_configfile_path):
 
 	# Load modules config and initialize them
 	modules = {}
-	for module_cfg in config.get_value(PLUGIN_NAME, "modules"):
-		var module = Module.new(
-			module_cfg["name"], module_cfg["output_level"], module_cfg["output_strategies"], get_external_sink(module_cfg["external_sink"]["path"])
-		)
-		modules[module_cfg["name"]] = module
+	
+	if config.get_value(PLUGIN_NAME, config_fields.external_sinks) != null:
+		for module_cfg in config.get_value(PLUGIN_NAME, "modules"):
+			var module = Module.new(
+				module_cfg["name"], module_cfg["output_level"], module_cfg["output_strategies"], get_external_sink(module_cfg["external_sink"]["path"])
+			)
+			modules[module_cfg["name"]] = module
 
 	info("Successfully loaded the config from '%s'." % configfile, PLUGIN_NAME)
 	return OK
