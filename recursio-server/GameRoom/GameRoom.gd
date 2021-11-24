@@ -91,11 +91,12 @@ func add_player(player_id: int, player_user_name: String) -> void:
 
 func remove_player(player_id: int) -> void:
 	# Update id dictionary
-	var _success = _player_id_user_name_dic.erase(player_id)
-	_success = _game_room_players_ready.erase(player_id)
-	_success = _team_id_to_player_id.erase(_player_id_to_team_id[player_id])
-	_success = _player_id_to_team_id.erase(player_id)
-	_player_count -= 1
+	if _player_id_to_team_id.has(player_id):
+		var _success = _player_id_user_name_dic.erase(player_id)
+		_success = _game_room_players_ready.erase(player_id)
+		_success = _team_id_to_player_id.erase(_player_id_to_team_id[player_id])
+		_success = _player_id_to_team_id.erase(player_id)
+		_player_count -= 1
 
 
 func handle_game_room_ready(player_id):
