@@ -1,8 +1,9 @@
 name: Build Client
 
 on:
-  push: {}
-  pull_request: {}
+  push:
+    branches:
+      - main
 
 jobs:
   Godot:
