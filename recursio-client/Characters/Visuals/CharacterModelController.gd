@@ -8,6 +8,8 @@ onready var _animator = get_node("Animator")
 onready var _front = get_node("RootPivot/FrontPivot/Front")
 onready var _front_variant = get_node("RootPivot/FrontPivot/FrontVariant")
 onready var _middle = get_node("RootPivot/MiddlePivot/Middle")
+onready var _back_dash = get_node("RootPivot/BackPivot/BackDash")
+onready var _back_dash_variant = get_node("RootPivot/BackPivot/BackDashVariant")
 onready var _back = get_node("RootPivot/BackPivot/Back")
 onready var _back_variant = get_node("RootPivot/BackPivot/BackVariant")
 onready var _parent = get_parent().get_parent()
@@ -38,8 +40,11 @@ func set_shader_param(param, value):
 	_front.material_override.set_shader_param(param, value)
 	_front_variant.material_override.set_shader_param(param, value)
 	_middle.material_override.set_shader_param(param, value)
+	_middle.material_override.set_shader_param(param, value)
 	_back.material_override.set_shader_param(param, value)
 	_back_variant.material_override.set_shader_param(param, value)
+	_back_dash.material_override.set_shader_param(param, value)
+	_back_dash_variant.material_override.set_shader_param(param, value)
 
 
 func _set_color_scheme(new_color_scheme:String, timeline_index):
