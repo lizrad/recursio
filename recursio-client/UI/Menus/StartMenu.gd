@@ -1,6 +1,8 @@
 extends Control
 class_name StartMenu
 
+const REMOTE_SERVER_IP: String = "37.252.189.118"
+
 export(PackedScene) var world_scene
 export(PackedScene) var level_scene
 export(PackedScene) var capture_point_scene
@@ -9,6 +11,8 @@ onready var _start_menu_buttons: VBoxContainer = get_node("CenterContainer/MainM
 
 onready var _btn_play_tutorial = get_node("CenterContainer/MainMenu/Btn_PlayTutorial")
 onready var _btn_play_online = get_node("CenterContainer/MainMenu/Btn_PlayOnline")
+onready var _btn_play_local = get_node("CenterContainer/MainMenu/HBoxContainer/Btn_PlayLocal")
+onready var _lineEdit_local_ip = get_node("CenterContainer/MainMenu/HBoxContainer/LocalIPAddress")
 onready var _btn_exit = get_node("CenterContainer/MainMenu/Btn_Exit")
 
 onready var _game_room_search: GameRoomSearch = get_node("CenterContainer/GameRoomSearch")
@@ -29,6 +33,7 @@ var _world
 func _ready():
 	var _error = _btn_play_tutorial.connect("pressed", self, "_on_play_tutorial")
 	_error = _btn_play_online.connect("pressed", self, "_on_play_online")
+	_error = _btn_play_local.connect("pressed", self, "_on_play_local")
 	_error = _btn_exit.connect("pressed", self, "_on_exit")
 
 	_error = _game_room_search.connect("btn_create_game_room_pressed", self, "_on_search_create_game_room_pressed")
@@ -69,6 +74,7 @@ func _return_to_game_room_lobby():
 
 func _toggle_enabled_start_menu_buttons(enabled: bool):
 	_btn_play_online.disabled = !enabled
+	_btn_play_local.disabled = !enabled
 	_btn_play_tutorial.disabled = !enabled
 	_btn_exit.disabled = !enabled
 
@@ -114,7 +120,12 @@ func _on_play_tutorial() -> void:
 
 func _on_play_online() -> void:
 	_toggle_enabled_start_menu_buttons(false)
-	Server.connect_to_server()
+	Server.connect_to_server(REMOTE_SERVER_IP)
+
+
+func _on_play_local() -> void:
+	_toggle_enabled_start_menu_buttons(false)
+	Server.connect_to_server(_lineEdit_local_ip.text)
 
 
 func _on_exit() -> void:
@@ -134,6 +145,8 @@ func _on_creation_create_game_room_pressed(game_room_name) -> void:
 
 func _on_search_back_pressed() -> void:
 	_start_menu_buttons.show()
+	Server.disconnect_from_server()
+	
 
 
 func _on_creation_back_pressed() -> void:
