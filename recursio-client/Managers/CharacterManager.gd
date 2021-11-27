@@ -360,9 +360,11 @@ func _on_player_hit(hit_player_id) -> void:
 
 func _on_ghost_hit(hit_ghost_player_owner, hit_ghost_id) -> void:
 	if hit_ghost_player_owner == _player_rpc_id:
-		_player_ghosts[hit_ghost_id].server_hit()
+		if _player_ghosts.has(hit_ghost_id):
+			_player_ghosts[hit_ghost_id].server_hit()
 	else:
-		_enemy_ghosts[hit_ghost_id].server_hit()
+		if _enemy_ghosts.has(hit_ghost_id):
+			_enemy_ghosts[hit_ghost_id].server_hit()
 
 
 func _on_capture_point_captured(capturing_player_id, _capture_point):
