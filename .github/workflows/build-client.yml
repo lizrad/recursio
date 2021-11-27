@@ -25,5 +25,5 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
-          name: Client - ${{ matrix.platform }}
+          name: recursio-client-${{ matrix.platform }}
           path: ${{ github.workspace }}/${{ steps.build.outputs.build }}
