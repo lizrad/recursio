@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Level/CapturePoint.gd" type="Script" id=1]
 [ext_resource path="res://Resources/Icons/circle_white_256x256.png" type="Texture" id=2]
@@ -12,9 +12,6 @@ albedo_color = Color( 0, 1, 0.811765, 1 )
 [sub_resource type="CylinderMesh" id=3]
 height = 0.4
 
-[sub_resource type="ViewportTexture" id=4]
-viewport_path = NodePath("Sprite3D/Viewport")
-
 [node name="CapturePoint" type="Spatial"]
 script = ExtResource( 1 )
 
@@ -26,7 +23,7 @@ shape = SubResource( 1 )
 
 [node name="MeshInstance" type="MeshInstance" parent="."]
 transform = Transform( 1, 0, 0, 0, 0.2, 0, 0, 0, 1, 0, 0, 0 )
-layers = 548
+layers = 36
 material_override = SubResource( 2 )
 cast_shadow = 0
 mesh = SubResource( 3 )
@@ -36,7 +33,6 @@ material/0 = null
 layers = 512
 axis = 1
 billboard = 2
-texture = SubResource( 4 )
 
 [node name="Viewport" type="Viewport" parent="Sprite3D"]
 size = Vector2( 260, 260 )
