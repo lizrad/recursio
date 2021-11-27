@@ -11,3 +11,7 @@ data_*/
 # Loggerplugin user-settings
 **/recursio-loggerplugin/loggerconfig.ini
 logger.cfg
+
+
+# Ignore Builds
+Build/
