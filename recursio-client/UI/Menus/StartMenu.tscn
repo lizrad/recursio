@@ -38,6 +38,7 @@ margin_bottom = 348.0
 [node name="Btn_PlayTutorial" type="Button" parent="CenterContainer/MainMenu"]
 margin_right = 229.0
 margin_bottom = 20.0
+disabled = true
 shortcut_in_tooltip = false
 text = "Play Tutorial"
 
