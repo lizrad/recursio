@@ -100,6 +100,10 @@ func _on_wall_spawn_received(position, rotation, wall_index):
 			_walls[wall_index].global_transform.origin = position
 			#TODO: is rotation global here, could be dangerous if it isn't
 			_walls[wall_index].rotation.y = rotation
+	else:
+		var wall_action_index = Constants.get_value("ghosts","wall_placing_timeline_index")
+		_action_manager.set_active(_get_action(ActionManager.Trigger.FIRE_START, wall_action_index) as Action, self, _kb, get_parent())
+		pass
 
 
 func get_visibility_mask():

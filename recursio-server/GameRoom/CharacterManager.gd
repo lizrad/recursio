@@ -166,8 +166,6 @@ func enable_ghosts() -> void:
 func disable_ghosts() -> void:
 	for player_id in ghost_dic:
 			for timeline_index in ghost_dic[player_id]:
-				if player_dic[player_id].timeline_index == timeline_index:
-					continue
 				_remove_ghost(ghost_dic[player_id][timeline_index])
 
 
@@ -182,8 +180,6 @@ func start_ghosts() -> void:
 func stop_ghosts() -> void:
 	for player_id in ghost_dic:
 		for timeline_index in ghost_dic[player_id]:
-			if player_dic[player_id].timeline_index == timeline_index:
-				continue
 			ghost_dic[player_id][timeline_index].stop_playing()
 
 

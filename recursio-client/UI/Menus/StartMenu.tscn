@@ -30,28 +30,50 @@ __meta__ = {
 }
 
 [node name="MainMenu" type="VBoxContainer" parent="CenterContainer"]
-margin_left = 467.0
-margin_top = 266.0
-margin_right = 557.0
-margin_bottom = 334.0
+margin_left = 397.0
+margin_top = 252.0
+margin_right = 626.0
+margin_bottom = 348.0
 
 [node name="Btn_PlayTutorial" type="Button" parent="CenterContainer/MainMenu"]
-margin_right = 90.0
+margin_right = 229.0
 margin_bottom = 20.0
+disabled = true
 shortcut_in_tooltip = false
 text = "Play Tutorial"
 
 [node name="Btn_PlayOnline" type="Button" parent="CenterContainer/MainMenu"]
 margin_top = 24.0
-margin_right = 90.0
+margin_right = 229.0
 margin_bottom = 44.0
 shortcut_in_tooltip = false
 text = "Play Online"
 
-[node name="Btn_Exit" type="Button" parent="CenterContainer/MainMenu"]
+[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/MainMenu"]
 margin_top = 48.0
-margin_right = 90.0
-margin_bottom = 68.0
+margin_right = 229.0
+margin_bottom = 72.0
+
+[node name="Btn_PlayLocal" type="Button" parent="CenterContainer/MainMenu/HBoxContainer"]
+margin_right = 75.0
+margin_bottom = 24.0
+shortcut_in_tooltip = false
+text = "Play Local"
+
+[node name="LocalIPAddress" type="LineEdit" parent="CenterContainer/MainMenu/HBoxContainer"]
+margin_left = 79.0
+margin_right = 229.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 150, 0 )
+text = "127.0.0.1"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Btn_Exit" type="Button" parent="CenterContainer/MainMenu"]
+margin_top = 76.0
+margin_right = 229.0
+margin_bottom = 96.0
 shortcut_in_tooltip = false
 text = "Exit"
 

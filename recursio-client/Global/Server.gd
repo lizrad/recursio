@@ -1,8 +1,6 @@
 extends Node
 
 var network = NetworkedMultiplayerENet.new()
-var remote_server_ip = "37.252.189.118"
-var local_server_ip = "127.0.0.1"
 var port = 1909
 
 var tickrate = 30
@@ -60,10 +58,9 @@ func _physics_process(delta):
 	_run_server_clock(delta)
 
 
-func connect_to_server():
+func connect_to_server(server_ip):
 	Logger.info("Connecting to server...", "connection")
-	var use_local_server = Constants.get_value("debug","use_local_server")
-	var ip = local_server_ip if use_local_server else remote_server_ip
+	var ip = server_ip
 	network.create_client(ip, port)
 	get_tree().set_network_peer(network)
 	var _error = get_tree().connect("connection_failed", self, "_on_connection_failed")
@@ -74,6 +71,7 @@ func connect_to_server():
 func disconnect_from_server():
 	Logger.info("Disconnecting from server", "connection")
 	set_physics_process(false)
+	network.close_connection()
 	get_tree().network_peer = null
 	var _error = get_tree().disconnect("connection_failed", self, "_on_connection_failed")
 	_error = get_tree().disconnect("connected_to_server", self, "_on_connection_succeeded")
@@ -86,6 +84,8 @@ func disconnect_from_server():
 	latency_array.clear()
 	if _clock_update_timer != null:
 		_clock_update_timer.queue_free()
+	
+	emit_signal("server_disconnected")
 
 
 func _notification(what):
@@ -109,7 +109,6 @@ func _on_connection_succeeded():
 
 func _on_server_disconnected():
 	disconnect_from_server()
-	emit_signal("server_disconnected")
 
 
 func _start_clock_synchronization():

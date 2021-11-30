@@ -69,6 +69,9 @@ func _delete_game_room(game_room_id: int) -> void:
 func _join_game_room(player_id: int, game_room_id: int, player_user_name: String) -> void:
 	if _game_room_dic.has(game_room_id):
 		var game_room: GameRoom = _game_room_dic[game_room_id]
+		if game_room.get_player_count() == Constants.PLAYER_MAX_COUNT:
+			return;
+		
 		game_room.add_player(player_id, player_user_name)
 		_player_game_room_dic[player_id] = game_room_id
 		_update_game_room_on_client(game_room)
