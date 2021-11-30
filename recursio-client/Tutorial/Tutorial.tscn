@@ -25,7 +25,6 @@ script = ExtResource( 4 )
 
 [node name="GameManager" type="Node" parent="CharacterManager"]
 script = ExtResource( 6 )
-level_path = NodePath("../../LevelH")
 
 [node name="TutorialUI" type="CenterContainer" parent="."]
 anchor_right = 1.0

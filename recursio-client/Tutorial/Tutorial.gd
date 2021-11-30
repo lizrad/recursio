@@ -18,9 +18,6 @@ func set_ui_visible(is_visible):
 func _ready():
 	set_ui_visible(true)
 	$CharacterManager/GameManager.set_level($LevelH)
-	
-#	$Player.player_init($CharacterManager/ActionManager, $CharacterManager/RoundManager)
-#	$Player.block_movement = false
 
 	$TutorialUI/PanelContainer/TutorialText.text = "Welcome to the tutorial!"
 	if show_text:
@@ -54,7 +51,6 @@ func _process(delta):
 	elif current_phase == Phases.ROUND2:
 		_update_phase2()
 	elif current_phase == Phases.DONE:
-		# TODO: Quit tutorial
 		pass
 
 
