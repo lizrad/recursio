@@ -2,13 +2,7 @@ extends Node
 
 var network = NetworkedMultiplayerENet.new()
 
-
-var use_local_server = false
-var remote_server_ip = "37.252.189.118"
-var local_server_ip = "127.0.0.1"
-
 var port = 1909
-
 var tickrate = 30
 
 # For Clock Synchronization

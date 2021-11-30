@@ -1,13 +1,11 @@
 extends Node
 class_name GameManager
 
-export var level_path: NodePath
-
 # These are optional
 var _game_result_screen
 var _countdown_screen
 
-onready var _level: Level = get_node(level_path)
+var _level: Level
 
 var _team_id := -1
 var _countdown_time: float = Constants.get_value("gameplay","countdown_phase_seconds")

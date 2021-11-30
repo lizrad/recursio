@@ -17,6 +17,7 @@ func set_ui_visible(is_visible):
 
 func _ready():
 	set_ui_visible(true)
+	$CharacterManager/GameManager.set_level($LevelH)
 	
 #	$Player.player_init($CharacterManager/ActionManager, $CharacterManager/RoundManager)
 #	$Player.block_movement = false
