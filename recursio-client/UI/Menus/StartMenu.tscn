@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=19 format=2]
 
 [ext_resource path="res://UI/Menus/StartMenu.gd" type="Script" id=1]
 [ext_resource path="res://UI/Menus/GameRooms/GameRoomCreation.gd" type="Script" id=2]
@@ -10,10 +10,99 @@
 [ext_resource path="res://Util/LatencyHUD.gd" type="Script" id=8]
 [ext_resource path="res://Shared/Level/LevelH.tscn" type="PackedScene" id=9]
 [ext_resource path="res://Level/CapturePoint.tscn" type="PackedScene" id=10]
+[ext_resource path="res://addons/ascii-shader/character_map.png" type="Texture" id=11]
+[ext_resource path="res://UI/Default.tres" type="Theme" id=12]
+
+[sub_resource type="Shader" id=1]
+code = "shader_type canvas_item;
+
+uniform sampler2D noise1;
+uniform sampler2D noise2;
+
+// An image containing ASCII characters, from darkest / emptiest (e.g. ' ') to brightest / fullest (e.g. '@')
+uniform sampler2D character_map;
+
+// The number of ASCII characters in the character_map
+uniform float number_of_characters = 8.0;
+
+// The pixel size of ASCII characters rendered on the screen
+uniform vec2 character_size = vec2(8.0, 16.0);
+
+void fragment() {
+	vec2 character_count = vec2(textureSize(SCREEN_TEXTURE, 0)) / character_size;
+	
+	// Clamp the screen UV coordinates to the future ASCII character grid
+	vec2 uv1 = floor((SCREEN_UV - TIME * vec2(0.02, 0.02)) * character_count) / character_count;
+	vec2 uv2 = floor((SCREEN_UV + TIME * vec2(0.0, 0.01)) * character_count) / character_count;
+	
+	// Calculate the coordinates we're at within the current character
+	vec2 character_uv = SCREEN_UV * character_count - floor(SCREEN_UV * character_count);
+	
+	vec4 color = texture(noise1, uv1)
+			- texture(noise2, uv2);
+	color *= 10.0;
+	
+	float swap = color.g;
+	color.g = color.b;
+	color.b = swap;
+	
+	color *= 0.7;
+	color += 0.3 * float(length(color) > 1.0);
+	
+	// Get the greyscale value (or brightness) here
+	float grey = min((color.x + color.y + color.z) / 3.0, 1.0);
+
+	// Using this greyscale value, decide which character in the character_map to use
+	// The floor and division is to get integer values from 0 to 7 instead of floating points inbetween
+	vec2 offset = vec2(floor(grey * (number_of_characters - 1.0)) / number_of_characters, 0.0);
+
+	// Stencil out the ASCII character by multiplying the color with its alpha
+	color *= texture(character_map, offset + character_uv * vec2(1.0 / number_of_characters, -1.0)).a;
+	
+	color.a = 1.0;
+
+	// Assign the result
+	COLOR = color;
+}"
+
+[sub_resource type="OpenSimplexNoise" id=2]
+seed = 123
+period = 128.0
+persistence = 0.7
+
+[sub_resource type="NoiseTexture" id=3]
+width = 1024
+height = 1024
+seamless = true
+as_normalmap = true
+bump_strength = 32.0
+noise = SubResource( 2 )
+
+[sub_resource type="OpenSimplexNoise" id=4]
+seed = 321
+period = 128.0
+persistence = 1.0
+
+[sub_resource type="NoiseTexture" id=5]
+width = 1024
+height = 1024
+seamless = true
+as_normalmap = true
+bump_strength = 32.0
+noise = SubResource( 4 )
+
+[sub_resource type="ShaderMaterial" id=6]
+shader = SubResource( 1 )
+shader_param/number_of_characters = 8.0
+shader_param/character_size = Vector2( 8, 16 )
+shader_param/noise1 = SubResource( 3 )
+shader_param/noise2 = SubResource( 5 )
+shader_param/character_map = ExtResource( 11 )
 
 [node name="StartMenu" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+theme = ExtResource( 12 )
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -21,6 +110,14 @@ __meta__ = {
 world_scene = ExtResource( 7 )
 level_scene = ExtResource( 9 )
 capture_point_scene = ExtResource( 10 )
+
+[node name="ColorRect" type="ColorRect" parent="."]
+material = SubResource( 6 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="CenterContainer" type="CenterContainer" parent="."]
 anchor_right = 1.0
@@ -30,39 +127,39 @@ __meta__ = {
 }
 
 [node name="MainMenu" type="VBoxContainer" parent="CenterContainer"]
-margin_left = 397.0
-margin_top = 252.0
-margin_right = 626.0
-margin_bottom = 348.0
+margin_left = 379.0
+margin_top = 240.0
+margin_right = 645.0
+margin_bottom = 360.0
 
 [node name="PlayTutorial" type="Button" parent="CenterContainer/MainMenu"]
-margin_right = 229.0
-margin_bottom = 20.0
+margin_right = 266.0
+margin_bottom = 26.0
 shortcut_in_tooltip = false
 text = "Play Tutorial"
 
 [node name="PlayOnline" type="Button" parent="CenterContainer/MainMenu"]
-margin_top = 24.0
-margin_right = 229.0
-margin_bottom = 44.0
+margin_top = 30.0
+margin_right = 266.0
+margin_bottom = 56.0
 shortcut_in_tooltip = false
 text = "Play Online"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/MainMenu"]
-margin_top = 48.0
-margin_right = 229.0
-margin_bottom = 72.0
+margin_top = 60.0
+margin_right = 266.0
+margin_bottom = 90.0
 
 [node name="Btn_PlayLocal" type="Button" parent="CenterContainer/MainMenu/HBoxContainer"]
-margin_right = 75.0
-margin_bottom = 24.0
+margin_right = 112.0
+margin_bottom = 30.0
 shortcut_in_tooltip = false
 text = "Play Local"
 
 [node name="LocalIPAddress" type="LineEdit" parent="CenterContainer/MainMenu/HBoxContainer"]
-margin_left = 79.0
-margin_right = 229.0
-margin_bottom = 24.0
+margin_left = 116.0
+margin_right = 266.0
+margin_bottom = 30.0
 rect_min_size = Vector2( 150, 0 )
 text = "127.0.0.1"
 __meta__ = {
@@ -70,9 +167,9 @@ __meta__ = {
 }
 
 [node name="Btn_Exit" type="Button" parent="CenterContainer/MainMenu"]
-margin_top = 76.0
-margin_right = 229.0
-margin_bottom = 96.0
+margin_top = 94.0
+margin_right = 266.0
+margin_bottom = 120.0
 shortcut_in_tooltip = false
 text = "Exit"
 
@@ -318,8 +415,8 @@ __meta__ = {
 [node name="LatencyText" type="Label" parent="StatsHUD"]
 anchor_top = 1.0
 anchor_bottom = 1.0
-margin_top = -14.0
-margin_right = 93.0
+margin_top = -20.0
+margin_right = 130.0
 text = "Latency: 40ms"
 
 [node name="FPSText" type="Label" parent="StatsHUD"]
@@ -327,8 +424,8 @@ anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = -60.0
-margin_top = -14.0
+margin_left = -70.0
+margin_top = -20.0
 text = "FPS: -1"
 __meta__ = {
 "_edit_use_anchors_": false

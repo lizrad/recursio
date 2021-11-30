@@ -19,7 +19,7 @@
 [ext_resource path="res://Characters/Visuals/Selector.gd" type="Script" id=17]
 [ext_resource path="res://Characters/Visuals/Selector.obj" type="ArrayMesh" id=18]
 
-[sub_resource type="SpatialMaterial" id=7]
+[sub_resource type="SpatialMaterial" id=1]
 albedo_color = Color( 1, 0, 0.866667, 1 )
 emission_enabled = true
 emission = Color( 1, 0.482353, 0.929412, 1 )
@@ -27,7 +27,7 @@ emission_energy = 1.61
 emission_operator = 0
 emission_on_uv2 = false
 
-[sub_resource type="CapsuleShape" id=1]
+[sub_resource type="CapsuleShape" id=2]
 height = 0.4
 
 [sub_resource type="SpatialMaterial" id=3]
@@ -62,7 +62,7 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.27928, 0 )
 transform = Transform( -3.27835e-08, 0.53033, 0.53033, 0, 0.53033, -0.53033, -0.75, -2.31815e-08, -2.31815e-08, -3, 0, 0 )
 visible = false
 layers = 512
-material_override = SubResource( 7 )
+material_override = SubResource( 1 )
 mesh = ExtResource( 18 )
 skeleton = NodePath("")
 material/0 = null
@@ -75,7 +75,7 @@ max_positon = Vector3( -1.75, 0, 0 )
 transform = Transform( -3.27835e-08, -0.53033, -0.53033, 0, 0.53033, -0.53033, 0.75, -2.31815e-08, -2.31815e-08, 3, 0, 0 )
 visible = false
 layers = 512
-material_override = SubResource( 7 )
+material_override = SubResource( 1 )
 mesh = ExtResource( 18 )
 skeleton = NodePath("")
 material/0 = null
@@ -87,7 +87,7 @@ max_positon = Vector3( 2, 0, 0 )
 [node name="CollisionShape" parent="KinematicBody" index="1"]
 transform = Transform( 0.75, 0, 0, 0, 0.75, -1.06581e-14, 0, -3.90799e-14, 1, 0, 0, 0 )
 visible = false
-shape = SubResource( 1 )
+shape = SubResource( 2 )
 
 [node name="CharacterModel" parent="KinematicBody" index="2" instance=ExtResource( 10 )]
 transform = Transform( -1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0 )
