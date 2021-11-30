@@ -59,6 +59,10 @@ func apply_input(movement_vector: Vector3, rotation_vector: Vector3, buttons: in
 		frame.position = self.position
 		_past_frames[Server.get_server_time()] = frame
 
+	# Nothing to do if player can't move
+	if block_movement or currently_dying or currently_spawning:
+		return
+
 	# visual appearance for aim_mode
 	# TODO: update drag_factor
 	# _drag_factor = 2*Constants.get_value("movement", "drag_factor") -> needs to be updated also on server

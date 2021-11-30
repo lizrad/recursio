@@ -50,12 +50,12 @@ func reset() -> void:
 
 # Should only be called in "physics_update()"
 func apply_input(movement_vector: Vector3, rotation_vector: Vector3, buttons: int) -> void:
-	var delta = get_physics_process_delta_time()
-	
+
 	# Nothing to do if player can't move
 	if block_movement or currently_dying or currently_spawning:
 		return
-	
+
+	var delta = get_physics_process_delta_time()
 	input_movement_direction = movement_vector
 
 	# Only rotate if input is given
