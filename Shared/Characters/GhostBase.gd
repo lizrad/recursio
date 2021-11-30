@@ -55,6 +55,7 @@ func start_playing(start_time: int) -> void:
 	_current_frame_index = 0
 	_start_time = start_time
 
+
 # Stops moving the ghost and disables collision
 func stop_playing() -> void:
 	_is_playing = false

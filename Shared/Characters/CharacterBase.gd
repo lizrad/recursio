@@ -32,7 +32,7 @@ var _actions = {}
 
 
 # Underlying kinematic body
-onready var _kb: KinematicBody = get_node("KinematicBody")
+onready var kb: KinematicBody = get_node("KinematicBody")
 onready var _collision_shape: CollisionShape = get_node("KinematicBody/CollisionShape")
 
 var _action_manager
@@ -80,26 +80,26 @@ func move_to_spawn_point() -> void:
 
 # Returns the position of the underlying kinematic body
 func get_position() -> Vector3:
-	return _kb.transform.origin
+	return kb.transform.origin
 
 
 # Returns the y-rotation of the underlying kinematic body
 func get_rotation_y() -> float:
-	return _kb.rotation.y;
+	return kb.rotation.y;
 
 
 # Sets the position of the underlying kinematic body
 func set_position(new_position: Vector3) -> void:
-	_kb.transform.origin = new_position
+	kb.transform.origin = new_position
 
 
 # Sets the y-rotation of the underlying kinematic body
 func set_rotation_y(new_rotation_y: float) -> void:
-	_kb.rotation.y = new_rotation_y
+	kb.rotation.y = new_rotation_y
 
 
 func set_velocity(new_velocity):
-	emit_signal("velocity_changed", velocity, -_kb.transform.basis.z, _kb.transform.basis.x)
+	emit_signal("velocity_changed", velocity, -kb.transform.basis.z, kb.transform.basis.x)
 	velocity = new_velocity
 
 
@@ -154,7 +154,7 @@ func trigger_actions(buttons: int) -> void:
 			continue
 
 		var action = _get_action(trigger, timeline_index)
-		var success = _action_manager.set_active(action, self, _kb, get_parent())
+		var success = _action_manager.set_active(action, self, kb, get_parent())
 		if success:
 			var type = _action_manager.get_action_type_for_trigger(trigger, timeline_index)
 			emit_signal("action_status_changed", type, true)
@@ -176,7 +176,7 @@ func _get_action(trigger, action_timeline_index):
 	return _actions[id]
 
 func get_body():
-	return _kb
+	return kb
 
 func wall_spawned(_wall):
 	pass

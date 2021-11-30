@@ -36,8 +36,9 @@ func close_current_input_frame() -> void:
 
 # Send input data with timestamp to the server
 func send_player_input_data_to_server() -> void:
-	_input_data.timestamp = Server.get_server_time()
-	Server.send_player_input_data(_input_data)
+	if Server.is_connection_active:
+		_input_data.timestamp = Server.get_server_time()
+		Server.send_player_input_data(_input_data)
 
 
 

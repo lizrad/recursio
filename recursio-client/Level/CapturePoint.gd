@@ -82,9 +82,10 @@ func _process(delta):
 	
 	#cannot reach 1 on client only
 	var local_maxima = 0.95 if _capture_progress <= 0.95 else _capture_progress
+	
 	#cannot reach 0 on client only
 	var local_minima = 0.05 if _capture_progress >= 0.05 else _capture_progress
-	if _local_player_inside:
+	if _local_player_inside or _local_ghost_inside:
 		if _capturing_team == -1:
 			set_capturing_player(player_id)
 		elif _capturing_team == player_id:
