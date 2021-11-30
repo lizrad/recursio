@@ -60,7 +60,7 @@ func apply_input(movement_vector: Vector3, rotation_vector: Vector3, buttons: in
 
 	# Only rotate if input is given
 	if rotation_vector != Vector3.ZERO:
-		_kb.look_at(rotation_vector + _kb.global_transform.origin, Vector3.UP)
+		kb.look_at(rotation_vector + kb.global_transform.origin, Vector3.UP)
 
 	# Scale movement depending on the direction the player is looking
 	var scale = (_base + movement_vector.dot(rotation_vector)) / _factor
@@ -70,8 +70,8 @@ func apply_input(movement_vector: Vector3, rotation_vector: Vector3, buttons: in
 	self.velocity = lerp(velocity, _target_velocity, _drag_factor * delta)
 	# Apply acceleration to velocity (important: after lerp)
 	self.velocity += acceleration * delta
-	var _collision_velocity = _kb.move_and_slide(velocity)
-
+	var _collision_velocity = kb.move_and_slide(velocity)
+	
 	# Trigger all actions with base
 	if aim_mode == false:
 		.trigger_actions(buttons)

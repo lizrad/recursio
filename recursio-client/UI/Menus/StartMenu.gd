@@ -9,8 +9,8 @@ export(PackedScene) var capture_point_scene
 
 onready var _start_menu_buttons: VBoxContainer = get_node("CenterContainer/MainMenu")
 
-onready var _btn_play_tutorial = get_node("CenterContainer/MainMenu/Btn_PlayTutorial")
-onready var _btn_play_online = get_node("CenterContainer/MainMenu/Btn_PlayOnline")
+onready var _btn_play_tutorial = get_node("CenterContainer/MainMenu/PlayTutorial")
+onready var _btn_play_online = get_node("CenterContainer/MainMenu/PlayOnline")
 onready var _btn_play_local = get_node("CenterContainer/MainMenu/HBoxContainer/Btn_PlayLocal")
 onready var _lineEdit_local_ip = get_node("CenterContainer/MainMenu/HBoxContainer/LocalIPAddress")
 onready var _btn_exit = get_node("CenterContainer/MainMenu/Btn_Exit")
@@ -115,7 +115,7 @@ func _on_connection_failed():
 
 
 func _on_play_tutorial() -> void:
-	pass
+	get_tree().change_scene("res://Tutorial/Tutorial.tscn")
 
 
 func _on_play_online() -> void:

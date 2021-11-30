@@ -146,6 +146,14 @@ func _on_game_start_received(start_time):
 	_round_manager.future_start_game(start_time)
 
 
+func get_player():
+	return _player
+
+
+func get_enemy():
+	return _enemy
+
+
 func _on_phase_switch_received(round_index, next_phase, switch_time):
 	_round_manager.round_index = round_index
 	_round_manager.get_previous_phase(next_phase)
@@ -201,8 +209,10 @@ func _on_countdown_phase_started() -> void:
 	_visual_kill_ghosts()
 	_visual_delay_spawn_ghosts(countdown_phase_seconds-spawn_time)
 	_game_manager.show_countdown_screen()
+	
 	# Send currently selected timeline to server
-	Server.send_timeline_pick(_player.timeline_index)
+	if Server.is_connection_active:
+		Server.send_timeline_pick(_player.timeline_index)
 
 
 func _on_game_phase_started() -> void:
@@ -283,6 +293,7 @@ func _on_spawn_player(player_id, spawn_point, team_id):
 	set_physics_process(true)
 	_player = _spawn_character(_player_scene, spawn_point)
 	_player.player_init(_action_manager, _round_manager)
+	_player.set_overview_light_enabled(false)
 	# TODO: Tunnel signal instead of accessing button overlay here
 	var _error = _player.get_button_overlay().connect("button_pressed", self, "_on_player_ready") 
 	_player_rpc_id = player_id

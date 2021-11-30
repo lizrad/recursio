@@ -1,11 +1,12 @@
 extends Node
 
 var network = NetworkedMultiplayerENet.new()
-var port = 1909
 
+var port = 1909
 var tickrate = 30
 
 # For Clock Synchronization
+var is_connection_active := false
 var latency: int = 0
 var server_clock: int = 0
 var delta_latency: int = 0
@@ -103,6 +104,7 @@ func _on_connection_failed():
 
 func _on_connection_succeeded():
 	Logger.info("Successfully connected", "connection")
+	is_connection_active = true
 	_start_clock_synchronization()
 	emit_signal("connection_successful")
 
@@ -137,7 +139,8 @@ func _determine_latency():
 
 
 func get_server_time():
-	return server_clock
+	# Return the local time if there's no server time to allow local play
+	return server_clock if server_clock > 0 else OS.get_system_time_msecs()
 
 
 func send_player_input_data(input_data: InputData):
