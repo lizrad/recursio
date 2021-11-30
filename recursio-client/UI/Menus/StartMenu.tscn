@@ -35,14 +35,13 @@ margin_top = 252.0
 margin_right = 626.0
 margin_bottom = 348.0
 
-[node name="Btn_PlayTutorial" type="Button" parent="CenterContainer/MainMenu"]
+[node name="PlayTutorial" type="Button" parent="CenterContainer/MainMenu"]
 margin_right = 229.0
 margin_bottom = 20.0
-disabled = true
 shortcut_in_tooltip = false
 text = "Play Tutorial"
 
-[node name="Btn_PlayOnline" type="Button" parent="CenterContainer/MainMenu"]
+[node name="PlayOnline" type="Button" parent="CenterContainer/MainMenu"]
 margin_top = 24.0
 margin_right = 229.0
 margin_bottom = 44.0
