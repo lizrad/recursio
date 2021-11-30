@@ -146,10 +146,6 @@ func _on_game_start_received(start_time):
 	_round_manager.future_start_game(start_time)
 
 
-func get_player_user_name() -> String:
-	return _player_user_name
-
-
 func get_player():
 	return _player
 
