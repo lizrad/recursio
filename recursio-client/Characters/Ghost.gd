@@ -5,11 +5,11 @@ onready var _character_model : CharacterModel = get_node("KinematicBody/Characte
 
 # TODO: move to Constants or make unique in any way
 onready var _minimap_icon : MiniMapIcon = get_node("KinematicBody/MiniMapIcon")
-onready var _minimap_icon_dead := load("res://Resources/Icons/icon_dead_ghost_minimap.png")
-onready var _minimap_icon_alive_hitscan := load("res://Resources/Icons/icon_ghost_minimap_hitscan.png")
-onready var _minimap_icon_alive_wall := load("res://Resources/Icons/icon_ghost_minimap_wall.png")
-onready var _minimap_icon_alive_hitscan_enemy := load("res://Resources/Icons/icon_enemy_minimap_hitscan.png")
-onready var _minimap_icon_alive_wall_enemy := load("res://Resources/Icons/icon_enemy_minimap_wall.png")
+onready var _minimap_icon_dead := preload("res://Resources/Icons/icon_dead_ghost_minimap.png")
+onready var _minimap_icon_alive_hitscan := preload("res://Resources/Icons/icon_ghost_minimap_hitscan.png")
+onready var _minimap_icon_alive_wall := preload("res://Resources/Icons/icon_ghost_minimap_wall.png")
+onready var _minimap_icon_alive_hitscan_enemy := preload("res://Resources/Icons/icon_enemy_minimap_hitscan.png")
+onready var _minimap_icon_alive_wall_enemy := preload("res://Resources/Icons/icon_enemy_minimap_wall.png")
 
 
 var _minimap_alive

@@ -81,7 +81,7 @@ func update_special_movement_ammo(amount: int) -> void:
 func update_weapon_type(img_bullet, color) ->void:
 	Logger.info("Update ammo type", "HUD")
 	_ammo_type_bg.modulate = color
-	_ammo_type.texture = load(img_bullet.resource_path)
+	_ammo_type.texture = img_bullet
 
 
 # Sets the internal player id for the capture points
