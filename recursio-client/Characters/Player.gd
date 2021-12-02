@@ -41,6 +41,13 @@ func reset() -> void:
 	_selector_left.deactivate()
 	_selector_right.deactivate()
 
+func reset_aim_mode():
+	aim_mode = false
+	if _aim_visuals.visible:
+		_aim_visuals.visible = false
+		for child in _aim_visuals.get_children():
+			child.visible = false
+
 func clear_past_frames():
 	_past_frames.clear()
 
@@ -71,10 +78,8 @@ func apply_input(movement_vector: Vector3, rotation_vector: Vector3, buttons: in
 		if action.ammunition > 0:
 			_aim_visuals.visible = true
 			_aim_visuals.get_child(timeline_index % 2).visible = aim_mode
-	elif _aim_visuals.visible:
-		_aim_visuals.visible = false
-		for child in _aim_visuals.get_children():
-			child.visible = false
+	else:
+		reset_aim_mode()
 
 
 # OVERRIDE #

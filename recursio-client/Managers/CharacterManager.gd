@@ -162,6 +162,7 @@ func _on_phase_switch_received(round_index, next_phase, switch_time):
 
 func _on_preparation_phase_started() -> void:
 	_player.block_movement = true
+	_player.reset_aim_mode()
 	_player.clear_walls()
 	_player.clear_past_frames()
 	_player.move_to_spawn_point()

@@ -144,6 +144,7 @@ func toggle_animation(value):
 func trigger_actions(buttons: int) -> void:
 	if currently_dying or currently_spawning:
 		return
+
 	# Go through buttons and trigger actions for them
 	var number_of_bits = log(buttons) / log(2) + 1
 	for bit_index in number_of_bits:
