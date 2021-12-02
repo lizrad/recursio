@@ -75,7 +75,8 @@ func reset() -> void:
 
 func move_to_spawn_point() -> void:
 	set_position(spawn_point)
-	set_rotation_y(0)
+	var val = PI/2 + (team_id * PI)
+	set_rotation_y(val)
 
 
 # Returns the position of the underlying kinematic body
