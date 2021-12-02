@@ -401,6 +401,7 @@ func _spawn_character(character_scene, spawn_point, team_id):
 
 func _create_player_ghost(record_data: RecordData):
 	var ghost: PlayerGhost = _player_ghost_scene.instance()
+	ghost.team_id = _player.team_id
 	add_child(ghost)
 	# TODO: Get color from ColorManager
 	ghost.player_ghost_init(_action_manager, record_data)
@@ -409,6 +410,7 @@ func _create_player_ghost(record_data: RecordData):
 
 func _create_enemy_ghost(record_data):
 	var ghost: Ghost = _ghost_scene.instance()
+	ghost.team_id = _enemy.team_id
 	add_child(ghost)
 	# TODO: Get color from ColorManager
 	ghost.ghost_init(_action_manager, record_data)
