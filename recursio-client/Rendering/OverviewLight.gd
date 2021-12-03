@@ -19,6 +19,7 @@ func _physics_process(delta):
 		if omni_range > 10.0 and not _audio_played_this_pulse:
 			var audio_player = AudioStreamPlayer.new()
 			audio_player.stream = preload("res://Resources/Audio/Effects/Pulse.ogg")
+			audio_player.bus = "Effects"
 			add_child(audio_player)
 			audio_player.connect("finished", audio_player, "queue_free")
 			audio_player.play()
