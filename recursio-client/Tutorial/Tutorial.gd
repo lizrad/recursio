@@ -8,7 +8,7 @@ enum Phases {
 }
 
 var current_phase = Phases.ROUND1
-var show_text = true
+var show_text = false
 
 
 func set_ui_visible(is_visible):

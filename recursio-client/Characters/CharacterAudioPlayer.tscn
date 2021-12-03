@@ -1,0 +1,24 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Characters/CharacterAudioPlayer.gd" type="Script" id=1]
+[ext_resource path="res://Resources/Audio/Effects/Move.ogg" type="AudioStream" id=2]
+[ext_resource path="res://Resources/Audio/Effects/Hit.ogg" type="AudioStream" id=3]
+[ext_resource path="res://Resources/Audio/Effects/Spawn.ogg" type="AudioStream" id=4]
+
+[node name="CharacterAudioPlayer" type="Spatial"]
+script = ExtResource( 1 )
+
+[node name="MoveAudio" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource( 2 )
+unit_size = 0.1
+autoplay = true
+
+[node name="CaptureAudio" type="AudioStreamPlayer3D" parent="."]
+
+[node name="SpawnAudio" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource( 4 )
+unit_size = 10.0
+
+[node name="DieAudio" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource( 3 )
+unit_size = 10.0

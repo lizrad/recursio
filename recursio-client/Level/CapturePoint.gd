@@ -135,6 +135,7 @@ func set_capture_status(capturing_player_id, capture_progress):
 	_capturing_team = capturing_player_id
 
 	_progress.value = _capture_progress
+	$CaptureSound.unit_size = _capture_progress * 5.0
 
 func capture_lost(capturing_player_id):
 	_captured_by = -1

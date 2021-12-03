@@ -17,6 +17,7 @@ script = ExtResource( 1 )
 
 [node name="ActionManager" type="Node" parent="CharacterManager"]
 script = ExtResource( 5 )
+plays_sounds = true
 
 [node name="GameManager" type="Node" parent="CharacterManager"]
 script = ExtResource( 6 )
