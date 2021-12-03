@@ -40,7 +40,7 @@ func _ready():
 	
 	$CharacterManager.get_player().kb.visible = true
 	
-	$CharacterManager._on_spawn_enemy(1, Vector3.FORWARD * 10.0)
+	$CharacterManager._on_spawn_enemy(1, Vector3.FORWARD * 10.0, 0)
 	$CharacterManager.get_enemy().kb.visible = false
 	$CharacterManager/RoundManager._start_game()
 

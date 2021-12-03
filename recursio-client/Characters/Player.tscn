@@ -116,15 +116,15 @@ current = true
 size = 70.0
 
 [node name="AsciiViewportContainer" type="ViewportContainer" parent="KinematicBody" index="6"]
-margin_right = 1024.0
-margin_bottom = 600.0
+anchor_right = 1.0
+anchor_bottom = 1.0
 stretch = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Viewport" type="Viewport" parent="KinematicBody/AsciiViewportContainer" index="0"]
-size = Vector2( 1024, 600 )
+size = Vector2( 1920, 1080 )
 handle_input_locally = false
 render_target_update_mode = 3
 shadow_atlas_size = 2048
@@ -151,15 +151,15 @@ __meta__ = {
 remote_path = NodePath("../../../../../NormalViewportContainer/Viewport/Camera")
 
 [node name="NormalViewportContainer" type="ViewportContainer" parent="KinematicBody" index="7"]
-margin_right = 1024.0
-margin_bottom = 600.0
+anchor_right = 1.0
+anchor_bottom = 1.0
 stretch = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Viewport" type="Viewport" parent="KinematicBody/NormalViewportContainer" index="0"]
-size = Vector2( 1024, 600 )
+size = Vector2( 1920, 1080 )
 transparent_bg = true
 handle_input_locally = false
 render_target_update_mode = 3
@@ -220,10 +220,14 @@ margin_bottom = 0.0
 
 [node name="ButtonOverlay" parent="KinematicBody" index="13" instance=ExtResource( 13 )]
 visible = false
-margin_left = 363.57
-margin_top = 527.664
-margin_right = 363.57
-margin_bottom = 527.664
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -281.764
+margin_top = -234.16
+margin_right = 281.764
+margin_bottom = 0.0
 
 [node name="AimVisuals" type="Spatial" parent="KinematicBody" index="14"]
 visible = false

@@ -1,18 +1,14 @@
 [gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://Resources/Fonts/default_font.tres" type="DynamicFont" id=1]
 [ext_resource path="res://Resources/Icons/button_scheme.png" type="Texture" id=2]
 [ext_resource path="res://UI/ButtonOverlay.gd" type="Script" id=3]
 [ext_resource path="res://Resources/Icons/circle_white_256x256.png" type="Texture" id=4]
+[ext_resource path="res://UI/Default.tres" type="Theme" id=5]
 
 [node name="ButtonOverlay" type="Panel"]
-anchor_top = -0.107
-anchor_right = 0.293
-anchor_bottom = 0.11
-margin_left = -1.33484
-margin_top = 0.127686
-margin_right = -0.366852
-margin_bottom = -0.0723343
+margin_right = 563.528
+margin_bottom = 234.16
+theme = ExtResource( 5 )
 script = ExtResource( 3 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -30,7 +26,6 @@ margin_left = 97.3348
 margin_top = 13.0723
 margin_right = 242.335
 margin_bottom = 44.0723
-custom_fonts/font = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -40,7 +35,6 @@ margin_left = 96.3348
 margin_top = 86.0723
 margin_right = 241.335
 margin_bottom = 117.072
-custom_fonts/font = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -50,7 +44,6 @@ margin_left = -144.665
 margin_top = 49.0723
 margin_right = 0.334839
 margin_bottom = 80.0723
-custom_fonts/font = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -60,7 +53,6 @@ margin_left = 138.335
 margin_top = 49.0723
 margin_right = 283.335
 margin_bottom = 80.0723
-custom_fonts/font = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
