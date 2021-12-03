@@ -18,6 +18,9 @@ var _number_of_capture_points := 0
 # Array of all capture points in the HUD
 var _capture_points = []
 
+# Array of all spawn points
+var _spawn_points = []
+
 enum {
 	Latency_Delay,
 	Prep_Phase,
@@ -78,11 +81,15 @@ func update_special_movement_ammo(amount: int) -> void:
 	_dash.text = str(amount)
 
 
-func update_weapon_type(img_bullet, color) ->void:
+func update_weapon_type(img_bullet, color) -> void:
 	Logger.info("Update ammo type", "HUD")
 	_ammo_type_bg.modulate = color
 	_ammo_type.texture = img_bullet
 
+func activate_spawn_point(timeline_index) -> void:
+	Logger.info("Activate SpawnPoint " + str(timeline_index), "HUD")
+	for spawn_point in _spawn_points:
+		spawn_point.get_child(0).set_active(spawn_point.get_index() == timeline_index)
 
 # Sets the internal player id for the capture points
 func set_player_id(player_id) -> void:
@@ -106,3 +113,7 @@ func add_capture_point() -> void:
 # The progress is between 0 and 1
 func update_capture_point(capture_point_id, progress, team) -> void:
 	_capture_points[capture_point_id].update_status(progress, team)
+
+
+func set_spawn_points(spawn_points):
+	_spawn_points = spawn_points

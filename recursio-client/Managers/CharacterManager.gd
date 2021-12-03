@@ -124,11 +124,11 @@ func _reset() -> void:
 	Logger.info("Full reset triggered.", "gameplay")
 	# Reset player
 	_player.reset()
-	_player.spawn_point = _game_manager.get_spawn_point(_player.team_id, 0)
+	_player.spawn_point = _game_manager.get_spawn_point(_player.team_id, 0).global_transform.origin
 	_player.move_to_spawn_point()
 	# Reset enemy player
 	_enemy.reset()
-	_enemy.spawn_point = _game_manager.get_spawn_point(_enemy.team_id, 0)
+	_enemy.spawn_point = _game_manager.get_spawn_point(_enemy.team_id, 0).global_transform.origin
 	_enemy.move_to_spawn_point()
 	# Reset player ghosts
 	for timeline_index in _player_ghosts:
@@ -237,7 +237,7 @@ func _on_game_result(winning_player_index) -> void:
 
 func _on_player_timeline_changed(timeline_index) -> void:
 	_disable_ghosts()
-	_player.spawn_point = _game_manager.get_spawn_point(_player.team_id, timeline_index)
+	_player.spawn_point = _game_manager.get_spawn_point(_player.team_id, timeline_index).global_transform.origin
 	_player.move_to_spawn_point()
 	_enable_ghosts()
 
@@ -263,7 +263,7 @@ func _on_player_ready(button) -> void:
 
 func _on_player_ghost_record_received(timeline_index, record_data):
 	var ghost = _create_player_ghost(record_data)
-	ghost.spawn_point = _game_manager.get_spawn_point(_player.team_id, timeline_index)
+	ghost.spawn_point = _game_manager.get_spawn_point(_player.team_id, timeline_index).global_transform.origin
 	if _round_manager.get_current_phase() == RoundManager.Phases.GAME:
 		ghost.round_index = _round_manager.round_index
 	else:
@@ -281,7 +281,7 @@ func _update_ghost_paths():
 
 func _on_enemy_ghost_record_received(timeline_index, record_data: RecordData):
 	var ghost = _create_enemy_ghost(record_data)
-	ghost.spawn_point = _game_manager.get_spawn_point(1 - _player.team_id, timeline_index)
+	ghost.spawn_point = _game_manager.get_spawn_point(1 - _player.team_id, timeline_index).global_transform.origin
 	if _round_manager.get_current_phase() == RoundManager.Phases.GAME:
 		ghost.round_index = _round_manager.round_index
 	else:
@@ -310,6 +310,9 @@ func _on_spawn_player(player_id, spawn_point, team_id):
 	
 	# Initialize capture point HUD for current level
 	_player.setup_capture_point_hud(_game_manager.get_capture_points().size())
+	
+	# Initialize spawn points for current level
+	_player.setup_spawn_point_hud(_game_manager.get_spawn_points(team_id))
 	
 	_error = _player.connect("timeline_index_changed", self, "_on_player_timeline_changed") 
 	_error = Server.connect("wall_spawn", _player, "_on_wall_spawn_received") 
