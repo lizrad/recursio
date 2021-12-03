@@ -10,7 +10,7 @@ func set_type(type) -> void:
 	# TODO: get color and texture from already instantiated action?
 	$SpriteType.texture = _tex_wall if type == idx_wall else _tex_bullet
 	$SpriteType/SpriteBG.modulate = Color(Constants.get_value("colors", "player_" + ("secondary" if type == idx_wall else "primary") + "_accent"))
-	set_active(true)
+	set_active(false)
 
 
 # rotate whole control but keep icons aligned
