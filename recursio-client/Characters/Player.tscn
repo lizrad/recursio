@@ -224,9 +224,9 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-margin_left = -281.764
-margin_top = -234.16
-margin_right = 281.764
+margin_left = -218.5
+margin_top = -143.0
+margin_right = 218.5
 margin_bottom = 0.0
 
 [node name="AimVisuals" type="Spatial" parent="KinematicBody" index="14"]
