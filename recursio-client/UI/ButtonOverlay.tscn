@@ -1,26 +1,24 @@
 [gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://Resources/Fonts/default_font.tres" type="DynamicFont" id=1]
 [ext_resource path="res://Resources/Icons/button_scheme.png" type="Texture" id=2]
 [ext_resource path="res://UI/ButtonOverlay.gd" type="Script" id=3]
 [ext_resource path="res://Resources/Icons/circle_white_256x256.png" type="Texture" id=4]
+[ext_resource path="res://UI/Default.tres" type="Theme" id=5]
 
 [node name="ButtonOverlay" type="Panel"]
-anchor_top = -0.107
-anchor_right = 0.293
-anchor_bottom = 0.11
-margin_left = -1.33484
-margin_top = 0.127686
-margin_right = -0.366852
-margin_bottom = -0.0723343
+margin_right = 437.0
+margin_bottom = 143.0
+theme = ExtResource( 5 )
 script = ExtResource( 3 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Labels" type="Control" parent="."]
-margin_right = 40.0
-margin_bottom = 40.0
+margin_left = 149.68
+margin_top = 2.52271
+margin_right = 189.68
+margin_bottom = 42.5227
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -30,7 +28,6 @@ margin_left = 97.3348
 margin_top = 13.0723
 margin_right = 242.335
 margin_bottom = 44.0723
-custom_fonts/font = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -40,7 +37,6 @@ margin_left = 96.3348
 margin_top = 86.0723
 margin_right = 241.335
 margin_bottom = 117.072
-custom_fonts/font = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -50,7 +46,6 @@ margin_left = -144.665
 margin_top = 49.0723
 margin_right = 0.334839
 margin_bottom = 80.0723
-custom_fonts/font = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -60,16 +55,15 @@ margin_left = 138.335
 margin_top = 49.0723
 margin_right = 283.335
 margin_bottom = 80.0723
-custom_fonts/font = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="TextureRect" type="TextureRect" parent="."]
-margin_left = 3.19229
-margin_top = 3.99727
-margin_right = 127.192
-margin_bottom = 127.997
+margin_left = 152.872
+margin_top = 6.51998
+margin_right = 276.872
+margin_bottom = 130.52
 texture = ExtResource( 2 )
 expand = true
 stretch_mode = 6
@@ -78,6 +72,10 @@ __meta__ = {
 }
 
 [node name="Buttons" type="Control" parent="."]
+margin_left = 149.68
+margin_top = 2.52271
+margin_right = 149.68
+margin_bottom = 2.52271
 __meta__ = {
 "_edit_use_anchors_": false
 }

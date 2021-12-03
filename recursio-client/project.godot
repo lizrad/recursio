@@ -264,6 +264,8 @@ multirun/window_distance_y=0
 
 [display]
 
+window/size/width=1920
+window/size/height=1080
 window/vsync/use_vsync=false
 window/stretch/mode="2d"
 
@@ -274,6 +276,10 @@ enabled=PoolStringArray( "res://addons/multirun/plugin.cfg", "res://addons/proje
 [global]
 
 layer=false
+
+[gui]
+
+theme/custom="res://UI/Default.tres"
 
 [input]
 
