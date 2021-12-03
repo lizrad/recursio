@@ -4,8 +4,7 @@ class_name Player
 signal initialized()
 
 onready var _hud: HUD = get_node("KinematicBody/HUD")
-onready var _selector_left = get_node("KinematicBody/Selector/SelectorLeft")
-onready var _selector_right = get_node("KinematicBody/Selector/SelectorRight")
+onready var _selector_mesh = get_node("KinematicBody/Selector/SelectorMesh")
 onready var _light_viewport = get_node("KinematicBody/LightViewport")
 onready var _overview_light = get_node("KinematicBody/TransformReset/OverviewLight")
 onready var _overview_target = get_node("KinematicBody/TransformReset/OverviewTarget")
@@ -38,8 +37,14 @@ func reset() -> void:
 	.reset()
 	clear_past_frames()
 	_hud.reset()
-	_selector_left.deactivate()
-	_selector_right.deactivate()
+	_selector_mesh.deactivate()
+
+func reset_aim_mode():
+	aim_mode = false
+	if _aim_visuals.visible:
+		_aim_visuals.visible = false
+		for child in _aim_visuals.get_children():
+			child.visible = false
 
 func clear_past_frames():
 	_past_frames.clear()
@@ -71,10 +76,8 @@ func apply_input(movement_vector: Vector3, rotation_vector: Vector3, buttons: in
 		if action.ammunition > 0:
 			_aim_visuals.visible = true
 			_aim_visuals.get_child(timeline_index % 2).visible = aim_mode
-	elif _aim_visuals.visible:
-		_aim_visuals.visible = false
-		for child in _aim_visuals.get_children():
-			child.visible = false
+	else:
+		reset_aim_mode()
 
 
 # OVERRIDE #
@@ -157,17 +160,13 @@ func update_capture_point_hud(capture_points: Array) -> void:
 
 
 func show_preparation_hud(round_index) -> void:
-	if team_id == 0:
-		_selector_right.activate()
-	else:
-		_selector_left.activate()
+	_selector_mesh.activate()
 	_hud.prep_phase_start(round_index)
 	_button_overlay.show_buttons(["ready!", "swap"], ButtonOverlay.BUTTONS.DOWN | ButtonOverlay.BUTTONS.RIGHT, ButtonOverlay.BUTTONS.DOWN)
 
 
 func show_countdown_hud() -> void:
-	_selector_left.deactivate()
-	_selector_right.deactivate()
+	_selector_mesh.deactivate()
 	_hud.countdown_phase_start()
 	_button_overlay.hide_buttons()
 

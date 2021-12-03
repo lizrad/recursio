@@ -162,6 +162,7 @@ func _on_phase_switch_received(round_index, next_phase, switch_time):
 
 func _on_preparation_phase_started() -> void:
 	_player.block_movement = true
+	_player.reset_aim_mode()
 	_player.clear_walls()
 	_player.clear_past_frames()
 	_player.move_to_spawn_point()
@@ -291,13 +292,12 @@ func _on_enemy_ghost_record_received(timeline_index, record_data: RecordData):
 
 func _on_spawn_player(player_id, spawn_point, team_id):
 	set_physics_process(true)
-	_player = _spawn_character(_player_scene, spawn_point)
+	_player = _spawn_character(_player_scene, spawn_point, team_id)
 	_player.player_init(_action_manager, _round_manager)
 	_player.set_overview_light_enabled(false)
 	# TODO: Tunnel signal instead of accessing button overlay here
 	var _error = _player.get_button_overlay().connect("button_pressed", self, "_on_player_ready") 
 	_player_rpc_id = player_id
-	_player.team_id = team_id
 	_player.player_id = player_id
 	_player.set_name(str(player_id))
 	_player.toggle_animation(false)
@@ -316,8 +316,8 @@ func _on_spawn_player(player_id, spawn_point, team_id):
 	
 	emit_signal("game_started")
 
-func _on_spawn_enemy(enemy_id, spawn_point):
-	_enemy = _spawn_character(_enemy_scene, spawn_point)
+func _on_spawn_enemy(enemy_id, spawn_point, team_id):
+	_enemy = _spawn_character(_enemy_scene, spawn_point, team_id)
 	_enemy.enemy_init(_action_manager)
 	_enemy.set_name(str(enemy_id))
 	_enemy.toggle_animation(false)
@@ -390,16 +390,18 @@ func _on_capture_point_capture_lost(capturing_player_id, _capture_point):
 		_player.set_overview_light_enabled(false)
 
 
-func _spawn_character(character_scene, spawn_point):
+func _spawn_character(character_scene, spawn_point, team_id):
 	var character: CharacterBase = character_scene.instance()
 	add_child(character)
 	character.spawn_point = spawn_point
+	character.team_id = team_id
 	character.move_to_spawn_point()
 	return character
 
 
 func _create_player_ghost(record_data: RecordData):
 	var ghost: PlayerGhost = _player_ghost_scene.instance()
+	ghost.team_id = _player.team_id
 	add_child(ghost)
 	# TODO: Get color from ColorManager
 	ghost.player_ghost_init(_action_manager, record_data)
@@ -408,6 +410,7 @@ func _create_player_ghost(record_data: RecordData):
 
 func _create_enemy_ghost(record_data):
 	var ghost: Ghost = _ghost_scene.instance()
+	ghost.team_id = _enemy.team_id
 	add_child(ghost)
 	# TODO: Get color from ColorManager
 	ghost.ghost_init(_action_manager, record_data)

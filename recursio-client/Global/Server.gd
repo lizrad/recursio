@@ -16,7 +16,7 @@ var latency_array = []
 signal connection_successful()
 signal connection_failed()
 signal server_disconnected()
-signal spawning_enemy(enemy_id, spawn_point)
+signal spawning_enemy(enemy_id, spawn_point, team_id)
 signal despawning_enemy(enemy_id)
 signal spawning_player(player_id, spawn_point)
 signal world_state_received(world_state)
@@ -163,9 +163,9 @@ remote func spawn_player(player_id, spawn_point, team_id):
 	emit_signal("spawning_player", player_id, spawn_point, team_id)
 
 
-remote func spawn_enemy(enemy_id, spawn_point):
+remote func spawn_enemy(enemy_id, spawn_point, team_id):
 	Logger.debug("Receive spawn enemy", "server")
-	emit_signal("spawning_enemy", enemy_id, spawn_point)
+	emit_signal("spawning_enemy", enemy_id, spawn_point, team_id)
 
 
 remote func despawn_enemy():
