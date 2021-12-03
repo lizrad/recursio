@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=2]
+[gd_scene load_steps=24 format=2]
 
 [ext_resource path="res://UI/Menus/StartMenu.gd" type="Script" id=1]
 [ext_resource path="res://UI/Menus/GameRooms/GameRoomCreation.gd" type="Script" id=2]
@@ -15,6 +15,7 @@
 [ext_resource path="res://Resources/Fonts/FiraCode-Regular.ttf" type="DynamicFontData" id=13]
 [ext_resource path="res://UI/Menus/SettingsContainer.gd" type="Script" id=14]
 [ext_resource path="res://UI/Menus/VolumeSlider.gd" type="Script" id=15]
+[ext_resource path="res://UI/Menus/FullScreenCheckButton.gd" type="Script" id=16]
 
 [sub_resource type="Shader" id=1]
 code = "shader_type canvas_item;
@@ -433,10 +434,11 @@ shortcut_in_tooltip = false
 text = "Leave"
 
 [node name="SettingsContainer" type="PanelContainer" parent="CenterContainer"]
-margin_left = 643.0
-margin_top = 411.0
-margin_right = 1277.0
-margin_bottom = 669.0
+visible = false
+margin_left = 953.0
+margin_top = 533.0
+margin_right = 967.0
+margin_bottom = 547.0
 script = ExtResource( 14 )
 
 [node name="SettingsList" type="VBoxContainer" parent="CenterContainer/SettingsContainer"]
@@ -470,7 +472,7 @@ margin_right = 156.0
 margin_bottom = 26.0
 text = "Main Volume: "
 
-[node name="VolumeSlider" type="HSlider" parent="CenterContainer/SettingsContainer/SettingsList/MainVolume"]
+[node name="VolumeSlider" type="HSlider" parent="CenterContainer/SettingsContainer/SettingsList/MainVolume" groups=["Setting"]]
 margin_left = 160.0
 margin_right = 560.0
 margin_bottom = 16.0
@@ -492,7 +494,7 @@ margin_right = 192.0
 margin_bottom = 26.0
 text = "  Music Volume: "
 
-[node name="VolumeSlider" type="HSlider" parent="CenterContainer/SettingsContainer/SettingsList/MusicVolume"]
+[node name="VolumeSlider" type="HSlider" parent="CenterContainer/SettingsContainer/SettingsList/MusicVolume" groups=["Setting"]]
 margin_left = 196.0
 margin_right = 596.0
 margin_bottom = 16.0
@@ -515,7 +517,7 @@ margin_right = 216.0
 margin_bottom = 26.0
 text = "  Effects Volume: "
 
-[node name="VolumeSlider" type="HSlider" parent="CenterContainer/SettingsContainer/SettingsList/EffectsVolume"]
+[node name="VolumeSlider" type="HSlider" parent="CenterContainer/SettingsContainer/SettingsList/EffectsVolume" groups=["Setting"]]
 margin_left = 220.0
 margin_right = 620.0
 margin_bottom = 16.0
@@ -539,10 +541,11 @@ margin_right = 156.0
 margin_bottom = 33.0
 text = "Full Screen: "
 
-[node name="CheckButton" type="CheckButton" parent="CenterContainer/SettingsContainer/SettingsList/FullScreen"]
+[node name="FullScreenCheckButton" type="CheckButton" parent="CenterContainer/SettingsContainer/SettingsList/FullScreen" groups=["Setting"]]
 margin_left = 160.0
 margin_right = 236.0
 margin_bottom = 40.0
+script = ExtResource( 16 )
 
 [node name="Space2" type="Control" parent="CenterContainer/SettingsContainer/SettingsList"]
 margin_top = 188.0
