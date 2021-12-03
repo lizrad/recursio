@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=2]
+[gd_scene load_steps=26 format=2]
 
 [ext_resource path="res://UI/Menus/StartMenu.gd" type="Script" id=1]
 [ext_resource path="res://UI/Menus/GameRooms/GameRoomCreation.gd" type="Script" id=2]
@@ -16,6 +16,8 @@
 [ext_resource path="res://UI/Menus/SettingsContainer.gd" type="Script" id=14]
 [ext_resource path="res://UI/Menus/VolumeSlider.gd" type="Script" id=15]
 [ext_resource path="res://UI/Menus/FullScreenCheckButton.gd" type="Script" id=16]
+[ext_resource path="res://UI/Menus/AsciiSlider.gd" type="Script" id=17]
+[ext_resource path="res://UI/Menus/AsciiBackground.gd" type="Script" id=18]
 
 [sub_resource type="Shader" id=1]
 code = "shader_type canvas_item;
@@ -126,10 +128,11 @@ world_scene = ExtResource( 7 )
 level_scene = ExtResource( 9 )
 capture_point_scene = ExtResource( 10 )
 
-[node name="ColorRect" type="ColorRect" parent="."]
+[node name="AsciiBackground" type="ColorRect" parent="."]
 material = SubResource( 6 )
 anchor_right = 1.0
 anchor_bottom = 1.0
+script = ExtResource( 18 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -434,28 +437,28 @@ shortcut_in_tooltip = false
 text = "Leave"
 
 [node name="SettingsContainer" type="PanelContainer" parent="CenterContainer"]
-visible = false
-margin_left = 953.0
-margin_top = 533.0
-margin_right = 967.0
-margin_bottom = 547.0
+margin_left = 635.0
+margin_top = 396.0
+margin_right = 1285.0
+margin_bottom = 684.0
+rect_min_size = Vector2( 650, 0 )
 script = ExtResource( 14 )
 
 [node name="SettingsList" type="VBoxContainer" parent="CenterContainer/SettingsContainer"]
 margin_left = 7.0
 margin_top = 7.0
-margin_right = 627.0
-margin_bottom = 251.0
+margin_right = 643.0
+margin_bottom = 281.0
 
 [node name="Header" type="Label" parent="CenterContainer/SettingsContainer/SettingsList"]
-margin_right = 620.0
+margin_right = 636.0
 margin_bottom = 26.0
 text = "Settings"
 align = 1
 
 [node name="Space" type="Control" parent="CenterContainer/SettingsContainer/SettingsList"]
 margin_top = 30.0
-margin_right = 620.0
+margin_right = 636.0
 margin_bottom = 50.0
 rect_min_size = Vector2( 0, 20 )
 __meta__ = {
@@ -464,7 +467,7 @@ __meta__ = {
 
 [node name="MainVolume" type="HBoxContainer" parent="CenterContainer/SettingsContainer/SettingsList"]
 margin_top = 54.0
-margin_right = 620.0
+margin_right = 636.0
 margin_bottom = 80.0
 
 [node name="Label" type="Label" parent="CenterContainer/SettingsContainer/SettingsList/MainVolume"]
@@ -474,9 +477,10 @@ text = "Main Volume: "
 
 [node name="VolumeSlider" type="HSlider" parent="CenterContainer/SettingsContainer/SettingsList/MainVolume" groups=["Setting"]]
 margin_left = 160.0
-margin_right = 560.0
+margin_right = 636.0
 margin_bottom = 16.0
 rect_min_size = Vector2( 400, 0 )
+size_flags_horizontal = 3
 max_value = 1.0
 step = 0.05
 value = 1.0
@@ -486,7 +490,7 @@ script = ExtResource( 15 )
 
 [node name="MusicVolume" type="HBoxContainer" parent="CenterContainer/SettingsContainer/SettingsList"]
 margin_top = 84.0
-margin_right = 620.0
+margin_right = 636.0
 margin_bottom = 110.0
 
 [node name="Label" type="Label" parent="CenterContainer/SettingsContainer/SettingsList/MusicVolume"]
@@ -496,9 +500,10 @@ text = "  Music Volume: "
 
 [node name="VolumeSlider" type="HSlider" parent="CenterContainer/SettingsContainer/SettingsList/MusicVolume" groups=["Setting"]]
 margin_left = 196.0
-margin_right = 596.0
+margin_right = 636.0
 margin_bottom = 16.0
 rect_min_size = Vector2( 400, 0 )
+size_flags_horizontal = 3
 max_value = 1.0
 step = 0.05
 value = 1.0
@@ -509,7 +514,7 @@ audio_bus_name = "Music"
 
 [node name="EffectsVolume" type="HBoxContainer" parent="CenterContainer/SettingsContainer/SettingsList"]
 margin_top = 114.0
-margin_right = 620.0
+margin_right = 636.0
 margin_bottom = 140.0
 
 [node name="Label" type="Label" parent="CenterContainer/SettingsContainer/SettingsList/EffectsVolume"]
@@ -519,9 +524,10 @@ text = "  Effects Volume: "
 
 [node name="VolumeSlider" type="HSlider" parent="CenterContainer/SettingsContainer/SettingsList/EffectsVolume" groups=["Setting"]]
 margin_left = 220.0
-margin_right = 620.0
+margin_right = 636.0
 margin_bottom = 16.0
 rect_min_size = Vector2( 400, 0 )
+size_flags_horizontal = 3
 max_value = 1.0
 step = 0.05
 value = 1.0
@@ -532,7 +538,7 @@ audio_bus_name = "Effects"
 
 [node name="FullScreen" type="HBoxContainer" parent="CenterContainer/SettingsContainer/SettingsList"]
 margin_top = 144.0
-margin_right = 620.0
+margin_right = 636.0
 margin_bottom = 184.0
 
 [node name="Label" type="Label" parent="CenterContainer/SettingsContainer/SettingsList/FullScreen"]
@@ -547,19 +553,42 @@ margin_right = 236.0
 margin_bottom = 40.0
 script = ExtResource( 16 )
 
-[node name="Space2" type="Control" parent="CenterContainer/SettingsContainer/SettingsList"]
+[node name="AsciiSize" type="HBoxContainer" parent="CenterContainer/SettingsContainer/SettingsList"]
 margin_top = 188.0
-margin_right = 620.0
-margin_bottom = 208.0
+margin_right = 636.0
+margin_bottom = 214.0
+
+[node name="Label" type="Label" parent="CenterContainer/SettingsContainer/SettingsList/AsciiSize"]
+margin_right = 264.0
+margin_bottom = 26.0
+text = "ASCII Character Size: "
+
+[node name="AsciiSlider" type="HSlider" parent="CenterContainer/SettingsContainer/SettingsList/AsciiSize"]
+margin_left = 268.0
+margin_right = 636.0
+margin_bottom = 16.0
+size_flags_horizontal = 3
+min_value = 4.0
+max_value = 16.0
+step = 4.0
+value = 8.0
+tick_count = 4
+ticks_on_borders = true
+script = ExtResource( 17 )
+
+[node name="Space2" type="Control" parent="CenterContainer/SettingsContainer/SettingsList"]
+margin_top = 218.0
+margin_right = 636.0
+margin_bottom = 238.0
 rect_min_size = Vector2( 0, 20 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="BackButton" type="Button" parent="CenterContainer/SettingsContainer/SettingsList"]
-margin_top = 212.0
-margin_right = 620.0
-margin_bottom = 244.0
+margin_top = 242.0
+margin_right = 636.0
+margin_bottom = 274.0
 text = "Back"
 __meta__ = {
 "_edit_use_anchors_": false
