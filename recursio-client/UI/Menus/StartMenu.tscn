@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=2]
+[gd_scene load_steps=21 format=2]
 
 [ext_resource path="res://UI/Menus/StartMenu.gd" type="Script" id=1]
 [ext_resource path="res://UI/Menus/GameRooms/GameRoomCreation.gd" type="Script" id=2]
@@ -12,6 +12,7 @@
 [ext_resource path="res://Level/CapturePoint.tscn" type="PackedScene" id=10]
 [ext_resource path="res://addons/ascii-shader/character_map.png" type="Texture" id=11]
 [ext_resource path="res://UI/Default.tres" type="Theme" id=12]
+[ext_resource path="res://Resources/Fonts/FiraCode-Regular.ttf" type="DynamicFontData" id=13]
 
 [sub_resource type="Shader" id=1]
 code = "shader_type canvas_item;
@@ -104,6 +105,12 @@ shader_param/noise1 = SubResource( 3 )
 shader_param/noise2 = SubResource( 5 )
 shader_param/character_map = ExtResource( 11 )
 
+[sub_resource type="DynamicFont" id=7]
+size = 60
+use_mipmaps = true
+use_filter = true
+font_data = ExtResource( 13 )
+
 [node name="StartMenu" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -132,28 +139,36 @@ __meta__ = {
 }
 
 [node name="MainMenu" type="VBoxContainer" parent="CenterContainer"]
-margin_left = 815.0
-margin_top = 468.0
-margin_right = 1105.0
-margin_bottom = 612.0
+margin_left = 812.0
+margin_top = 428.0
+margin_right = 1108.0
+margin_bottom = 651.0
+
+[node name="Label" type="Label" parent="CenterContainer/MainMenu"]
+margin_right = 296.0
+margin_bottom = 75.0
+custom_fonts/font = SubResource( 7 )
+text = "recursio"
+align = 1
 
 [node name="PlayTutorial" type="Button" parent="CenterContainer/MainMenu"]
-margin_right = 290.0
-margin_bottom = 32.0
+margin_top = 79.0
+margin_right = 296.0
+margin_bottom = 111.0
 shortcut_in_tooltip = false
 text = "Play Tutorial"
 
 [node name="PlayOnline" type="Button" parent="CenterContainer/MainMenu"]
-margin_top = 36.0
-margin_right = 290.0
-margin_bottom = 68.0
+margin_top = 115.0
+margin_right = 296.0
+margin_bottom = 147.0
 shortcut_in_tooltip = false
 text = "Play Online"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/MainMenu"]
-margin_top = 72.0
-margin_right = 290.0
-margin_bottom = 108.0
+margin_top = 151.0
+margin_right = 296.0
+margin_bottom = 187.0
 
 [node name="Btn_PlayLocal" type="Button" parent="CenterContainer/MainMenu/HBoxContainer"]
 margin_right = 132.0
@@ -172,9 +187,9 @@ __meta__ = {
 }
 
 [node name="Btn_Exit" type="Button" parent="CenterContainer/MainMenu"]
-margin_top = 112.0
-margin_right = 290.0
-margin_bottom = 144.0
+margin_top = 191.0
+margin_right = 296.0
+margin_bottom = 223.0
 shortcut_in_tooltip = false
 text = "Exit"
 
