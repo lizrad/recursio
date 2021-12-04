@@ -53,3 +53,4 @@ fill_mode = 5
 stream = ExtResource( 3 )
 unit_size = 0.1
 autoplay = true
+bus = "Effects"
