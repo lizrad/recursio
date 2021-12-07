@@ -168,7 +168,8 @@ func update_capture_point_hud(capture_points: Array) -> void:
 
 
 func show_preparation_hud(round_index) -> void:
-	_selector_mesh.activate()
+	# EDIT: disabled -> use SpawnPoints instead
+	#_selector_mesh.activate()
 	_hud.prep_phase_start(round_index)
 	_button_overlay.show_buttons(["ready!", "swap"], ButtonOverlay.BUTTONS.DOWN | ButtonOverlay.BUTTONS.RIGHT, ButtonOverlay.BUTTONS.DOWN)
 

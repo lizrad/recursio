@@ -21,4 +21,8 @@ func rotate_ui(degrees) -> void:
 
 func set_active(value) -> void:
 	$SpriteArea.modulate = Color("#FF9AFF") if value else Color.yellow
-	$SpriteType.material_override.set_shader_param("is_greyscale", value)
+	$SpriteType.material_override.set_shader_param("is_greyscale", !value)
+
+
+func show_weapon_type(value) -> void:
+	$SpriteType.visible = value

@@ -19,6 +19,7 @@ void fragment() {
 }"
 
 [sub_resource type="ShaderMaterial" id=2]
+resource_local_to_scene = true
 shader = SubResource( 1 )
 shader_param/is_greyscale = true
 shader_param/albedo = ExtResource( 4 )
@@ -28,8 +29,10 @@ script = ExtResource( 3 )
 
 [node name="SpriteType" type="Sprite3D" parent="."]
 transform = Transform( 2, 0, 0, 0, 1, 0, 0, 0, 2, 3, 0, 0 )
+visible = false
 layers = 513
 material_override = SubResource( 2 )
+cast_shadow = 0
 axis = 1
 transparent = false
 double_sided = false

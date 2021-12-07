@@ -57,6 +57,7 @@ script = ExtResource( 2 )
 
 [node name="Selector" type="Spatial" parent="KinematicBody" index="0"]
 transform = Transform( -4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 1.27928, 0 )
+visible = false
 
 [node name="SelectorMesh" type="MeshInstance" parent="KinematicBody/Selector" index="0"]
 transform = Transform( -3.27835e-08, 0.53033, 0.53033, 0, 0.53033, -0.53033, -0.75, -2.31815e-08, -2.31815e-08, -3, 0, 0 )

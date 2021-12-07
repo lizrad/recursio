@@ -86,15 +86,19 @@ func update_weapon_type(img_bullet, color) -> void:
 	_ammo_type_bg.modulate = color
 	_ammo_type.texture = img_bullet
 
+
 func activate_spawn_point(timeline_index) -> void:
 	Logger.info("Activate SpawnPoint " + str(timeline_index), "HUD")
 	for spawn_point in _spawn_points:
-		spawn_point.get_child(0).set_active(spawn_point.get_index() == timeline_index)
+		if spawn_point.get_child_count() > 0:
+			spawn_point.get_child(0).set_active(spawn_point.get_index() == timeline_index)
+
 
 # Sets the internal player id for the capture points
 func set_player_id(player_id) -> void:
 	for capture_point in _capture_points:
 		capture_point.set_player_id(player_id)
+
 
 # Adds a new capture point HUD item to the HUD
 func add_capture_point() -> void:
