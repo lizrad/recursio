@@ -64,9 +64,6 @@ func get_action_type_for_trigger(trigger, timeline_index):
 func get_max_ammo_for_trigger(trigger, timeline_index):
 	return get_action_for_trigger(trigger, timeline_index).max_ammo
 
-func get_img_bullet_for_trigger(trigger, timeline_index):
-	return get_action_for_trigger(trigger, timeline_index).img_bullet
-
 func get_action_for_trigger(trigger, timeline_index) -> Action:
 	return get_action(get_action_type_for_trigger(trigger, timeline_index))
 	
@@ -115,17 +112,6 @@ func set_active(action: Action, character: CharacterBase, tree_position: Spatial
 		_instanced_actions.append(weakref(spawn))
 		# TODO: if has recoil configured -> apply on player
 	
-	# Play sound
-	if action.sound and plays_sounds:
-		var audio_player = AudioStreamPlayer3D.new()
-		audio_player.stream = action.sound
-		audio_player.bus = "Effects"
-		get_tree().get_root().add_child(audio_player)
-		audio_player.global_transform = tree_position.global_transform
-		audio_player.unit_size = 20
-		audio_player.connect("finished", audio_player, "queue_free")
-		audio_player.play()
-
 	action.emit_signal("action_triggered")
 	
 	# Block spaming
