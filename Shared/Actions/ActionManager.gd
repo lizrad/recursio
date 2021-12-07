@@ -18,6 +18,8 @@ enum ActionType {
 	MELEE
 }
 
+export var plays_sounds := false
+
 # Preconfigured Actions
 # Action(ammo, cd, recharge, activation_max, action_scene)
 var action_resources = {
@@ -61,9 +63,6 @@ func get_action_type_for_trigger(trigger, timeline_index):
 
 func get_max_ammo_for_trigger(trigger, timeline_index):
 	return get_action_for_trigger(trigger, timeline_index).max_ammo
-
-func get_img_bullet_for_trigger(trigger, timeline_index):
-	return get_action_for_trigger(trigger, timeline_index).img_bullet
 
 func get_action_for_trigger(trigger, timeline_index) -> Action:
 	return get_action(get_action_type_for_trigger(trigger, timeline_index))
@@ -112,7 +111,7 @@ func set_active(action: Action, character: CharacterBase, tree_position: Spatial
 		spawn.initialize(character)
 		_instanced_actions.append(weakref(spawn))
 		# TODO: if has recoil configured -> apply on player
-
+	
 	action.emit_signal("action_triggered")
 	
 	# Block spaming

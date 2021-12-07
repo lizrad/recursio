@@ -1,8 +1,8 @@
 extends Spatial
 class_name SpawnPoint
 
-var _tex_wall = preload("res://Shared/Actions/Shots/wall.png")
-var _tex_bullet = preload("res://Shared/Actions/Shots/bullet.png")
+var _tex_wall = preload("res://Resources/Icons/wall.png")
+var _tex_bullet = preload("res://Resources/Icons/bullet.png")
 
 # TODO: use ctor
 func set_type(type) -> void:

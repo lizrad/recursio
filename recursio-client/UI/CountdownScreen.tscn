@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://Resources/Fonts/default_font.tres" type="DynamicFont" id=1]
+[ext_resource path="res://Resources/Fonts/Large.tres" type="DynamicFont" id=1]
 [ext_resource path="res://UI/CountdownScreen.gd" type="Script" id=2]
 
 [node name="CountdownScreen" type="Control"]
@@ -19,9 +19,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 margin_left = -213.0
-margin_top = 113.513
+margin_top = -140.0
 margin_right = 213.0
-margin_bottom = 286.513
+margin_bottom = 33.0
 custom_fonts/font = ExtResource( 1 )
 text = "1"
 align = 1

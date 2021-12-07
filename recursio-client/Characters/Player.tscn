@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=2]
+[gd_scene load_steps=26 format=2]
 
 [ext_resource path="res://Shared/Characters/PlayerBase.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Characters/Player.gd" type="Script" id=2]
@@ -15,19 +15,13 @@
 [ext_resource path="res://UI/ButtonOverlay.tscn" type="PackedScene" id=13]
 [ext_resource path="res://addons/ascii-shader/AsciiRenderer.tscn" type="PackedScene" id=14]
 [ext_resource path="res://Characters/PlayerInput.gd" type="Script" id=15]
-[ext_resource path="res://Shared/Actions/Shots/WallMesh.tres" type="CubeMesh" id=16]
+[ext_resource path="res://Resources/Meshes/wall_outline.obj" type="ArrayMesh" id=16]
 [ext_resource path="res://Characters/Visuals/Selector.gd" type="Script" id=17]
 [ext_resource path="res://Characters/Visuals/Selector.obj" type="ArrayMesh" id=18]
+[ext_resource path="res://Characters/CharacterAudioPlayer.tscn" type="PackedScene" id=19]
+[ext_resource path="res://Characters/SettingAsciiRenderer.gd" type="Script" id=20]
 
-[sub_resource type="SpatialMaterial" id=7]
-albedo_color = Color( 1, 0, 0.866667, 1 )
-emission_enabled = true
-emission = Color( 1, 0.482353, 0.929412, 1 )
-emission_energy = 1.61
-emission_operator = 0
-emission_on_uv2 = false
-
-[sub_resource type="CapsuleShape" id=1]
+[sub_resource type="CapsuleShape" id=2]
 height = 0.4
 
 [sub_resource type="SpatialMaterial" id=3]
@@ -62,7 +56,6 @@ visible = false
 [node name="SelectorMesh" type="MeshInstance" parent="KinematicBody/Selector" index="0"]
 transform = Transform( -3.27835e-08, 0.53033, 0.53033, 0, 0.53033, -0.53033, -0.75, -2.31815e-08, -2.31815e-08, -3, 0, 0 )
 layers = 512
-material_override = SubResource( 7 )
 mesh = ExtResource( 18 )
 skeleton = NodePath("")
 material/0 = null
@@ -71,10 +64,22 @@ speed = 3.0
 min_positon = Vector3( -2, 0, 0 )
 max_positon = Vector3( -1.75, 0, 0 )
 
+[node name="SelectorRight" type="MeshInstance" parent="KinematicBody/Selector" index="1"]
+transform = Transform( -3.27835e-08, -0.53033, -0.53033, 0, 0.53033, -0.53033, 0.75, -2.31815e-08, -2.31815e-08, 3, 0, 0 )
+visible = false
+layers = 512
+mesh = ExtResource( 18 )
+skeleton = NodePath("")
+material/0 = null
+script = ExtResource( 17 )
+speed = 3.0
+min_positon = Vector3( 1.75, 0, 0 )
+max_positon = Vector3( 2, 0, 0 )
+
 [node name="CollisionShape" parent="KinematicBody" index="1"]
 transform = Transform( 0.75, 0, 0, 0, 0.75, -1.06581e-14, 0, -3.90799e-14, 1, 0, 0, 0 )
 visible = false
-shape = SubResource( 1 )
+shape = SubResource( 2 )
 
 [node name="CharacterModel" parent="KinematicBody" index="2" instance=ExtResource( 10 )]
 transform = Transform( -1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0 )
@@ -104,17 +109,18 @@ current = true
 size = 70.0
 
 [node name="AsciiViewportContainer" type="ViewportContainer" parent="KinematicBody" index="6"]
-margin_right = 1024.0
-margin_bottom = 600.0
+anchor_right = 1.0
+anchor_bottom = 1.0
 stretch = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Viewport" type="Viewport" parent="KinematicBody/AsciiViewportContainer" index="0"]
-size = Vector2( 1024, 600 )
+size = Vector2( 1920, 1080 )
 handle_input_locally = false
 render_target_update_mode = 3
+audio_listener_enable_3d = true
 shadow_atlas_size = 2048
 script = ExtResource( 3 )
 
@@ -134,20 +140,21 @@ __meta__ = {
 }
 
 [node name="AsciiRenderer" parent="KinematicBody/AsciiViewportContainer/Viewport/LerpedFollow/Camera" index="0" instance=ExtResource( 14 )]
+script = ExtResource( 20 )
 
 [node name="RemoteTransform" type="RemoteTransform" parent="KinematicBody/AsciiViewportContainer/Viewport/LerpedFollow/Camera" index="1"]
 remote_path = NodePath("../../../../../NormalViewportContainer/Viewport/Camera")
 
 [node name="NormalViewportContainer" type="ViewportContainer" parent="KinematicBody" index="7"]
-margin_right = 1024.0
-margin_bottom = 600.0
+anchor_right = 1.0
+anchor_bottom = 1.0
 stretch = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Viewport" type="Viewport" parent="KinematicBody/NormalViewportContainer" index="0"]
-size = Vector2( 1024, 600 )
+size = Vector2( 1920, 1080 )
 transparent_bg = true
 handle_input_locally = false
 render_target_update_mode = 3
@@ -208,10 +215,14 @@ margin_bottom = 0.0
 
 [node name="ButtonOverlay" parent="KinematicBody" index="13" instance=ExtResource( 13 )]
 visible = false
-margin_left = 363.57
-margin_top = 527.664
-margin_right = 363.57
-margin_bottom = 527.664
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -218.5
+margin_top = -143.0
+margin_right = 218.5
+margin_bottom = 0.0
 
 [node name="AimVisuals" type="Spatial" parent="KinematicBody" index="14"]
 visible = false
@@ -231,3 +242,7 @@ material_override = SubResource( 6 )
 cast_shadow = 0
 mesh = ExtResource( 16 )
 material/0 = null
+
+[node name="Listener" type="Listener" parent="KinematicBody" index="15"]
+
+[node name="CharacterAudioPlayer2" parent="KinematicBody" index="16" instance=ExtResource( 19 )]

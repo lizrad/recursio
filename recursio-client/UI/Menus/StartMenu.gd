@@ -14,6 +14,7 @@ onready var _btn_play_tutorial = get_node("CenterContainer/MainMenu/PlayTutorial
 onready var _btn_play_online = get_node("CenterContainer/MainMenu/PlayOnline")
 onready var _btn_play_local = get_node("CenterContainer/MainMenu/HBoxContainer/Btn_PlayLocal")
 onready var _lineEdit_local_ip = get_node("CenterContainer/MainMenu/HBoxContainer/LocalIPAddress")
+onready var _btn_settings = get_node("CenterContainer/MainMenu/SettingsButton")
 onready var _btn_exit = get_node("CenterContainer/MainMenu/Btn_Exit")
 
 onready var _game_room_search: GameRoomSearch = get_node("CenterContainer/GameRoomSearch")
@@ -35,6 +36,7 @@ func _ready():
 	var _error = _btn_play_tutorial.connect("pressed", self, "_on_play_tutorial")
 	_error = _btn_play_online.connect("pressed", self, "_on_play_online")
 	_error = _btn_play_local.connect("pressed", self, "_on_play_local")
+	_error = _btn_settings.connect("pressed", self, "_on_open_settings")
 	_error = _btn_exit.connect("pressed", self, "_on_exit")
 
 	_error = _game_room_search.connect("btn_create_game_room_pressed", self, "_on_search_create_game_room_pressed")
@@ -127,6 +129,10 @@ func _on_play_online() -> void:
 func _on_play_local() -> void:
 	_toggle_enabled_start_menu_buttons(false)
 	Server.connect_to_server(_lineEdit_local_ip.text)
+
+
+func _on_open_settings() -> void:
+	$CenterContainer/SettingsContainer.show()
 
 
 func _on_exit() -> void:

@@ -8,7 +8,7 @@ enum Phases {
 }
 
 var current_phase = Phases.ROUND1
-var show_text = true
+var show_text = false
 
 
 func set_ui_visible(is_visible):
@@ -40,7 +40,7 @@ func _ready():
 	
 	$CharacterManager.get_player().kb.visible = true
 	
-	$CharacterManager._on_spawn_enemy(1, Vector3.FORWARD * 10.0, 1)
+	$CharacterManager._on_spawn_enemy(1, Vector3.FORWARD * 10.0, 0)
 	$CharacterManager.get_enemy().kb.visible = false
 	$CharacterManager/RoundManager._start_game()
 

@@ -3,7 +3,7 @@
 [ext_resource path="res://Level/spawn_border.png" type="Texture" id=1]
 [ext_resource path="res://Resources/Icons/circle_white_256x256.png" type="Texture" id=2]
 [ext_resource path="res://Level/SpawnPoint.gd" type="Script" id=3]
-[ext_resource path="res://Shared/Actions/Shots/wall.png" type="Texture" id=4]
+[ext_resource path="res://Resources/Icons/wall.png" type="Texture" id=4]
 
 [sub_resource type="Shader" id=1]
 code = "shader_type spatial;
@@ -22,7 +22,6 @@ void fragment() {
 resource_local_to_scene = true
 shader = SubResource( 1 )
 shader_param/is_greyscale = true
-shader_param/albedo = ExtResource( 4 )
 
 [node name="SpawnPoint" type="Spatial"]
 script = ExtResource( 3 )
