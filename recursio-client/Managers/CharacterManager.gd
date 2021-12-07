@@ -39,11 +39,10 @@ func _ready():
 	#TODO: Probably move this to ghostmanager
 	_error = Server.connect("player_ghost_record_received", _ghost_manager, "_on_player_ghost_record_received") 
 	_error = Server.connect("enemy_ghost_record_received", _ghost_manager, "_on_enemy_ghost_record_received") 
-	_error = Server.connect("ghost_hit", _ghost_manager, "_on_ghost_hit") 
+	_error = Server.connect("ghost_hit", _ghost_manager, "_on_ghost_hit_from_server") 
 	_error = _round_manager.connect("preparation_phase_started", _ghost_manager, "_on_preparation_phase_started") 
 	_error = _round_manager.connect("countdown_phase_started", _ghost_manager, "_on_countdown_phase_started") 
 	_error = _round_manager.connect("game_phase_started", _ghost_manager, "_on_game_phase_started") 
-	_error = Server.connect("timeline_picks", _ghost_manager, "_on_timeline_picks") 
 	####################################################
 	
 	_error = Server.connect("world_state_received", self, "_on_world_state_received") 
@@ -190,11 +189,15 @@ func _on_game_result(winning_player_index) -> void:
 func _on_player_timeline_changed(timeline_index) -> void:
 	_player.spawn_point = _game_manager.get_spawn_point(_player.team_id, timeline_index)
 	_player.move_to_spawn_point()
+	_ghost_manager.refresh_active_ghosts()
+	_ghost_manager.refresh_path_select()
 
 func _on_timeline_picks(timeline_index, enemy_pick):
 	Logger.info("Received ghost picks from server","ghost_picking")
 	_player.timeline_index = timeline_index
 	_enemy.timeline_index = enemy_pick
+	_ghost_manager.refresh_active_ghosts()
+	_ghost_manager.refresh_path_select()
 
 func _on_player_ready(button) -> void:
 	if button == ButtonOverlay.BUTTONS.DOWN:
@@ -220,8 +223,7 @@ func _on_spawn_player(player_id, spawn_point, team_id):
 	# Initialize capture point HUD for current level
 	_player.setup_capture_point_hud(_game_manager.get_capture_points().size())
 	
-	_error = _player.connect("timeline_index_changed", self, "_on_player_timeline_changed") 
-	_error = _player.connect("timeline_index_changed", _ghost_manager, "_on_player_timeline_changed") 
+	_error = _player.connect("timeline_index_changed", self, "_on_player_timeline_changed")  
 	_error = Server.connect("wall_spawn", _player, "_on_wall_spawn_received") 
 	
 	emit_signal("game_started")

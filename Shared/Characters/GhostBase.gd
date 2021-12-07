@@ -71,3 +71,16 @@ func _apply_record_frame(record_frame: RecordFrame):
 	.set_position(record_frame.position)
 	.set_rotation_y(record_frame.rotation_y)
 	.trigger_actions(record_frame.buttons)
+
+
+func enable_body():
+	if not is_record_data_set():
+		return
+	kb.visible = true
+	_collision_shape.disabled = false
+	#_minimap_icon.set_texture(_minimap_alive)
+
+
+func disable_body():
+	kb.visible = false
+	_collision_shape.disabled = true
