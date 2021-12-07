@@ -168,11 +168,6 @@ remote func spawn_enemy(enemy_id, spawn_point):
 	emit_signal("spawning_enemy", enemy_id, spawn_point)
 
 
-remote func despawn_enemy():
-	Logger.debug("Receive despawn enemy", "server")
-	emit_signal("despawning_enemy")
-
-
 remote func receive_server_time(server_time, player_time):
 	Logger.debug("Receive server time", "server")
 	latency = (OS.get_system_time_msecs() - player_time) / 2

@@ -121,8 +121,6 @@ func despawn_player(player_id) -> void:
 	ghost_dic.erase(player_id)
 	player_dic[player_id].queue_free()
 	player_dic.erase(player_id)
-	for other_player_id in player_dic:
-		Server.despawn_enemy_on_client(other_player_id)
 
 func reset_wall_indices():
 	for player_id in player_dic:
