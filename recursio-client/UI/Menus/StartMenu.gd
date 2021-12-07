@@ -117,28 +117,41 @@ func _on_connection_failed():
 
 
 func _on_play_tutorial() -> void:
+	$ClickSound.play()
+	yield($ClickSound, "finished")
+	
 	get_tree().change_scene("res://Tutorial/Tutorial.tscn")
 
 
 func _on_play_online() -> void:
+	$ClickSound.play()
+	
 	_toggle_enabled_start_menu_buttons(false)
 	Server.connect_to_server(REMOTE_SERVER_IP)
 
 
 func _on_play_local() -> void:
+	$ClickSound.play()
+	
 	_toggle_enabled_start_menu_buttons(false)
 	Server.connect_to_server(_lineEdit_local_ip.text)
 
 
 func _on_open_settings() -> void:
+	$ClickSound.play()
+	
 	$CenterContainer/SettingsContainer.show()
 
 
 func _on_exit() -> void:
+	$BackSound.play()
+	
 	get_tree().quit()
 
 
 func _on_search_create_game_room_pressed() -> void:
+	$ClickSound.play()
+	
 	# just create room with default naming
 	# 	otherwise would need virtual keyboard vor controller support
 	#_game_room_creation.show()
@@ -146,20 +159,28 @@ func _on_search_create_game_room_pressed() -> void:
 
 
 func _on_creation_create_game_room_pressed(game_room_name) -> void:
+	$ClickSound.play()
+	
 	Server.send_create_game_room(game_room_name)
 
 
 func _on_search_back_pressed() -> void:
+	$BackSound.play()
+	
 	_start_menu_buttons.show()
 	Server.disconnect_from_server()
 	
 
 
 func _on_creation_back_pressed() -> void:
+	$BackSound.play()
+	
 	_game_room_search.show()
 
 
 func _on_join_game_room_pressed() -> void:
+	$ClickSound.play()
+	
 	var selected_room = _game_room_search.get_selected_game_room()
 	if selected_room != -1:
 		Server.send_join_game_room(selected_room, _player_user_name)
@@ -169,11 +190,15 @@ func _on_room_search_visibility_changed() -> void:
 
 
 func _on_game_room_leave_pressed() -> void:
+	$BackSound.play()
+	
 	_in_game_room = false
 	_game_room_search.show()
 
 
 func _on_game_room_created(game_room_id, game_room_name) -> void:
+	$ClickSound.play()
+	
 	_game_room_search.add_game_room(game_room_id, game_room_name)
 	_game_room_creation.hide()
 
@@ -203,12 +228,16 @@ func _on_game_room_joined(player_id_name_dic, game_room_id):
 
 
 func _on_game_room_ready_received(player_id):
+	$ClickSound.play()
+	
 	if player_id == _player_rpc_id:
 		_game_room_lobby.toggle_ready_button(true)
 	_game_room_lobby.set_player_ready(player_id, true)
 
 
 func _on_game_room_not_ready_received(player_id):
+	$BackSound.play()
+	
 	if player_id == _player_rpc_id:
 		_game_room_lobby.toggle_ready_button(false)
 	_game_room_lobby.set_player_ready(player_id, false)

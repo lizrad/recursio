@@ -83,6 +83,9 @@ func _on_create_game_room_pressed() -> void:
 
 
 func _on_send_get_game_rooms() -> void:
+	get_parent().get_parent().get_node("ClickSound").play()
+	
+	
 	if visible:
 		Server.send_get_game_rooms()
 
