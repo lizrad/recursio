@@ -5,6 +5,7 @@ signal world_state_updated(world_state)
 
 onready var _server = get_node("/root/Server")
 onready var _character_manager: CharacterManager = get_node("CharacterManager")
+onready var _ghost_manager: CharacterManager = get_node("GhostManager")
 onready var _world_state_manager: WorldStateManager = get_node("WorldStateManager")
 onready var _game_manager: GameManager = get_node("GameManager")
 onready var _action_manager: ActionManager = get_node("ActionManager")
@@ -46,10 +47,6 @@ func spawn_player(player_id: int, team_id: int, player_user_name: String) -> voi
 	_character_manager.spawn_player(player_id, team_id, player_user_name)
 
 
-func despawn_player(player_id: int) -> void:
-	_character_manager.despawn_player(player_id)
-
-
 func update_player_input_data(player_id, input_data: InputData):
 	if _round_manager.get_current_phase() == RoundManager.Phases.GAME:
 		_character_manager.update_player_input_data(player_id, input_data)
@@ -69,9 +66,10 @@ func handle_player_ready(player_id):
 
 func handle_ghost_pick(player_id, timeline_index):
 	if _round_manager.get_current_phase() != RoundManager.Phases.COUNTDOWN:
-		Logger.error("Received ghost picks outside proper phase", "ghost_picking")
+		Logger.error("Received timeline picks outside proper phase", "ghost_picking")
 		return
 	_character_manager.set_timeline_index(player_id, timeline_index)
+	_ghost_manager.refresh_active_ghosts()
 
 
 func get_players():
@@ -97,7 +95,9 @@ func _on_preparation_phase_started():
 	var default_timeline_index = min(round_index,Constants.get_value("ghosts", "max_amount"))
 	for player_id in _character_manager.player_dic:
 		_character_manager.player_dic[player_id].round_index = round_index
+		_character_manager.player_dic[player_id].reset_record_data()
 		_character_manager.set_timeline_index(player_id, default_timeline_index)
+		_ghost_manager.refresh_active_ghosts()
 		_server.send_phase_switch_to_client(player_id, round_index, RoundManager.Phases.COUNTDOWN, switch_time)
 	
 
@@ -121,7 +121,7 @@ func _on_game_phase_started() -> void:
 
 func _on_game_phase_stopped():
 	_action_manager.clear_action_instances()
-	_character_manager.create_ghosts()
+	_ghost_manager.handle_active_player_records()
 	_character_manager.disable_ghosts()
 	_character_manager.stop_ghosts()
 	_character_manager.reset_wall_indices()

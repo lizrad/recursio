@@ -1,6 +1,5 @@
 extends Node
 class_name ActionManager
-
 enum Trigger {
 	NONE = 						 0,
 	FIRE_START = 				 2,
