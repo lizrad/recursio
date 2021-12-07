@@ -2,7 +2,7 @@ extends Node
 
 signal setting_changed(setting_header, setting_name)
 
-export var always_apply_defaults_at_startup := true
+export var always_apply_defaults_at_startup := false
 
 var settings_config = ConfigFile.new()
 
