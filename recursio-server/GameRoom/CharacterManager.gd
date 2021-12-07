@@ -185,7 +185,8 @@ func stop_ghosts() -> void:
 func _create_ghost_from_player(player) -> void:
 	var record_data = player.get_record_data()
 	var ghost = _ghost_scene.instance()
-	ghost.ghost_base_init(_action_manager, record_data)
+	ghost.init(_action_manager, record_data.timeline_index)
+	ghost.set_record_data(record_data)
 	ghost.player_id = player.player_id
 	ghost.spawn_point = player.spawn_point
 	ghost.team_id = player.team_id
