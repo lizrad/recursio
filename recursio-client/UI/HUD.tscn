@@ -1,11 +1,11 @@
 [gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://UI/HUD.gd" type="Script" id=1]
-[ext_resource path="res://UI/Default.tres" type="Theme" id=2]
+[ext_resource path="res://Resources/Fonts/Large.tres" type="DynamicFont" id=2]
 [ext_resource path="res://Resources/Icons/icon_dash.png" type="Texture" id=3]
 [ext_resource path="res://Resources/Icons/circle_white_256x256.png" type="Texture" id=4]
 [ext_resource path="res://Resources/Icons/round_timer_1024x256.png" type="Texture" id=5]
-[ext_resource path="res://Resources/Fonts/Large.tres" type="DynamicFont" id=6]
+[ext_resource path="res://UI/Default.tres" type="Theme" id=6]
 
 [node name="HUD" type="Control"]
 anchor_right = 1.0
@@ -14,7 +14,7 @@ margin_left = 1.68176
 margin_top = 0.840897
 margin_right = 1.68176
 margin_bottom = 0.840881
-theme = ExtResource( 2 )
+theme = ExtResource( 6 )
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -25,11 +25,11 @@ anchor_left = 0.3
 anchor_top = 0.97
 anchor_right = 0.7
 anchor_bottom = 1.0
-margin_left = 2.77277
-margin_top = -510.474
-margin_right = 3.17279
-margin_bottom = -497.474
-custom_fonts/font = ExtResource( 6 )
+margin_left = 2.77301
+margin_top = -927.6
+margin_right = 3.17297
+margin_bottom = -914.6
+custom_fonts/font = ExtResource( 2 )
 text = "Waiting for Server..."
 align = 1
 valign = 1
@@ -41,15 +41,15 @@ __meta__ = {
 margin_top = 10.0
 margin_right = 23.0
 margin_bottom = 41.0
-custom_fonts/font = ExtResource( 6 )
+custom_fonts/font = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="WeaponTypeBG" type="TextureRect" parent="WeaponAmmo"]
-margin_left = 30.9084
+margin_left = 50.0
 margin_top = -5.13712
-margin_right = 70.9084
+margin_right = 90.0
 margin_bottom = 34.8629
 texture = ExtResource( 4 )
 expand = true
@@ -57,9 +57,10 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="WeaponType" type="TextureRect" parent="WeaponAmmo/WeaponTypeBG"]
-margin_right = 40.0
-margin_bottom = 40.0
+[node name="WeaponType" type="TextureRect" parent="WeaponAmmo"]
+margin_left = 50.0
+margin_right = 90.0
+margin_bottom = 34.8629
 expand = true
 stretch_mode = 6
 __meta__ = {
@@ -72,16 +73,16 @@ anchor_bottom = 0.07
 margin_top = 9.0
 margin_right = 23.0
 margin_bottom = 40.0
-custom_fonts/font = ExtResource( 6 )
+custom_fonts/font = ExtResource( 2 )
 text = "2"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="DashTexture" type="TextureRect" parent="DashAmmo"]
-margin_left = 29.8626
+margin_left = 50.0
 margin_top = -6.34314
-margin_right = 69.8626
+margin_right = 90.0
 margin_bottom = 33.6569
 texture = ExtResource( 3 )
 expand = true
