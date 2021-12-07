@@ -3,9 +3,9 @@
 [ext_resource path="res://Managers/CharacterManager.gd" type="Script" id=1]
 [ext_resource path="res://UI/GameResultScreen.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Managers/ClientActionManager.gd" type="Script" id=3]
+[ext_resource path="res://Util/StatsHUD.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Managers/GameManager.gd" type="Script" id=6]
 [ext_resource path="res://Shared/RoundManager.gd" type="Script" id=7]
-[ext_resource path="res://Util/LatencyHUD.gd" type="Script" id=8]
 [ext_resource path="res://UI/CountdownScreen.tscn" type="PackedScene" id=9]
 [ext_resource path="res://World.gd" type="Script" id=10]
 
@@ -29,33 +29,4 @@ script = ExtResource( 7 )
 [node name="CountdownScreen" parent="." instance=ExtResource( 9 )]
 visible = false
 
-[node name="StatsHUD" type="Control" parent="."]
-anchor_right = 1.0
-anchor_bottom = 1.0
-mouse_filter = 2
-script = ExtResource( 8 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="LatencyText" type="Label" parent="StatsHUD"]
-anchor_top = 1.0
-anchor_bottom = 1.0
-margin_top = -14.0
-margin_right = 93.0
-text = "Latency: 40ms"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="FPSText" type="Label" parent="StatsHUD"]
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = -60.0
-margin_top = -14.0
-text = "FPS: -1"
-__meta__ = {
-"_edit_use_anchors_": false
-}
+[node name="StatsHUD" parent="." instance=ExtResource( 4 )]
