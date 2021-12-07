@@ -75,7 +75,8 @@ func reset() -> void:
 
 func move_to_spawn_point() -> void:
 	set_position(spawn_point)
-	set_rotation_y(0)
+	var val = PI/2 + (team_id * PI)
+	set_rotation_y(val)
 
 
 # Returns the position of the underlying kinematic body
@@ -144,6 +145,7 @@ func toggle_animation(value):
 func trigger_actions(buttons: int) -> void:
 	if currently_dying or currently_spawning:
 		return
+
 	# Go through buttons and trigger actions for them
 	var number_of_bits = log(buttons) / log(2) + 1
 	for bit_index in number_of_bits:

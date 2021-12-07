@@ -18,6 +18,8 @@ enum ActionType {
 	MELEE
 }
 
+export var plays_sounds := false
+
 # Preconfigured Actions
 # Action(ammo, cd, recharge, activation_max, action_scene)
 var action_resources = {
@@ -112,6 +114,17 @@ func set_active(action: Action, character: CharacterBase, tree_position: Spatial
 		spawn.initialize(character)
 		_instanced_actions.append(weakref(spawn))
 		# TODO: if has recoil configured -> apply on player
+	
+	# Play sound
+	if action.sound and plays_sounds:
+		var audio_player = AudioStreamPlayer3D.new()
+		audio_player.stream = action.sound
+		audio_player.bus = "Effects"
+		get_tree().get_root().add_child(audio_player)
+		audio_player.global_transform = tree_position.global_transform
+		audio_player.unit_size = 20
+		audio_player.connect("finished", audio_player, "queue_free")
+		audio_player.play()
 
 	action.emit_signal("action_triggered")
 	

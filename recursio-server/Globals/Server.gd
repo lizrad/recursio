@@ -53,8 +53,8 @@ func spawn_player_on_client(player_id, spawn_point, team_id):
 	rpc_id(player_id, "spawn_player", player_id, spawn_point, team_id)
 
 
-func spawn_enemy_on_client(player_id, enemy_id, enemy_position):
-	rpc_id(player_id, "spawn_enemy", enemy_id, enemy_position)
+func spawn_enemy_on_client(player_id, enemy_id, enemy_position, team_id):
+	rpc_id(player_id, "spawn_enemy", enemy_id, enemy_position, team_id)
 
 
 func send_player_ghost_record_to_client(player_id, timeline_index, record_data: RecordData):

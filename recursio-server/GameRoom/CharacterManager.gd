@@ -106,8 +106,9 @@ func spawn_player(player_id, team_id, player_user_name) -> void:
 	# Triggering spawns of enemies on all clients
 	for other_player_id in player_dic:
 		var other_spawn_point = player_dic[other_player_id].spawn_point
-		Server.spawn_enemy_on_client(player_id, other_player_id, other_spawn_point)
-		Server.spawn_enemy_on_client(other_player_id, player_id, spawn_point)
+		var other_team_id = player_dic[other_player_id].team_id
+		Server.spawn_enemy_on_client(player_id, other_player_id, other_spawn_point, other_team_id)
+		Server.spawn_enemy_on_client(other_player_id, player_id, spawn_point, team_id)
 
 	player_dic[player_id] = player
 	player.move_to_spawn_point()

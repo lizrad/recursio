@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Shared/Characters/CharacterBase.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Characters/Ghost.gd" type="Script" id=2]
+[ext_resource path="res://Characters/CharacterAudioPlayer.tscn" type="PackedScene" id=3]
 [ext_resource path="res://UI/MiniMapIcon.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Characters/Visuals/CharacterModel.tscn" type="PackedScene" id=5]
 
@@ -14,3 +15,5 @@ color_scheme = "enemy_ghost"
 
 [node name="MiniMapIcon" parent="KinematicBody" index="2" instance=ExtResource( 4 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.48839, 0 )
+
+[node name="CharacterAudioPlayer" parent="KinematicBody" index="3" instance=ExtResource( 3 )]

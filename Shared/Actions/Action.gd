@@ -7,7 +7,7 @@ export var cooldown: float
 export var recharge_time: float
 export var activation_max: int # max time in ticks where action can be applied
 
-export var sound: AudioStreamSample
+export var sound: AudioStream
 export var img_bullet: StreamTexture
 export var player_accessory: PackedScene
 export var attack: PackedScene
