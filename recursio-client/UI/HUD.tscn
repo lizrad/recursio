@@ -1,10 +1,10 @@
 [gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://UI/HUD.gd" type="Script" id=1]
-[ext_resource path="res://Resources/Fonts/default_font.tres" type="DynamicFont" id=2]
 [ext_resource path="res://Resources/Icons/icon_dash.png" type="Texture" id=3]
 [ext_resource path="res://Resources/Icons/circle_white_256x256.png" type="Texture" id=4]
 [ext_resource path="res://Resources/Icons/round_timer_1024x256.png" type="Texture" id=5]
+[ext_resource path="res://Resources/Fonts/Large.tres" type="DynamicFont" id=6]
 
 [node name="HUD" type="Control"]
 anchor_right = 1.0
@@ -27,7 +27,7 @@ margin_left = 2.77277
 margin_top = -510.474
 margin_right = 3.17279
 margin_bottom = -497.474
-custom_fonts/font = ExtResource( 2 )
+custom_fonts/font = ExtResource( 6 )
 text = "Waiting for Server..."
 align = 1
 valign = 1
@@ -39,7 +39,7 @@ __meta__ = {
 margin_top = 10.0
 margin_right = 23.0
 margin_bottom = 41.0
-custom_fonts/font = ExtResource( 2 )
+custom_fonts/font = ExtResource( 6 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -70,7 +70,7 @@ anchor_bottom = 0.07
 margin_top = 9.0
 margin_right = 23.0
 margin_bottom = 40.0
-custom_fonts/font = ExtResource( 2 )
+custom_fonts/font = ExtResource( 6 )
 text = "2"
 __meta__ = {
 "_edit_use_anchors_": false
