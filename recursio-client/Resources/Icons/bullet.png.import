@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/bullet.png-f6b7e4b073281c25abdc51bc690aee5e.stex"
+path="res://.import/bullet.png-2904c5fb8c0e04be6e0307774b6b91c4.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Shared/Actions/Shots/bullet.png"
-dest_files=[ "res://.import/bullet.png-f6b7e4b073281c25abdc51bc690aee5e.stex" ]
+source_file="res://Resources/Icons/bullet.png"
+dest_files=[ "res://.import/bullet.png-2904c5fb8c0e04be6e0307774b6b91c4.stex" ]
 
 [params]
 

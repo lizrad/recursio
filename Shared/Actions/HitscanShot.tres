@@ -1,9 +1,7 @@
-[gd_resource type="Resource" load_steps=5 format=2]
+[gd_resource type="Resource" load_steps=3 format=2]
 
 [ext_resource path="res://Shared/Actions/Action.gd" type="Script" id=1]
 [ext_resource path="res://Shared/Actions/Shots/HitscanShot.tscn" type="PackedScene" id=2]
-[ext_resource path="res://Shared/Actions/Shots/bullet.png" type="Texture" id=3]
-[ext_resource path="res://Shared/Actions/Sounds/Shoot.ogg" type="AudioStream" id=4]
 
 [resource]
 script = ExtResource( 1 )
@@ -12,6 +10,4 @@ max_ammo = 10
 cooldown = 0.5
 recharge_time = -1.0
 activation_max = 0
-sound = ExtResource( 4 )
-img_bullet = ExtResource( 3 )
 attack = ExtResource( 2 )
