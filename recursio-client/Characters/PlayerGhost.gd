@@ -29,5 +29,10 @@ func toggle_path_select(value):
 		$GhostPath.selected = value
 
 
+# OVERRIDE #
+func disable_body():
+	.disable_body()
+	toggle_path_select(false)
+
 func delete_path():
 	$GhostPath.set_curve(Curve.new())

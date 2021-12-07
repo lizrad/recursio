@@ -217,11 +217,12 @@ func _on_game_room_not_ready_received(player_id):
 func _on_load_level_received():
 	$CenterContainer.hide()
 	_world = world_scene.instance()
-	add_child(_world)
 	var level = level_scene.instance()
 	level.capture_point_scene = capture_point_scene
+	add_child(_world)
 	_world.set_level(level)
 	_world.add_child(level)
+	_world.level_set_up_done()
 
 
 func _on_game_result_received(_winning_player_id):
