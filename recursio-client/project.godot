@@ -102,7 +102,7 @@ _global_script_classes=[ {
 "base": "Node",
 "class": "GhostManager",
 "language": "GDScript",
-"path": "res://Managers/GhostManager.gd"
+"path": "res://Shared/GhostManager.gd"
 }, {
 "base": "Control",
 "class": "HUD",
