@@ -12,7 +12,15 @@ func _init(tutorial_text, character_manager, level).(tutorial_text):
 
 func _ready():
 	_rounds = 2
-	_started_round_1()
+	add_round_start_function(funcref(self, "_started_round_1"))
+	add_round_condition_function(funcref(self, "_check_completed_round_1"))
+	add_round_end_function(funcref(self, "_completed_round_1"))
+	
+	add_round_start_function(funcref(self, "_started_round_2"))
+	add_round_condition_function(funcref(self, "_check_completed_round_2"))
+	add_round_end_function(funcref(self, "_completed_round_2"))
+	
+	start()
 
 
 func _started_round_1():
@@ -79,7 +87,3 @@ func _completed_round_2() -> void:
 	
 	_toggle_ui(true)
 	_tutorial_text.text = "Good job!"
-
-
-func _update_round_2() -> void:
-	pass
