@@ -70,7 +70,7 @@ func move_players_to_spawn_point() -> void:
 		player_dic[player_id].move_to_spawn_point()
 
 func spawn_player(player_id, team_id, player_user_name) -> void:
-	var spawn_point = _game_manager.get_spawn_point(team_id, 0)
+	var spawn_point = _game_manager.get_spawn_point(team_id, 0).global_transform.origin
 	var player: PlayerBase = _player_scene.instance()
 	player.player_base_init(_action_manager)
 	player.player_id = player_id
@@ -104,7 +104,7 @@ func set_block_player_input(blocked: bool) -> void:
 func set_timeline_index(player_id, timeline_index):
 	Logger.info("Setting timeline index for player "+str(player_id)+" to "+str(timeline_index),"ghost_picking")
 	player_dic[player_id].timeline_index = timeline_index
-	player_dic[player_id].spawn_point = _game_manager.get_spawn_point(player_dic[player_id].team_id, timeline_index)
+	player_dic[player_id].spawn_point = _game_manager.get_spawn_point(player_dic[player_id].team_id, timeline_index).global_transform.origin
 	player_dic[player_id].move_to_spawn_point()
 
 func propagate_player_picks():

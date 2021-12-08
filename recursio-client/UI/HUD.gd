@@ -4,8 +4,8 @@ class_name HUD
 onready var _timer_pb: TextureProgress = get_node("TimerProgressBar")
 onready var _phase = get_node("Phase")
 onready var _ammo = get_node("WeaponAmmo")
-onready var _ammo_type = get_node("WeaponAmmo/WeaponType")
 onready var _ammo_type_bg = get_node("WeaponAmmo/WeaponTypeBG")
+onready var _ammo_type = get_node("WeaponAmmo/WeaponType")
 onready var _dash = get_node("DashAmmo")
 onready var _capture_point_hb = get_node("TimerProgressBar/CapturePoints")
 
@@ -17,6 +17,9 @@ var _capture_point_scene = preload("res://UI/CapturePointHUD.tscn")
 var _number_of_capture_points := 0
 # Array of all capture points in the HUD
 var _capture_points = []
+
+# Array of all spawn points as Position3D with SpawnPoint as child
+var _spawn_points = []
 
 enum {
 	Latency_Delay,
@@ -78,16 +81,24 @@ func update_special_movement_ammo(amount: int) -> void:
 	_dash.text = str(amount)
 
 
-func update_weapon_type(img_bullet, color) ->void:
+func update_weapon_type(img_bullet, color) -> void:
 	Logger.info("Update ammo type", "HUD")
 	_ammo_type_bg.modulate = color
 	_ammo_type.texture = img_bullet
+
+
+func activate_spawn_point(timeline_index) -> void:
+	Logger.info("Activate SpawnPoint " + str(timeline_index), "HUD")
+	for spawn_point in _spawn_points:
+		if spawn_point.has_node("SpawnPoint"):
+			spawn_point.get_node("SpawnPoint").set_active(spawn_point.get_index() == timeline_index)
 
 
 # Sets the internal player id for the capture points
 func set_player_id(player_id) -> void:
 	for capture_point in _capture_points:
 		capture_point.set_player_id(player_id)
+
 
 # Adds a new capture point HUD item to the HUD
 func add_capture_point() -> void:
@@ -106,3 +117,7 @@ func add_capture_point() -> void:
 # The progress is between 0 and 1
 func update_capture_point(capture_point_id, progress, team) -> void:
 	_capture_points[capture_point_id].update_status(progress, team)
+
+
+func set_spawn_points(spawn_points):
+	_spawn_points = spawn_points

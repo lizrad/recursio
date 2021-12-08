@@ -189,7 +189,7 @@ func _on_game_result(winning_player_index) -> void:
 		_game_manager.show_loss()
 
 func _on_player_timeline_changed(timeline_index) -> void:
-	_player.spawn_point = _game_manager.get_spawn_point(_player.team_id, timeline_index)
+	_player.spawn_point = _game_manager.get_spawn_point(_player.team_id, timeline_index).global_transform.origin
 	_player.move_to_spawn_point()
 	_ghost_manager.refresh_active_ghosts()
 	_ghost_manager.refresh_path_select()
@@ -204,6 +204,7 @@ func _on_timeline_picks(timeline_index, enemy_pick):
 func _on_player_ready(button) -> void:
 	if button == ButtonOverlay.BUTTONS.DOWN:
 		Server.send_player_ready()
+
 
 func _on_spawn_player(player_id, spawn_point, team_id):
 	set_physics_process(true)
@@ -225,7 +226,12 @@ func _on_spawn_player(player_id, spawn_point, team_id):
 	# Initialize capture point HUD for current level
 	_player.setup_capture_point_hud(_game_manager.get_capture_points().size())
 	
-	_error = _player.connect("timeline_index_changed", self, "_on_player_timeline_changed")  
+
+	# Initialize spawn points for current level
+	_player.setup_spawn_point_hud(_game_manager.get_spawn_points(team_id))
+	
+	_error = _player.connect("timeline_index_changed", self, "_on_player_timeline_changed") 
+
 	_error = Server.connect("wall_spawn", _player, "_on_wall_spawn_received") 
 	
 	emit_signal("game_started")
