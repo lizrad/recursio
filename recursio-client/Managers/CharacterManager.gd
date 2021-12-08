@@ -304,10 +304,12 @@ func _toggle_visbility_lights(value: bool):
 func _apply_visibility_mask(character) -> void:
 	if not _player:
 		return
-
-	character.get_node("KinematicBody/CharacterModel").set_shader_param("visibility_mask", _player.get_visibility_mask())
-	if character.has_node("KinematicBody/MiniMapIcon"):
-		character.get_node("KinematicBody/MiniMapIcon").visibility_mask = _player.get_visibility_mask()
+	if Constants.get_value("visibility","use_visibility"):
+		character.get_node("KinematicBody/CharacterModel").set_shader_param("visibility_mask", _player.get_visibility_mask())
+		if character.has_node("KinematicBody/MiniMapIcon"):
+			character.get_node("KinematicBody/MiniMapIcon").visibility_mask = _player.get_visibility_mask()
+	else:
+		_apply_visibility_always(character)
 
 func _apply_visibility_always(character) -> void:
 	character.get_node("KinematicBody/CharacterModel").set_shader_param("always_draw", true)

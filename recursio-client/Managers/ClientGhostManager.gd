@@ -17,7 +17,7 @@ func _spawn_all_ghosts():
 		var team_id = _character_manager._player.team_id
 		var spawn_point = _game_manager.get_spawn_point(team_id, timeline_index)
 		var player_ghost = _create_ghost(player_id, team_id, timeline_index, spawn_point, _player_ghost_scene)
-		_apply_visibility_always(player_ghost)
+		_character_manager._apply_visibility_always(player_ghost)
 		_player_ghosts.append(player_ghost)
 		
 		var enemy_id = _character_manager._enemy.player_id
@@ -25,7 +25,7 @@ func _spawn_all_ghosts():
 		var enemy_spawn_point = _game_manager.get_spawn_point(enemy_team_id, timeline_index)
 		var enemy_ghost = _create_ghost(enemy_id, enemy_team_id, timeline_index, enemy_spawn_point, _enemy_ghost_scene)
 		
-		_apply_visibility_mask(enemy_ghost)
+		_character_manager._apply_visibility_mask(enemy_ghost)
 		_enemy_ghosts.append(enemy_ghost)
 		
 		_ghosts.append(player_ghost)
@@ -138,11 +138,3 @@ func refresh_path_select():
 	for ghost in _player_ghosts:
 		ghost.toggle_path_select(false)
 	_player_ghosts[_character_manager._player.timeline_index].toggle_path_select(true)
-
-func _apply_visibility_mask(character) -> void:
-	character.get_node("KinematicBody/CharacterModel").set_shader_param("visibility_mask", _character_manager._player.get_visibility_mask())
-	if character.has_node("KinematicBody/MiniMapIcon"):
-		character.get_node("KinematicBody/MiniMapIcon").visibility_mask = _character_manager._player.get_visibility_mask()
-
-func _apply_visibility_always(character) -> void:
-	character.get_node("KinematicBody/CharacterModel").set_shader_param("always_draw", true)
