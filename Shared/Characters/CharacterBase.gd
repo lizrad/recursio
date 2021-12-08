@@ -4,6 +4,7 @@ class_name CharacterBase
 signal hit()
 signal dying()
 signal spawning()
+signal non_vfx_spawn()
 signal velocity_changed(velocity, front_vector, right_vector)
 signal timeline_index_changed(timeline_index)
 signal action_status_changed(action_type, status)
@@ -189,6 +190,10 @@ func visual_delayed_spawn(delay: float):
 
 func visual_kill():
 	emit_signal("dying")
+
+
+func non_vfx_spawn():
+	emit_signal("non_vfx_spawn")
 
 func is_collision_active() -> bool:
 	return !_collision_shape.disabled

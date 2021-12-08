@@ -57,9 +57,9 @@ func _update_ghost_record(ghost_array, timeline_index, record_data):
 	refresh_active_ghosts()
 
 func on_preparation_phase_started() -> void:
+	refresh_active_ghosts()
 	_stop_ghosts()
 	_move_ghosts_to_spawn()
-	refresh_active_ghosts()
 
 func on_countdown_phase_started() -> void:
 	pass

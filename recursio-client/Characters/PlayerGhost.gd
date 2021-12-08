@@ -10,7 +10,7 @@ func init(action_manager, player_id, team_id, timeline_index, spawn_point) -> vo
 
 
 func toggle_visibility_light(value: bool):
-	_visibility_light.visible = value
+	_visibility_light.toggle(value)
 
 
 func create_path():

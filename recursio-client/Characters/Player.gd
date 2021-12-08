@@ -220,7 +220,7 @@ func get_round_manager():
 	return _round_manager
 
 func toggle_visibility_light(value: bool):
-	_visibility_light.visible = value
+	_visibility_light.toggle(value)
 
 
 # OVERRIDE #

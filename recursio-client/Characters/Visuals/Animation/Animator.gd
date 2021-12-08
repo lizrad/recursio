@@ -23,10 +23,13 @@ onready var melee_animator = get_node("../MeleeAnimator")
 onready var death_animator = get_node("../DeathAnimator")
 onready var spawn_animator = get_node("../SpawnAnimator")
 
-var _animation_active = false;
+var _animation_active = false
 var _animation_status = {}
 var _action_animations = {}
 var _priority_sorted = []
+
+
+var delayed_non_vfx_spawn = false
 
 func _ready():
 	_animation_status[idle_animator] = true
@@ -61,6 +64,9 @@ func _ready():
 	_priority_sorted.append(spawn_animator)
 
 func toggle_animation(value):
+	if delayed_non_vfx_spawn:
+		delayed_non_vfx_spawn = false
+		non_vfx_spawn()
 	_animation_active = value;
 
 func action_status_changed(action_type, status):
@@ -83,6 +89,12 @@ func spawn_active():
 	spawn_animator.start_animation()
 	_animation_status[spawn_animator]=true
 	spawn_animator.connect("animation_over", self, "_stop_spawn_animation")
+
+func non_vfx_spawn():
+	if _animation_status[death_animator]==true:
+		delayed_non_vfx_spawn = true
+	else:
+		spawn_animator.non_vfx_spawn()
 
 func velocity_changed(velocity, front_vector, right_vector):
 	#because movement only aproaches 0 asymptotically
@@ -117,6 +129,9 @@ func _stop_animation(animator):
 func _stop_death_animation():
 	death_animator.disconnect("animation_over", self, "_stop_death_animation")
 	_animation_status[death_animator] = false
+	if delayed_non_vfx_spawn:
+		delayed_non_vfx_spawn = false
+		non_vfx_spawn()
 	emit_signal("death_animation_over")
 
 func _stop_spawn_animation():

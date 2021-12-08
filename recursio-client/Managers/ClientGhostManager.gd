@@ -34,6 +34,7 @@ func _spawn_all_ghosts():
 # OVERRIDE #
 func on_preparation_phase_started() -> void:
 	.on_preparation_phase_started()
+	_non_vfx_spawn_ghosts()
 	_toggle_ghost_animation(false)
 	_toggle_visbility_lights(false)
 	# Display paths of my ghosts
@@ -96,10 +97,13 @@ func _on_enemy_ghost_record_received(timeline_index, record_data: RecordData):
 
 
 func _on_ghost_hit_from_server(hit_ghost_player_owner, hit_ghost_id) -> void:
+	var ghost 
 	if hit_ghost_player_owner == _character_manager._player.player_id:
-		_player_ghosts[hit_ghost_id].server_hit()
+		ghost = _player_ghosts[hit_ghost_id]
+		ghost.toggle_visibility_light(false)
 	else:
-		_enemy_ghosts[hit_ghost_id].server_hit()
+		ghost = _enemy_ghosts[hit_ghost_id]
+	ghost.server_hit()
 
 func _toggle_visbility_lights(value: bool):
 	for ghost in _player_ghosts:
@@ -121,6 +125,10 @@ func _toggle_ghost_animation(value) -> void:
 func _visual_delay_spawn_ghosts(delay) -> void:
 	for ghost in _ghosts:
 		ghost.visual_delayed_spawn(delay)
+
+func _non_vfx_spawn_ghosts() -> void:
+	for ghost in _ghosts:
+		ghost.non_vfx_spawn()
 
 func refresh_path_select():
 	for ghost in _player_ghosts:
