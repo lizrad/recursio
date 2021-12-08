@@ -12,7 +12,7 @@ func init(action_manager, player_id, team_id, timeline_index, spawn_point) -> vo
 	self.player_id = player_id
 	self.team_id = team_id
 	self.timeline_index = timeline_index
-	self.spawn_point = spawn_point
+	self.spawn_point = spawn_point.global_transform.origin
 	.character_base_init(action_manager)
 
 func set_record_data(record_data):
