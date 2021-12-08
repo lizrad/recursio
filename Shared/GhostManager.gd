@@ -11,12 +11,19 @@ var _ghost_scene = preload("res://Shared/Characters/GhostBase.tscn")
 # holds every ghost 
 var _ghosts: Array = []
 var _seperated_ghosts: Array = [[],[]]
+var _game_phase_start_time = -1
+var _previous_ghost_deaths: Array = []
 var _max_ghosts = Constants.get_value("ghosts", "max_amount")
 
 var _game_manager
 var _round_manager
 var _action_manager
 var _character_manager
+
+func _physics_process(delta):
+	#TODO: look through previous deaths and apply them
+	for ghost in _ghosts:
+		ghost.update(delta)
 
 func init(game_manager,round_manager,action_manager, character_manager):
 	_game_manager = game_manager
@@ -45,14 +52,48 @@ func _create_ghost(player_id, team_id, timeline_index, spawn_point, ghost_scene)
 
 func _on_ghost_hit(ghost):
 	Logger.info("Ghost hit!", "attacking")
+	_previous_ghost_deaths.append(create_new_ghost_death_data(ghost, ghost.last_death_perpetrator))
 	emit_signal("ghost_hit",ghost.player_id, ghost.timeline_index)
 
-func _update_ghost_record(ghost_array, timeline_index, record_data):
+func _on_player_killed(victim, perpetrator):
+	_previous_ghost_deaths.append(create_new_ghost_death_data(victim, perpetrator))
+
+func create_new_ghost_death_data(victim, perpetrator):
+	var ghost_data = GhostDeathData.new()
+	
+	ghost_data.time = Server.get_server_time()-_game_phase_start_time
+
+	ghost_data.victim_team_id = victim.team_id
+	ghost_data.victim_round_index = victim.round_index
+	ghost_data.victim_timeline_index = victim.timeline_index
+
+	ghost_data.perpetrator_team_id = perpetrator.team_id
+	ghost_data.perpetrator_round_index = perpetrator.round_index
+	ghost_data.perpetrator_timeline_index = perpetrator.timeline_index
+	
+	print("--------------------------------------------------------------")
+	print("CREATED GHOST DEATH DATA:")
+	print("TEAM: "+str(victim.team_id)+" ROUND: "+str(victim.round_index)+" TIMELINE: "+str(victim.timeline_index))
+	print("TEAM: "+str(perpetrator.team_id)+" ROUND: "+str(perpetrator.round_index)+" TIMELINE: "+str(perpetrator.timeline_index))
+	print("--------------------------------------------------------------")
+	return ghost_data
+
+func _clear_old_ghost_death_data(perpetrator_team_id, perpetrator_timeline_index, perpetrator_round_index):
+	var to_remove = []
+	print("TEAM: "+str(perpetrator_team_id)+" ROUND: "+str(perpetrator_round_index)+" TIMELINE: "+str(perpetrator_timeline_index))
+	print("SIZE BEFORE: "+str(_previous_ghost_deaths.size()))
+	for data in _previous_ghost_deaths:
+		if data.perpetrator_team_id == perpetrator_team_id and data.perpetrator_timeline_index == perpetrator_timeline_index:
+			if data.perpetrator_round_index < perpetrator_round_index:
+				to_remove.append(data)
+	for data in to_remove:
+		_previous_ghost_deaths.erase(data)
+	print("SIZE AFTER: "+str(_previous_ghost_deaths.size()))
+	print("--------------------------------------------------------------")
+
+func _update_ghost_record(ghost_array, timeline_index, record_data, round_index):
 	ghost_array[timeline_index].set_record_data(record_data)
-	if _round_manager.get_current_phase() == RoundManager.Phases.GAME:
-		ghost_array[timeline_index].round_index = _round_manager.round_index
-	else:
-		ghost_array[timeline_index].round_index = _round_manager.round_index-1
+	ghost_array[timeline_index].round_index = round_index
 	refresh_active_ghosts()
 
 func on_preparation_phase_started() -> void:
@@ -64,15 +105,18 @@ func on_countdown_phase_started() -> void:
 	pass
 
 func on_game_phase_started() -> void:
+	_game_phase_start_time = Server.get_server_time()
 	_start_ghosts()
 
 func on_game_phase_stopped() -> void:
 	_use_new_record_data()
 
 func _use_new_record_data():
+	var current_round_index = _round_manager.round_index-1
 	for player in _character_manager.player_dic.values():
 		var record_data = player.get_record_data()
-		_update_ghost_record(_seperated_ghosts[player.team_id], record_data.timeline_index, record_data)
+		_update_ghost_record(_seperated_ghosts[player.team_id], record_data.timeline_index, record_data, current_round_index)
+		_clear_old_ghost_death_data(player.team_id, record_data.timeline_index, current_round_index)
 		_seperated_ghosts[player.team_id][record_data.timeline_index].player_id = player.player_id
 		emit_signal("new_record_data_applied", player)
 
@@ -102,7 +146,3 @@ func _start_ghosts() -> void:
 func _stop_ghosts() -> void:
 	for ghost in _ghosts:
 		ghost.stop_playing()
-
-
-
-

@@ -225,9 +225,10 @@ func toggle_visibility_light(value: bool):
 
 # OVERRIDE #
 # disable hit of base on client
-func hit():
+func hit(perpetrator):
 	pass
 
 # call hit of baseclass triggered by server
 func server_hit():
-	.hit()
+	#TODO: using null here because we dont record deaths on the client anyway but this is kinda wack
+	.hit(null)

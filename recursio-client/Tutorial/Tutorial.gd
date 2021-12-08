@@ -66,7 +66,7 @@ func _update_phase1():
 		
 		$CharacterManager/RoundManager.round_index += 1
 		$CharacterManager/RoundManager.switch_to_phase(RoundManager.Phases.PREPARATION)
-		$CharacterManager._on_player_ghost_record_received(0, $CharacterManager.get_player().get_record_data())
+		$CharacterManager._on_player_ghost_record_received(0, $CharacterManager.get_player().get_record_data(), 0)
 		current_phase = Phases.ROUND2
 		
 		$TutorialUI/PanelContainer/TutorialText.text = "Now try capturing both points."

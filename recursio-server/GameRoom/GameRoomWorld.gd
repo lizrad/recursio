@@ -31,6 +31,7 @@ func _ready():
 	_error = _round_manager.connect("game_phase_stopped", self,"_on_game_phase_stopped") 
 	_error = _ghost_manager.connect("ghost_hit", self, "_on_ghost_hit")
 	_error = _ghost_manager.connect("new_record_data_applied", self, "_on_new_record_data_applied")
+	_error = _character_manager.connect("player_killed", _ghost_manager, "_on_player_killed")
 	_world_state_manager.world_processing_offset = world_processing_offset
 	_character_manager.world_processing_offset = world_processing_offset
 
@@ -40,10 +41,11 @@ func _on_ghost_hit(owning_player_id, timeline_index):
 
 
 func _on_new_record_data_applied(player):
-	_server.send_player_ghost_record_to_client(player.player_id, player.timeline_index, player.get_record_data())
+	var current_round_index = _round_manager.round_index-1
+	_server.send_player_ghost_record_to_client(player.player_id, player.timeline_index,current_round_index, player.get_record_data())
 	for client_id in _character_manager.player_dic:
 		if client_id != player.player_id:
-			_server.send_enemy_ghost_record_to_client(client_id, player.timeline_index, player.get_record_data())
+			_server.send_enemy_ghost_record_to_client(client_id, player.timeline_index, current_round_index, player.get_record_data())
 
 func set_level(level: Node):
 	_game_manager._level = level

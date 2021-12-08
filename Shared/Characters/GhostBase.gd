@@ -28,7 +28,7 @@ func is_record_data_set() -> bool:
 		return false
 
 # Goes through the record and applies each frame
-func _physics_process(_delta):
+func update(_delta):
 	if not _is_active:
 		return
 	if not _is_playing:
@@ -52,9 +52,10 @@ func _physics_process(_delta):
 
 # Stops the ghost and triggers the base classes hit function
 # OVERRIDE #
-func hit() -> void:
+# OVERRIDE #
+func hit(perpetrator) -> void:
 	_is_playing = false
-	.hit()
+	.hit(perpetrator)
 
 
 # Starts moving the ghost and enables collision

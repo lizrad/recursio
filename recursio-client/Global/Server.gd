@@ -20,8 +20,8 @@ signal spawning_enemy(enemy_id, spawn_point, team_id)
 signal despawning_enemy(enemy_id)
 signal spawning_player(player_id, spawn_point)
 signal world_state_received(world_state)
-signal player_ghost_record_received(timeline_index, gameplay_record)
-signal enemy_ghost_record_received(timeline_index, gameplay_record)
+signal player_ghost_record_received(timeline_index,round_index,  gameplay_record)
+signal enemy_ghost_record_received(timeline_index,round_index,  gameplay_record)
 signal capture_point_captured(capturing_player_id, capture_point)
 signal capture_point_team_changed(capturing_player_id, capture_point)
 signal capture_point_status_changed(capturing_player_id, capture_point, capture_progress)
@@ -197,14 +197,14 @@ remote func receive_latency(player_time):
 	Logger.debug("Receive latency (" + str((OS.get_system_time_msecs() - player_time) / 2) + ")", "server")
 
 
-remote func receive_player_ghost_record(timeline_index, record_data):
+remote func receive_player_ghost_record(timeline_index,round_index,  record_data):
 	Logger.debug("Receive player ghost record", "server")
-	emit_signal("player_ghost_record_received", timeline_index, RecordData.new().from_array(record_data))
+	emit_signal("player_ghost_record_received", timeline_index, round_index, RecordData.new().from_array(record_data))
 
 
-remote func receive_enemy_ghost_record(timeline_index, record_data):
+remote func receive_enemy_ghost_record(timeline_index,round_index,  record_data):
 	Logger.debug("Receive enemy ghost record", "server")
-	emit_signal("enemy_ghost_record_received", timeline_index, RecordData.new().from_array(record_data))
+	emit_signal("enemy_ghost_record_received", timeline_index, round_index, RecordData.new().from_array(record_data))
 
 
 # Receives the current world state of the players room

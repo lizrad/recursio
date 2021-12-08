@@ -76,23 +76,28 @@ func _enable_active_ghosts() -> void:
 func _use_new_record_data():
 	# Not calling super because we dont want local values to overwrite remote ones
 	# But we will use them until we get better ones
-	var current_round_index = _round_manager.round_index
+	var current_round_index = _round_manager.round_index-1
 	var record_data = _character_manager._player.get_record_data()
 	if current_round_index > _player_ghosts[record_data.timeline_index].round_index:
-		_update_ghost_record(_player_ghosts, record_data.timeline_index, record_data)
+		_update_ghost_record(_player_ghosts, record_data.timeline_index, record_data, current_round_index)
 		_player_ghosts[record_data.timeline_index].player_id = _character_manager._player.player_id
 	
 	record_data = _character_manager._enemy.get_record_data()
 	if current_round_index > _enemy_ghosts[record_data.timeline_index].round_index:
-		_update_ghost_record(_enemy_ghosts, record_data.timeline_index, record_data)
+		_update_ghost_record(_enemy_ghosts, record_data.timeline_index, record_data, current_round_index)
 		_enemy_ghosts[record_data.timeline_index].player_id = _character_manager._enemy.player_id
 
-func _on_player_ghost_record_received(timeline_index, record_data):
-	_update_ghost_record(_player_ghosts, timeline_index, record_data)
+# OVERRIDE #
+# local ghost hits should not trigger anything on the client
+func _on_ghost_hit(ghost):
+	pass
+
+func _on_player_ghost_record_received(timeline_index, round_index,  record_data):
+	_update_ghost_record(_player_ghosts, timeline_index, record_data , round_index)
 	_update_ghost_paths()
 
-func _on_enemy_ghost_record_received(timeline_index, record_data: RecordData):
-	_update_ghost_record(_enemy_ghosts, timeline_index, record_data)
+func _on_enemy_ghost_record_received(timeline_index,round_index,  record_data: RecordData):
+	_update_ghost_record(_enemy_ghosts, timeline_index, record_data, round_index)
 
 
 func _on_ghost_hit_from_server(hit_ghost_player_owner, hit_ghost_id) -> void:

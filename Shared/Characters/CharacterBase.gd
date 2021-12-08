@@ -24,6 +24,8 @@ var round_index: int = -1
 # tracks activation for triggers
 var last_triggers: int = 0
 
+#TODO: using this so we don't have to change every thing that listens to the hit() signal, but we should maybe just include it in the future
+var last_death_perpetrator = null
 
 var position: Vector3 setget set_position, get_position
 var rotation_y: float setget set_rotation_y, get_rotation_y
@@ -109,7 +111,8 @@ func set_timeline_index(new_timeline_index: int):
 	timeline_index = new_timeline_index
 	emit_signal("timeline_index_changed", new_timeline_index)
 
-func hit() -> void:
+func hit(perpetrator) -> void:
+	last_death_perpetrator = perpetrator
 	emit_signal("hit")
 	set_dying(true)
 

@@ -2,6 +2,7 @@ extends Node
 class_name CharacterManager
 
 signal world_state_updated(world_state)
+signal player_killed(victim, perpetrator)
 
 var _player_scene = preload("res://Shared/Characters/PlayerBase.tscn")
 
@@ -118,7 +119,7 @@ func propagate_player_picks():
 
 func _on_player_hit(hit_player_id):
 	Logger.info("Player hit!", "attacking")
-	
+	emit_signal("player_killed", player_dic[hit_player_id], player_dic[hit_player_id].last_death_perpetrator)
 	for player_id in player_dic:
 		Server.send_player_hit(player_id, hit_player_id)
 

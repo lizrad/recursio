@@ -31,7 +31,7 @@ func start_playing(start_time: int) -> void:
 
 # OVERRIDE #
 # disable hit of base on client
-func hit():
+func hit(perpetrator):
 	pass
 
 # Displays ghost as dead
@@ -39,6 +39,7 @@ func hit():
 func server_hit():
 	if not is_record_data_set():
 		return
-	.hit()
+	#TODO: using null here because we dont record deaths on the client anyway but this is kinda wack
+	.hit(null)
 	#_minimap_icon.set_texture(_minimap_icon_dead)
 
