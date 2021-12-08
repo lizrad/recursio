@@ -199,6 +199,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://Tutorial/TutorialScenario_1.gd"
 }, {
+"base": "RichTextLabel",
+"class": "TypingTextLabel",
+"language": "GDScript",
+"path": "res://Util/TypingTextLabel.gd"
+}, {
 "base": "Object",
 "class": "WorldState",
 "language": "GDScript",
@@ -243,6 +248,7 @@ _global_script_class_icons={
 "TextFileToArray": "",
 "TutorialScenario": "",
 "TutorialScenario_1": "",
+"TypingTextLabel": "",
 "WorldState": ""
 }
 

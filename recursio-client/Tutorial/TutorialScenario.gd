@@ -10,7 +10,7 @@ var _rounds: int = 0
 # Currently active round in this scenario
 var _current_round: int = 0
 
-var _tutorial_text: RichTextLabel
+var _tutorial_text: TypingTextLabel
 
 var _round_starts := []
 var _round_conditions := []

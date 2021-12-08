@@ -146,7 +146,7 @@ func _on_game_start_received(start_time):
 	_round_manager.future_start_game(start_time)
 
 
-func get_player():
+func get_player() -> Player:
 	return _player
 
 

@@ -27,19 +27,20 @@ func _started_round_1():
 	_toggle_ui(true)
 	_character_manager._game_manager.set_level(_level)
 
-	_tutorial_text.text = "Welcome to the tutorial!"
+	_tutorial_text.typing_text = "Welcome to the tutorial!"
 	if show_ui:
 		yield(get_tree().create_timer(3), "timeout")
 	
 	_character_manager._on_spawn_player(0, Vector3.ZERO, 0)
 	_character_manager.get_player().kb.visible = false
+	_character_manager.get_player().hide_button_overlay = true
 	
-	_tutorial_text.text = "The goal is to capture both points at once."
+	_tutorial_text.typing_text = "The goal is to capture both points at once."
 	if show_ui:
 		yield(get_tree().create_timer(4), "timeout")
 	
 	_character_manager.get_player().set_custom_view_target(_level.get_capture_points()[1])
-	_tutorial_text.text = "Try capturing this one!"
+	_tutorial_text.typing_text = "Try capturing this one!"
 	if show_ui:
 		yield(get_tree().create_timer(3), "timeout")
 	
@@ -60,7 +61,7 @@ func _check_completed_round_1() -> bool:
 func _completed_round_1() -> void:
 	_level.get_capture_points()[1]._capture_progress = 1.0
 	_toggle_ui(true)
-	_tutorial_text.text = "Nice!"
+	_tutorial_text.typing_text = "Nice!"
 
 
 func _started_round_2() -> void:
@@ -71,10 +72,10 @@ func _started_round_2() -> void:
 	_character_manager._round_manager.switch_to_phase(RoundManager.Phases.PREPARATION)
 	_character_manager._on_player_ghost_record_received(0, _character_manager.get_player().get_record_data())
 	
-	_tutorial_text.text = "Now try capturing both points."
+	_tutorial_text.typing_text = "Now try capturing both points."
 	if show_ui:
 		yield(get_tree().create_timer(3), "timeout")
-	_tutorial_text.text = "Your past self will help you!"
+	_tutorial_text.typing_text = "Your past self will help you!"
 
 
 func _check_completed_round_2() -> bool:
@@ -86,4 +87,4 @@ func _completed_round_2() -> void:
 	_level.get_capture_points()[1]._capture_progress = 1.0
 	
 	_toggle_ui(true)
-	_tutorial_text.text = "Good job!"
+	_tutorial_text.typing_text = "Good job!"

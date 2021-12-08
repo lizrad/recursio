@@ -15,9 +15,9 @@ func set_ui_visible(is_visible):
 	$TutorialUI.visible = is_visible if show_ui else false
 
 
-func _ready():
+func _ready():	
 	var tutorial_text = get_node("TutorialUI/PanelContainer/TutorialText")
-	var character_manager = get_node("CharacterManager")
+	var character_manager = get_node("CharacterManager")	
 	var level = get_node("LevelH")
 	var scenario1: TutorialScenario_1 = TutorialScenario_1.new(tutorial_text, character_manager, level)
 	scenario1.show_ui = show_ui

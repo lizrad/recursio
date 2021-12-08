@@ -14,6 +14,10 @@ onready var _visibility_light = get_node("KinematicBody/VisibilityLight")
 onready var _button_overlay: ButtonOverlay = get_node("KinematicBody/ButtonOverlay")
 onready var _aim_visuals = get_node("KinematicBody/AimVisuals")
 
+
+var hide_button_overlay: bool = false
+
+
 var _walls = []
 var _past_frames = {}
 var _just_corrected = false
@@ -162,6 +166,8 @@ func update_capture_point_hud(capture_points: Array) -> void:
 func show_preparation_hud(round_index) -> void:
 	_selector_mesh.activate()
 	_hud.prep_phase_start(round_index)
+	if hide_button_overlay:
+		return
 	_button_overlay.show_buttons(["ready!", "swap"], ButtonOverlay.BUTTONS.DOWN | ButtonOverlay.BUTTONS.RIGHT, ButtonOverlay.BUTTONS.DOWN)
 
 
