@@ -4,7 +4,6 @@ class_name Player
 signal initialized()
 
 onready var _hud: HUD = get_node("KinematicBody/HUD")
-onready var _selector_mesh = get_node("KinematicBody/Selector/SelectorMesh")
 onready var _light_viewport = get_node("KinematicBody/LightViewport")
 onready var _overview_light = get_node("KinematicBody/TransformReset/OverviewLight")
 onready var _overview_target = get_node("KinematicBody/TransformReset/OverviewTarget")
@@ -37,7 +36,7 @@ func reset() -> void:
 	.reset()
 	clear_past_frames()
 	_hud.reset()
-	_selector_mesh.deactivate()
+
 
 func reset_aim_mode():
 	aim_mode = false
@@ -48,6 +47,7 @@ func reset_aim_mode():
 
 func clear_past_frames():
 	_past_frames.clear()
+
 
 func clear_walls():
 	_walls.clear()
@@ -168,14 +168,11 @@ func update_capture_point_hud(capture_points: Array) -> void:
 
 
 func show_preparation_hud(round_index) -> void:
-	# EDIT: disabled -> use SpawnPoints instead
-	#_selector_mesh.activate()
 	_hud.prep_phase_start(round_index)
 	_button_overlay.show_buttons(["ready!", "swap"], ButtonOverlay.BUTTONS.DOWN | ButtonOverlay.BUTTONS.RIGHT, ButtonOverlay.BUTTONS.DOWN)
 
 
 func show_countdown_hud() -> void:
-	_selector_mesh.deactivate()
 	_hud.countdown_phase_start()
 	_button_overlay.hide_buttons()
 
@@ -219,15 +216,17 @@ func handle_server_update(position, time):
 
 			Logger.info(("Corrected from " + str(before) + " to " + str(.get_position())
 				+ " (should be at " + str(position) + " according to server)"), "movement_validation")
-			print("WARNING: TODO check if this is still up to date (hotfix, lerp and correction) -> happens sometimes if switching timeline index very often")
+			Logger.warn("check if the TODOs in this block are still up to date (hotfix, lerp and correction) -> happens sometimes if switching timeline index very often")
 
 			# Hotfix for overcompensation - we could also fix all following past states, but is that required?
 			clear_past_frames()
 
 			_just_corrected = true
 
+
 func get_round_manager():
 	return _round_manager
+
 
 func toggle_visibility_light(value: bool):
 	_visibility_light.visible = value

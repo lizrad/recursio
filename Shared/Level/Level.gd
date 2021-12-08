@@ -54,7 +54,6 @@ func reset():
 func get_spawn_points(team_id):
 	var node_name = "Player" + str(team_id + 1) + "Spawns"
 	if has_node(node_name):
-		# EDIT: return full node instead of only global_transform vector
 		var spawn_points = []
 		for point in get_node(node_name).get_children():
 			spawn_points.append(point)
@@ -81,9 +80,8 @@ func show_spawn_point_weapon_type(team_id) -> void:
 	var spawns = "Player" + str(team_id + 1) + "Spawns"
 	if has_node(spawns):
 		for spawn in get_node(spawns).get_children():
-			var spawn_point = spawn.get_child(0)
-			if spawn_point:
-				spawn_point.show_weapon_type(true)
+			if spawn.has_node("SpawnPoint"):
+				spawn.get_node("SpawnPoint").show_weapon_type(true)
 
 
 func toggle_capture_points(toggle: bool) -> void:

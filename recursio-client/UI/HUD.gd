@@ -18,7 +18,7 @@ var _number_of_capture_points := 0
 # Array of all capture points in the HUD
 var _capture_points = []
 
-# Array of all spawn points
+# Array of all spawn points as Position3D with SpawnPoint as child
 var _spawn_points = []
 
 enum {
@@ -90,8 +90,8 @@ func update_weapon_type(img_bullet, color) -> void:
 func activate_spawn_point(timeline_index) -> void:
 	Logger.info("Activate SpawnPoint " + str(timeline_index), "HUD")
 	for spawn_point in _spawn_points:
-		if spawn_point.get_child_count() > 0:
-			spawn_point.get_child(0).set_active(spawn_point.get_index() == timeline_index)
+		if spawn_point.has_node("SpawnPoint"):
+			spawn_point.get_node("SpawnPoint").set_active(spawn_point.get_index() == timeline_index)
 
 
 # Sets the internal player id for the capture points

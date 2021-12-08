@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=2]
+[gd_scene load_steps=24 format=2]
 
 [ext_resource path="res://Shared/Characters/PlayerBase.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Characters/Player.gd" type="Script" id=2]
@@ -16,8 +16,6 @@
 [ext_resource path="res://addons/ascii-shader/AsciiRenderer.tscn" type="PackedScene" id=14]
 [ext_resource path="res://Characters/PlayerInput.gd" type="Script" id=15]
 [ext_resource path="res://Resources/Meshes/wall_outline.obj" type="ArrayMesh" id=16]
-[ext_resource path="res://Characters/Visuals/Selector.gd" type="Script" id=17]
-[ext_resource path="res://Characters/Visuals/Selector.obj" type="ArrayMesh" id=18]
 [ext_resource path="res://Characters/CharacterAudioPlayer.tscn" type="PackedScene" id=19]
 [ext_resource path="res://Characters/SettingAsciiRenderer.gd" type="Script" id=20]
 
@@ -49,50 +47,23 @@ flags_unshaded = true
 [node name="Player" instance=ExtResource( 1 )]
 script = ExtResource( 2 )
 
-[node name="Selector" type="Spatial" parent="KinematicBody" index="0"]
-transform = Transform( -4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 1.27928, 0 )
-visible = false
-
-[node name="SelectorMesh" type="MeshInstance" parent="KinematicBody/Selector" index="0"]
-transform = Transform( -3.27835e-08, 0.53033, 0.53033, 0, 0.53033, -0.53033, -0.75, -2.31815e-08, -2.31815e-08, -3, 0, 0 )
-layers = 512
-mesh = ExtResource( 18 )
-skeleton = NodePath("")
-material/0 = null
-script = ExtResource( 17 )
-speed = 3.0
-min_positon = Vector3( -2, 0, 0 )
-max_positon = Vector3( -1.75, 0, 0 )
-
-[node name="SelectorRight" type="MeshInstance" parent="KinematicBody/Selector" index="1"]
-transform = Transform( -3.27835e-08, -0.53033, -0.53033, 0, 0.53033, -0.53033, 0.75, -2.31815e-08, -2.31815e-08, 3, 0, 0 )
-visible = false
-layers = 512
-mesh = ExtResource( 18 )
-skeleton = NodePath("")
-material/0 = null
-script = ExtResource( 17 )
-speed = 3.0
-min_positon = Vector3( 1.75, 0, 0 )
-max_positon = Vector3( 2, 0, 0 )
-
-[node name="CollisionShape" parent="KinematicBody" index="1"]
+[node name="CollisionShape" parent="KinematicBody" index="0"]
 transform = Transform( 0.75, 0, 0, 0, 0.75, -1.06581e-14, 0, -3.90799e-14, 1, 0, 0, 0 )
 visible = false
 shape = SubResource( 2 )
 
-[node name="CharacterModel" parent="KinematicBody" index="2" instance=ExtResource( 10 )]
+[node name="CharacterModel" parent="KinematicBody" index="1" instance=ExtResource( 10 )]
 transform = Transform( -1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0 )
 
-[node name="PlayerInput" type="Node" parent="KinematicBody" index="3"]
+[node name="PlayerInput" type="Node" parent="KinematicBody" index="2"]
 script = ExtResource( 15 )
 
-[node name="VisibilityLight" parent="KinematicBody" index="4" instance=ExtResource( 9 )]
+[node name="VisibilityLight" parent="KinematicBody" index="3" instance=ExtResource( 9 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.368213, -0.741072 )
 visible = false
 light_energy = 16.0
 
-[node name="LightViewport" type="Viewport" parent="KinematicBody" index="5"]
+[node name="LightViewport" type="Viewport" parent="KinematicBody" index="4"]
 size = Vector2( 2048, 2048 )
 handle_input_locally = false
 hdr = false
@@ -108,7 +79,7 @@ projection = 1
 current = true
 size = 70.0
 
-[node name="AsciiViewportContainer" type="ViewportContainer" parent="KinematicBody" index="6"]
+[node name="AsciiViewportContainer" type="ViewportContainer" parent="KinematicBody" index="5"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 stretch = true
@@ -145,7 +116,7 @@ script = ExtResource( 20 )
 [node name="RemoteTransform" type="RemoteTransform" parent="KinematicBody/AsciiViewportContainer/Viewport/LerpedFollow/Camera" index="1"]
 remote_path = NodePath("../../../../../NormalViewportContainer/Viewport/Camera")
 
-[node name="NormalViewportContainer" type="ViewportContainer" parent="KinematicBody" index="7"]
+[node name="NormalViewportContainer" type="ViewportContainer" parent="KinematicBody" index="6"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 stretch = true
@@ -170,7 +141,7 @@ __meta__ = {
 "_editor_description_": ""
 }
 
-[node name="TransformReset" type="Node" parent="KinematicBody" index="8"]
+[node name="TransformReset" type="Node" parent="KinematicBody" index="7"]
 
 [node name="OverviewTarget" type="Position3D" parent="KinematicBody/TransformReset" index="0"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10, 0 )
@@ -192,28 +163,28 @@ light_negative = true
 omni_range = 0.0
 omni_attenuation = 3.75716e-05
 
-[node name="ViewTarget" type="Position3D" parent="KinematicBody" index="9"]
+[node name="ViewTarget" type="Position3D" parent="KinematicBody" index="8"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -6 )
 script = ExtResource( 8 )
 
-[node name="ViewTarget2" type="Position3D" parent="KinematicBody" index="10"]
+[node name="ViewTarget2" type="Position3D" parent="KinematicBody" index="9"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -6 )
 script = ExtResource( 8 )
 
-[node name="MiniMapSprite" type="Sprite3D" parent="KinematicBody" index="11"]
+[node name="MiniMapSprite" type="Sprite3D" parent="KinematicBody" index="10"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.07854, 0 )
 visible = false
 layers = 8
 axis = 1
 texture = ExtResource( 12 )
 
-[node name="HUD" parent="KinematicBody" index="12" instance=ExtResource( 4 )]
+[node name="HUD" parent="KinematicBody" index="11" instance=ExtResource( 4 )]
 margin_left = 0.0
 margin_top = 0.0
 margin_right = 0.0
 margin_bottom = 0.0
 
-[node name="ButtonOverlay" parent="KinematicBody" index="13" instance=ExtResource( 13 )]
+[node name="ButtonOverlay" parent="KinematicBody" index="12" instance=ExtResource( 13 )]
 visible = false
 anchor_left = 0.5
 anchor_top = 1.0
@@ -224,7 +195,7 @@ margin_top = -143.0
 margin_right = 218.5
 margin_bottom = 0.0
 
-[node name="AimVisuals" type="Spatial" parent="KinematicBody" index="14"]
+[node name="AimVisuals" type="Spatial" parent="KinematicBody" index="13"]
 visible = false
 
 [node name="Hitscan" type="MeshInstance" parent="KinematicBody/AimVisuals" index="0"]
@@ -243,6 +214,6 @@ cast_shadow = 0
 mesh = ExtResource( 16 )
 material/0 = null
 
-[node name="Listener" type="Listener" parent="KinematicBody" index="15"]
+[node name="Listener" type="Listener" parent="KinematicBody" index="14"]
 
-[node name="CharacterAudioPlayer2" parent="KinematicBody" index="16" instance=ExtResource( 19 )]
+[node name="CharacterAudioPlayer2" parent="KinematicBody" index="15" instance=ExtResource( 19 )]
