@@ -159,6 +159,7 @@ func send_timeline_pick(timeline_index):
 
 
 remote func spawn_player(player_id, spawn_point, team_id):
+	print("spawn_player"+str(player_id))
 	Logger.debug("Receive spawn player", "server")
 	emit_signal("spawning_player", player_id, spawn_point, team_id)
 

@@ -13,13 +13,18 @@ var _newest_client_record = -1
 # OVERRIDE #
 func _spawn_all_ghosts():
 	for timeline_index in range(_max_ghosts+1):
-		var player_ghost = _create_ghost(timeline_index, _player_ghost_scene)
-		player_ghost.spawn_point = _game_manager.get_spawn_point(_character_manager._player.team_id, timeline_index)
+		var player_id = _character_manager._player.player_id
+		var team_id = _character_manager._player.team_id
+		var spawn_point = _game_manager.get_spawn_point(team_id, timeline_index)
+		var player_ghost = _create_ghost(player_id, team_id, timeline_index, spawn_point, _player_ghost_scene)
 		_apply_visibility_always(player_ghost)
 		_player_ghosts.append(player_ghost)
 		
-		var enemy_ghost = _create_ghost(timeline_index, _enemy_ghost_scene)
-		enemy_ghost.spawn_point = _game_manager.get_spawn_point(abs(_character_manager._player.team_id-1), timeline_index)
+		var enemy_id = _character_manager._enemy.player_id
+		var enemy_team_id = abs(_character_manager._player.team_id-1)
+		var enemy_spawn_point = _game_manager.get_spawn_point(enemy_team_id, timeline_index)
+		var enemy_ghost = _create_ghost(enemy_id, enemy_team_id, timeline_index, enemy_spawn_point, _enemy_ghost_scene)
+		
 		_apply_visibility_mask(enemy_ghost)
 		_enemy_ghosts.append(enemy_ghost)
 		
@@ -27,16 +32,16 @@ func _spawn_all_ghosts():
 		_ghosts.append(enemy_ghost)
 
 # OVERRIDE #
-func _on_preparation_phase_started() -> void:
-	._on_preparation_phase_started()
+func on_preparation_phase_started() -> void:
+	.on_preparation_phase_started()
 	_toggle_ghost_animation(false)
 	_toggle_visbility_lights(false)
 	# Display paths of my ghosts
 	_update_ghost_paths()
 
 # OVERRIDE #
-func _on_countdown_phase_started() -> void:
-	._on_countdown_phase_started()
+func on_countdown_phase_started() -> void:
+	.on_countdown_phase_started()
 	# Delete ghost path visualization
 	for ghost in _player_ghosts:
 		ghost.delete_path()
@@ -47,10 +52,14 @@ func _on_countdown_phase_started() -> void:
 	_visual_delay_spawn_ghosts(countdown_phase_seconds-spawn_time)
 
 # OVERRIDE #
-func _on_game_phase_started() -> void:
-	._on_game_phase_started()
+func on_game_phase_started() -> void:
+	.on_game_phase_started()
 	_toggle_visbility_lights(true)
 	_toggle_ghost_animation(true)
+
+# OVERRIDE #
+func on_game_phase_stopped() -> void:
+	.on_game_phase_stopped()
 
 # OVERRIDE #
 func _enable_active_ghosts() -> void:
@@ -61,6 +70,22 @@ func _enable_active_ghosts() -> void:
 		
 		if timeline_index != _character_manager._enemy.timeline_index:
 			_enemy_ghosts[timeline_index].enable_body()
+
+# OVERRIDE #
+func _use_new_record_data():
+	# Not calling super because we dont want local values to overwrite remote ones
+	# But we will use them until we get better ones
+	#var current_round_index = _round_manager.round_index
+	#var record_data = _character_manager._player.get_record_data()
+	#if current_round_index > _player_ghosts[record_data.timeline_index].round_index:
+	#	_update_ghost_record(_player_ghosts, record_data.timeline_index, record_data)
+	#	_player_ghosts[record_data.timeline_index].player_id = _character_manager._player.player_id
+	
+	#record_data = _character_manager._enemy.get_record_data()
+	#if current_round_index > _enemy_ghosts[record_data.timeline_index].round_index:
+	#	_update_ghost_record(_enemy_ghosts, record_data.timeline_index, record_data)
+	#	_enemy_ghosts[record_data.timeline_index].player_id = _character_manager._enemy.player_id
+	pass
 
 func _on_player_ghost_record_received(timeline_index, record_data):
 	_update_ghost_record(_player_ghosts, timeline_index, record_data)

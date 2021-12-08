@@ -4,8 +4,8 @@ class_name PlayerGhost
 onready var _visibility_light = get_node("KinematicBody/VisibilityLight")
 
 # OVERRIDE #
-func init(action_manager, timeline_index) -> void:
-	.init(action_manager, timeline_index)
+func init(action_manager, player_id, team_id, timeline_index, spawn_point) -> void:
+	.init(action_manager, player_id, team_id, timeline_index, spawn_point)
 	_character_model._set_color_scheme("player_ghost", timeline_index)
 
 

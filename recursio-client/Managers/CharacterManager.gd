@@ -40,9 +40,10 @@ func _ready():
 	_error = Server.connect("player_ghost_record_received", _ghost_manager, "_on_player_ghost_record_received") 
 	_error = Server.connect("enemy_ghost_record_received", _ghost_manager, "_on_enemy_ghost_record_received") 
 	_error = Server.connect("ghost_hit", _ghost_manager, "_on_ghost_hit_from_server") 
-	_error = _round_manager.connect("preparation_phase_started", _ghost_manager, "_on_preparation_phase_started") 
-	_error = _round_manager.connect("countdown_phase_started", _ghost_manager, "_on_countdown_phase_started") 
-	_error = _round_manager.connect("game_phase_started", _ghost_manager, "_on_game_phase_started") 
+	_error = _round_manager.connect("preparation_phase_started", _ghost_manager, "on_preparation_phase_started") 
+	_error = _round_manager.connect("countdown_phase_started", _ghost_manager, "on_countdown_phase_started") 
+	_error = _round_manager.connect("game_phase_started", _ghost_manager, "on_game_phase_started") 
+	_error = _round_manager.connect("game_phase_stopped", _ghost_manager, "on_game_phase_stopped") 
 	####################################################
 	
 	_error = Server.connect("world_state_received", self, "_on_world_state_received") 
@@ -230,6 +231,7 @@ func _on_spawn_player(player_id, spawn_point, team_id):
 
 func _on_spawn_enemy(enemy_id, spawn_point, team_id):
 	_enemy = _spawn_character(_enemy_scene, spawn_point, team_id)
+	_enemy.player_id = enemy_id
 	_enemy.enemy_init(_action_manager)
 	_enemy.set_name(str(enemy_id))
 	_enemy.toggle_animation(false)
@@ -292,7 +294,6 @@ func _spawn_character(character_scene, spawn_point, team_id):
 func _toggle_visbility_lights(value: bool):
 	_player.toggle_visibility_light(value)
 
-
 func _apply_visibility_mask(character) -> void:
 	if not _player:
 		return
@@ -301,15 +302,12 @@ func _apply_visibility_mask(character) -> void:
 	if character.has_node("KinematicBody/MiniMapIcon"):
 		character.get_node("KinematicBody/MiniMapIcon").visibility_mask = _player.get_visibility_mask()
 
-
 func _apply_visibility_always(character) -> void:
 	character.get_node("KinematicBody/CharacterModel").set_shader_param("always_draw", true)
 
-
-
-
-
-
-
-
-
+func team_id_to_player_id(team_id):
+	if _player.team_id == team_id:
+			return _player.player_id
+	if _enemy.team_id == team_id:
+		return _enemy.player_id
+	return -1

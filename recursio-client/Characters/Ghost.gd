@@ -15,16 +15,15 @@ onready var _minimap_icon_alive_wall_enemy := preload("res://Resources/Icons/ico
 var _minimap_alive
 
 # OVERRIDE #
-func init(action_manager, timeline_index) -> void:
-	.init(action_manager, timeline_index)
-
-	var wall_index = Constants.get_value("ghosts", "wall_placing_timeline_index")
+func init(action_manager, player_id, team_id, timeline_index, spawn_point) -> void:
+	.init(action_manager, player_id, team_id, timeline_index, spawn_point)
+	#var wall_index = Constants.get_value("ghosts", "wall_placing_timeline_index")
 	# TODO: find a better way to detect enemy... maybe with groups or owning team or smth?
-	var friendly = "PlayerGhost" in name
-	if friendly:
-		_minimap_alive = _minimap_icon_alive_hitscan if wall_index != timeline_index else _minimap_icon_alive_wall
-	else:
-		_minimap_alive = _minimap_icon_alive_hitscan_enemy if wall_index != timeline_index else _minimap_icon_alive_wall_enemy
+	#var friendly = "PlayerGhost" in name
+	#if friendly:
+	#	_minimap_alive = _minimap_icon_alive_hitscan if wall_index != timeline_index else _minimap_icon_alive_wall
+	#else:
+	#	_minimap_alive = _minimap_icon_alive_hitscan_enemy if wall_index != timeline_index else _minimap_icon_alive_wall_enemy
 
 # OVERRIDE #
 func start_playing(start_time: int) -> void:

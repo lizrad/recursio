@@ -124,3 +124,9 @@ func _on_player_hit(hit_player_id):
 
 func _on_wall_spawn(position, rotation, wall_index, player_id):
 	Server.send_wall_spawn(position, rotation, wall_index, player_id)
+
+func team_id_to_player_id(team_id):
+	for player in player_dic.values():
+		if player.team_id == team_id:
+			return player.player_id
+	return -1
