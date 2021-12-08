@@ -32,7 +32,6 @@ func _spawn_all_ghosts():
 		for team_id  in [0,1]:
 			var spawn_point = _game_manager.get_spawn_point(team_id, timeline_index)
 			var player_id = _character_manager.team_id_to_player_id(team_id)
-			print("PLAYER ID" + str(player_id))
 			var ghost = _create_ghost(player_id, team_id, timeline_index, spawn_point, _ghost_scene)
 			ghost.connect("hit", self, "_on_ghost_hit", [ghost])
 			_seperated_ghosts[team_id].append(ghost)
