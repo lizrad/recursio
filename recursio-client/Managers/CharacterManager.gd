@@ -36,7 +36,7 @@ func _ready():
 	_error = Server.connect("spawning_player", self, "_on_spawn_player") 
 	_error = Server.connect("spawning_enemy", self, "_on_spawn_enemy") 
 	
-	#TODO: Probably move this to ghostmanager
+	#TODO: Probably should move this to some mediator class
 	_error = Server.connect("player_ghost_record_received", _ghost_manager, "_on_player_ghost_record_received") 
 	_error = Server.connect("enemy_ghost_record_received", _ghost_manager, "_on_enemy_ghost_record_received") 
 	_error = Server.connect("ghost_hit", _ghost_manager, "_on_ghost_hit_from_server") 
@@ -136,6 +136,7 @@ func _on_preparation_phase_started() -> void:
 	_player.reset_aim_mode()
 	_player.clear_walls()
 	_player.clear_past_frames()
+	_player.reset_record_data()
 	_player.move_to_spawn_point()
 	_player.toggle_animation(false)
 	_enemy.toggle_animation(false)

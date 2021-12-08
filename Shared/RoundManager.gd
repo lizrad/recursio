@@ -92,10 +92,10 @@ func _check_for_game_start():
 
 
 func _start_game():
-	_start_phase(Phases.PREPARATION)
 	_current_phase_index = 0
 	round_index = 0
 	_running = true
+	_start_phase(Phases.PREPARATION)
 
 
 func _check_for_phase_switch():

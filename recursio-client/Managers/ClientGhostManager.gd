@@ -76,17 +76,16 @@ func _enable_active_ghosts() -> void:
 func _use_new_record_data():
 	# Not calling super because we dont want local values to overwrite remote ones
 	# But we will use them until we get better ones
-	#var current_round_index = _round_manager.round_index
-	#var record_data = _character_manager._player.get_record_data()
-	#if current_round_index > _player_ghosts[record_data.timeline_index].round_index:
-	#	_update_ghost_record(_player_ghosts, record_data.timeline_index, record_data)
-	#	_player_ghosts[record_data.timeline_index].player_id = _character_manager._player.player_id
+	var current_round_index = _round_manager.round_index
+	var record_data = _character_manager._player.get_record_data()
+	if current_round_index > _player_ghosts[record_data.timeline_index].round_index:
+		_update_ghost_record(_player_ghosts, record_data.timeline_index, record_data)
+		_player_ghosts[record_data.timeline_index].player_id = _character_manager._player.player_id
 	
-	#record_data = _character_manager._enemy.get_record_data()
-	#if current_round_index > _enemy_ghosts[record_data.timeline_index].round_index:
-	#	_update_ghost_record(_enemy_ghosts, record_data.timeline_index, record_data)
-	#	_enemy_ghosts[record_data.timeline_index].player_id = _character_manager._enemy.player_id
-	pass
+	record_data = _character_manager._enemy.get_record_data()
+	if current_round_index > _enemy_ghosts[record_data.timeline_index].round_index:
+		_update_ghost_record(_enemy_ghosts, record_data.timeline_index, record_data)
+		_enemy_ghosts[record_data.timeline_index].player_id = _character_manager._enemy.player_id
 
 func _on_player_ghost_record_received(timeline_index, record_data):
 	_update_ghost_record(_player_ghosts, timeline_index, record_data)
