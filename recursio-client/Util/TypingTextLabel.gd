@@ -1,6 +1,8 @@
 extends RichTextLabel
 class_name TypingTextLabel
 
+signal typing_completed()
+
 export(float) var typing_speed = 20.0
 
 var _number_of_characters: int = 0
@@ -18,6 +20,7 @@ func _process(delta):
 	if _number_of_visible_characters >= _number_of_characters:
 		set_process(false)
 		self.visible_characters = -1
+		emit_signal("typing_completed")
 		return
 	
 	var step_size = typing_speed * delta
@@ -38,7 +41,7 @@ func get_typing_text() -> String:
 	return self.text
 
 
-func get_required_typing_time() -> float:
+func get_typing_time() -> float:
 	return _number_of_characters / typing_speed
 
 

@@ -20,7 +20,6 @@ func _ready():
 	var character_manager = get_node("CharacterManager")	
 	var level = get_node("LevelH")
 	var scenario1: TutorialScenario_1 = TutorialScenario_1.new(tutorial_text, character_manager, level)
-	scenario1.show_ui = show_ui
 	scenario1.connect("ui_toggled", self, "set_ui_visible")
 	scenario1.connect("tree_exited", self, "on_scenario_completed")
 	add_child(scenario1)

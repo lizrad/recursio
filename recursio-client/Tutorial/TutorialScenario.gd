@@ -3,8 +3,6 @@ class_name TutorialScenario
 
 signal ui_toggled(show)
 
-var show_ui: bool = true
-
 # Number of rounds in this scenario
 var _rounds: int = 0
 # Currently active round in this scenario
@@ -56,5 +54,4 @@ func add_round_end_function(round_end_function: FuncRef):
 
 
 func _toggle_ui(show: bool) -> void:
-	emit_signal("ui_toggled", show if show_ui else false)
-
+	emit_signal("ui_toggled", show)
