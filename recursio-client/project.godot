@@ -189,6 +189,16 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://Util/TextFileToArray.gd"
 }, {
+"base": "Node",
+"class": "TutorialScenario",
+"language": "GDScript",
+"path": "res://Tutorial/TutorialScenario.gd"
+}, {
+"base": "TutorialScenario",
+"class": "TutorialScenario_1",
+"language": "GDScript",
+"path": "res://Tutorial/TutorialScenario_1.gd"
+}, {
 "base": "Object",
 "class": "WorldState",
 "language": "GDScript",
@@ -231,6 +241,8 @@ _global_script_class_icons={
 "StartMenu": "",
 "StaticInput": "",
 "TextFileToArray": "",
+"TutorialScenario": "",
+"TutorialScenario_1": "",
 "WorldState": ""
 }
 

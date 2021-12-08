@@ -37,16 +37,15 @@ __meta__ = {
 }
 
 [node name="PanelContainer" type="PanelContainer" parent="TutorialUI"]
-margin_left = 809.0
-margin_top = 381.0
-margin_right = 1111.0
-margin_bottom = 421.0
+margin_left = 703.0
+margin_top = 500.0
+margin_right = 1217.0
+margin_bottom = 614.0
 
-[node name="TutorialText" type="Label" parent="TutorialUI/PanelContainer"]
+[node name="TutorialText" type="RichTextLabel" parent="TutorialUI/PanelContainer"]
 margin_left = 7.0
 margin_top = 7.0
-margin_right = 295.0
-margin_bottom = 33.0
+margin_right = 507.0
+margin_bottom = 107.0
+rect_min_size = Vector2( 500, 100 )
 text = "Welcome to the tutorial!"
-align = 1
-valign = 1
