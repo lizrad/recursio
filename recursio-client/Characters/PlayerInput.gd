@@ -68,6 +68,7 @@ func _swap_weapon_type(timeline_index) -> void:
 	var accent_type = "primary" if wall_index != timeline_index else "secondary"
 	var color = Color(Constants.get_value("colors", "player_" + accent_type + "_accent"))
 
+	_player.activate_spawn_point_hud(timeline_index)
 	_player.update_weapon_type_hud(max_ammo, img_bullet, color)
 
 
