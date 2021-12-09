@@ -89,8 +89,19 @@ func _use_new_record_data():
 
 # OVERRIDE #
 # local ghost hits should not trigger anything on the client
-func _on_ghost_hit(ghost):
+func _on_ghost_hit(_ghost):
 	pass
+
+# OVERRIDE #
+func _handle_previous_ghost_death_setup():
+	var current_round_index = _round_manager.round_index
+	_add_new_previous_ghost_death_data()
+	var player = _character_manager._player
+	var enemy  = _character_manager._enemy
+	_clear_old_ghost_death_data(player.team_id, player.timeline_index, current_round_index)
+	_clear_old_ghost_death_data(enemy.team_id, enemy.timeline_index, current_round_index)
+	_current_ghost_death_index = 0
+	_game_phase_start_time = Server.get_server_time()
 
 func _on_player_ghost_record_received(timeline_index, round_index,  record_data):
 	_update_ghost_record(_player_ghosts, timeline_index, record_data , round_index)
