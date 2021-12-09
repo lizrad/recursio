@@ -37,10 +37,10 @@ func _ready():
 	_error = Server.connect("spawning_enemy", self, "_on_spawn_enemy") 
 	
 	#TODO: Probably should move this to some mediator class
-	_error = Server.connect("player_ghost_record_received", _ghost_manager, "_on_player_ghost_record_received") 
-	_error = Server.connect("enemy_ghost_record_received", _ghost_manager, "_on_enemy_ghost_record_received") 
-	_error = Server.connect("ghost_hit", _ghost_manager, "_on_ghost_hit_from_server") 
-	_error = Server.connect("quiet_ghost_hit", _ghost_manager, "_on_quiet_ghost_hit_from_server") 
+	_error = Server.connect("player_ghost_record_received", _ghost_manager, "on_player_ghost_record_received") 
+	_error = Server.connect("enemy_ghost_record_received", _ghost_manager, "on_enemy_ghost_record_received") 
+	_error = Server.connect("ghost_hit", _ghost_manager, "on_ghost_hit_from_server") 
+	_error = Server.connect("quiet_ghost_hit", _ghost_manager, "on_quiet_ghost_hit_from_server") 
 	_error = _round_manager.connect("preparation_phase_started", _ghost_manager, "on_preparation_phase_started") 
 	_error = _round_manager.connect("countdown_phase_started", _ghost_manager, "on_countdown_phase_started") 
 	_error = _round_manager.connect("game_phase_started", _ghost_manager, "on_game_phase_started") 
