@@ -63,12 +63,12 @@ func _check_completed_round_1() -> bool:
 
 func _completed_round_1() -> void:
 	_level.get_capture_points()[1]._capture_progress = 1.0
-	_toggle_ui(true)
-	_tutorial_text.typing_text = "Nice!"
 
 
 func _started_round_2() -> void:	
 	
+	_toggle_ui(true)
+	_tutorial_text.typing_text = "Nice!"
 	yield(_tutorial_text, "typing_completed")
 	yield(get_tree().create_timer(2), "timeout")
 	

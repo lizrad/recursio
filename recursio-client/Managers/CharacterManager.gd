@@ -37,6 +37,7 @@ func _ready():
 	_error = _round_manager.connect("preparation_phase_started", self, "_on_preparation_phase_started") 
 	_error = _round_manager.connect("countdown_phase_started", self, "_on_countdown_phase_started") 
 	_error = _round_manager.connect("game_phase_started", self, "_on_game_phase_started") 
+	_error = _round_manager.connect("game_phase_stopped", self, "_on_game_phase_stopped") 
 
 	# Connect to server signals
 	_error = Server.connect("spawning_player", self, "_on_spawn_player") 
@@ -226,6 +227,10 @@ func _on_game_phase_started() -> void:
 	_player.show_game_hud(_round_manager.round_index)
 	_game_manager.toggle_capture_points(true)
 	_start_ghosts()
+
+
+func _on_game_phase_stopped() -> void:
+	_game_manager.toggle_capture_points(false)
 
 
 func _on_game_result(winning_player_index) -> void:
