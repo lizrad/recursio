@@ -115,6 +115,10 @@ func hit(perpetrator) -> void:
 	emit_signal("hit")
 	set_dying(true)
 
+func quiet_hit(perpetrator) -> void:
+	last_death_perpetrator = perpetrator
+	set_dying(true)
+
 func set_dying(new_dying_status: bool):
 	Logger.info("Setting currently_dying to "+str(new_dying_status)+".", "death_and_spawn")
 	currently_dying = new_dying_status

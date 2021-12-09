@@ -30,6 +30,7 @@ func _ready():
 	_error = _round_manager.connect("game_phase_started", self,"_on_game_phase_started") 
 	_error = _round_manager.connect("game_phase_stopped", self,"_on_game_phase_stopped") 
 	_error = _ghost_manager.connect("ghost_hit", self, "_on_ghost_hit")
+	_error = _ghost_manager.connect("quiet_ghost_hit", self, "_on_quiet_ghost_hit")
 	_error = _ghost_manager.connect("new_record_data_applied", self, "_on_new_record_data_applied")
 	_error = _character_manager.connect("player_killed", _ghost_manager, "_on_player_killed")
 	_world_state_manager.world_processing_offset = world_processing_offset
@@ -38,6 +39,10 @@ func _ready():
 func _on_ghost_hit(owning_player_id, timeline_index):
 	for player_id in _character_manager.player_dic:
 		_server.send_ghost_hit(player_id, owning_player_id, timeline_index)
+
+func _on_quiet_ghost_hit(owning_player_id, timeline_index):
+	for player_id in _character_manager.player_dic:
+		_server.send_quiet_ghost_hit(player_id, owning_player_id, timeline_index)
 
 
 func _on_new_record_data_applied(player):

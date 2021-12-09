@@ -29,6 +29,7 @@ signal capture_point_capture_lost(capturing_player_id, capture_point)
 signal game_result(winning_player_id)
 signal player_hit(hit_player_id)
 signal ghost_hit(hit_ghost_player_owner, hit_ghost_id)
+signal quiet_ghost_hit(hit_ghost_player_owner, hit_ghost_id)
 signal timeline_picks(player_pick, enemy_picks)
 signal wall_spawn (position, rotation, wall_index)
 
@@ -254,6 +255,10 @@ remote func receive_player_hit(hit_player_id):
 remote func receive_ghost_hit(hit_ghost_player_owner, hit_ghost_id):
 	Logger.debug("Ghost hit received: " + str(hit_ghost_id) + " of player " + str(hit_ghost_player_owner), "server")
 	emit_signal("ghost_hit", hit_ghost_player_owner, hit_ghost_id)
+
+remote func receive_quiet_ghost_hit(hit_ghost_player_owner, hit_ghost_id):
+	Logger.debug("Quiet ghost hit received: " + str(hit_ghost_id) + " of player " + str(hit_ghost_player_owner), "server")
+	emit_signal("quiet_ghost_hit", hit_ghost_player_owner, hit_ghost_id)
 
 
 remote func receive_player_action(action_player_id, action_type):

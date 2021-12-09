@@ -21,6 +21,11 @@ func set_record_data(record_data):
 func clear_record_data():
 	_record_data = null
 
+func is_active() -> bool:
+	return _is_active
+func is_playing() -> bool:
+	return _is_playing
+
 func is_record_data_set() -> bool:
 	if _record_data:
 		return true
@@ -52,12 +57,15 @@ func update(_delta):
 
 # Stops the ghost and triggers the base classes hit function
 # OVERRIDE #
-# OVERRIDE #
 func hit(perpetrator) -> void:
 	_is_playing = false
 	.hit(perpetrator)
 
-
+# OVERRIDE #
+func quiet_hit(perpetrator) -> void:
+	_is_playing = false
+	.quiet_hit(perpetrator)
+	
 # Starts moving the ghost and enables collision
 func start_playing(start_time: int) -> void:
 	_is_playing = true

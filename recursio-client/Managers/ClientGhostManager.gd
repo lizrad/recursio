@@ -120,6 +120,16 @@ func _on_ghost_hit_from_server(hit_ghost_player_owner, hit_ghost_id) -> void:
 		ghost = _enemy_ghosts[hit_ghost_id]
 	ghost.server_hit()
 
+func _on_quiet_ghost_hit_from_server(hit_ghost_player_owner, hit_ghost_id) -> void:
+	var ghost 
+	if hit_ghost_player_owner == _character_manager._player.player_id:
+		ghost = _player_ghosts[hit_ghost_id]
+		ghost.toggle_visibility_light(false)
+	else:
+		ghost = _enemy_ghosts[hit_ghost_id]
+	#TODO: using null here because we dont store ghost deaths on client anyway but this kinda dirty
+	ghost.quiet_hit(null)
+
 func _toggle_visbility_lights(value: bool):
 	for ghost in _player_ghosts:
 		ghost.toggle_visibility_light(value)
