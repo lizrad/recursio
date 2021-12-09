@@ -234,7 +234,7 @@ func toggle_visibility_light(value: bool):
 
 # OVERRIDE #
 # disable hit of base on client
-func hit(perpetrator):
+func hit(_perpetrator):
 	pass
 
 # call hit of baseclass triggered by server

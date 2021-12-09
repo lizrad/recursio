@@ -31,7 +31,7 @@ func start_playing(start_time: int) -> void:
 
 # OVERRIDE #
 # disable hit of base on client
-func hit(perpetrator):
+func hit(_perpetrator):
 	pass
 
 # Displays ghost as dead
