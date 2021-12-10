@@ -55,6 +55,7 @@ func spawn_world():
 		var player_user_name = _player_id_user_name_dic[player_id]
 		_game_room_world.spawn_player(player_id, team_id, player_user_name)
 	
+	_game_room_world.pre_game_setup()
 	var server_clock_warm_up = 3.0
 	yield(get_tree().create_timer(server_clock_warm_up), "timeout")
 	
