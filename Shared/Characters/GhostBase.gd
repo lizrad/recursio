@@ -27,10 +27,7 @@ func is_playing() -> bool:
 	return _is_playing
 
 func is_record_data_set() -> bool:
-	if _record_data:
-		return true
-	else:
-		return false
+	return _record_data != null
 
 # Goes through the record and applies each frame
 func update(_delta):
