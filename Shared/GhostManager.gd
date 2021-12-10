@@ -49,11 +49,6 @@ func init(game_manager,round_manager,action_manager, character_manager):
 	_move_ghosts_to_spawn()
 
 func on_preparation_phase_started() -> void:
-	print("")
-	print("==============================================================")
-	print("                      PREP PHASE START")
-	print("==============================================================")
-	print("")
 	_stop_ghosts()
 	_move_ghosts_to_spawn()
 
@@ -89,7 +84,6 @@ func _on_player_killed(victim, perpetrator):
 	_new_previous_ghost_death.append(_create_new_ghost_death_data(victim, perpetrator))
 
 func _on_ghost_hit(perpetrator, victim):
-	print("GHOST HIT")
 	_new_previous_ghost_death.append(_create_new_ghost_death_data(victim, perpetrator))
 	emit_signal("ghost_hit",victim.player_id, victim.timeline_index, perpetrator.player_id, perpetrator.timeline_index)
 
@@ -139,7 +133,6 @@ func _look_for_previous_death():
 		return
 	var current_time = _server.get_server_time()-_game_phase_start_time
 	while _previous_ghost_deaths[_current_ghost_death_index].time < current_time:
-		print("FOUND PREVIOUS DEATH AT TIME: "+str(_previous_ghost_deaths[_current_ghost_death_index].time))
 		_apply_previous_death(_previous_ghost_deaths[_current_ghost_death_index])
 		_current_ghost_death_index+=1
 		if _current_ghost_death_index >= _previous_ghost_deaths.size():
@@ -148,13 +141,7 @@ func _look_for_previous_death():
 func _apply_previous_death(ghost_death_data):
 	var victim_active = _is_ghost_active(ghost_death_data.victim_team_id,ghost_death_data.victim_round_index,ghost_death_data.victim_timeline_index)
 	var perpetrator_active = _is_ghost_active(ghost_death_data.perpetrator_team_id,ghost_death_data.perpetrator_round_index,ghost_death_data.perpetrator_timeline_index)
-	print("VICTIM ACTIVE: "+str(victim_active)+" PERPETRATOR ACTIVE: "+str(perpetrator_active))
 	if victim_active and perpetrator_active:
-		print("oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo")
-		print("APPLYING GHOST DEATH DATA AT TIME: "+str(_previous_ghost_deaths[_current_ghost_death_index].time))
-		print("   VICTIM: Team = "+str(ghost_death_data.victim_team_id)+" Round = "+str(ghost_death_data.victim_round_index)+" Timeline = "+str(ghost_death_data.victim_timeline_index))
-		print("   PERPETRATOR: Team = "+str(ghost_death_data.perpetrator_team_id)+" Round = "+str(ghost_death_data.perpetrator_round_index)+" Timeline = "+str(ghost_death_data.perpetrator_timeline_index))
-		print("oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo")
 		var victim = _seperated_ghosts[ghost_death_data.victim_team_id][ghost_death_data.victim_timeline_index]
 		var perpetrator = _seperated_ghosts[ghost_death_data.perpetrator_team_id][ghost_death_data.perpetrator_timeline_index]
 		emit_signal("quiet_ghost_hit", victim.player_id, victim.timeline_index, perpetrator.player_id, perpetrator.timeline_index)
@@ -175,11 +162,6 @@ func _clear_old_ghost_death_data(perpetrator_team_id, perpetrator_timeline_index
 			if data.perpetrator_round_index < perpetrator_round_index:
 				to_remove.append(data)
 	for data in to_remove:
-		print("--------------------------------------------------------------")
-		print("ERASED GHOST DEATH DATA At TIME: "+ str(data.time))
-		print("   VICTIM: Team = "+str(data.victim_team_id)+" Round = "+str(data.victim_round_index)+" Timeline = "+str(data.victim_timeline_index))
-		print("   PERPETRATOR: Round =  "+str(data.perpetrator_team_id)+" Round =  "+str(data.perpetrator_round_index)+" Timeline = "+str(data.perpetrator_timeline_index))
-		print("--------------------------------------------------------------")
 		_previous_ghost_deaths.erase(data)
 
 func _create_new_ghost_death_data(victim, perpetrator):
@@ -195,11 +177,6 @@ func _create_new_ghost_death_data(victim, perpetrator):
 	ghost_data.perpetrator_round_index = perpetrator.round_index
 	ghost_data.perpetrator_timeline_index = perpetrator.timeline_index
 	
-	print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-	print("CREATED GHOST DEATH DATA AT TIME: "+str(ghost_data.time))
-	print("   VICTIM: Team = "+str(victim.team_id)+" Round = "+str(victim.round_index)+" Timeline = "+str(victim.timeline_index))
-	print("   PERPETRATOR: Round =  "+str(perpetrator.team_id)+" Round =  "+str(perpetrator.round_index)+" Timeline = "+str(perpetrator.timeline_index))
-	print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 	return ghost_data
 
 func _refresh_previous_ghost_deaths():
