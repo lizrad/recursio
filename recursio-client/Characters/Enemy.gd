@@ -14,8 +14,8 @@ func enemy_init(action_manager: ActionManager) -> void:
 
 
 # OVERRIDE #
-func hit():
+func hit(_perpetrator):
 	pass
 
-func server_hit():
-	.hit()
+func server_hit(perpetrator):
+	.hit(perpetrator)

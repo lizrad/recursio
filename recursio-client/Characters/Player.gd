@@ -229,14 +229,14 @@ func get_round_manager():
 
 
 func toggle_visibility_light(value: bool):
-	_visibility_light.visible = value
+	_visibility_light.toggle(value)
 
 
 # OVERRIDE #
 # disable hit of base on client
-func hit():
+func hit(_perpetrator):
 	pass
 
 # call hit of baseclass triggered by server
-func server_hit():
-	.hit()
+func server_hit(perpetrator):
+	.hit(perpetrator)

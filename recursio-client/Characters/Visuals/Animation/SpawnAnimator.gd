@@ -16,7 +16,11 @@ func _on_color_scheme_changed(new_color_scheme, _timeline_index):
 	_spawn_particles.material_override.albedo_color = main_color
 	_spawn_particles.material_override.emission = main_color
 
-
+func non_vfx_spawn():
+	_front_pivot.visible = true
+	_middle_pivot.visible = true
+	_back_pivot.visible = true
+	
 func start_animation():
 	_time_since_start = 0
 	_spawn_particles.restart()

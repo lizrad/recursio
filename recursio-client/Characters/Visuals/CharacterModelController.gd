@@ -33,6 +33,7 @@ func _ready():
 	_error = _parent.connect("timeline_index_changed",self,"_on_timeline_index_changed")
 	_error = _parent.connect("dying",self,"_on_death")
 	_error = _parent.connect("spawning",self,"_on_spawn")
+	_error = _parent.connect("non_vfx_spawn",self,"_on_non_vfx_spawn")
 	_error = _animator.connect("death_animation_over", self, "_on_death_animation_over")
 	_error = _parent.connect("animation_status_changed",self,"_on_animation_status_changed")
 
@@ -93,6 +94,9 @@ func _on_death():
 
 func _on_spawn():
 	_animator.spawn_active()
+	
+func _on_non_vfx_spawn():
+	_animator.non_vfx_spawn()
 
 func _on_death_animation_over():
 	_death_particles.emitting = true

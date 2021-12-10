@@ -57,20 +57,14 @@ func spawn_enemy_on_client(player_id, enemy_id, enemy_position, team_id):
 	rpc_id(player_id, "spawn_enemy", enemy_id, enemy_position, team_id)
 
 
-func despawn_enemy_on_client(_player_id):
-	#TODO: disconnect is not handled properly yet anyway, and this causes a crash on client
-	#rpc_id(player_id, "despawn_enemy")
-	pass
-
-
-func send_player_ghost_record_to_client(player_id, timeline_index, record_data: RecordData):
+func send_player_ghost_record_to_client(player_id, timeline_index, round_index, record_data: RecordData):
 	record_data.timestamp = get_server_time()
-	rpc_id(player_id, "receive_player_ghost_record", timeline_index, record_data.to_array())
+	rpc_id(player_id, "receive_player_ghost_record", timeline_index,round_index,  record_data.to_array())
 
 
-func send_enemy_ghost_record_to_client(player_id, timeline_index, record_data: RecordData):
+func send_enemy_ghost_record_to_client(player_id, timeline_index,round_index,  record_data: RecordData):
 	record_data.timestamp = get_server_time()
-	rpc_id(player_id, "receive_enemy_ghost_record", timeline_index, record_data.to_array())
+	rpc_id(player_id, "receive_enemy_ghost_record", timeline_index,round_index,  record_data.to_array())
 
 
 func get_server_time():
@@ -118,14 +112,19 @@ func send_game_result(player_id, winning_player_id):
 	rpc_id(player_id, "receive_game_result", winning_player_id)
 
 
-func send_player_hit(player_id, hit_player_id):
+func send_player_hit(player_id, victim_player_id, perpetrator_player_id, perpetrator_timeline_index):
 	Logger.info("Sending player hit to client", "connection")
-	rpc_id(player_id, "receive_player_hit", hit_player_id)
+	rpc_id(player_id, "receive_player_hit", victim_player_id, perpetrator_player_id, perpetrator_timeline_index)
 
 
-func send_ghost_hit(player_id, hit_ghost_player_owner, hit_ghost_id):
+func send_ghost_hit(player_id, victim_player_id, victim_timeline_index, perpetrator_player_id, perpetrator_timeline_index):
 	Logger.info("Sending ghost hit to client", "connection")
-	rpc_id(player_id, "receive_ghost_hit", hit_ghost_player_owner, hit_ghost_id)
+	rpc_id(player_id, "receive_ghost_hit", victim_player_id, victim_timeline_index, perpetrator_player_id, perpetrator_timeline_index)
+
+
+func send_quiet_ghost_hit(player_id, victim_player_id, victim_timeline_index, perpetrator_player_id, perpetrator_timeline_index):
+	Logger.info("Sending quiet ghost hit to client", "connection")
+	rpc_id(player_id, "receive_quiet_ghost_hit", victim_player_id, victim_timeline_index, perpetrator_player_id, perpetrator_timeline_index)
 
 
 func send_ghost_pick(player_id, player_pick, enemy_pick):

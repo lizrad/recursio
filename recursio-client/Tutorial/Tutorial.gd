@@ -42,8 +42,9 @@ func _ready():
 	
 	$CharacterManager._on_spawn_enemy(1, Vector3.FORWARD * 10.0, 0)
 	$CharacterManager.get_enemy().kb.visible = false
+	$CharacterManager/GhostManager.init($CharacterManager/GameManager,$CharacterManager/RoundManager,$CharacterManager/ActionManager, $CharacterManager)
 	$CharacterManager/RoundManager._start_game()
-
+	
 
 func _process(delta):
 	if current_phase == Phases.ROUND1:
@@ -66,7 +67,6 @@ func _update_phase1():
 		
 		$CharacterManager/RoundManager.round_index += 1
 		$CharacterManager/RoundManager.switch_to_phase(RoundManager.Phases.PREPARATION)
-		$CharacterManager._on_player_ghost_record_received(0, $CharacterManager.get_player().get_record_data())
 		current_phase = Phases.ROUND2
 		
 		$TutorialUI/PanelContainer/TutorialText.text = "Now try capturing both points."

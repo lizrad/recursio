@@ -21,7 +21,7 @@ func _hit_body(collider):
 	_hit_something = true
 	if character is CharacterBase:
 		assert(character.has_method("hit"))
-		character.hit()
+		character.hit(_owning_player)
 
 func _physics_process(_delta):
 	if _hit_something:
