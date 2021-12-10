@@ -6,6 +6,7 @@ var _toggle_start = -1
 var _time_since_toggle_start = -1
 onready var _toggle_time = Constants.get_value("visibility", "light_toggle_time")
 onready var _spot_range = Constants.get_value("visibility", "spot_range")
+
 func _ready():
 	$SightLight.light_energy = light_energy
 	$SightLight.spot_angle = spot_angle
@@ -23,6 +24,7 @@ func _process(delta):
 		$SightLight.spot_range = spot_range
 	
 
+# toggling lerps the light range between 0 and 12 for a smooth effect
 func toggle(value):
 	_time_since_toggle_start = 0
 	_currently_toggling = true

@@ -4,6 +4,7 @@ class_name CharacterBase
 signal hit(perpetrator)
 signal dying()
 signal spawning()
+
 signal non_vfx_spawn()
 signal velocity_changed(velocity, front_vector, right_vector)
 signal timeline_index_changed(timeline_index)
@@ -112,6 +113,11 @@ func hit(perpetrator) -> void:
 	emit_signal("hit", perpetrator)
 	set_dying(true)
 
+
+# quiet_hit is used to tell a character it is hit, without it triggering the hit signal
+# this is necessary because lots of gameplay functionality listens to hit (eg. recording 
+# of the death in the ghostmanager class) we do nott want this during special gameplay 
+# moments (for now only when a death is triggered by a previous death recording from the ghostmanager)
 func quiet_hit(perpetrator) -> void:
 	set_dying(true)
 
@@ -194,6 +200,10 @@ func visual_kill():
 	emit_signal("dying")
 
 
+# non_vfx_spawn is used to spawn a character without triggering any animations or particles
+# this is necessary because when a character dies, it remains invisible until it spawns again, 
+# but there are moments during gameplay where we don't want to see the whole spawn procedure 
+# (eg. when dead ghost appear again during the prep phase)
 func non_vfx_spawn():
 	emit_signal("non_vfx_spawn")
 
