@@ -17,6 +17,5 @@ func enemy_init(action_manager: ActionManager) -> void:
 func hit(_perpetrator):
 	pass
 
-func server_hit():
-	#TODO: using null here because we dont record deaths on the client anyway but this is kinda wack
-	.hit(null)
+func server_hit(perpetrator):
+	.hit(perpetrator)

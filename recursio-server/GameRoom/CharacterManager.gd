@@ -117,11 +117,12 @@ func propagate_player_picks():
 				enemy_pick = player_dic[enemy_id].timeline_index
 		Server.send_ghost_pick(player_id, player_pick, enemy_pick)
 
-func _on_player_hit(hit_player_id):
+func _on_player_hit(perpetrator, victim_player_id):
 	Logger.info("Player hit!", "attacking")
-	emit_signal("player_killed", player_dic[hit_player_id], player_dic[hit_player_id].last_death_perpetrator)
+	var victim = player_dic[victim_player_id]
+	emit_signal("player_killed", victim, perpetrator)
 	for player_id in player_dic:
-		Server.send_player_hit(player_id, hit_player_id)
+		Server.send_player_hit(player_id, victim_player_id, perpetrator.player_id, perpetrator.timeline_index)
 
 func _on_wall_spawn(position, rotation, wall_index, player_id):
 	Server.send_wall_spawn(position, rotation, wall_index, player_id)

@@ -4,12 +4,12 @@ class_name Ghost
 onready var _character_model : CharacterModel = get_node("KinematicBody/CharacterModel")
 
 # TODO: move to Constants or make unique in any way
-onready var _minimap_icon : MiniMapIcon = get_node("KinematicBody/MiniMapIcon")
-onready var _minimap_icon_dead := preload("res://Resources/Icons/icon_dead_ghost_minimap.png")
-onready var _minimap_icon_alive_hitscan := preload("res://Resources/Icons/icon_ghost_minimap_hitscan.png")
-onready var _minimap_icon_alive_wall := preload("res://Resources/Icons/icon_ghost_minimap_wall.png")
-onready var _minimap_icon_alive_hitscan_enemy := preload("res://Resources/Icons/icon_enemy_minimap_hitscan.png")
-onready var _minimap_icon_alive_wall_enemy := preload("res://Resources/Icons/icon_enemy_minimap_wall.png")
+#onready var _minimap_icon : MiniMapIcon = get_node("KinematicBody/MiniMapIcon")
+#onready var _minimap_icon_dead := preload("res://Resources/Icons/icon_dead_ghost_minimap.png")
+#onready var _minimap_icon_alive_hitscan := preload("res://Resources/Icons/icon_ghost_minimap_hitscan.png")
+#onready var _minimap_icon_alive_wall := preload("res://Resources/Icons/icon_ghost_minimap_wall.png")
+#onready var _minimap_icon_alive_hitscan_enemy := preload("res://Resources/Icons/icon_enemy_minimap_hitscan.png")
+#onready var _minimap_icon_alive_wall_enemy := preload("res://Resources/Icons/icon_enemy_minimap_wall.png")
 
 
 var _minimap_alive
@@ -36,10 +36,9 @@ func hit(_perpetrator):
 
 # Displays ghost as dead
 # calls hit of base function triggered by server
-func server_hit():
+func server_hit(perpetrator):
 	if not is_record_data_set():
 		return
-	#TODO: using null here because we dont record deaths on the client anyway but this is kinda wack
-	.hit(null)
+	.hit(perpetrator)
 	#_minimap_icon.set_texture(_minimap_icon_dead)
 

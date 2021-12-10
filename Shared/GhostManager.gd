@@ -1,8 +1,8 @@
 extends Node
 class_name GhostManager
 
-signal ghost_hit(owning_player_id, timeline_index)
-signal quiet_ghost_hit(owning_player_id, timeline_index)
+signal ghost_hit(victim_player_id, victim_timeline_index, perpetrator_player_id, perpetrator_timeline_index)
+signal quiet_ghost_hit(victim_player_id, victim_timeline_index, perpetrator_player_id, perpetrator_timeline_index)
 signal new_record_data_applied(player)
 
 onready var _server = get_node("/root/Server")
@@ -54,8 +54,6 @@ func on_preparation_phase_started() -> void:
 	print("                      PREP PHASE START")
 	print("==============================================================")
 	print("")
-	#TODO: check if we need this
-	refresh_active_ghosts()
 	_stop_ghosts()
 	_move_ghosts_to_spawn()
 
@@ -63,8 +61,9 @@ func on_countdown_phase_started() -> void:
 	pass
 
 func on_game_phase_started() -> void:
+	_game_phase_start_time = _server.get_server_time()
 	_refresh_previous_ghost_deaths()
-	_start_ghosts()
+	_start_ghosts(_game_phase_start_time)
 
 func on_game_phase_stopped() -> void:
 	_use_new_record_data()
@@ -89,9 +88,10 @@ func _on_player_killed(victim, perpetrator):
 	#when an active player is killed we also have to create a ghost death so the death is fixed for the following rounds
 	_new_previous_ghost_death.append(_create_new_ghost_death_data(victim, perpetrator))
 
-func _on_ghost_hit(ghost):
-	_new_previous_ghost_death.append(_create_new_ghost_death_data(ghost, ghost.last_death_perpetrator))
-	emit_signal("ghost_hit",ghost.player_id, ghost.timeline_index)
+func _on_ghost_hit(perpetrator, victim):
+	print("GHOST HIT")
+	_new_previous_ghost_death.append(_create_new_ghost_death_data(victim, perpetrator))
+	emit_signal("ghost_hit",victim.player_id, victim.timeline_index, perpetrator.player_id, perpetrator.timeline_index)
 
 func _use_new_record_data():
 	var current_round_index = _round_manager.round_index-1
@@ -104,8 +104,6 @@ func _use_new_record_data():
 func _update_ghost_record(ghost_array, timeline_index, record_data, round_index):
 	ghost_array[timeline_index].set_record_data(record_data)
 	ghost_array[timeline_index].round_index = round_index
-	#TODO: check if we need this
-	refresh_active_ghosts()
 
 func _move_ghosts_to_spawn() -> void:
 	for ghost in _ghosts:
@@ -126,9 +124,9 @@ func _disable_all_ghosts() -> void:
 	for ghost in _ghosts:
 		ghost.disable_body()
 
-func _start_ghosts() -> void:
+func _start_ghosts(start_time) -> void:
 	for ghost in _ghosts:
-		ghost.start_playing(_server.get_server_time())
+		ghost.start_playing(start_time)
 	
 func _stop_ghosts() -> void:
 	for ghost in _ghosts:
@@ -150,6 +148,7 @@ func _look_for_previous_death():
 func _apply_previous_death(ghost_death_data):
 	var victim_active = _is_ghost_active(ghost_death_data.victim_team_id,ghost_death_data.victim_round_index,ghost_death_data.victim_timeline_index)
 	var perpetrator_active = _is_ghost_active(ghost_death_data.perpetrator_team_id,ghost_death_data.perpetrator_round_index,ghost_death_data.perpetrator_timeline_index)
+	print("VICTIM ACTIVE: "+str(victim_active)+" PERPETRATOR ACTIVE: "+str(perpetrator_active))
 	if victim_active and perpetrator_active:
 		print("oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo")
 		print("APPLYING GHOST DEATH DATA AT TIME: "+str(_previous_ghost_deaths[_current_ghost_death_index].time))
@@ -158,7 +157,7 @@ func _apply_previous_death(ghost_death_data):
 		print("oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo")
 		var victim = _seperated_ghosts[ghost_death_data.victim_team_id][ghost_death_data.victim_timeline_index]
 		var perpetrator = _seperated_ghosts[ghost_death_data.perpetrator_team_id][ghost_death_data.perpetrator_timeline_index]
-		emit_signal("quiet_ghost_hit", victim.player_id, victim.timeline_index)
+		emit_signal("quiet_ghost_hit", victim.player_id, victim.timeline_index, perpetrator.player_id, perpetrator.timeline_index)
 		victim.quiet_hit(perpetrator)
 
 func _is_ghost_active(team_id, round_index, timeline_index):
@@ -209,7 +208,7 @@ func _refresh_previous_ghost_deaths():
 	for player in _character_manager.player_dic.values():
 		_clear_old_ghost_death_data(player.team_id, player.timeline_index, current_round_index)
 	_current_ghost_death_index = 0
-	_game_phase_start_time = _server.get_server_time()
+	
 
 func _add_new_previous_ghost_deaths_data():
 	_previous_ghost_deaths += _new_previous_ghost_death

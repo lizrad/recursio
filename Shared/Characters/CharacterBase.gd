@@ -1,7 +1,7 @@
 extends Node
 class_name CharacterBase
 
-signal hit()
+signal hit(perpetrator)
 signal dying()
 signal spawning()
 signal non_vfx_spawn()
@@ -24,8 +24,6 @@ var round_index: int = -1
 # tracks activation for triggers
 var last_triggers: int = 0
 
-#TODO: using this so we don't have to change every thing that listens to the hit() signal, but we should maybe just include it in the future
-var last_death_perpetrator = null
 
 var position: Vector3 setget set_position, get_position
 var rotation_y: float setget set_rotation_y, get_rotation_y
@@ -111,12 +109,10 @@ func set_timeline_index(new_timeline_index: int):
 	emit_signal("timeline_index_changed", new_timeline_index)
 
 func hit(perpetrator) -> void:
-	last_death_perpetrator = perpetrator
-	emit_signal("hit")
+	emit_signal("hit", perpetrator)
 	set_dying(true)
 
 func quiet_hit(perpetrator) -> void:
-	last_death_perpetrator = perpetrator
 	set_dying(true)
 
 func set_dying(new_dying_status: bool):

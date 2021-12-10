@@ -36,7 +36,7 @@ func _ready():
 	_error = Server.connect("spawning_player", self, "_on_spawn_player") 
 	_error = Server.connect("spawning_enemy", self, "_on_spawn_enemy") 
 	
-	#TODO: Probably should move this to some mediator class
+	# TODO: Probably should move this to the mediator class if we actually implement this at some point
 	_error = Server.connect("player_ghost_record_received", _ghost_manager, "on_player_ghost_record_received") 
 	_error = Server.connect("enemy_ghost_record_received", _ghost_manager, "on_enemy_ghost_record_received") 
 	_error = Server.connect("ghost_hit", _ghost_manager, "on_ghost_hit_from_server") 
@@ -128,8 +128,6 @@ func get_enemy():
 
 func _on_phase_switch_received(round_index, next_phase, switch_time):
 	_round_manager.round_index = round_index
-	#TODO: What the fuck is this doing, what did I think here, check this over, might be a bug
-	_round_manager.get_previous_phase(next_phase)
 	_round_manager.future_switch_to_phase(next_phase, switch_time)
 
 func _on_preparation_phase_started() -> void:
@@ -275,11 +273,12 @@ func _on_world_state_received(world_state: WorldState):
 				_enemy.server_acceleration = player_states[id].acceleration
 				_enemy.last_triggers |= player_states[id].buttons
 
-func _on_player_hit(hit_player_id) -> void:
+func _on_player_hit(hit_player_id, perpetrator_player_id, perpetrator_timeline_index) -> void:
+	var perpetrator = _ghost_manager._find_perpetrator(perpetrator_player_id, perpetrator_timeline_index)
 	if hit_player_id == _player_rpc_id:
-		_player.server_hit() 
+		_player.server_hit(perpetrator) 
 	else:
-		 _enemy.server_hit()
+		 _enemy.server_hit(perpetrator)
 
 func _on_capture_point_captured(capturing_player_id, _capture_point):
 	if capturing_player_id == _player_rpc_id:

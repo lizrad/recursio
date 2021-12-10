@@ -238,6 +238,5 @@ func hit(_perpetrator):
 	pass
 
 # call hit of baseclass triggered by server
-func server_hit():
-	#TODO: using null here because we dont record deaths on the client anyway but this is kinda wack
-	.hit(null)
+func server_hit(perpetrator):
+	.hit(perpetrator)
