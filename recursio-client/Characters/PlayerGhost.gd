@@ -14,8 +14,7 @@ func toggle_visibility_light(value: bool):
 
 
 func create_path():
-	if not is_record_data_set():
-		return
+	assert(is_record_data_set())
 	var _curve = Curve3D.new()
 	for frame in range(0, _record_data.record_frames.size(), 30):
 		var record_frame: RecordFrame = _record_data.record_frames[frame]
