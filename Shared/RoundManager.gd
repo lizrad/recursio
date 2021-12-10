@@ -72,8 +72,14 @@ func future_switch_to_phase(phase, switch_time):
 	assert(phase != Phases.NONE)
 	_phase_deadline = switch_time
 	if _phase_order[_current_phase_index] == phase:
+		match phase:
+			Phases.PREPARATION:
+				_phase_deadline += _preparation_phase_time * 1000
+			Phases.COUNTDOWN:
+				_phase_deadline += _countdown_phase_time * 1000
+			Phases.GAME:
+				_phase_deadline += _game_phase_time * 1000
 		return
-
 	var previous_phase = get_previous_phase(phase)
 	if get_current_phase() != previous_phase:
 		switch_to_phase(previous_phase)
