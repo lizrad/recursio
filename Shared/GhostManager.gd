@@ -128,7 +128,8 @@ func _enable_active_ghosts() -> void:
 		for timeline_index in range(0, _max_ghosts+1):
 			var player_id = _character_manager.team_id_to_player_id(team_id)
 			if timeline_index != _character_manager.player_dic[player_id].timeline_index:
-				_seperated_ghosts[team_id][timeline_index].enable_body()
+				if _seperated_ghosts[team_id][timeline_index].is_record_data_set():
+					_seperated_ghosts[team_id][timeline_index].enable_body()
 
 
 func _disable_all_ghosts() -> void:

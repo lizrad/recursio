@@ -35,8 +35,8 @@ func update(_delta):
 		return
 	if not _is_playing:
 		return
-	if not is_record_data_set():
-		return
+	# this should only run when we have record data
+	assert(is_record_data_set())
 
 	if _current_frame_index >= _record_data.record_frames.size():
 		return
@@ -83,8 +83,7 @@ func _apply_record_frame(record_frame: RecordFrame):
 
 
 func enable_body():
-	if not is_record_data_set():
-		return
+	assert(is_record_data_set())
 	_is_active = true
 	kb.visible = true
 	_collision_shape.disabled = false

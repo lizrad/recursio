@@ -37,8 +37,7 @@ func hit(_perpetrator):
 # Displays ghost as dead
 # calls hit of base function triggered by server
 func server_hit(perpetrator):
-	if not is_record_data_set():
-		return
+	assert(is_record_data_set())
 	.hit(perpetrator)
 	#_minimap_icon.set_texture(_minimap_icon_dead)
 
