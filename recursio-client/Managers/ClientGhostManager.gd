@@ -71,10 +71,12 @@ func _enable_active_ghosts() -> void:
 	# Not calling super here because client and server have completely different concepts of ghost seperation - player/enemy and player[0]/player[1]
 	for timeline_index in range(_max_ghosts+1):
 		if timeline_index != _character_manager._player.timeline_index:
-			_player_ghosts[timeline_index].enable_body()
+			if _player_ghosts[timeline_index].is_record_data_set():
+				_player_ghosts[timeline_index].enable_body()
 		
 		if timeline_index != _character_manager._enemy.timeline_index:
-			_enemy_ghosts[timeline_index].enable_body()
+			if _enemy_ghosts[timeline_index].is_record_data_set():
+				_enemy_ghosts[timeline_index].enable_body()
 
 
 # OVERRIDE #
@@ -172,7 +174,8 @@ func _toggle_visbility_lights(value: bool):
 
 func _update_ghost_paths():
 	for ghost in _player_ghosts:
-		ghost.create_path()
+		if ghost.is_record_data_set():
+			ghost.create_path()
 
 
 func _toggle_ghost_animation(value) -> void:
