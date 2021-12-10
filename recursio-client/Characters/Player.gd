@@ -4,7 +4,6 @@ class_name Player
 signal initialized()
 
 onready var _hud: HUD = get_node("KinematicBody/HUD")
-onready var _selector_mesh = get_node("KinematicBody/Selector/SelectorMesh")
 onready var _light_viewport = get_node("KinematicBody/LightViewport")
 onready var _overview_light = get_node("KinematicBody/TransformReset/OverviewLight")
 onready var _overview_target = get_node("KinematicBody/TransformReset/OverviewTarget")
@@ -37,7 +36,7 @@ func reset() -> void:
 	.reset()
 	clear_past_frames()
 	_hud.reset()
-	_selector_mesh.deactivate()
+
 
 func reset_aim_mode():
 	aim_mode = false
@@ -48,6 +47,7 @@ func reset_aim_mode():
 
 func clear_past_frames():
 	_past_frames.clear()
+
 
 func clear_walls():
 	_walls.clear()
@@ -103,12 +103,12 @@ func wall_spawned(wall):
 func _on_wall_spawn_received(position, rotation, wall_index):
 	if _walls.size()>wall_index:
 		if _walls[wall_index]:
-			Logger.info("correcting wall from " + str(_walls[wall_index].global_transform.origin) +" to "+ str(position), "wall_validation")
+			Logger.info("correcting wall from " + str(_walls[wall_index].global_transform.origin) + " to "+ str(position), "wall_validation")
 			_walls[wall_index].global_transform.origin = position
 			#TODO: is rotation global here, could be dangerous if it isn't
 			_walls[wall_index].rotation.y = rotation
 	else:
-		var wall_action_index = Constants.get_value("ghosts","wall_placing_timeline_index")
+		var wall_action_index = Constants.get_value("ghosts", "wall_placing_timeline_index")
 		_action_manager.set_active(_get_action(ActionManager.Trigger.FIRE_START, wall_action_index) as Action, self, kb, get_parent())
 		pass
 
@@ -139,9 +139,17 @@ func setup_capture_point_hud(number_of_capture_points) -> void:
 	_hud.set_player_id(self.player_id)
 
 
+func setup_spawn_point_hud(spawn_points) -> void:
+	_hud.set_spawn_points(spawn_points)
+
+
 func update_weapon_type_hud(max_ammo, img_bullet, color) -> void:
 	_hud.update_weapon_type(img_bullet, color)
 	_hud.update_fire_action_ammo(max_ammo)
+
+
+func activate_spawn_point_hud(timeline_index) -> void:
+	_hud.activate_spawn_point(timeline_index)
 
 
 func update_fire_action_ammo_hud(amount: int) -> void:
@@ -160,13 +168,11 @@ func update_capture_point_hud(capture_points: Array) -> void:
 
 
 func show_preparation_hud(round_index) -> void:
-	_selector_mesh.activate()
 	_hud.prep_phase_start(round_index)
 	_button_overlay.show_buttons(["ready!", "swap"], ButtonOverlay.BUTTONS.DOWN | ButtonOverlay.BUTTONS.RIGHT, ButtonOverlay.BUTTONS.DOWN)
 
 
 func show_countdown_hud() -> void:
-	_selector_mesh.deactivate()
 	_hud.countdown_phase_start()
 	_button_overlay.hide_buttons()
 
@@ -210,14 +216,17 @@ func handle_server_update(position, time):
 
 			Logger.info(("Corrected from " + str(before) + " to " + str(.get_position())
 				+ " (should be at " + str(position) + " according to server)"), "movement_validation")
+			Logger.warn("check if the TODOs in this block are still up to date (hotfix, lerp and correction) -> happens sometimes if switching timeline index very often")
 
 			# Hotfix for overcompensation - we could also fix all following past states, but is that required?
 			clear_past_frames()
 
 			_just_corrected = true
 
+
 func get_round_manager():
 	return _round_manager
+
 
 func toggle_visibility_light(value: bool):
 	_visibility_light.visible = value

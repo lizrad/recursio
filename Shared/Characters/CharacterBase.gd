@@ -40,7 +40,6 @@ var _death_timer
 var _auto_respawn_on_death = false
 var _spawn_timer
 
-
 var _spawn_imminent = false;
 var _spawn_deadline = -1;
 
