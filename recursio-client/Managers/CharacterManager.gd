@@ -8,6 +8,10 @@ onready var _game_manager: GameManager = get_node("GameManager")
 onready var _round_manager: RoundManager = get_node("RoundManager")
 onready var _ghost_manager: GhostManager = get_node("GhostManager")
 
+
+var enemy_is_server_driven: bool = true
+
+
 # Scenes for instanciating 
 var _player_scene = preload("res://Characters/Player.tscn")
 var _enemy_scene = preload("res://Characters/Enemy.tscn")
@@ -65,48 +69,8 @@ func _physics_process(delta):
 	if not _round_manager.is_running():
 		return
 
-	_time_since_last_server_update += delta
-	var server_delta = 1.0 / Server.tickrate
-
-	# Goes from 0 to 1 for each network tick
-	var tick_progress = _time_since_last_server_update / server_delta
-	tick_progress = min(tick_progress, 1)
-
-	# TODO: Use base move function?
-	_enemy.velocity = (
-		_enemy.last_velocity
-		+ (_enemy.server_velocity - _enemy.last_velocity) * tick_progress
-	)
-
-	var projected_from_start = (
-		_enemy.last_position
-		+ _enemy.velocity * _time_since_last_server_update
-		+ (
-			_enemy.server_acceleration
-			* 0.5
-			* _time_since_last_server_update
-			* _time_since_last_server_update
-		)
-	)
-
-	var projected_from_last_known = (
-		_enemy.server_position
-		+ _enemy.server_velocity * _time_since_last_server_update
-		+ (
-			_enemy.server_acceleration
-			* 0.5
-			* _time_since_last_server_update
-			* _time_since_last_server_update
-		)
-	)
-
-	_enemy.position = (
-		projected_from_start
-		+ (projected_from_last_known - projected_from_start) * tick_progress
-	)
-
-	_enemy.trigger_actions(_enemy.last_triggers)
-	_enemy.last_triggers = 0
+	if enemy_is_server_driven:
+		_update_enemy(delta)
 
 	# Update CapturePoints in player HUD
 	_player.update_capture_point_hud(_game_manager.get_capture_points())
@@ -124,7 +88,7 @@ func _on_game_start_received(start_time):
 func get_player() -> Player:
 	return _player
 
-func get_enemy():
+func get_enemy() -> Enemy:
 	return _enemy
 
 func _on_phase_switch_received(round_index, next_phase, switch_time):
@@ -133,6 +97,7 @@ func _on_phase_switch_received(round_index, next_phase, switch_time):
 
 func _on_preparation_phase_started() -> void:
 	_player.block_movement = true
+	_enemy.block_movement = true
 	_player.reset_aim_mode()
 	_player.clear_walls()
 	_player.clear_past_frames()
@@ -176,6 +141,7 @@ func _on_countdown_phase_started() -> void:
 
 func _on_game_phase_started() -> void:
 	_player.block_movement = false
+	_enemy.block_movement = false
 	_player.set_overview_light_enabled(false)
 	_toggle_visbility_lights(true)
 	_game_manager.hide_countdown_screen()
@@ -325,3 +291,48 @@ func team_id_to_player_id(team_id):
 	if _enemy.team_id == team_id:
 		return _enemy.player_id
 	return -1
+
+
+func _update_enemy(delta) -> void:
+	_time_since_last_server_update += delta
+	var server_delta = 1.0 / Server.tickrate
+
+	# Goes from 0 to 1 for each network tick
+	var tick_progress = _time_since_last_server_update / server_delta
+	tick_progress = min(tick_progress, 1)
+
+	# TODO: Use base move function?
+	_enemy.velocity = (
+		_enemy.last_velocity
+		+ (_enemy.server_velocity - _enemy.last_velocity) * tick_progress
+	)
+
+	var projected_from_start = (
+		_enemy.last_position
+		+ _enemy.velocity * _time_since_last_server_update
+		+ (
+			_enemy.server_acceleration
+			* 0.5
+			* _time_since_last_server_update
+			* _time_since_last_server_update
+		)
+	)
+
+	var projected_from_last_known = (
+		_enemy.server_position
+		+ _enemy.server_velocity * _time_since_last_server_update
+		+ (
+			_enemy.server_acceleration
+			* 0.5
+			* _time_since_last_server_update
+			* _time_since_last_server_update
+		)
+	)
+
+	_enemy.position = (
+		projected_from_start
+		+ (projected_from_last_known - projected_from_start) * tick_progress
+	)
+
+	_enemy.trigger_actions(_enemy.last_triggers)
+	_enemy.last_triggers = 0

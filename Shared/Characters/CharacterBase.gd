@@ -57,6 +57,11 @@ func _ready():
 	add_child(_death_timer)
 	add_child(_spawn_timer)
 
+
+func _physics_process(delta):
+	kb.transform.origin.y = 0
+
+
 func _process(delta):
 	if _spawn_imminent:
 		_spawn_deadline -= delta

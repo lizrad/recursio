@@ -2,11 +2,13 @@ extends TutorialScenario
 class_name TutorialScenario_2
 
 var _character_manager: CharacterManager
+var _ghost_manager: ClientGhostManager
 var _level: Level
 
 
-func _init(tutorial_text, character_manager, level).(tutorial_text):
+func _init(tutorial_text, character_manager, ghost_manager, level).(tutorial_text):
 	_character_manager = character_manager
+	_ghost_manager = ghost_manager
 	_level = level
 
 
@@ -23,29 +25,27 @@ func _ready():
 	add_round_start_function(funcref(self, "_started_round_3"))
 	add_round_condition_function(funcref(self, "_check_completed_round_3"))
 	add_round_end_function(funcref(self, "_completed_round_3"))
-	
-	start()
 
 
 func _started_round_1():
 	_toggle_ui(true)
-	_character_manager._game_manager.set_level(_level)
-	
-	_character_manager._on_spawn_player(0, Vector3.ZERO, 0)
-	_character_manager.get_player().kb.visible = false
-	_character_manager.get_player().hide_button_overlay = true
-	
 	_tutorial_text.typing_text = "This scenario will teach you about enemies. Try to capture the lower capture point again."
-	
-	
-	
+		
 	_character_manager.get_player().follow_camera()
-	
-	
 	_character_manager.get_player().kb.visible = true
+	_character_manager.get_enemy().kb.visible = true
+	_character_manager.get_enemy().move_to_spawn_point()
 	
-	_character_manager._on_spawn_enemy(1, Vector3.FORWARD * 10.0, 0)
-	_character_manager.get_enemy().kb.visible = false
+	var enemyAI: EnemyAI = EnemyAI.new(_character_manager.get_enemy())
+	enemyAI.add_waypoint(Vector3(-12, 0, 8))
+	enemyAI.add_waypoint(Vector3(-5, 0, 5))
+	enemyAI.add_waypoint(Vector3(-8, 0, 9))
+	enemyAI.add_waypoint(Vector3(-12, 0, 8))
+	enemyAI.add_waypoint(Vector3(-15, 0, 4))
+	
+	add_child(enemyAI)
+	enemyAI.start()
+	
 	_character_manager._round_manager._start_game()
 	_character_manager._round_manager.switch_to_phase(RoundManager.Phases.GAME)
 	
@@ -77,7 +77,6 @@ func _completed_round_1() -> void:
 	_level.get_capture_points()[1]._capture_progress = 1.0
 	_character_manager._round_manager.round_index += 1
 	_character_manager._round_manager.switch_to_phase(RoundManager.Phases.PREPARATION)
-	_character_manager._on_player_ghost_record_received(0, _character_manager.get_player().get_record_data())
 
 
 func _started_round_2() -> void:
@@ -92,7 +91,7 @@ func _started_round_2() -> void:
 
 
 func _check_completed_round_2() -> bool:
-	return _character_manager._player_ghosts[0].currently_dying
+	return _ghost_manager._player_ghosts[0].currently_dying
 
 
 func _completed_round_2() -> void:

@@ -1,4 +1,5 @@
 extends GhostManager
+class_name ClientGhostManager
 
 var _enemy_ghost_scene = preload("res://Characters/Ghost.tscn")
 var _player_ghost_scene = preload("res://Characters/PlayerGhost.tscn")

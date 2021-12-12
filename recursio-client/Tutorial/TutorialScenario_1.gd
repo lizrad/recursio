@@ -25,16 +25,11 @@ func _ready():
 
 func _started_round_1():
 	_toggle_ui(true)
-	_character_manager._game_manager.set_level(_level)
 
 	_tutorial_text.typing_text = "Welcome to the tutorial!"
 	
 	yield(_tutorial_text, "typing_completed")
 	yield(get_tree().create_timer(2), "timeout")
-	
-	_character_manager._on_spawn_player(0, Vector3.ZERO, 0)
-	_character_manager.get_player().kb.visible = false
-	_character_manager.get_player().hide_button_overlay = true
 	
 	_tutorial_text.typing_text = "The goal is to capture both points at once."
 	
@@ -51,9 +46,6 @@ func _started_round_1():
 	_toggle_ui(false)
 	
 	_character_manager.get_player().kb.visible = true
-	
-	_character_manager._on_spawn_enemy(1, Vector3.FORWARD * 10.0, 0)
-	_character_manager.get_enemy().kb.visible = false
 	_character_manager._round_manager._start_game()
 
 
@@ -74,7 +66,6 @@ func _started_round_2() -> void:
 	
 	_character_manager._round_manager.round_index += 1
 	_character_manager._round_manager.switch_to_phase(RoundManager.Phases.PREPARATION)
-	_character_manager._on_player_ghost_record_received(0, _character_manager.get_player().get_record_data())
 	
 	_tutorial_text.typing_text = "Now try capturing both points."
 	
