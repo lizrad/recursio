@@ -3,9 +3,10 @@ class_name StartMenu
 
 const REMOTE_SERVER_IP: String = "37.252.189.118"
 
-export(PackedScene) var world_scene
-export(PackedScene) var level_scene
-export(PackedScene) var capture_point_scene
+export var world_scene: PackedScene
+export var level_scene: PackedScene
+export var capture_point_scene: PackedScene
+export var spawn_point_scene: PackedScene
 
 onready var _start_menu_buttons: VBoxContainer = get_node("CenterContainer/MainMenu")
 
@@ -217,11 +218,13 @@ func _on_game_room_not_ready_received(player_id):
 func _on_load_level_received():
 	$CenterContainer.hide()
 	_world = world_scene.instance()
-	add_child(_world)
 	var level = level_scene.instance()
 	level.capture_point_scene = capture_point_scene
+	add_child(_world)
+	level.spawn_point_scene = spawn_point_scene
 	_world.set_level(level)
 	_world.add_child(level)
+	_world.level_set_up_done()
 
 
 func _on_game_result_received(_winning_player_id):

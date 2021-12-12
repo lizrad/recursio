@@ -8,7 +8,7 @@ var _countdown_screen
 var _level: Level
 
 var _team_id := -1
-var _countdown_time: float = Constants.get_value("gameplay","countdown_phase_seconds")
+var _countdown_time: float = Constants.get_value("gameplay", "countdown_phase_seconds")
 
 func _ready():
 	if has_node("../../GameResultScreen"):
@@ -71,7 +71,11 @@ func show_loss() -> void:
 		_game_result_screen.visible = true
 
 
-func get_spawn_point(team_id, timeline_index) -> Vector3:
+func get_spawn_points(team_id) -> Array:
+	return _level.get_spawn_points(team_id)
+
+
+func get_spawn_point(team_id, timeline_index) -> Node:
 	return _level.get_spawn_points(team_id)[timeline_index]
 
 
@@ -81,14 +85,18 @@ func get_capture_points() -> Array:
 
 func toggle_spawn_points(toggle: bool) -> void:
 	_level.toggle_spawn_points(toggle)
-	
-	
+
+
 func toggle_capture_points(toggle: bool) -> void:
 	_level.toggle_capture_points(toggle)
 
+
 func set_team_id(team_id):
 	_team_id = team_id
-	_level.color_spawn_points(_team_id)
+	# display spawnpoint weapon type only for active team
+	_level.show_spawn_point_weapon_type(_team_id)
+	# TODO: should be reset if team_id changes
+
 
 func reset() -> void:
 	if _game_result_screen and _countdown_screen:

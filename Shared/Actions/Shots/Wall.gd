@@ -7,6 +7,7 @@ onready var _mesh_instance = get_node("MeshPivot/MeshInstance")
 var _time_since_spawn := 0.0
 var placed_by_body
 var round_index
+var _owning_player
 
 func _init() -> void:
 	Logger.info("_init action", "Wall")
@@ -33,6 +34,7 @@ func initialize(owning_player) -> void:
 	initialize_visual(owning_player)
 	placed_by_body = owning_player
 	owning_player.wall_spawned(self)
+	_owning_player = owning_player
 	round_index = owning_player.round_index
 
 
@@ -52,4 +54,4 @@ func handle_hit(collider):
 
 	if character is GhostBase and not character == placed_by_body \
 			and character.round_index < round_index:
-		character.hit()
+		character.hit(_owning_player)

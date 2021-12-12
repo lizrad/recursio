@@ -20,15 +20,16 @@ signal spawning_enemy(enemy_id, spawn_point, team_id)
 signal despawning_enemy(enemy_id)
 signal spawning_player(player_id, spawn_point)
 signal world_state_received(world_state)
-signal player_ghost_record_received(timeline_index, gameplay_record)
-signal enemy_ghost_record_received(timeline_index, gameplay_record)
+signal player_ghost_record_received(timeline_index,round_index,  gameplay_record)
+signal enemy_ghost_record_received(timeline_index,round_index,  gameplay_record)
 signal capture_point_captured(capturing_player_id, capture_point)
 signal capture_point_team_changed(capturing_player_id, capture_point)
 signal capture_point_status_changed(capturing_player_id, capture_point, capture_progress)
 signal capture_point_capture_lost(capturing_player_id, capture_point)
 signal game_result(winning_player_id)
-signal player_hit(hit_player_id)
-signal ghost_hit(hit_ghost_player_owner, hit_ghost_id)
+signal player_hit(hit_player_id, perpetrator_player_id, perpetrator_timeline_index)
+signal ghost_hit(hit_ghost_player_owner, hit_ghost_id, perpetrator_player_id, perpetrator_timeline_index)
+signal quiet_ghost_hit(hit_ghost_player_owner, hit_ghost_id, perpetrator_player_id, perpetrator_timeline_index)
 signal timeline_picks(player_pick, enemy_picks)
 signal wall_spawn (position, rotation, wall_index)
 
@@ -168,11 +169,6 @@ remote func spawn_enemy(enemy_id, spawn_point, team_id):
 	emit_signal("spawning_enemy", enemy_id, spawn_point, team_id)
 
 
-remote func despawn_enemy():
-	Logger.debug("Receive despawn enemy", "server")
-	emit_signal("despawning_enemy")
-
-
 remote func receive_server_time(server_time, player_time):
 	Logger.debug("Receive server time", "server")
 	latency = (OS.get_system_time_msecs() - player_time) / 2
@@ -201,14 +197,14 @@ remote func receive_latency(player_time):
 	Logger.debug("Receive latency (" + str((OS.get_system_time_msecs() - player_time) / 2) + ")", "server")
 
 
-remote func receive_player_ghost_record(timeline_index, record_data):
+remote func receive_player_ghost_record(timeline_index, round_index, record_data):
 	Logger.debug("Receive player ghost record", "server")
-	emit_signal("player_ghost_record_received", timeline_index, RecordData.new().from_array(record_data))
+	emit_signal("player_ghost_record_received", timeline_index, round_index, RecordData.new().from_array(record_data))
 
 
-remote func receive_enemy_ghost_record(timeline_index, record_data):
+remote func receive_enemy_ghost_record(timeline_index, round_index, record_data):
 	Logger.debug("Receive enemy ghost record", "server")
-	emit_signal("enemy_ghost_record_received", timeline_index, RecordData.new().from_array(record_data))
+	emit_signal("enemy_ghost_record_received", timeline_index, round_index, RecordData.new().from_array(record_data))
 
 
 # Receives the current world state of the players room
@@ -251,15 +247,18 @@ remote func receive_game_result(winning_player_id):
 	emit_signal("game_result", winning_player_id)
 
 
-remote func receive_player_hit(hit_player_id):
+remote func receive_player_hit(hit_player_id, perpetrator_player_id, perpetrator_timeline_index):
 	Logger.debug("Player hit received: " + str(hit_player_id), "server")
-	emit_signal("player_hit", hit_player_id)
+	emit_signal("player_hit", hit_player_id, perpetrator_player_id, perpetrator_timeline_index)
 
 
-remote func receive_ghost_hit(hit_ghost_player_owner, hit_ghost_id):
-	Logger.debug("Ghost hit received: " + str(hit_ghost_id) + " of player " + str(hit_ghost_player_owner), "server")
-	emit_signal("ghost_hit", hit_ghost_player_owner, hit_ghost_id)
+remote func receive_ghost_hit(victim_player_id, victim_timeline_index, perpetrator_player_id, perpetrator_timeline_index):
+	Logger.debug("Ghost hit received: " + str(victim_timeline_index) + " of player " + str(victim_player_id), "server")
+	emit_signal("ghost_hit", victim_player_id, victim_timeline_index, perpetrator_player_id, perpetrator_timeline_index)
 
+remote func receive_quiet_ghost_hit(victim_player_id, victim_timeline_index, perpetrator_player_id, perpetrator_timeline_index):
+	Logger.debug("Quiet ghost hit received: " + str(victim_timeline_index) + " of player " + str(victim_player_id), "server")
+	emit_signal("quiet_ghost_hit", victim_player_id, victim_timeline_index, perpetrator_player_id, perpetrator_timeline_index)
 
 remote func receive_player_action(action_player_id, action_type):
 	Logger.debug("Other player action received: " + str(action_type), "server")

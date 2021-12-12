@@ -37,7 +37,7 @@ func reset():
 		_level.get_capture_points()[i].reset()
 
 
-func get_spawn_point(team_id, timeline_index) -> Vector3:
+func get_spawn_point(team_id, timeline_index) -> Node:
 	return _level.get_spawn_points(team_id)[timeline_index]
 
 

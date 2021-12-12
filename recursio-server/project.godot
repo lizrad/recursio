@@ -60,6 +60,16 @@ _global_script_classes=[ {
 "path": "res://Shared/Characters/GhostBase.gd"
 }, {
 "base": "Object",
+"class": "GhostDeathData",
+"language": "GDScript",
+"path": "res://Shared/Recording/GhostDeathData.gd"
+}, {
+"base": "Node",
+"class": "GhostManager",
+"language": "GDScript",
+"path": "res://Shared/GhostManager.gd"
+}, {
+"base": "Object",
 "class": "InputData",
 "language": "GDScript",
 "path": "res://Shared/Input/InputData.gd"
@@ -140,6 +150,8 @@ _global_script_class_icons={
 "GameRoomManager": "",
 "GameRoomWorld": "",
 "GhostBase": "",
+"GhostDeathData": "",
+"GhostManager": "",
 "InputData": "",
 "InputFrame": "",
 "Level": "",

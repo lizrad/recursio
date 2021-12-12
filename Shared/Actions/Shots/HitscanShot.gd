@@ -52,7 +52,7 @@ func handle_hit(collider):
 	
 	if character is CharacterBase:
 		assert(character.has_method("hit"))
-		character.hit()
+		character.hit(_owning_player)
 
 
 func _update_collision():
