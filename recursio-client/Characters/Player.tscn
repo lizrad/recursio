@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=2]
+[gd_scene load_steps=29 format=2]
 
 [ext_resource path="res://Shared/Characters/PlayerBase.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Characters/Player.gd" type="Script" id=2]
@@ -17,8 +17,10 @@
 [ext_resource path="res://Characters/PlayerInput.gd" type="Script" id=15]
 [ext_resource path="res://Resources/Meshes/wall_outline.obj" type="ArrayMesh" id=16]
 [ext_resource path="res://Resources/Audio/Effects/Fail.ogg" type="AudioStream" id=17]
+[ext_resource path="res://Characters/VisibilityVisualization.gd" type="Script" id=18]
 [ext_resource path="res://Characters/CharacterAudioPlayer.tscn" type="PackedScene" id=19]
 [ext_resource path="res://Characters/SettingAsciiRenderer.gd" type="Script" id=20]
+[ext_resource path="res://Resources/Meshes/torus.obj" type="ArrayMesh" id=21]
 
 [sub_resource type="CapsuleShape" id=2]
 height = 0.4
@@ -44,6 +46,13 @@ emission_on_uv2 = false
 [sub_resource type="SpatialMaterial" id=6]
 resource_local_to_scene = true
 flags_unshaded = true
+
+[sub_resource type="SpatialMaterial" id=7]
+flags_unshaded = true
+albedo_color = Color( 1, 0.168627, 0.121569, 1 )
+
+[sub_resource type="PrismMesh" id=8]
+size = Vector3( 1.2, 1.2, 0.1 )
 
 [node name="Player" instance=ExtResource( 1 )]
 script = ExtResource( 2 )
@@ -220,3 +229,17 @@ material/0 = null
 [node name="Listener" type="Listener" parent="KinematicBody" index="14"]
 
 [node name="CharacterAudioPlayer2" parent="KinematicBody" index="15" instance=ExtResource( 19 )]
+
+[node name="VisibilityVisualization" type="MeshInstance" parent="KinematicBody" index="16"]
+material_override = SubResource( 7 )
+cast_shadow = 0
+mesh = ExtResource( 21 )
+material/0 = null
+script = ExtResource( 18 )
+
+[node name="Arrow" type="MeshInstance" parent="KinematicBody/VisibilityVisualization" index="0"]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, -3 )
+material_override = SubResource( 7 )
+cast_shadow = 0
+mesh = SubResource( 8 )
+material/0 = null

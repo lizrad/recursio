@@ -32,8 +32,17 @@ func player_init(action_manager, round_manager) -> void:
 	emit_signal("initialized")
 
 
+func set_visibility_visualization_visible(is_visible):
+	$KinematicBody/VisibilityVisualization.visible = is_visible
+
+
+func set_visibility_visualization_enemy_position(enemy_pos):
+	$KinematicBody/VisibilityVisualization.looking_at = enemy_pos
+
+
 # OVERRIDE #
 func reset() -> void:
+	set_visibility_visualization_visible(false)
 	.reset()
 	clear_past_frames()
 	_hud.reset()
