@@ -110,8 +110,9 @@ func set_velocity(new_velocity):
 
 
 func set_timeline_index(new_timeline_index: int):
-	timeline_index = new_timeline_index
-	emit_signal("timeline_index_changed", new_timeline_index)
+	if timeline_index != new_timeline_index:
+		timeline_index = new_timeline_index
+		emit_signal("timeline_index_changed", new_timeline_index)
 
 func hit(perpetrator) -> void:
 	emit_signal("hit", perpetrator)

@@ -103,9 +103,11 @@ func set_block_player_input(blocked: bool) -> void:
 
 func set_timeline_index(player_id, timeline_index):
 	Logger.info("Setting timeline index for player "+str(player_id)+" to "+str(timeline_index),"ghost_picking")
-	player_dic[player_id].timeline_index = timeline_index
-	player_dic[player_id].spawn_point = _game_manager.get_spawn_point(player_dic[player_id].team_id, timeline_index).global_transform.origin
-	player_dic[player_id].move_to_spawn_point()
+	var player = player_dic[player_id]
+	player.timeline_index = timeline_index
+	player.spawn_point = _game_manager.get_spawn_point(player.team_id, timeline_index).global_transform.origin
+	player.move_to_spawn_point()	
+	propagate_player_picks()
 
 func propagate_player_picks():
 	Logger.info("Propagating timeline picks", "ghost_picking")
@@ -115,7 +117,7 @@ func propagate_player_picks():
 		for enemy_id in player_dic:
 			if enemy_id != player_id:
 				enemy_pick = player_dic[enemy_id].timeline_index
-		Server.send_ghost_pick(player_id, player_pick, enemy_pick)
+		Server.send_timeline_pick(player_id, player_pick, enemy_pick)
 
 func _on_player_hit(perpetrator, victim_player_id):
 	Logger.info("Player hit!", "attacking")
