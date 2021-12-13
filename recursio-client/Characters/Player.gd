@@ -15,6 +15,7 @@ onready var _aim_visuals = get_node("KinematicBody/AimVisuals")
 
 
 var hide_button_overlay: bool = false
+var block_switching: bool = false
 
 
 var _walls = []

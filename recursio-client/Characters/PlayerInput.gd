@@ -50,7 +50,7 @@ func _physics_process(_delta):
 		InputManager.close_current_input_frame()
 		InputManager.send_player_input_data_to_server()
 	elif cur_phase == RoundManager.Phases.PREPARATION:
-		if Input.is_action_just_pressed("player_switch"):
+		if Input.is_action_just_pressed("player_switch") && not _player.block_switching:
 			var timeline_index: int = (_player.timeline_index + 1) % (Constants.get_value("ghosts", "max_amount") + 1)
 			_player.timeline_index = timeline_index
 

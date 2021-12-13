@@ -3,10 +3,11 @@ class_name TutorialScenario_2
 
 var _player: Player
 var _enemy: Enemy
-
+var _enemyAI: EnemyAI
 
 func _ready():
 	_rounds = 3
+	_completion_delay = 2.0
 	add_round_start_function(funcref(self, "_started_round_1"))
 	add_round_condition_function(funcref(self, "_check_completed_round_1"))
 	add_round_end_function(funcref(self, "_completed_round_1"))
@@ -17,25 +18,32 @@ func _ready():
 	
 	add_round_start_function(funcref(self, "_started_round_3"))
 	add_round_condition_function(funcref(self, "_check_completed_round_3"))
-	add_round_end_function(funcref(self, "_completed_round_3"))
+	add_round_end_function(funcref(self, "_completed_round_3"))	
+	
 	
 	_character_manager._on_spawn_player(0, Vector3.ZERO, 0)
-	_character_manager.get_player().kb.visible = false
-	_character_manager.get_player().hide_button_overlay = true
+	_player = _character_manager.get_player()
+	
+	_player.kb.visible = false
+	_player.hide_button_overlay = true
+	_player.block_switching = true
+	
 	var spawn_point = _game_manager.get_spawn_point(1, 0).global_transform.origin
 	_character_manager._on_spawn_enemy(1, spawn_point, 1)
-	_character_manager.enemy_is_server_driven = false
-	_character_manager.get_enemy().kb.visible = false
-
-
-func _started_round_1():	
-	_toggle_ui(true)
-	_tutorial_text.typing_text = "This scenario will teach you about enemies. Try to capture the lower capture point again."
-	
-	_player = _character_manager.get_player()
 	_enemy = _character_manager.get_enemy()
 	
-	_player.follow_camera()
+	_character_manager.enemy_is_server_driven = false
+	_enemy.kb.visible = false
+
+
+func _started_round_1():
+	
+	yield(get_tree().create_timer(2), "timeout")
+	
+	_toggle_ui(true)
+	_tutorial_text.typing_text = "This scenario will teach you about enemies."
+	
+	
 	_player.kb.visible = true
 	_player.block_movement = true
 	_player.block_input = true
@@ -45,20 +53,26 @@ func _started_round_1():
 	_player.connect("client_hit", self, "_on_player_hit")
 	_enemy.connect("client_hit", self, "_on_enemy_hit")
 	
-	var enemyAI: EnemyAI = EnemyAI.new(_enemy)
-	enemyAI.add_waypoint(Vector2(-12, 8))
-	enemyAI.add_waypoint(Vector2(-5, 5))
+	_enemyAI = EnemyAI.new(_enemy)
+	_enemyAI.add_waypoint(Vector2(-12, 8))
+	_enemyAI.add_waypoint(Vector2(-5, 5))
 	
-	enemyAI.set_character_to_shoot(_player)
+	_enemyAI.set_character_to_shoot(_player)
 	
-	add_child(enemyAI)
-	enemyAI.start()
+	add_child(_enemyAI)
+	_enemyAI.start()
 	
 	_character_manager._round_manager._start_game()
 	_player.block_movement = true
 	yield(_tutorial_text, "typing_completed")
+	yield(_round_manager, "game_phase_started")
+	_player.block_movement = true
+	
+	_tutorial_text.typing_text = "Try to capture the lower capture point again."
+	yield(_tutorial_text, "typing_completed")
+	yield(get_tree().create_timer(2), "timeout")
 	_player.block_movement = false
-	yield(get_tree().create_timer(3), "timeout")
+	yield(get_tree().create_timer(2), "timeout")
 	_toggle_ui(false)
 	
 	# Wait until player gets hit
@@ -84,14 +98,21 @@ func _check_completed_round_1() -> bool:
 
 func _completed_round_1() -> void:
 	_level.get_capture_points()[1]._capture_progress = 1.0
+	_enemyAI.stop()
+
+
+func _started_round_2() -> void:
+	_toggle_ui(true)
+	_tutorial_text.typing_text = "Good job!"
+	yield(_tutorial_text, "typing_completed")
+	yield(get_tree().create_timer(2), "timeout")
+	
 	_character_manager._round_manager.round_index += 1
 	_character_manager._round_manager.switch_to_phase(RoundManager.Phases.PREPARATION)
 	_enemy.kb.visible = false
 	_player.kb.visible = false
 	_player.block_movement = true
-
-
-func _started_round_2() -> void:
+	
 	for ghost in _ghost_manager._ghosts:
 		if ghost.team_id == 0:
 			ghost.connect("client_hit", self, "_on_ghost_hit_soft_lock", [ghost])
