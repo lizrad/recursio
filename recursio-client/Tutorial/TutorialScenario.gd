@@ -79,4 +79,4 @@ func add_round_end_function(round_end_function: FuncRef):
 
 
 func _toggle_ui(show: bool) -> void:
-	_tutorial_text.visible = show if show_ui else false
+	$TutorialUI.visible = show if show_ui else false

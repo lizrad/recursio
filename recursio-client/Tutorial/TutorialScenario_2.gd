@@ -55,7 +55,6 @@ func _started_round_1():
 	enemyAI.start()
 	
 	_character_manager._round_manager._start_game()
-	_character_manager._round_manager.switch_to_phase(RoundManager.Phases.GAME)
 	_player.block_movement = true
 	yield(_tutorial_text, "typing_completed")
 	_player.block_movement = false
