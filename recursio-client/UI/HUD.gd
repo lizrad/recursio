@@ -61,11 +61,14 @@ func _process(_delta):
 	else:
 		_timer_pb.tint_progress = Color.white
 
+
 # Calculates the remaining time and maps it between 0 and 1
 func _calculate_progress() -> float:
 	if _max_time <= 0:
 		return 0.0
+
 	return _round_manager.get_current_phase_time_left() / 1000.0 / _max_time
+
 
 func prep_phase_start(round_index) -> void:
 	_phase.text = "Preparation Phase " + str(round_index + 1)
@@ -73,9 +76,14 @@ func prep_phase_start(round_index) -> void:
 	_dash.visible = true
 	_ammo.visible = true
 
+	# TODO: this should be set explicit from outside in dash actions
+	update_special_movement_ammo(2)
+
+
 func countdown_phase_start() -> void:
 	_phase.text = "Get ready!"
 	_max_time = Constants.get_value("gameplay", "countdown_phase_seconds")
+
 
 func game_phase_start(round_index) -> void:
 	_phase.text = "Game Phase " + str(round_index + 1)
