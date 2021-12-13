@@ -11,8 +11,14 @@ var _text := ""
 
 func update_text(sec) -> void:
 	var text = str(sec) if sec > 0 else "GO!"
+	
 	if _text != text:
 		_text = text
+		
+		if sec > 0:
+			$ProgressSound.play()
+		else:
+			$GoSound.play()
 
 		$CountdownText.text = text
 		$Tween.interpolate_property($CountdownText, "rect_scale", Vector2.ONE, Vector2.ONE*scale_mod, scale_time, Tween.TRANS_LINEAR, Tween.EASE_IN)

@@ -1,7 +1,9 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://Resources/Fonts/Large.tres" type="DynamicFont" id=1]
 [ext_resource path="res://UI/CountdownScreen.gd" type="Script" id=2]
+[ext_resource path="res://Resources/Audio/UI/Countdown_Progress.ogg" type="AudioStream" id=3]
+[ext_resource path="res://Resources/Audio/UI/Countdown_Last.ogg" type="AudioStream" id=4]
 
 [node name="CountdownScreen" type="Control"]
 anchor_right = 1.0
@@ -31,3 +33,13 @@ __meta__ = {
 }
 
 [node name="Tween" type="Tween" parent="."]
+
+[node name="ProgressSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 3 )
+volume_db = -28.0
+bus = "Effects"
+
+[node name="GoSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 4 )
+volume_db = -28.0
+bus = "Effects"

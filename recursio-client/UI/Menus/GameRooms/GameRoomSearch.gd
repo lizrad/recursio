@@ -22,7 +22,7 @@ func _ready():
 	var _error = _room_filter.connect("text_changed", self, "_on_filter_text_changed")
 
 	_error = _btn_create_room.connect("pressed", self, "_on_create_game_room_pressed")
-	_error = _btn_refresh_game_rooms.connect("pressed", self, "_on_send_get_game_rooms")
+	_error = _btn_refresh_game_rooms.connect("pressed", self, "_on_refresh_pressed")
 	_error = _btn_back.connect("pressed", self, "_on_back_pressed")
 	_error = _btn_join_game_room.connect("pressed", self, "_on_join_game_room_pressed")
 
@@ -80,6 +80,11 @@ func _on_filter_text_changed(_new_text) -> void:
 
 func _on_create_game_room_pressed() -> void:
 	emit_signal("btn_create_game_room_pressed")
+
+
+func _on_refresh_pressed() -> void:
+	get_parent().get_parent().get_node("ClickSound").play()
+	_on_send_get_game_rooms()
 
 
 func _on_send_get_game_rooms() -> void:
