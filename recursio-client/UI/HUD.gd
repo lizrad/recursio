@@ -38,8 +38,8 @@ func pass_round_manager(round_manager):
 
 
 func _ready() -> void:
-	if not $Tween.is_connected("tween_completed", self, "_on_tween_completed"):
-		$Tween.connect("tween_completed", self, "_on_tween_completed")
+	if not $Tween.is_connected("tween_all_completed", self, "_on_tween_completed"):
+		$Tween.connect("tween_all_completed", self, "_on_tween_completed")
 
 	reset()
 
@@ -173,11 +173,12 @@ func animate_weapon_selection(pos: Vector2) -> void:
 	_ammo_type_animation.texture = _ammo_type.texture
 	_ammo_type_animation.visible = true
 	Logger.info("starting tween", "Tween")
-	$Tween.interpolate_property(_ammo_type_animation, "rect_position", pos, _ammo_type.rect_global_position, tween_time, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
+	$Tween.interpolate_property(_ammo_type_animation, "rect_position", pos, _ammo_type.rect_global_position, tween_time, Tween.TRANS_CUBIC, Tween.EASE_IN_OUT)
 	# TODO: is there a opacity for controls?
 	$Tween.interpolate_property(_ammo_type_animation, "visible", true, false, 2*tween_time, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
 	$Tween.start()
 
 
-func _on_tween_completed(object: Object, key: NodePath) -> void:
-	$AnimationPlayer.play("select_weapon")
+func _on_tween_completed() -> void:
+	if not $AnimationPlayer.is_playing():
+		$AnimationPlayer.play("select_weapon")
