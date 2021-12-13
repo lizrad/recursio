@@ -2,6 +2,7 @@ extends Node
 class_name TutorialScenario
 
 signal ui_toggled(show)
+signal scenario_completed()
 
 # Number of rounds in this scenario
 var _rounds: int = 0
@@ -31,6 +32,7 @@ func _process(delta):
 	if _current_round >= _rounds:
 		queue_free()
 		set_process(false)
+		emit_signal("scenario_completed")
 		return
 	
 	# Call round start for new round

@@ -2,7 +2,6 @@ extends PlayerBase
 class_name Player
 
 signal initialized()
-signal client_hit()
 
 onready var _hud: HUD = get_node("KinematicBody/HUD")
 onready var _light_viewport = get_node("KinematicBody/LightViewport")
@@ -240,8 +239,9 @@ func toggle_visibility_light(value: bool):
 
 
 # OVERRIDE #
+# Only emit signal for client
 func hit(perpetrator):
-	emit_signal("client_hit")
+	emit_signal("client_hit", perpetrator)
 
 
 # call hit of baseclass triggered by server

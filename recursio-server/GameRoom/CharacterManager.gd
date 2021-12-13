@@ -111,6 +111,7 @@ func propagate_player_picks():
 	Logger.info("Propagating timeline picks", "ghost_picking")
 	for player_id in player_dic:
 		var player_pick = player_dic[player_id].timeline_index
+		player_dic[player_id].set_record_data_timestamp(Server.get_server_time())
 		var enemy_pick
 		for enemy_id in player_dic:
 			if enemy_id != player_id:

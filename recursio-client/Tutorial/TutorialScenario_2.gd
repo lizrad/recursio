@@ -92,6 +92,13 @@ func _completed_round_1() -> void:
 
 
 func _started_round_2() -> void:
+	for ghost in _ghost_manager._ghosts:
+		if ghost.team_id == 0:
+			ghost.connect("client_hit", self, "_on_ghost_hit_soft_lock", [ghost])
+		else:
+			ghost.connect("client_hit", self, "_on_ghost_hit", [ghost])
+	
+	
 	_toggle_ui(true)
 	_tutorial_text.typing_text = "Now watch what happens with your ghost."
 	
@@ -116,8 +123,14 @@ func _started_round_3() -> void:
 	
 	yield(_tutorial_text, "typing_completed")
 	yield(get_tree().create_timer(2), "timeout")
+	_toggle_ui(true)
+	_tutorial_text.typing_text = "This round, instead of shooting, you can place 2 walls. Ghosts that touch these walls die."
+	_character_manager._round_manager.switch_to_phase(RoundManager.Phases.PREPARATION)
+	_player.kb.visible = true
+	yield(_tutorial_text, "typing_completed")
+	yield(get_tree().create_timer(2), "timeout")	
 	
-	_tutorial_text.typing_text = "Try to capture both points by rescuing your ghost."
+	_tutorial_text.typing_text = "Try to capture both points by rescuing your ghost!"
 	yield(_tutorial_text, "typing_completed")
 	yield(get_tree().create_timer(2), "timeout")
 	
@@ -137,13 +150,23 @@ func _completed_round_3() -> void:
 	_tutorial_text.typing_text = "Good job!"
 
 
-func _on_enemy_hit():
-	_enemy.server_hit(_player)
+func _on_player_hit(perpetrator):
+	_player.server_hit(perpetrator)
 
 
-func _on_player_hit():
-	_player.server_hit(_enemy)
+func _on_enemy_hit(perpetrator):
+	_enemy.server_hit(perpetrator)
 
 
+func _on_ghost_hit(perpetrator, ghost: Ghost):
+	ghost.server_hit(perpetrator)
 
 
+func _on_ghost_hit_soft_lock(perpetrator, ghost: Ghost):
+	ghost.server_hit(perpetrator)
+	_toggle_ui(true)
+	_tutorial_text.typing_text = "Oh no, your ghost died! Try again."
+	yield(_tutorial_text, "typing_completed")
+	yield(get_tree().create_timer(2), "timeout")
+	_toggle_ui(false)
+	_character_manager._round_manager.switch_to_phase(RoundManager.Phases.PREPARATION)

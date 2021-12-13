@@ -141,6 +141,8 @@ func _on_countdown_phase_started() -> void:
 		Server.send_timeline_pick(_player.timeline_index)
 
 func _on_game_phase_started() -> void:
+	_player.set_record_data_timestamp(Server.get_server_time())
+	_enemy.set_record_data_timestamp(Server.get_server_time())
 	_player.block_movement = false
 	_enemy.block_movement = false
 	_player.set_overview_light_enabled(false)
