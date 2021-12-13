@@ -1,14 +1,6 @@
 extends TutorialScenario
 class_name TutorialScenario_1
 
-var _character_manager: CharacterManager
-var _level: Level
-
-
-func _init(tutorial_text, character_manager, level).(tutorial_text):
-	_character_manager = character_manager
-	_level = level
-
 
 func _ready():
 	_rounds = 2
@@ -20,12 +12,17 @@ func _ready():
 	add_round_condition_function(funcref(self, "_check_completed_round_2"))
 	add_round_end_function(funcref(self, "_completed_round_2"))
 	
-	start()
+	_character_manager._on_spawn_player(0, Vector3.ZERO, 0)
+	_character_manager.get_player().kb.visible = false
+	_character_manager.get_player().hide_button_overlay = true
+	var spawn_point = _game_manager.get_spawn_point(1, 0).global_transform.origin
+	_character_manager._on_spawn_enemy(1, spawn_point, 1)
+	_character_manager.enemy_is_server_driven = false
+	_character_manager.get_enemy().kb.visible = false
 
 
-func _started_round_1():
+func _started_round_1():	
 	_toggle_ui(true)
-
 	_tutorial_text.typing_text = "Welcome to the tutorial!"
 	
 	yield(_tutorial_text, "typing_completed")

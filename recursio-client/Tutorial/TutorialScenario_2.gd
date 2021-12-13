@@ -1,18 +1,8 @@
 extends TutorialScenario
 class_name TutorialScenario_2
 
-var _character_manager: CharacterManager
-var _ghost_manager: ClientGhostManager
-var _level: Level
-
 var _player: Player
 var _enemy: Enemy
-
-
-func _init(tutorial_text, character_manager, ghost_manager, level).(tutorial_text):
-	_character_manager = character_manager
-	_ghost_manager = ghost_manager
-	_level = level
 
 
 func _ready():
@@ -28,9 +18,17 @@ func _ready():
 	add_round_start_function(funcref(self, "_started_round_3"))
 	add_round_condition_function(funcref(self, "_check_completed_round_3"))
 	add_round_end_function(funcref(self, "_completed_round_3"))
+	
+	_character_manager._on_spawn_player(0, Vector3.ZERO, 0)
+	_character_manager.get_player().kb.visible = false
+	_character_manager.get_player().hide_button_overlay = true
+	var spawn_point = _game_manager.get_spawn_point(1, 0).global_transform.origin
+	_character_manager._on_spawn_enemy(1, spawn_point, 1)
+	_character_manager.enemy_is_server_driven = false
+	_character_manager.get_enemy().kb.visible = false
 
 
-func _started_round_1():
+func _started_round_1():	
 	_toggle_ui(true)
 	_tutorial_text.typing_text = "This scenario will teach you about enemies. Try to capture the lower capture point again."
 	
@@ -89,6 +87,9 @@ func _completed_round_1() -> void:
 	_level.get_capture_points()[1]._capture_progress = 1.0
 	_character_manager._round_manager.round_index += 1
 	_character_manager._round_manager.switch_to_phase(RoundManager.Phases.PREPARATION)
+	_enemy.kb.visible = false
+	_player.kb.visible = false
+	_player.block_movement = true
 
 
 func _started_round_2() -> void:
@@ -105,8 +106,6 @@ func _started_round_2() -> void:
 	_level.get_capture_points()[1]._capture_progress = 0.0
 	yield(get_tree().create_timer(_character_manager._round_manager._preparation_phase_time + 0.1), "timeout")
 	_player.move_camera_to_overview()
-	_player.block_movement = true
-	_player.kb.visible = false
 
 
 func _check_completed_round_2() -> bool:
@@ -127,6 +126,7 @@ func _started_round_3() -> void:
 	_tutorial_text.typing_text = "This round, instead of shooting, you can place 2 walls. Ghosts that touch these walls die."
 	_character_manager._round_manager.switch_to_phase(RoundManager.Phases.PREPARATION)
 	_player.kb.visible = true
+	_enemy.kb.visible = true
 	yield(_tutorial_text, "typing_completed")
 	yield(get_tree().create_timer(2), "timeout")	
 	
@@ -159,6 +159,8 @@ func _on_enemy_hit(perpetrator):
 
 
 func _on_ghost_hit(perpetrator, ghost: Ghost):
+	if ghost is PlayerGhost:
+		ghost.toggle_visible_light = false
 	ghost.server_hit(perpetrator)
 
 

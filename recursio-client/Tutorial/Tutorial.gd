@@ -1,59 +1,42 @@
-extends Spatial
+extends Control
+class_name Tutorial
 
+signal scenario_completed()
+signal btn_back_pressed()
 
-enum Phases {
-	ROUND1,
-	ROUND2,
-	DONE
-}
+export(Array, PackedScene) var tutorial_scenes: Array = []
 
-var current_phase = Phases.ROUND1
-var show_ui = true
-
-var _character_manager: CharacterManager
-
-func set_ui_visible(is_visible):
-	$TutorialUI.visible = is_visible if show_ui else false
+onready var _btn_tutorial_1: Button = get_node("TutorialMenu/Tutorial1")
+onready var _btn_tutorial_2: Button = get_node("TutorialMenu/Tutorial2")
+onready var _btn_back: Button = get_node("TutorialMenu/Btn_Back")
 
 
 func _ready():
-	_character_manager = get_node("CharacterManager")
-	var tutorial_text = get_node("TutorialUI/PanelContainer/TutorialText")
-	var ghost_manager: ClientGhostManager = get_node("CharacterManager/GhostManager")
-	var game_manager: GameManager = get_node("CharacterManager/GameManager")
-	var round_manager: RoundManager = get_node("CharacterManager/RoundManager")
-	var action_manager: ActionManager =  get_node("CharacterManager/ActionManager")
-	
-	var level = get_node("LevelH")
-	_character_manager._game_manager.set_level(level)
-	var scenario1: TutorialScenario_2 = TutorialScenario_2.new(tutorial_text, _character_manager, ghost_manager, level)
-	scenario1.connect("ui_toggled", self, "set_ui_visible")
-	scenario1.connect("scenario_completed", self, "on_scenario_completed")
-	
-	add_child(scenario1)
-	
-	_character_manager._on_spawn_player(0, Vector3.ZERO, 0)
-	_character_manager.get_player().kb.visible = false
-	_character_manager.get_player().hide_button_overlay = true
-	var spawn_point = game_manager.get_spawn_point(1, 0).global_transform.origin
-	_character_manager._on_spawn_enemy(1, spawn_point, 1)
-	_character_manager.enemy_is_server_driven = false
-	_character_manager.get_enemy().kb.visible = false
-	
-	ghost_manager.init(game_manager, round_manager, action_manager, _character_manager)
-	
-	scenario1.start()
+	_btn_tutorial_1.connect("pressed", self, "start_scenario", [0])
+	_btn_tutorial_2.connect("pressed", self, "start_scenario", [1])
+	_btn_back.connect("pressed", self, "_on_back_pressed")
 
 
-func _process(delta):
-	if _character_manager._round_manager.get_current_phase() == RoundManager.Phases.GAME:
-		_character_manager._round_manager._phase_deadline += delta * 1000
+func start_scenario(scenario_index) -> void:
+	_btn_tutorial_1.disabled = true
+	_btn_tutorial_2.disabled = true
+	var scenario: TutorialScenario = tutorial_scenes[scenario_index].instance()
+	add_child(scenario)
+	scenario.init()
+	
+	scenario.connect("scenario_completed", self, "on_scenario_completed")
+	
+	scenario.start()
 
 
 func on_scenario_completed() -> void:
-	yield(get_tree().create_timer(2.0), "timeout")
-	get_tree().change_scene("res://UI/Menus/StartMenu.tscn")
+	_btn_tutorial_1.disabled = false
+	_btn_tutorial_2.disabled = false
+	emit_signal("scenario_completed")
 
+
+func _on_back_pressed() -> void:
+	emit_signal("btn_back_pressed")
 
 
 
