@@ -110,6 +110,15 @@ func set_timeline_index(player_id, timeline_index):
 
 
 func _on_player_timeline_changed(timeline_index, picking_player_id):
+	_propagate_timeline_pick(timeline_index, picking_player_id)
+
+
+func propagate_current_timelines():
+	for player_id in player_dic:
+		_propagate_timeline_pick(player_dic[player_id].timeline_index, player_id)
+
+
+func _propagate_timeline_pick(timeline_index, picking_player_id):
 	for client_id in player_dic:
 		Server.send_timeline_pick(client_id, picking_player_id, timeline_index)
 
