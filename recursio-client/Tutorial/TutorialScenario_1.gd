@@ -4,6 +4,7 @@ class_name TutorialScenario_1
 
 func _ready():
 	_rounds = 2
+	_completion_delay = 2.0
 	add_round_start_function(funcref(self, "_started_round_1"))
 	add_round_condition_function(funcref(self, "_check_completed_round_1"))
 	add_round_end_function(funcref(self, "_completed_round_1"))

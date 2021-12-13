@@ -9,8 +9,8 @@ var _waypoints := []
 var _current_waypoint: int = 0
 
 var _character_to_shoot: CharacterBase
-var _shoot_timer: float = 2.0
-var _shoot_cooldown: float = 3.0
+var _shoot_timer: float = 1.0
+var _shoot_cooldown: float = 2.0
 var _rotation_lerp: float = 0.1
 
 var _is_running: bool = false
@@ -57,6 +57,10 @@ func _physics_process(delta):
 
 func start() -> void:
 	_is_running = true
+
+
+func stop() -> void:
+	_is_running = false
 
 
 func add_waypoint(position: Vector2) -> void:

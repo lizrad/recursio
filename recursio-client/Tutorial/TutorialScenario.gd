@@ -10,6 +10,8 @@ var _rounds: int = 0
 # Currently active round in this scenario
 var _current_round: int = 0
 
+var _completion_delay: float = 0
+
 var _round_starts := []
 var _round_conditions := []
 var _round_ends := []
@@ -49,9 +51,8 @@ func _process(delta):
 	
 	# Are we done with the scenario?
 	if _current_round >= _rounds:
-		queue_free()
 		set_process(false)
-		emit_signal("scenario_completed")
+		_completed()
 		return
 	
 	# Call round start for new round
@@ -80,3 +81,9 @@ func add_round_end_function(round_end_function: FuncRef):
 
 func _toggle_ui(show: bool) -> void:
 	$TutorialUI.visible = show if show_ui else false
+
+
+func _completed() -> void:
+	yield(get_tree().create_timer(_completion_delay), "timeout")
+	emit_signal("scenario_completed")
+	queue_free()
