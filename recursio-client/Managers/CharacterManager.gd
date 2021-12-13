@@ -50,7 +50,7 @@ func _ready():
 	_error = Server.connect("world_state_received", self, "_on_world_state_received") 
 	_error = Server.connect("player_hit", self, "_on_player_hit") 
 
-	_error = Server.connect("timeline_picks", self, "_on_timeline_picks") 
+	_error = Server.connect("timeline_pick", self, "_on_timeline_pick") 
 
 	_error = Server.connect("capture_point_captured", self, "_on_capture_point_captured") 
 	_error = Server.connect("capture_point_capture_lost", self, "_on_capture_point_capture_lost")
@@ -204,9 +204,9 @@ func _on_enemy_timeline_changed(timeline_index) -> void:
 	_ghost_manager.refresh_active_ghosts()
 	_ghost_manager.refresh_path_select()
 
-func _on_timeline_picks(player_pick, enemy_pick):
-	_enemy.timeline_index = enemy_pick
-	_player.timeline_index = player_pick
+func _on_timeline_pick(picking_player_id, timeline_index):
+	var character = _player if _player.player_id == picking_player_id else _enemy
+	character.timeline_index = timeline_index
 	_ghost_manager.refresh_active_ghosts()
 	_ghost_manager.refresh_path_select()
 
