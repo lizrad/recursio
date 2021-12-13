@@ -119,6 +119,7 @@ func _on_preparation_phase_started() -> void:
 	var next_timeline_index = min(_round_manager.round_index, _max_timelines)
 	_player.timeline_index = next_timeline_index
 	_enemy.timeline_index = next_timeline_index
+	_enemy.spawn_point = _game_manager.get_spawn_point(_enemy.team_id, _enemy.timeline_index).global_transform.origin
 	_enemy.move_to_spawn_point()
 
 func _on_countdown_phase_started() -> void:

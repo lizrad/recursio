@@ -33,28 +33,34 @@ func _started_round_1():
 		
 	_character_manager.get_player().follow_camera()
 	_character_manager.get_player().kb.visible = true
+	_character_manager.get_player().block_movement = true
+	_character_manager.get_player().block_input = true
 	_character_manager.get_enemy().kb.visible = true
-	_character_manager.get_enemy().move_to_spawn_point()
+	_character_manager.get_enemy().block_movement = false
+	
+	_character_manager.get_player().connect("client_hit", self, "_on_player_hit")
+	_character_manager.get_enemy().connect("client_hit", self, "_on_enemy_hit")
 	
 	var enemyAI: EnemyAI = EnemyAI.new(_character_manager.get_enemy())
-	enemyAI.add_waypoint(Vector3(-12, 0, 8))
-	enemyAI.add_waypoint(Vector3(-5, 0, 5))
-	enemyAI.add_waypoint(Vector3(-8, 0, 9))
-	enemyAI.add_waypoint(Vector3(-12, 0, 8))
-	enemyAI.add_waypoint(Vector3(-15, 0, 4))
+	enemyAI.add_waypoint(Vector2(-12, 8))
+	enemyAI.add_waypoint(Vector2(-5, 5))
+	
+	enemyAI.set_character_to_shoot(_character_manager.get_player())
 	
 	add_child(enemyAI)
 	enemyAI.start()
 	
 	_character_manager._round_manager._start_game()
 	_character_manager._round_manager.switch_to_phase(RoundManager.Phases.GAME)
-	
+	_character_manager.get_player().block_movement = true
 	yield(_tutorial_text, "typing_completed")
+	_character_manager.get_player().block_movement = false
 	yield(get_tree().create_timer(3), "timeout")
 	_toggle_ui(false)
 	
 	# Wait until player gets hit
-	yield(_character_manager.get_player(), "hit")
+	yield(_character_manager.get_player(), "client_hit")
+	_character_manager.get_player().block_input = false
 	
 	_toggle_ui(true)
 	_tutorial_text.typing_text = "When a player gets hit, he will be send back to the spawnpoint."
@@ -125,8 +131,12 @@ func _completed_round_3() -> void:
 	_tutorial_text.typing_text = "Good job!"
 
 
+func _on_enemy_hit():
+	_character_manager.get_enemy().server_hit(_character_manager.get_player())
 
 
+func _on_player_hit():
+	_character_manager.get_player().server_hit(_character_manager.get_enemy())
 
 
 
