@@ -57,6 +57,10 @@ func _ready():
 	add_child(_death_timer)
 	add_child(_spawn_timer)
 
+func _physics_process(delta):
+	#locking y to stop physics translation pushing characters into the ground/air
+	kb.transform.origin.y = 0
+
 func _process(delta):
 	if _spawn_imminent:
 		_spawn_deadline -= delta
