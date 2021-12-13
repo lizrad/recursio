@@ -3,11 +3,14 @@ class_name HUD
 
 onready var _timer_pb: TextureProgress = get_node("TimerProgressBar")
 onready var _phase = get_node("Phase")
-onready var _ammo = get_node("WeaponAmmo")
+onready var _ammo: Label= get_node("WeaponAmmo")
 onready var _ammo_type_bg = get_node("WeaponAmmo/WeaponTypeBG")
 onready var _ammo_type = get_node("WeaponAmmo/WeaponType")
-onready var _dash = get_node("DashAmmo")
+onready var _dash: Label = get_node("DashAmmo")
 onready var _capture_point_hb = get_node("TimerProgressBar/CapturePoints")
+onready var _ammo_type_animation = get_node("TextureRect")
+
+onready var tween_time := 1.5
 
 var _round_manager
 
@@ -26,19 +29,27 @@ enum {
 	Prep_Phase,
 	Game_Phase
 }
+
 var _max_time := -1.0
+
 
 func pass_round_manager(round_manager):
 	_round_manager = round_manager
 
+
 func _ready() -> void:
+	if not $Tween.is_connected("tween_completed", self, "_on_tween_completed"):
+		$Tween.connect("tween_completed", self, "_on_tween_completed")
+
 	reset()
+
 
 func reset():
 	_phase.text = "Waiting for game to start..."
 	_max_time = -1.0
 	_dash.visible = false
 	_ammo.visible = false
+
 
 func _process(_delta):
 	var val = _calculate_progress()
@@ -74,15 +85,21 @@ func game_phase_start(round_index) -> void:
 func update_fire_action_ammo(amount: int) -> void:
 	Logger.info("Set fire ammo to: " + str(amount), "HUD")
 	_ammo.text = str(amount)
+	# mark ammo ui red -> is reset to weapon depending color in update_weapon_type
+	if amount < 1:
+		_ammo.set("custom_colors/font_color", Color.red)
+		_ammo_type_bg.modulate = Color.red
 
 
 func update_special_movement_ammo(amount: int) -> void:
 	Logger.info("Set special movement ammo to: " + str(amount), "HUD")
+	_dash.set("custom_colors/font_color", Color.white if amount > 0 else Color.red)
 	_dash.text = str(amount)
 
 
 func update_weapon_type(img_bullet, color) -> void:
 	Logger.info("Update ammo type", "HUD")
+	_ammo.set("custom_colors/font_color", Color.white)
 	_ammo_type_bg.modulate = color
 	_ammo_type.texture = img_bullet
 
@@ -121,3 +138,38 @@ func update_capture_point(capture_point_id, progress, team) -> void:
 
 func set_spawn_points(spawn_points):
 	_spawn_points = spawn_points
+
+
+func get_active_spawn_point() -> SpawnPoint:
+	for spawn_point in _spawn_points:
+		if spawn_point.has_node("SpawnPoint"):
+			var spawn = spawn_point.get_node("SpawnPoint") as SpawnPoint
+			if spawn.active:
+				return spawn
+
+	return null
+
+
+# visual effect for showing insufficient ammo
+# TODO: apply for dash too
+func wobble_ammo() -> void:
+	if not $AnimationPlayer.is_playing():
+		$AnimationPlayer.play("no_ammo")
+
+
+func animate_weapon_selection(pos: Vector2) -> void:
+	if $Tween.is_active():
+		Logger.info("not restarting tween", "Tween")
+		return
+
+	_ammo_type_animation.texture = _ammo_type.texture
+	_ammo_type_animation.visible = true
+	Logger.info("starting tween", "Tween")
+	$Tween.interpolate_property(_ammo_type_animation, "rect_position", pos, _ammo_type.rect_global_position, tween_time, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
+	# TODO: is there a opacity for controls?
+	$Tween.interpolate_property(_ammo_type_animation, "visible", true, false, 2*tween_time, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
+	$Tween.start()
+
+
+func _on_tween_completed(object: Object, key: NodePath) -> void:
+	$AnimationPlayer.play("select_weapon")

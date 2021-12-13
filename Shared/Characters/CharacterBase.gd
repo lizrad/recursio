@@ -121,13 +121,15 @@ func hit(perpetrator) -> void:
 func quiet_hit(perpetrator) -> void:
 	set_dying(true)
 
+
 func set_dying(new_dying_status: bool):
-	Logger.info("Setting currently_dying to "+str(new_dying_status)+".", "death_and_spawn")
+	Logger.info("Setting currently_dying to " + str(new_dying_status) + ".", "death_and_spawn")
 	currently_dying = new_dying_status
 	if currently_dying:
 		_collision_shape.disabled = true
 		_death_timer.start()
 		emit_signal("dying")
+
 
 func _on_death_timer_timeout():
 	Logger.info("Death timer timeout.", "death_and_spawn")
@@ -135,21 +137,25 @@ func _on_death_timer_timeout():
 	if _auto_respawn_on_death:
 		set_spawning(true)
 
+
 func set_spawning(new_spawning_status: bool):
-	Logger.info("Setting currently_spawning to "+str(new_spawning_status)+".", "death_and_spawn")
+	Logger.info("Setting currently_spawning to " + str(new_spawning_status) + ".", "death_and_spawn")
 	currently_spawning = new_spawning_status
 	if currently_spawning:
 		move_to_spawn_point()
 		_spawn_timer.start()
 		emit_signal("spawning")
 
+
 func _on_spawn_timer_timeout():
 	Logger.info("Spawn timer timeout.", "death_and_spawn")
 	_collision_shape.disabled = false
 	set_spawning(false)
 
+
 func toggle_animation(value):
 	emit_signal("animation_status_changed", value)
+
 
 func trigger_actions(buttons: int) -> void:
 	if currently_dying or currently_spawning:
@@ -186,15 +192,19 @@ func _get_action(trigger, action_timeline_index):
 
 	return _actions[id]
 
+
 func get_body():
 	return kb
+
 
 func wall_spawned(_wall):
 	pass
 
+
 func visual_delayed_spawn(delay: float):
 	_spawn_imminent = true
 	_spawn_deadline = delay
+
 
 func visual_kill():
 	emit_signal("dying")
@@ -206,6 +216,7 @@ func visual_kill():
 # (eg. when dead ghost appear again during the prep phase)
 func non_vfx_spawn():
 	emit_signal("non_vfx_spawn")
+
 
 func is_collision_active() -> bool:
 	return !_collision_shape.disabled

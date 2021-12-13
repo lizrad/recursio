@@ -4,6 +4,8 @@ class_name SpawnPoint
 var _tex_wall = preload("res://Resources/Icons/wall.png")
 var _tex_bullet = preload("res://Resources/Icons/bullet.png")
 
+export var active = false
+
 # TODO: use ctor
 func set_type(type) -> void:
 	var idx_wall = Constants.get_value("ghosts", "wall_placing_timeline_index")
@@ -20,6 +22,7 @@ func rotate_ui(degrees) -> void:
 
 
 func set_active(value) -> void:
+	active = value
 	$SpriteArea.modulate = Color(Constants.get_value("colors", "selection")) if value else Color.yellow
 	$SpriteType.material_override.set_shader_param("is_greyscale", !value)
 
