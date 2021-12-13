@@ -7,6 +7,7 @@ onready var _action_manager: ActionManager = get_node("ActionManager")
 onready var _game_manager: GameManager = get_node("GameManager")
 onready var _round_manager: RoundManager = get_node("RoundManager")
 onready var _ghost_manager: GhostManager = get_node("GhostManager")
+onready var _visibility_checker: VisibilityChecker = get_node("VisibilityChecker")
 
 # Scenes for instanciating 
 var _player_scene = preload("res://Characters/Player.tscn")
@@ -175,6 +176,9 @@ func _on_countdown_phase_started() -> void:
 	
 
 func _on_game_phase_started() -> void:
+	_visibility_checker.set_player(_player)
+	_visibility_checker.set_enemies(_enemy, _ghost_manager._enemy_ghosts)
+	
 	_player.block_movement = false
 	_player.set_overview_light_enabled(false)
 	_toggle_visbility_lights(true)

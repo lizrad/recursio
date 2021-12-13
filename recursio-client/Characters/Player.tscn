@@ -228,6 +228,7 @@ material/0 = null
 [node name="CharacterAudioPlayer2" parent="KinematicBody" index="15" instance=ExtResource( 19 )]
 
 [node name="VisibilityVisualization" type="MeshInstance" parent="KinematicBody" index="16"]
+transform = Transform( 0.01, 0, 0, 0, 0.01, 0, 0, 0, 0.01, 0, 0, 0 )
 material_override = SubResource( 7 )
 cast_shadow = 0
 mesh = ExtResource( 21 )
