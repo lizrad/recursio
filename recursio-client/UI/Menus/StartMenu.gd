@@ -133,6 +133,7 @@ func _on_play_local() -> void:
 
 func _on_open_settings() -> void:
 	$CenterContainer/SettingsContainer.show()
+	$CenterContainer/SettingsContainer.connect("visibility_changed", self, "_on_room_search_visibility_changed")
 
 
 func _on_exit() -> void:
@@ -153,7 +154,6 @@ func _on_creation_create_game_room_pressed(game_room_name) -> void:
 func _on_search_back_pressed() -> void:
 	_start_menu_buttons.show()
 	Server.disconnect_from_server()
-	
 
 
 func _on_creation_back_pressed() -> void:
@@ -164,6 +164,7 @@ func _on_join_game_room_pressed() -> void:
 	var selected_room = _game_room_search.get_selected_game_room()
 	if selected_room != -1:
 		Server.send_join_game_room(selected_room, _player_user_name)
+
 
 func _on_room_search_visibility_changed() -> void:
 	_btn_play_tutorial.grab_focus()
