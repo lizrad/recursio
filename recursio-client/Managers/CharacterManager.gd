@@ -179,9 +179,6 @@ func _on_countdown_phase_started() -> void:
 	
 
 func _on_game_phase_started() -> void:
-	_visibility_checker.set_player(_player)
-	_visibility_checker.set_enemies(_enemy, _ghost_manager._enemy_ghosts)
-	
 	_player.block_movement = false
 	_player.set_overview_light_enabled(false)
 	_toggle_visbility_lights(true)
@@ -222,6 +219,9 @@ func _on_timeline_picked(picking_player_id, timeline_index):
 	character.timeline_index = timeline_index
 	_ghost_manager.refresh_active_ghosts()
 	_ghost_manager.refresh_path_select()
+	
+	_visibility_checker.set_player(_player)
+	_visibility_checker.set_enemies(_enemy, _ghost_manager._enemy_ghosts)
 
 func _on_player_ready(button) -> void:
 	if button == ButtonOverlay.BUTTONS.DOWN:

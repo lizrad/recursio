@@ -32,6 +32,9 @@ func _process(delta):
 		var positions = []
 		
 		for enemy in _enemies:
+			if enemy is GhostBase and not enemy.is_playing():
+				continue
+			
 			var player_pos = _player.kb.global_transform.origin
 			var enemy_pos = enemy.kb.global_transform.origin
 			var player_enemy_vector = enemy_pos - player_pos
