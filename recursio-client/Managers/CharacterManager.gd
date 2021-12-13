@@ -158,6 +158,9 @@ func _on_preparation_phase_started() -> void:
 	_player.timeline_index = next_timeline_index
 	_enemy.timeline_index = next_timeline_index
 	_enemy.move_to_spawn_point()
+	
+	
+	_visibility_checker.reset()
 
 func _on_countdown_phase_started() -> void:
 	_game_manager.toggle_spawn_points(false)

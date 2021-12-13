@@ -9,6 +9,7 @@ onready var tween = get_node("Tween")
 
 
 func set_visible(is_visible):
+	# Lerp to visible or invisible
 	if is_inside_tree():
 		if not should_be_visible and is_visible:
 			tween.interpolate_property(self, "scale",
