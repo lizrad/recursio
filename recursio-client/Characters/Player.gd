@@ -33,11 +33,11 @@ func player_init(action_manager, round_manager) -> void:
 
 
 func set_visibility_visualization_visible(is_visible):
-	$KinematicBody/VisibilityVisualization.visible = is_visible
+	$KinematicBody/VisibilityVisualization.set_visible(is_visible)
 
 
-func set_visibility_visualization_enemy_position(enemy_pos):
-	$KinematicBody/VisibilityVisualization.looking_at = enemy_pos
+func set_visibility_visualization_enemy_positions(enemy_positions: Array):
+	$KinematicBody/VisibilityVisualization.set_looking_at_positions(enemy_positions)
 
 
 # OVERRIDE #

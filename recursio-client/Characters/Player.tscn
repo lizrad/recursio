@@ -51,9 +51,6 @@ flags_unshaded = true
 flags_unshaded = true
 albedo_color = Color( 1, 0.168627, 0.121569, 1 )
 
-[sub_resource type="PrismMesh" id=8]
-size = Vector3( 1.2, 1.2, 0.1 )
-
 [node name="Player" instance=ExtResource( 1 )]
 script = ExtResource( 2 )
 
@@ -237,9 +234,6 @@ mesh = ExtResource( 21 )
 material/0 = null
 script = ExtResource( 18 )
 
-[node name="Arrow" type="MeshInstance" parent="KinematicBody/VisibilityVisualization" index="0"]
-transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, -3 )
-material_override = SubResource( 7 )
-cast_shadow = 0
-mesh = SubResource( 8 )
-material/0 = null
+[node name="Tween" type="Tween" parent="KinematicBody/VisibilityVisualization" index="0"]
+
+[node name="Arrows" type="Spatial" parent="KinematicBody/VisibilityVisualization" index="1"]
