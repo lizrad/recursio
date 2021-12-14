@@ -6,12 +6,12 @@ class ObjectPropertyCoupling:
 	
 	
 	func _init(object: Object, property: String):
-		self.object = object
+		self.object = weakref(object)
 		self.property = property
 	
 	
 	func apply_color(color: Color):
-		object.set(property, color)
+		object.get_ref().set(property, color)
 
 
 class ObjectMethodCoupling:
@@ -21,7 +21,7 @@ class ObjectMethodCoupling:
 
 
 	func _init(object: Object, method: String, args: Array):
-		self.object = object
+		self.object = weakref(object)
 		self.method = method
 		self.args = args
 
@@ -29,7 +29,7 @@ class ObjectMethodCoupling:
 	func apply_color(color: Color):
 		var all_args = args 
 		all_args += [color]
-		object.callv(method, all_args)
+		object.get_ref().callv(method, all_args)
 
 
 var _header: String = "colors"
@@ -62,7 +62,6 @@ func color_object_by_method(color_name: String, object: Object, method: String, 
 
 func _register_coupling(coupling, color_name: String):
 	#TODO: check if coupling already exists, if so delete the older one
-	print("Registering "+ str(coupling.object)+ " to color "+color_name)
 	var color = _get_color(color_name)
 	coupling.apply_color(color)
 	_colored_objects[color_name].append(coupling)
@@ -72,15 +71,11 @@ func color_changed(color_name: String):
 	var to_remove: Array = []
 	for i in range(0, _colored_objects[color_name].size()):
 		var coupling = _colored_objects[color_name][i]
-		print("Color changed for "+str(coupling.object)+ " with color "+color_name)
-		if is_instance_valid(coupling.object):
+		if coupling.object.get_ref() != null:
 			coupling.apply_color(color)
 		else:
 			to_remove.append(i)
 	# Removing objects that have become invalid
-	# TODO: This does not work. If i play the tutorial after 
-	# I already played online and change a color during the tutorial nothing 
-	# gets deleted even though object from online play have been stored 
-	# in the array before. I thought they would automatically become invalid?
 	for i in to_remove:
+		print("X")
 		_colored_objects[color_name].remove(i)
