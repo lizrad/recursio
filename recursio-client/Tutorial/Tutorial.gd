@@ -16,6 +16,10 @@ func set_ui_visible(is_visible):
 
 
 func _ready():
+	print("   ")
+	print("   ")
+	print("   ")
+	print("   ")
 	set_ui_visible(true)
 	$CharacterManager/GameManager.set_level($LevelH)
 

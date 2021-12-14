@@ -9,7 +9,9 @@ var _key
 
 
 func _ready():
-	_color_picker_button.connect("color_changed", self, "_on_color_changed")
+	# listening to popup_closed instead of color_changed so it really only saves 
+	# to file when the user decided
+	_color_picker_button.connect("popup_closed", self, "_on_popup_closed")
 
 
 func init(header: String, key: String):
@@ -21,6 +23,9 @@ func init(header: String, key: String):
 	var color = Color(UserSettings.get_setting(header, key))
 	_color_picker_button.color = color
 
-func _on_color_changed(color: Color):
+func _on_popup_closed():
+	var color = _color_picker_button.color
 	var color_string = "#" + color.to_html(false)
+	print(color_string)
 	UserSettings.set_setting(_header, _key, color_string)
+	ColorManager.color_changed(_key)
