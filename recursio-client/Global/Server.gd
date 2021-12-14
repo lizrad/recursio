@@ -30,7 +30,7 @@ signal game_result(winning_player_id)
 signal player_hit(hit_player_id, perpetrator_player_id, perpetrator_timeline_index)
 signal ghost_hit(hit_ghost_player_owner, hit_ghost_id, perpetrator_player_id, perpetrator_timeline_index)
 signal quiet_ghost_hit(hit_ghost_player_owner, hit_ghost_id, perpetrator_player_id, perpetrator_timeline_index)
-signal timeline_picks(player_pick, enemy_picks)
+signal timeline_picked(picking_player_id, timeline_index)
 signal wall_spawn (position, rotation, wall_index)
 
 signal phase_switch_received(round_index,next_phase, switch_time)
@@ -265,9 +265,9 @@ remote func receive_player_action(action_player_id, action_type):
 	emit_signal("player_action", action_player_id, action_type)
 
 
-remote func receive_timeline_picks(player_pick, enemy_pick):
-	Logger.debug("Ghost picks received", "server")
-	emit_signal("timeline_picks",player_pick, enemy_pick)
+remote func receive_timeline_pick(picking_player_id, timeline_index):
+	Logger.debug("Ghost pick received", "server")
+	emit_signal("timeline_picked",picking_player_id, timeline_index)
 
 
 remote func receive_wall_spawn(position, rotation, wall_index):

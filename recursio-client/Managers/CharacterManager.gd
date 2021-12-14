@@ -50,7 +50,7 @@ func _ready():
 	_error = Server.connect("world_state_received", self, "_on_world_state_received") 
 	_error = Server.connect("player_hit", self, "_on_player_hit") 
 
-	_error = Server.connect("timeline_picks", self, "_on_timeline_picks") 
+	_error = Server.connect("timeline_picked", self, "_on_timeline_picked") 
 
 	_error = Server.connect("capture_point_captured", self, "_on_capture_point_captured") 
 	_error = Server.connect("capture_point_capture_lost", self, "_on_capture_point_capture_lost")
@@ -63,7 +63,10 @@ func _ready():
 func _physics_process(delta):
 	if not _round_manager.is_running():
 		return
-
+	
+	if _round_manager.get_current_phase() != RoundManager.Phases.GAME:
+		return
+	
 	_time_since_last_server_update += delta
 	var server_delta = 1.0 / Server.tickrate
 
@@ -169,9 +172,6 @@ func _on_countdown_phase_started() -> void:
 	_enemy.visual_delayed_spawn(countdown_phase_seconds-spawn_time)
 	_game_manager.show_countdown_screen()
 	
-	# Send currently selected timeline to server
-	if Server.is_connection_active:
-		Server.send_timeline_pick(_player.timeline_index)
 
 func _on_game_phase_started() -> void:
 	_player.block_movement = false
@@ -192,11 +192,24 @@ func _on_player_timeline_changed(timeline_index) -> void:
 	_player.move_to_spawn_point()
 	_ghost_manager.refresh_active_ghosts()
 	_ghost_manager.refresh_path_select()
+	
+	# Client driven timeline changes are only allowed during prep phase, 
+	# so we catch any race condition triggered changes outside the prep phase here
+	# (Should not happen if latency and lag is minimal)
+	if _round_manager.get_current_phase() == RoundManager.Phases.PREPARATION:
+	# Send currently selected timeline to server
+		if Server.is_connection_active:
+			Server.send_timeline_pick(_player.timeline_index)
 
-func _on_timeline_picks(timeline_index, enemy_pick):
-	Logger.info("Received ghost picks from server","ghost_picking")
-	_player.timeline_index = timeline_index
-	_enemy.timeline_index = enemy_pick
+func _on_enemy_timeline_changed(timeline_index) -> void:
+	_enemy.spawn_point = _game_manager.get_spawn_point(_enemy.team_id, timeline_index).global_transform.origin
+	_enemy.move_to_spawn_point()
+	_ghost_manager.refresh_active_ghosts()
+	_ghost_manager.refresh_path_select()
+
+func _on_timeline_picked(picking_player_id, timeline_index):
+	var character = _player if _player.player_id == picking_player_id else _enemy
+	character.timeline_index = timeline_index
 	_ghost_manager.refresh_active_ghosts()
 	_ghost_manager.refresh_path_select()
 
@@ -242,6 +255,8 @@ func _on_spawn_enemy(enemy_id, spawn_point, team_id):
 	_enemy.set_name(str(enemy_id))
 	_enemy.toggle_animation(false)
 	_apply_visibility_mask(_enemy)
+	var _error = _enemy.connect("timeline_index_changed", self, "_on_enemy_timeline_changed") 
+
 
 func _on_world_state_received(world_state: WorldState):
 	if _time_since_last_world_state_update < world_state.timestamp:

@@ -85,8 +85,8 @@ func handle_player_ready(player_id):
 
 
 func handle_ghost_pick(player_id, timeline_index):
-	if _round_manager.get_current_phase() != RoundManager.Phases.COUNTDOWN:
-		Logger.error("Received timeline picks outside proper phase", "ghost_picking")
+	if _round_manager.get_current_phase() == RoundManager.Phases.GAME:
+		Logger.error("Received timeline picks during game phase", "ghost_picking")
 		return
 	_character_manager.set_timeline_index(player_id, timeline_index)
 	_ghost_manager.refresh_active_ghosts()
@@ -130,11 +130,11 @@ func _on_countdown_phase_started():
 	_ghost_manager.on_countdown_phase_started()
 	
 func _on_game_phase_started() -> void:
+	_character_manager.propagate_current_timelines()
 	var round_index = _round_manager.round_index
 	var switch_time = _round_manager.get_deadline()
 	for player_id in _character_manager.player_dic:
 		_server.send_phase_switch_to_client(player_id, round_index, RoundManager.Phases.PREPARATION, switch_time)
-	_character_manager.propagate_player_picks()
 	_character_manager.move_players_to_spawn_point()
 	_character_manager.set_block_player_input(false)
 	_ghost_manager.on_game_phase_started()

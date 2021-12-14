@@ -76,7 +76,6 @@ func spawn_player(player_id, team_id, player_user_name) -> void:
 	player.player_id = player_id
 	player.user_name = player_user_name
 	player.team_id = team_id
-	player.timeline_index = 0
 	player.spawn_point = spawn_point
 	add_child(player)
 	var _error = player.connect("hit", self, "_on_player_hit", [player_id])
@@ -92,6 +91,7 @@ func spawn_player(player_id, team_id, player_user_name) -> void:
 	player_dic[player_id] = player
 	player.move_to_spawn_point()
 	Server.spawn_player_on_client(player_id, spawn_point, team_id)
+	player.connect("timeline_index_changed", self, "_on_player_timeline_changed", [player.player_id])
 
 func reset_wall_indices():
 	for player_id in player_dic:
@@ -103,19 +103,25 @@ func set_block_player_input(blocked: bool) -> void:
 
 func set_timeline_index(player_id, timeline_index):
 	Logger.info("Setting timeline index for player "+str(player_id)+" to "+str(timeline_index),"ghost_picking")
-	player_dic[player_id].timeline_index = timeline_index
-	player_dic[player_id].spawn_point = _game_manager.get_spawn_point(player_dic[player_id].team_id, timeline_index).global_transform.origin
-	player_dic[player_id].move_to_spawn_point()
+	var player = player_dic[player_id]
+	player.timeline_index = timeline_index
+	player.spawn_point = _game_manager.get_spawn_point(player.team_id, timeline_index).global_transform.origin
+	player.move_to_spawn_point()	
 
-func propagate_player_picks():
-	Logger.info("Propagating timeline picks", "ghost_picking")
+
+func _on_player_timeline_changed(timeline_index, picking_player_id):
+	_propagate_timeline_pick(timeline_index, picking_player_id)
+
+
+func propagate_current_timelines():
 	for player_id in player_dic:
-		var player_pick = player_dic[player_id].timeline_index
-		var enemy_pick
-		for enemy_id in player_dic:
-			if enemy_id != player_id:
-				enemy_pick = player_dic[enemy_id].timeline_index
-		Server.send_ghost_pick(player_id, player_pick, enemy_pick)
+		_propagate_timeline_pick(player_dic[player_id].timeline_index, player_id)
+
+
+func _propagate_timeline_pick(timeline_index, picking_player_id):
+	for client_id in player_dic:
+		Server.send_timeline_pick(client_id, picking_player_id, timeline_index)
+
 
 func _on_player_hit(perpetrator, victim_player_id):
 	Logger.info("Player hit!", "attacking")

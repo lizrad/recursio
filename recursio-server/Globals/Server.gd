@@ -127,9 +127,9 @@ func send_quiet_ghost_hit(player_id, victim_player_id, victim_timeline_index, pe
 	rpc_id(player_id, "receive_quiet_ghost_hit", victim_player_id, victim_timeline_index, perpetrator_player_id, perpetrator_timeline_index)
 
 
-func send_ghost_pick(player_id, player_pick, enemy_pick):
+func send_timeline_pick(player_id, picking_player_id, timeline_index):
 	Logger.info("Sending ghost picks", "connection")
-	rpc_id(player_id, "receive_timeline_picks", player_pick, enemy_pick)
+	rpc_id(player_id, "receive_timeline_pick", picking_player_id, timeline_index)
 
 func send_wall_spawn(position, rotation, wall_index, player_id):
 	Logger.info("Sending wall spawn", "connection")
