@@ -78,7 +78,6 @@ func apply_input(movement_vector: Vector3, rotation_vector: Vector3, buttons: in
 			_aim_visuals.visible = true
 			_aim_visuals.get_child(timeline_index % 2).visible = aim_mode
 		else:
-			# QUESTION: should this be in ClientActionManager?
 			# -> already handles sound effects but fail sound for no ammo is only needed for current player
 			if not _audio_player.playing:
 				_audio_player.play()
