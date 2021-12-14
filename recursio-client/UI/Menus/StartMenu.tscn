@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=2]
+[gd_scene load_steps=30 format=2]
 
 [ext_resource path="res://UI/Menus/StartMenu.gd" type="Script" id=1]
 [ext_resource path="res://UI/Menus/GameRooms/GameRoomCreation.gd" type="Script" id=2]
@@ -21,7 +21,6 @@
 [ext_resource path="res://Resources/Audio/UI/Click.ogg" type="AudioStream" id=19]
 [ext_resource path="res://Resources/Audio/UI/Back.ogg" type="AudioStream" id=20]
 [ext_resource path="res://Level/SpawnPoint.tscn" type="PackedScene" id=21]
-[ext_resource path="res://UI/Menus/ColorSetting.tscn" type="PackedScene" id=22]
 [ext_resource path="res://UI/Menus/ColorSettingController.gd" type="Script" id=23]
 
 [sub_resource type="Shader" id=1]
@@ -487,10 +486,6 @@ margin_bottom = -4.0
 script = ExtResource( 23 )
 
 [node name="ColorList" type="VBoxContainer" parent="CenterContainer/SettingsContainer/SettingsList/TabContainer/Colors"]
-margin_right = 244.0
-margin_bottom = 60.0
-
-[node name="ColorSetting" parent="CenterContainer/SettingsContainer/SettingsList/TabContainer/Colors/ColorList" instance=ExtResource( 22 )]
 
 [node name="Video" type="VBoxContainer" parent="CenterContainer/SettingsContainer/SettingsList/TabContainer"]
 visible = false
