@@ -1,16 +1,13 @@
 extends HBoxContainer
 
 
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
+onready var _color_picker_button : ColorPickerButton = get_node("ColorPickerButton")
+onready var _label :Label = get_node("Label")
 
 
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	pass # Replace with function body.
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
+func init(header: String, key: String):
+	var color_name = key.replace("_"," ").capitalize()
+	name = color_name
+	_label.text = color_name
+	var color = Color(UserSettings.get_setting(header, key))
+	_color_picker_button.color = color

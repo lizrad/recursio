@@ -1,16 +1,14 @@
 extends ScrollContainer
 
+var _color_setting_scene = preload("res://UI/Menus/ColorSetting.tscn")
 
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
+var _color_header = "colors"
+onready var _color_list = get_node("ColorList")
 
 
-# Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
+	var colors = UserSettings.get_all_settings_for_header(_color_header)
+	for color in colors:
+		var color_setting = _color_setting_scene.instance()
+		_color_list.add_child(color_setting)
+		color_setting.init(_color_header, color)
