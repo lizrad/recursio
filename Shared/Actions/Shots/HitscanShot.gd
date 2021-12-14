@@ -1,14 +1,15 @@
 extends RayCast
 
 onready var _max_time = Constants.get_value("hitscan", "max_time")
+onready var _bullet_range = Constants.get_value("hitscan", "range")
 
-var _bullet_range = Constants.get_value("hitscan", "range")
 var _owning_player
 var _first_frame := true
 
 
 func _init() -> void:
 	Logger.info("_init action", "HitscanShot")
+
 
 func initialize(owning_player) -> void:
 	Logger.info("initialize action", "HitscanShot")
@@ -26,6 +27,7 @@ func initialize(owning_player) -> void:
 	_owning_player = owning_player
 	add_exception(owning_player.get_body())
 
+
 func _physics_process(delta):
 	_max_time -= delta
 	if _max_time <= 0:
@@ -36,6 +38,7 @@ func _physics_process(delta):
 	if  _first_frame:
 		_update_collision()
 		_first_frame = false
+
 
 func handle_hit(collider):
 	var character = collider.get_parent()
@@ -59,9 +62,8 @@ func _update_collision():
 	var collider = get_collider()
 	if collider:
 		var collision_point = get_collision_point()
-		Logger.debug("Collision Point: "+str(collision_point), "HitscanShot")
+		Logger.debug("Collision Point: " + str(collision_point), "HitscanShot")
 		handle_hit(collider)
 	else:
 		$Visualisation.scale.y = _bullet_range*0.5
 		$Visualisation.transform.origin.z = -_bullet_range*0.5
-		

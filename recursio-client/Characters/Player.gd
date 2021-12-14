@@ -12,6 +12,7 @@ onready var _view_target = get_node("KinematicBody/ViewTarget")
 onready var _visibility_light = get_node("KinematicBody/VisibilityLight")
 onready var _button_overlay: ButtonOverlay = get_node("KinematicBody/ButtonOverlay")
 onready var _aim_visuals = get_node("KinematicBody/AimVisuals")
+onready var _audio_player: AudioStreamPlayer = get_node("AudioStreamPlayer")
 
 var _walls = []
 var _past_frames = {}
@@ -76,6 +77,11 @@ func apply_input(movement_vector: Vector3, rotation_vector: Vector3, buttons: in
 		if action.ammunition > 0:
 			_aim_visuals.visible = true
 			_aim_visuals.get_child(timeline_index % 2).visible = aim_mode
+		else:
+			# -> already handles sound effects but fail sound for no ammo is only needed for current player
+			if not _audio_player.playing:
+				_audio_player.play()
+				_hud.wobble_ammo()
 	else:
 		reset_aim_mode()
 
@@ -96,6 +102,7 @@ func _get_action(trigger, timeline_index):
 
 	return _actions[id]
 
+
 # OVERRIDE #
 func wall_spawned(wall):
 	_walls.append(wall)
@@ -110,7 +117,6 @@ func _on_wall_spawn_received(position, rotation, wall_index):
 	else:
 		var wall_action_index = Constants.get_value("ghosts", "wall_placing_timeline_index")
 		_action_manager.set_active(_get_action(ActionManager.Trigger.FIRE_START, wall_action_index) as Action, self, kb, get_parent())
-		pass
 
 
 func get_visibility_mask():
@@ -173,6 +179,12 @@ func show_preparation_hud(round_index) -> void:
 
 
 func show_countdown_hud() -> void:
+	# need to convert selected spawn point 3D coords to 2D screen space
+	var active_spawn = _hud.get_active_spawn_point() as SpawnPoint
+	if active_spawn:
+		var camera = get_node("KinematicBody/NormalViewportContainer/Viewport/Camera")
+		var pos = camera.unproject_position(active_spawn.global_transform.origin)
+		_hud.animate_weapon_selection(pos)
 	_hud.countdown_phase_start()
 	_button_overlay.hide_buttons()
 

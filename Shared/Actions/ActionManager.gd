@@ -97,7 +97,9 @@ func set_active(action: Action, character: CharacterBase, tree_position: Spatial
 		return false
 
 	# No ammo left
-	if action.ammunition == 0:
+	if action.ammunition < 1:
+		action.blocked = true
+		action.activation_time = OS.get_system_time_msecs()
 		return false
 
 	# Fire actual action
@@ -120,9 +122,8 @@ func set_active(action: Action, character: CharacterBase, tree_position: Spatial
 	if action.recharge_time >= 0:
 		action.trigger_times.append(action.activation_time)
 
-	if action.ammunition > 0:
-		action.ammunition -= 1
-		action.emit_signal("ammunition_changed", action.ammunition)
+	action.ammunition -= 1
+	action.emit_signal("ammunition_changed", action.ammunition)
 
 	if not _actions.has(action):
 		_actions.append(action)

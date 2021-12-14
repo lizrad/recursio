@@ -1,6 +1,10 @@
-[gd_resource type="Theme" load_steps=2 format=2]
+[gd_resource type="Theme" load_steps=3 format=2]
 
 [ext_resource path="res://Resources/Fonts/Normal.tres" type="DynamicFont" id=1]
+[ext_resource path="res://UI/StyleBoxFlat.tres" type="StyleBox" id=2]
 
 [resource]
 default_font = ExtResource( 1 )
+Button/styles/focus = ExtResource( 2 )
+LineEdit/styles/focus = ExtResource( 2 )
+TextEdit/styles/focus = ExtResource( 2 )
