@@ -27,3 +27,7 @@ func set_setting(setting_header, setting_name, value):
 	settings_config.set_value(setting_header, setting_name, value)
 	settings_config.save(SETTINGS_PATH)
 	emit_signal("setting_changed", setting_header, setting_name, value)
+
+
+func get_all_settings_for_header(setting_header):
+	return settings_config.get_section_keys(setting_header)
