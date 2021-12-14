@@ -91,7 +91,6 @@ func spawn_player(player_id, team_id, player_user_name) -> void:
 	player_dic[player_id] = player
 	player.move_to_spawn_point()
 	Server.spawn_player_on_client(player_id, spawn_point, team_id)
-	_error = player.connect("timeline_index_changed", self, "_on_player_timeline_changed", [player.player_id])
 
 func reset_wall_indices():
 	for player_id in player_dic:
@@ -101,26 +100,25 @@ func set_block_player_input(blocked: bool) -> void:
 	for player_id in player_dic:
 		player_dic[player_id].block_movement = blocked
 
-func set_timeline_index(player_id, timeline_index):
-	Logger.info("Setting timeline index for player "+str(player_id)+" to "+str(timeline_index),"ghost_picking")
-	var player = player_dic[player_id]
+# propagate_to_picking_player is necessary because there are some moments where picking is 
+# server driven and some where it is client driven, to avoid endless loops of switching 
+# timelines because server and client are out of face because of a big latency we use this 
+# parameter to decide whether we send picks to the player itself
+func set_timeline_index(picking_player_id, timeline_index, propagate_to_picking_player):
+	Logger.info("Setting timeline index for player "+str(picking_player_id)+" to "+str(timeline_index),"ghost_picking")
+	var player = player_dic[picking_player_id]
 	player.timeline_index = timeline_index
 	player.spawn_point = _game_manager.get_spawn_point(player.team_id, timeline_index).global_transform.origin
-	player.move_to_spawn_point()	
+	player.move_to_spawn_point()
+	_propagate_current_timelines(picking_player_id, propagate_to_picking_player)
 
 
-func _on_player_timeline_changed(timeline_index, picking_player_id):
-	_propagate_timeline_pick(timeline_index, picking_player_id)
-
-
-func propagate_current_timelines():
+func _propagate_current_timelines(picking_player_id, propagate_to_picking_player):
 	for player_id in player_dic:
-		_propagate_timeline_pick(player_dic[player_id].timeline_index, player_id)
-
-
-func _propagate_timeline_pick(timeline_index, picking_player_id):
-	for client_id in player_dic:
-		Server.send_timeline_pick(client_id, picking_player_id, timeline_index)
+		for client_id in player_dic:
+			if not propagate_to_picking_player and picking_player_id == client_id and picking_player_id == player_id:
+				continue
+			Server.send_timeline_pick(client_id, player_id, player_dic[player_id].timeline_index)
 
 
 func _on_player_hit(perpetrator, victim_player_id):
