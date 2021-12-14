@@ -23,7 +23,7 @@ func rotate_ui(degrees) -> void:
 
 func set_active(value) -> void:
 	active = value
-	$SpriteArea.modulate = Color(Constants.get_value("colors", "selection")) if value else Color.gray
+	$SpriteArea.modulate = Color(Constants.get_value("colors", "selected")) if value else Constants.get_value("colors", "unselected")
 	$SpriteType.material_override.set_shader_param("is_greyscale", !value)
 
 
