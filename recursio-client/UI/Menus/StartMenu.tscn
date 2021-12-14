@@ -486,11 +486,11 @@ margin_right = -4.0
 margin_bottom = -4.0
 script = ExtResource( 23 )
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/SettingsContainer/SettingsList/TabContainer/Colors"]
+[node name="ColorList" type="VBoxContainer" parent="CenterContainer/SettingsContainer/SettingsList/TabContainer/Colors"]
 margin_right = 244.0
 margin_bottom = 60.0
 
-[node name="ColorSetting" parent="CenterContainer/SettingsContainer/SettingsList/TabContainer/Colors/VBoxContainer" instance=ExtResource( 22 )]
+[node name="ColorSetting" parent="CenterContainer/SettingsContainer/SettingsList/TabContainer/Colors/ColorList" instance=ExtResource( 22 )]
 
 [node name="Video" type="VBoxContainer" parent="CenterContainer/SettingsContainer/SettingsList/TabContainer"]
 visible = false
