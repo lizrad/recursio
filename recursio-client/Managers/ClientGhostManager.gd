@@ -184,13 +184,21 @@ func _toggle_ghost_animation(value) -> void:
 
 
 func _visual_kill_ghosts() -> void:
-	for ghost in _ghosts:
+	for ghost in _player_ghosts:
 		ghost.visual_kill()
+	# if ghosts are hidden we dont want to produce visible vfx here
+	if not Constants.get_value("visibility","use_visibility"):
+		for ghost in _enemy_ghosts:
+			ghost.visual_kill()
 
 
 func _visual_delay_spawn_ghosts(delay) -> void:
-	for ghost in _ghosts:
+	for ghost in _player_ghosts:
 		ghost.visual_delayed_spawn(delay)
+	# if ghosts are hidden we dont want to produce visible vfx here
+	if not Constants.get_value("visibility","use_visibility"):
+		for ghost in _enemy_ghosts:
+			ghost.visual_delayed_spawn(delay)
 
 
 func _non_vfx_spawn_ghosts() -> void:

@@ -168,8 +168,9 @@ func _on_countdown_phase_started() -> void:
 	var spawn_time = Constants.get_value("gameplay","spawn_time")
 	_player.visual_kill()
 	_player.visual_delayed_spawn(countdown_phase_seconds-spawn_time)
-	_enemy.visual_kill()
-	_enemy.visual_delayed_spawn(countdown_phase_seconds-spawn_time)
+	if not Constants.get_value("visibility","use_visibility"):
+		_enemy.visual_kill()
+		_enemy.visual_delayed_spawn(countdown_phase_seconds-spawn_time)
 	_game_manager.show_countdown_screen()
 	
 
