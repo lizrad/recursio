@@ -112,6 +112,9 @@ func set_timeline_index(picking_player_id, timeline_index, propagate_to_picking_
 	player.move_to_spawn_point()
 	_propagate_current_timelines(picking_player_id, propagate_to_picking_player)
 
+func propagate_all_timelines():
+	for player_id in player_dic:
+		_propagate_current_timelines(player_id, true)
 
 func _propagate_current_timelines(picking_player_id, propagate_to_picking_player):
 	for player_id in player_dic:

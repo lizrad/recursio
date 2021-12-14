@@ -130,7 +130,7 @@ func _on_countdown_phase_started():
 	_ghost_manager.on_countdown_phase_started()
 	
 func _on_game_phase_started() -> void:
-	_character_manager.propagate_current_timelines()
+	_character_manager.propagate_all_timelines()
 	var round_index = _round_manager.round_index
 	var switch_time = _round_manager.get_deadline()
 	for player_id in _character_manager.player_dic:
