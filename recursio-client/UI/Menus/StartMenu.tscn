@@ -492,7 +492,7 @@ margin_bottom = 60.0
 
 [node name="ColorSetting" parent="CenterContainer/SettingsContainer/SettingsList/TabContainer/Colors/VBoxContainer" instance=ExtResource( 22 )]
 
-[node name="Graphics" type="VBoxContainer" parent="CenterContainer/SettingsContainer/SettingsList/TabContainer"]
+[node name="Video" type="VBoxContainer" parent="CenterContainer/SettingsContainer/SettingsList/TabContainer"]
 visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -501,20 +501,20 @@ margin_top = 44.0
 margin_right = -4.0
 margin_bottom = -4.0
 
-[node name="FullScreen" type="HBoxContainer" parent="CenterContainer/SettingsContainer/SettingsList/TabContainer/Graphics"]
+[node name="FullScreen" type="HBoxContainer" parent="CenterContainer/SettingsContainer/SettingsList/TabContainer/Video"]
 margin_right = 628.0
 margin_bottom = 40.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="CenterContainer/SettingsContainer/SettingsList/TabContainer/Graphics/FullScreen"]
+[node name="Label" type="Label" parent="CenterContainer/SettingsContainer/SettingsList/TabContainer/Video/FullScreen"]
 margin_top = 7.0
 margin_right = 156.0
 margin_bottom = 33.0
 text = "Full Screen: "
 
-[node name="FullScreenCheckButton" type="CheckButton" parent="CenterContainer/SettingsContainer/SettingsList/TabContainer/Graphics/FullScreen" groups=["Setting"]]
+[node name="FullScreenCheckButton" type="CheckButton" parent="CenterContainer/SettingsContainer/SettingsList/TabContainer/Video/FullScreen" groups=["Setting"]]
 margin_left = 160.0
 margin_right = 236.0
 margin_bottom = 40.0
@@ -524,17 +524,17 @@ focus_next = NodePath("../../AsciiSize/AsciiSlider")
 focus_previous = NodePath("../../../Audio/EffectsVolume/VolumeSlider")
 script = ExtResource( 16 )
 
-[node name="AsciiSize" type="HBoxContainer" parent="CenterContainer/SettingsContainer/SettingsList/TabContainer/Graphics"]
+[node name="AsciiSize" type="HBoxContainer" parent="CenterContainer/SettingsContainer/SettingsList/TabContainer/Video"]
 margin_top = 44.0
 margin_right = 628.0
 margin_bottom = 70.0
 
-[node name="Label" type="Label" parent="CenterContainer/SettingsContainer/SettingsList/TabContainer/Graphics/AsciiSize"]
+[node name="Label" type="Label" parent="CenterContainer/SettingsContainer/SettingsList/TabContainer/Video/AsciiSize"]
 margin_right = 264.0
 margin_bottom = 26.0
 text = "ASCII Character Size: "
 
-[node name="AsciiSlider" type="HSlider" parent="CenterContainer/SettingsContainer/SettingsList/TabContainer/Graphics/AsciiSize"]
+[node name="AsciiSlider" type="HSlider" parent="CenterContainer/SettingsContainer/SettingsList/TabContainer/Video/AsciiSize"]
 margin_left = 268.0
 margin_right = 628.0
 margin_bottom = 16.0
@@ -630,8 +630,8 @@ margin_right = 628.0
 margin_bottom = 16.0
 rect_min_size = Vector2( 400, 0 )
 focus_neighbour_top = NodePath("../../MusicVolume/VolumeSlider")
-focus_neighbour_bottom = NodePath("../../../Graphics/FullScreen/FullScreenCheckButton")
-focus_next = NodePath("../../../Graphics/FullScreen/FullScreenCheckButton")
+focus_neighbour_bottom = NodePath("../../../Video/FullScreen/FullScreenCheckButton")
+focus_next = NodePath("../../../Video/FullScreen/FullScreenCheckButton")
 focus_previous = NodePath("../../MusicVolume/VolumeSlider")
 size_flags_horizontal = 3
 max_value = 1.0
@@ -655,10 +655,10 @@ __meta__ = {
 margin_top = 332.0
 margin_right = 636.0
 margin_bottom = 364.0
-focus_neighbour_top = NodePath("../TabContainer/Graphics/AsciiSize/AsciiSlider")
+focus_neighbour_top = NodePath("../TabContainer/Video/AsciiSize/AsciiSlider")
 focus_neighbour_bottom = NodePath("../TabContainer/Audio/MainVolume/VolumeSlider")
 focus_next = NodePath("../TabContainer/Audio/MainVolume/VolumeSlider")
-focus_previous = NodePath("../TabContainer/Graphics/AsciiSize/AsciiSlider")
+focus_previous = NodePath("../TabContainer/Video/AsciiSize/AsciiSlider")
 text = "Back"
 __meta__ = {
 "_edit_use_anchors_": false
