@@ -23,5 +23,4 @@ func init(header: String, key: String):
 
 func _on_color_changed(color: Color):
 	var color_string = "#" + color.to_html(false)
-	print(color_string)
 	UserSettings.set_setting(_header, _key, color_string)
