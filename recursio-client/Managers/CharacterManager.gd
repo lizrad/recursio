@@ -193,6 +193,9 @@ func _on_player_timeline_changed(timeline_index) -> void:
 	_ghost_manager.refresh_active_ghosts()
 	_ghost_manager.refresh_path_select()
 	
+	# Client driven timeline changes are only allowed during prep phase, 
+	# so we catch any race condition triggered changes outside the prep phase here
+	# (Should not happen if latency and lag is minimal)
 	if _round_manager.get_current_phase() == RoundManager.Phases.PREPARATION:
 	# Send currently selected timeline to server
 		if Server.is_connection_active:
