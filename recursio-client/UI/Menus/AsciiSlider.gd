@@ -2,7 +2,7 @@ extends HSlider
 
 
 func _ready() -> void:
-	connect("value_changed", self, "_on_value_changed")
+	var _error = connect("value_changed", self, "_on_value_changed")
 	value = UserSettings.get_setting("video", "ascii_size")
 
 

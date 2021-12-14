@@ -208,7 +208,9 @@ func _on_enemy_timeline_changed(timeline_index) -> void:
 	_ghost_manager.refresh_path_select()
 
 func _on_timeline_picked(picking_player_id, timeline_index):
-	var character = _player if _player.player_id == picking_player_id else _enemy
+	var character = _player 
+	if _player.player_id != picking_player_id:
+		 character = _enemy
 	character.timeline_index = timeline_index
 	_ghost_manager.refresh_active_ghosts()
 	_ghost_manager.refresh_path_select()

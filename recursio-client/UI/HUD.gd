@@ -39,7 +39,7 @@ func pass_round_manager(round_manager):
 
 func _ready() -> void:
 	if not $Tween.is_connected("tween_all_completed", self, "_on_tween_completed"):
-		$Tween.connect("tween_all_completed", self, "_on_tween_completed")
+		var _error = $Tween.connect("tween_all_completed", self, "_on_tween_completed")
 
 	reset()
 

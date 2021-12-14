@@ -17,7 +17,6 @@ signal connection_successful()
 signal connection_failed()
 signal server_disconnected()
 signal spawning_enemy(enemy_id, spawn_point, team_id)
-signal despawning_enemy(enemy_id)
 signal spawning_player(player_id, spawn_point)
 signal world_state_received(world_state)
 signal player_ghost_record_received(timeline_index,round_index,  gameplay_record)
@@ -75,9 +74,9 @@ func disconnect_from_server():
 	set_physics_process(false)
 	network.close_connection()
 	get_tree().network_peer = null
-	var _error = get_tree().disconnect("connection_failed", self, "_on_connection_failed")
-	_error = get_tree().disconnect("connected_to_server", self, "_on_connection_succeeded")
-	_error = get_tree().disconnect("server_disconnected", self, "_on_server_disconnected")
+	get_tree().disconnect("connection_failed", self, "_on_connection_failed")
+	get_tree().disconnect("connected_to_server", self, "_on_connection_succeeded")
+	get_tree().disconnect("server_disconnected", self, "_on_server_disconnected")
 	# Reset variables
 	latency = 0
 	server_clock = 0

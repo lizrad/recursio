@@ -7,7 +7,7 @@ onready var _bus := AudioServer.get_bus_index(audio_bus_name)
 
 
 func _ready() -> void:
-	connect("value_changed", self, "_on_value_changed")
+	var _error = connect("value_changed", self, "_on_value_changed")
 	value = UserSettings.get_setting("audio", audio_bus_name.to_lower() + "_volume")
 
 

@@ -91,7 +91,7 @@ func spawn_player(player_id, team_id, player_user_name) -> void:
 	player_dic[player_id] = player
 	player.move_to_spawn_point()
 	Server.spawn_player_on_client(player_id, spawn_point, team_id)
-	player.connect("timeline_index_changed", self, "_on_player_timeline_changed", [player.player_id])
+	_error = player.connect("timeline_index_changed", self, "_on_player_timeline_changed", [player.player_id])
 
 func reset_wall_indices():
 	for player_id in player_dic:

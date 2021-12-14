@@ -121,7 +121,7 @@ func _on_play_tutorial() -> void:
 	$ClickSound.play()
 	yield($ClickSound, "finished")
 	
-	get_tree().change_scene("res://Tutorial/Tutorial.tscn")
+	var _error = get_tree().change_scene("res://Tutorial/Tutorial.tscn")
 
 
 func _on_play_online() -> void:
@@ -142,7 +142,7 @@ func _on_open_settings() -> void:
 	$ClickSound.play()
 	
 	$CenterContainer/SettingsContainer.show()
-	$CenterContainer/SettingsContainer.connect("visibility_changed", self, "_on_room_search_visibility_changed")
+	var _error = $CenterContainer/SettingsContainer.connect("visibility_changed", self, "_on_room_search_visibility_changed")
 
 
 func _on_exit() -> void:

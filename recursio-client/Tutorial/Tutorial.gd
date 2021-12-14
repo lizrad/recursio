@@ -46,7 +46,7 @@ func _ready():
 	$CharacterManager/RoundManager._start_game()
 	
 
-func _process(delta):
+func _process(_delta):
 	if current_phase == Phases.ROUND1:
 		_update_phase1()
 	elif current_phase == Phases.ROUND2:
@@ -89,4 +89,4 @@ func _update_phase2():
 		current_phase = Phases.DONE
 		
 		yield(get_tree().create_timer(2.0), "timeout")
-		get_tree().change_scene("res://UI/Menus/StartMenu.tscn")
+		var _error = get_tree().change_scene("res://UI/Menus/StartMenu.tscn")

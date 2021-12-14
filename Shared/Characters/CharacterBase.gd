@@ -57,7 +57,7 @@ func _ready():
 	add_child(_death_timer)
 	add_child(_spawn_timer)
 
-func _physics_process(delta):
+func _physics_process(_delta):
 	#locking y to stop physics translation pushing characters into the ground/air
 	kb.transform.origin.y = 0
 
@@ -123,7 +123,7 @@ func hit(perpetrator) -> void:
 # this is necessary because lots of gameplay functionality listens to hit (eg. recording 
 # of the death in the ghostmanager class) we do nott want this during special gameplay 
 # moments (for now only when a death is triggered by a previous death recording from the ghostmanager)
-func quiet_hit(perpetrator) -> void:
+func quiet_hit(_perpetrator) -> void:
 	set_dying(true)
 
 
