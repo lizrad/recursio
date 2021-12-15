@@ -12,7 +12,10 @@ class ObjectPropertyCoupling:
 	
 	func apply_color(color: Color):
 		object.get_ref().set(property, color)
-
+	
+	
+	func equals(other_coupling) -> bool:
+		return (object.get_ref() == other_coupling.object.get_ref() and property == other_coupling.property)
 
 class ObjectMethodCoupling:
 	var object: Object
@@ -30,6 +33,11 @@ class ObjectMethodCoupling:
 		var all_args = args 
 		all_args += [color]
 		object.get_ref().callv(method, all_args)
+	
+	
+	
+	func equals(other_coupling) -> bool:
+		return (object.get_ref() == other_coupling.object.get_ref() and method == other_coupling.method)
 
 
 var _header: String = "colors"
@@ -60,22 +68,44 @@ func color_object_by_method(color_name: String, object: Object, method: String, 
 	var coupling :ObjectMethodCoupling = ObjectMethodCoupling.new(object, method, additional_method_args)
 	_register_coupling(coupling, color_name)
 
-func _register_coupling(coupling, color_name: String):
-	#TODO: check if coupling already exists, if so delete the older one
-	var color = _get_color(color_name)
-	coupling.apply_color(color)
-	_colored_objects[color_name].append(coupling)
 
+func _register_coupling(coupling, new_color_name: String):
+	# TODO: this clean up step is pretty unperformant, with many loops and dictionary lookups, 
+	# we might need to optimize this somehow or let the user take responsibility for
+	# deregistering objects himself (trading ease of use for speed)
+	for color_name in _colored_objects:
+		_clean_up_color(color_name)
+		# because we do this here it is ensured that every object only exists once, 
+		# so after we found one we can early break the loop
+		if(_delete_coupling(color_name, coupling)):
+			break
+	_colored_objects[new_color_name].append(coupling)
+	var color = _get_color(new_color_name)
+	coupling.apply_color(color)
+
+# gets called when a user changes a color setting, and updates every relevant object on the fly
 func color_changed(color_name: String):
+	_clean_up_color(color_name)
 	var color = _get_color(color_name)
-	var to_remove: Array = []
 	for i in range(0, _colored_objects[color_name].size()):
 		var coupling = _colored_objects[color_name][i]
-		if coupling.object.get_ref() != null:
-			coupling.apply_color(color)
-		else:
-			to_remove.append(i)
-	# Removing objects that have become invalid
-	for i in to_remove:
-		print("X")
-		_colored_objects[color_name].remove(i)
+		coupling.apply_color(color)
+
+
+# Remove every coupling where the object was already deleted
+func _clean_up_color(color_name: String):
+	var to_remove: Array = []
+	for i in range(_colored_objects[color_name].size()-1, -1, -1):
+		var coupling = _colored_objects[color_name][i]
+		if coupling.object.get_ref() == null:
+			_colored_objects[color_name].remove(i)
+
+
+# Tries to delete the first occurence of a coupling that stores the same object
+func _delete_coupling(color_name, coupling) -> bool:
+	for i in range(_colored_objects[color_name].size()-1, -1, -1):
+		var current_coupling = _colored_objects[color_name][i]
+		if current_coupling.equals(coupling):
+			_colored_objects[color_name].remove(i)
+			return true
+	return false
