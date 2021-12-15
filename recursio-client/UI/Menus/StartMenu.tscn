@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=2]
+[gd_scene load_steps=32 format=2]
 
 [ext_resource path="res://UI/Menus/StartMenu.gd" type="Script" id=1]
 [ext_resource path="res://UI/Menus/GameRooms/GameRoomCreation.gd" type="Script" id=2]
@@ -23,6 +23,7 @@
 [ext_resource path="res://Tutorial/TutorialScenario_1.tscn" type="PackedScene" id=21]
 [ext_resource path="res://Resources/Audio/UI/Click.ogg" type="AudioStream" id=22]
 [ext_resource path="res://Resources/Audio/UI/Back.ogg" type="AudioStream" id=23]
+[ext_resource path="res://Level/SpawnPoint.tscn" type="PackedScene" id=24]
 
 [sub_resource type="Shader" id=1]
 code = "shader_type canvas_item;
@@ -132,7 +133,7 @@ __meta__ = {
 world_scene = ExtResource( 7 )
 level_scene = ExtResource( 9 )
 capture_point_scene = ExtResource( 10 )
-spawn_point_scene = ExtResource( 21 )
+spawn_point_scene = ExtResource( 24 )
 
 [node name="AsciiBackground" type="ColorRect" parent="."]
 material = SubResource( 6 )
