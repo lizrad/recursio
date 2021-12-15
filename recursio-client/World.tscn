@@ -1,12 +1,12 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://Managers/CharacterManager.gd" type="Script" id=1]
 [ext_resource path="res://UI/GameResultScreen.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Managers/ClientActionManager.gd" type="Script" id=3]
-[ext_resource path="res://Util/StatsHUD.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Managers/ClientGhostManager.gd" type="Script" id=5]
 [ext_resource path="res://Managers/GameManager.gd" type="Script" id=6]
 [ext_resource path="res://Shared/RoundManager.gd" type="Script" id=7]
+[ext_resource path="res://Managers/VisibilityChecker.gd" type="Script" id=8]
 [ext_resource path="res://UI/CountdownScreen.tscn" type="PackedScene" id=9]
 [ext_resource path="res://World.gd" type="Script" id=10]
 
@@ -28,9 +28,10 @@ script = ExtResource( 7 )
 [node name="GhostManager" type="Node" parent="CharacterManager"]
 script = ExtResource( 5 )
 
+[node name="VisibilityChecker" type="Node" parent="CharacterManager"]
+script = ExtResource( 8 )
+
 [node name="GameResultScreen" parent="." instance=ExtResource( 2 )]
 
 [node name="CountdownScreen" parent="." instance=ExtResource( 9 )]
 visible = false
-
-[node name="StatsHUD" parent="." instance=ExtResource( 4 )]

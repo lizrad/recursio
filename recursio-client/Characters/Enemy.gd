@@ -14,8 +14,9 @@ func enemy_init(action_manager: ActionManager) -> void:
 
 
 # OVERRIDE #
-func hit(_perpetrator):
-	pass
+# Only emit signal for client
+func hit(perpetrator):
+	emit_signal("client_hit", perpetrator)
 
 func server_hit(perpetrator):
 	.hit(perpetrator)

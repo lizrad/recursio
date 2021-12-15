@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=2]
+[gd_scene load_steps=33 format=2]
 
 [ext_resource path="res://UI/Menus/StartMenu.gd" type="Script" id=1]
 [ext_resource path="res://UI/Menus/GameRooms/GameRoomCreation.gd" type="Script" id=2]
@@ -7,7 +7,7 @@
 [ext_resource path="res://UI/Menus/GameRoomLobby.gd" type="Script" id=5]
 [ext_resource path="res://Resources/Icons/icon_not_ready.png" type="Texture" id=6]
 [ext_resource path="res://World.tscn" type="PackedScene" id=7]
-[ext_resource path="res://Util/StatsHUD.tscn" type="PackedScene" id=8]
+[ext_resource path="res://UI/Menus/DebugCheckButton.gd" type="Script" id=8]
 [ext_resource path="res://Shared/Level/LevelH.tscn" type="PackedScene" id=9]
 [ext_resource path="res://Level/CapturePoint.tscn" type="PackedScene" id=10]
 [ext_resource path="res://addons/ascii-shader/character_map.png" type="Texture" id=11]
@@ -18,10 +18,12 @@
 [ext_resource path="res://UI/Menus/FullScreenCheckButton.gd" type="Script" id=16]
 [ext_resource path="res://UI/Menus/AsciiSlider.gd" type="Script" id=17]
 [ext_resource path="res://UI/Menus/AsciiBackground.gd" type="Script" id=18]
-[ext_resource path="res://Resources/Audio/UI/Click.ogg" type="AudioStream" id=19]
+[ext_resource path="res://Tutorial/Tutorial.gd" type="Script" id=19]
 [ext_resource path="res://Resources/Audio/UI/Back.ogg" type="AudioStream" id=20]
 [ext_resource path="res://Level/SpawnPoint.tscn" type="PackedScene" id=21]
-[ext_resource path="res://UI/Menus/ColorSettingController.gd" type="Script" id=23]
+[ext_resource path="res://Resources/Audio/UI/Click.ogg" type="AudioStream" id=23]
+[ext_resource path="res://Tutorial/TutorialScenario_2.tscn" type="PackedScene" id=24]
+[ext_resource path="res://Tutorial/TutorialScenario_1.tscn" type="PackedScene" id=25]
 
 [sub_resource type="Shader" id=1]
 code = "shader_type canvas_item;
@@ -115,6 +117,12 @@ shader_param/noise2 = SubResource( 5 )
 shader_param/character_map = ExtResource( 11 )
 
 [sub_resource type="DynamicFont" id=7]
+size = 60
+use_mipmaps = true
+use_filter = true
+font_data = ExtResource( 13 )
+
+[sub_resource type="DynamicFont" id=8]
 size = 60
 use_mipmaps = true
 use_filter = true
@@ -454,7 +462,7 @@ script = ExtResource( 14 )
 margin_left = 7.0
 margin_top = 7.0
 margin_right = 643.0
-margin_bottom = 371.0
+margin_bottom = 325.0
 
 [node name="Header" type="Label" parent="CenterContainer/SettingsContainer/SettingsList"]
 margin_right = 636.0
@@ -471,97 +479,25 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="TabContainer" type="TabContainer" parent="CenterContainer/SettingsContainer/SettingsList"]
+[node name="MainVolume" type="HBoxContainer" parent="CenterContainer/SettingsContainer/SettingsList"]
 margin_top = 54.0
 margin_right = 636.0
-margin_bottom = 304.0
-rect_min_size = Vector2( 0, 250 )
+margin_bottom = 80.0
 
-[node name="Video" type="VBoxContainer" parent="CenterContainer/SettingsContainer/SettingsList/TabContainer"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = 4.0
-margin_top = 44.0
-margin_right = -4.0
-margin_bottom = -4.0
-
-[node name="FullScreen" type="HBoxContainer" parent="CenterContainer/SettingsContainer/SettingsList/TabContainer/Video"]
-margin_right = 628.0
-margin_bottom = 40.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label" type="Label" parent="CenterContainer/SettingsContainer/SettingsList/TabContainer/Video/FullScreen"]
-margin_top = 7.0
-margin_right = 156.0
-margin_bottom = 33.0
-text = "Full Screen: "
-
-[node name="FullScreenCheckButton" type="CheckButton" parent="CenterContainer/SettingsContainer/SettingsList/TabContainer/Video/FullScreen" groups=["Setting"]]
-margin_left = 160.0
-margin_right = 236.0
-margin_bottom = 40.0
-focus_neighbour_top = NodePath("../../../Audio/EffectsVolume/VolumeSlider")
-focus_neighbour_bottom = NodePath("../../AsciiSize/AsciiSlider")
-focus_next = NodePath("../../AsciiSize/AsciiSlider")
-focus_previous = NodePath("../../../Audio/EffectsVolume/VolumeSlider")
-script = ExtResource( 16 )
-
-[node name="AsciiSize" type="HBoxContainer" parent="CenterContainer/SettingsContainer/SettingsList/TabContainer/Video"]
-margin_top = 44.0
-margin_right = 628.0
-margin_bottom = 70.0
-
-[node name="Label" type="Label" parent="CenterContainer/SettingsContainer/SettingsList/TabContainer/Video/AsciiSize"]
-margin_right = 264.0
-margin_bottom = 26.0
-text = "ASCII Character Size: "
-
-[node name="AsciiSlider" type="HSlider" parent="CenterContainer/SettingsContainer/SettingsList/TabContainer/Video/AsciiSize"]
-margin_left = 268.0
-margin_right = 628.0
-margin_bottom = 16.0
-focus_neighbour_top = NodePath("../../FullScreen/FullScreenCheckButton")
-focus_neighbour_bottom = NodePath("../../../../BackButton")
-focus_next = NodePath("../../../../BackButton")
-focus_previous = NodePath("../../FullScreen/FullScreenCheckButton")
-size_flags_horizontal = 3
-min_value = 4.0
-max_value = 16.0
-step = 4.0
-value = 8.0
-tick_count = 4
-ticks_on_borders = true
-script = ExtResource( 17 )
-
-[node name="Audio" type="VBoxContainer" parent="CenterContainer/SettingsContainer/SettingsList/TabContainer"]
-visible = false
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = 4.0
-margin_top = 44.0
-margin_right = -4.0
-margin_bottom = -4.0
-
-[node name="MainVolume" type="HBoxContainer" parent="CenterContainer/SettingsContainer/SettingsList/TabContainer/Audio"]
-margin_right = 628.0
-margin_bottom = 26.0
-
-[node name="Label" type="Label" parent="CenterContainer/SettingsContainer/SettingsList/TabContainer/Audio/MainVolume"]
+[node name="Label" type="Label" parent="CenterContainer/SettingsContainer/SettingsList/MainVolume"]
 margin_right = 156.0
 margin_bottom = 26.0
 text = "Main Volume: "
 
-[node name="VolumeSlider" type="HSlider" parent="CenterContainer/SettingsContainer/SettingsList/TabContainer/Audio/MainVolume" groups=["Setting"]]
+[node name="VolumeSlider" type="HSlider" parent="CenterContainer/SettingsContainer/SettingsList/MainVolume" groups=["Setting"]]
 margin_left = 160.0
-margin_right = 628.0
+margin_right = 636.0
 margin_bottom = 16.0
 rect_min_size = Vector2( 400, 0 )
-focus_neighbour_top = NodePath("../../../../BackButton")
+focus_neighbour_top = NodePath("../../BackButton")
 focus_neighbour_bottom = NodePath("../../MusicVolume")
 focus_next = NodePath("../../MusicVolume/VolumeSlider")
-focus_previous = NodePath("../../../../BackButton")
+focus_previous = NodePath("../../BackButton")
 size_flags_horizontal = 3
 max_value = 1.0
 step = 0.05
@@ -570,19 +506,19 @@ tick_count = 11
 ticks_on_borders = true
 script = ExtResource( 15 )
 
-[node name="MusicVolume" type="HBoxContainer" parent="CenterContainer/SettingsContainer/SettingsList/TabContainer/Audio"]
-margin_top = 30.0
-margin_right = 628.0
-margin_bottom = 56.0
+[node name="MusicVolume" type="HBoxContainer" parent="CenterContainer/SettingsContainer/SettingsList"]
+margin_top = 84.0
+margin_right = 636.0
+margin_bottom = 110.0
 
-[node name="Label" type="Label" parent="CenterContainer/SettingsContainer/SettingsList/TabContainer/Audio/MusicVolume"]
+[node name="Label" type="Label" parent="CenterContainer/SettingsContainer/SettingsList/MusicVolume"]
 margin_right = 192.0
 margin_bottom = 26.0
 text = "  Music Volume: "
 
-[node name="VolumeSlider" type="HSlider" parent="CenterContainer/SettingsContainer/SettingsList/TabContainer/Audio/MusicVolume" groups=["Setting"]]
+[node name="VolumeSlider" type="HSlider" parent="CenterContainer/SettingsContainer/SettingsList/MusicVolume" groups=["Setting"]]
 margin_left = 196.0
-margin_right = 628.0
+margin_right = 636.0
 margin_bottom = 16.0
 rect_min_size = Vector2( 400, 0 )
 focus_neighbour_top = NodePath("../../MainVolume/VolumeSlider")
@@ -598,24 +534,24 @@ ticks_on_borders = true
 script = ExtResource( 15 )
 audio_bus_name = "Music"
 
-[node name="EffectsVolume" type="HBoxContainer" parent="CenterContainer/SettingsContainer/SettingsList/TabContainer/Audio"]
-margin_top = 60.0
-margin_right = 628.0
-margin_bottom = 86.0
+[node name="EffectsVolume" type="HBoxContainer" parent="CenterContainer/SettingsContainer/SettingsList"]
+margin_top = 114.0
+margin_right = 636.0
+margin_bottom = 140.0
 
-[node name="Label" type="Label" parent="CenterContainer/SettingsContainer/SettingsList/TabContainer/Audio/EffectsVolume"]
+[node name="Label" type="Label" parent="CenterContainer/SettingsContainer/SettingsList/EffectsVolume"]
 margin_right = 216.0
 margin_bottom = 26.0
 text = "  Effects Volume: "
 
-[node name="VolumeSlider" type="HSlider" parent="CenterContainer/SettingsContainer/SettingsList/TabContainer/Audio/EffectsVolume" groups=["Setting"]]
+[node name="VolumeSlider" type="HSlider" parent="CenterContainer/SettingsContainer/SettingsList/EffectsVolume" groups=["Setting"]]
 margin_left = 220.0
-margin_right = 628.0
+margin_right = 636.0
 margin_bottom = 16.0
 rect_min_size = Vector2( 400, 0 )
 focus_neighbour_top = NodePath("../../MusicVolume/VolumeSlider")
-focus_neighbour_bottom = NodePath("../../../Video/FullScreen/FullScreenCheckButton")
-focus_next = NodePath("../../../Video/FullScreen/FullScreenCheckButton")
+focus_neighbour_bottom = NodePath("../../FullScreen/FullScreenCheckButton")
+focus_next = NodePath("../../FullScreen/FullScreenCheckButton")
 focus_previous = NodePath("../../MusicVolume/VolumeSlider")
 size_flags_horizontal = 3
 max_value = 1.0
@@ -626,44 +562,149 @@ ticks_on_borders = true
 script = ExtResource( 15 )
 audio_bus_name = "Effects"
 
-[node name="Colors" type="ScrollContainer" parent="CenterContainer/SettingsContainer/SettingsList/TabContainer"]
-visible = false
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = 4.0
-margin_top = 44.0
-margin_right = -4.0
-margin_bottom = -4.0
-script = ExtResource( 23 )
+[node name="FullScreen" type="HBoxContainer" parent="CenterContainer/SettingsContainer/SettingsList"]
+margin_top = 144.0
+margin_right = 636.0
+margin_bottom = 184.0
 
-[node name="ColorList" type="VBoxContainer" parent="CenterContainer/SettingsContainer/SettingsList/TabContainer/Colors"]
+[node name="Label" type="Label" parent="CenterContainer/SettingsContainer/SettingsList/FullScreen"]
+margin_top = 7.0
+margin_right = 156.0
+margin_bottom = 33.0
+text = "Full Screen: "
+
+[node name="FullScreenCheckButton" type="CheckButton" parent="CenterContainer/SettingsContainer/SettingsList/FullScreen" groups=["Setting"]]
+margin_left = 160.0
+margin_right = 236.0
+margin_bottom = 40.0
+focus_neighbour_top = NodePath("../../EffectsVolume/VolumeSlider")
+focus_neighbour_bottom = NodePath("../../AsciiSize/AsciiSlider")
+focus_next = NodePath("../../AsciiSize/AsciiSlider")
+focus_previous = NodePath("../../EffectsVolume/VolumeSlider")
+script = ExtResource( 16 )
+
+[node name="AsciiSize" type="HBoxContainer" parent="CenterContainer/SettingsContainer/SettingsList"]
+margin_top = 188.0
+margin_right = 636.0
+margin_bottom = 214.0
+
+[node name="Label" type="Label" parent="CenterContainer/SettingsContainer/SettingsList/AsciiSize"]
+margin_right = 264.0
+margin_bottom = 26.0
+text = "ASCII Character Size: "
+
+[node name="AsciiSlider" type="HSlider" parent="CenterContainer/SettingsContainer/SettingsList/AsciiSize"]
+margin_left = 268.0
+margin_right = 636.0
+margin_bottom = 16.0
+focus_neighbour_top = NodePath("../../FullScreen/FullScreenCheckButton")
+focus_neighbour_bottom = NodePath("../../Debug/DebugCheckButton")
+focus_next = NodePath("../../Debug/DebugCheckButton")
+focus_previous = NodePath("../../FullScreen/FullScreenCheckButton")
+size_flags_horizontal = 3
+min_value = 4.0
+max_value = 16.0
+step = 4.0
+value = 8.0
+tick_count = 4
+ticks_on_borders = true
+script = ExtResource( 17 )
+
+[node name="Debug" type="HBoxContainer" parent="CenterContainer/SettingsContainer/SettingsList"]
+margin_top = 218.0
+margin_right = 636.0
+margin_bottom = 258.0
+
+[node name="Label" type="Label" parent="CenterContainer/SettingsContainer/SettingsList/Debug"]
+margin_top = 7.0
+margin_right = 120.0
+margin_bottom = 33.0
+text = "Debug UI: "
+
+[node name="DebugCheckButton" type="CheckButton" parent="CenterContainer/SettingsContainer/SettingsList/Debug" groups=["Setting"]]
+margin_left = 124.0
+margin_right = 200.0
+margin_bottom = 40.0
+focus_neighbour_top = NodePath("../../AsciiSize/AsciiSlider")
+focus_neighbour_bottom = NodePath("../../BackButton")
+focus_next = NodePath("../../BackButton")
+focus_previous = NodePath("../../AsciiSize/AsciiSlider")
+script = ExtResource( 8 )
 
 [node name="Space2" type="Control" parent="CenterContainer/SettingsContainer/SettingsList"]
-margin_top = 308.0
+margin_top = 262.0
 margin_right = 636.0
-margin_bottom = 328.0
+margin_bottom = 282.0
 rect_min_size = Vector2( 0, 20 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="BackButton" type="Button" parent="CenterContainer/SettingsContainer/SettingsList"]
-margin_top = 332.0
+margin_top = 286.0
 margin_right = 636.0
-margin_bottom = 364.0
-focus_neighbour_top = NodePath("../TabContainer/Video/AsciiSize/AsciiSlider")
-focus_neighbour_bottom = NodePath("../TabContainer/Audio/MainVolume/VolumeSlider")
-focus_next = NodePath("../TabContainer/Audio/MainVolume/VolumeSlider")
-focus_previous = NodePath("../TabContainer/Video/AsciiSize/AsciiSlider")
+margin_bottom = 318.0
+focus_neighbour_top = NodePath("../Debug/DebugCheckButton")
+focus_neighbour_bottom = NodePath("../MainVolume/VolumeSlider")
+focus_next = NodePath("../MainVolume/VolumeSlider")
+focus_previous = NodePath("../Debug/DebugCheckButton")
 text = "Back"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="StatsHUD" parent="." instance=ExtResource( 8 )]
+[node name="Tutorial" type="Control" parent="."]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = -1920.0
+margin_bottom = -1080.0
+script = ExtResource( 19 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+tutorial_scenes = [ ExtResource( 25 ), ExtResource( 24 ) ]
+
+[node name="TutorialMenu" type="VBoxContainer" parent="Tutorial"]
+margin_left = 812.0
+margin_top = 410.0
+margin_right = 1108.0
+margin_bottom = 669.0
+
+[node name="Label" type="Label" parent="Tutorial/TutorialMenu"]
+margin_right = 333.0
+margin_bottom = 75.0
+custom_fonts/font = SubResource( 8 )
+text = "Tutorials"
+align = 1
+
+[node name="Tutorial1" type="Button" parent="Tutorial/TutorialMenu"]
+margin_top = 79.0
+margin_right = 333.0
+margin_bottom = 111.0
+shortcut_in_tooltip = false
+text = "Tutorial 1: Capture Points"
+align = 0
+expand_icon = true
+
+[node name="Tutorial2" type="Button" parent="Tutorial/TutorialMenu"]
+margin_top = 115.0
+margin_right = 333.0
+margin_bottom = 147.0
+shortcut_in_tooltip = false
+text = "Tutorial 2: Enemies"
+align = 0
+expand_icon = true
+
+[node name="Btn_Back" type="Button" parent="Tutorial/TutorialMenu"]
+margin_top = 151.0
+margin_right = 333.0
+margin_bottom = 183.0
+shortcut_in_tooltip = false
+text = "Back"
 
 [node name="ClickSound" type="AudioStreamPlayer" parent="."]
-stream = ExtResource( 19 )
+stream = ExtResource( 23 )
 volume_db = -30.0
 bus = "Effects"
 

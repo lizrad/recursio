@@ -58,12 +58,10 @@ func spawn_enemy_on_client(player_id, enemy_id, enemy_position, team_id):
 
 
 func send_player_ghost_record_to_client(player_id, timeline_index, round_index, record_data: RecordData):
-	record_data.timestamp = get_server_time()
 	rpc_id(player_id, "receive_player_ghost_record", timeline_index,round_index,  record_data.to_array())
 
 
 func send_enemy_ghost_record_to_client(player_id, timeline_index,round_index,  record_data: RecordData):
-	record_data.timestamp = get_server_time()
 	rpc_id(player_id, "receive_enemy_ghost_record", timeline_index,round_index,  record_data.to_array())
 
 
