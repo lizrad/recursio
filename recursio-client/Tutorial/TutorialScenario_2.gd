@@ -187,7 +187,8 @@ func _on_ghost_hit(perpetrator, ghost: Ghost):
 	ghost.server_hit(perpetrator)
 
 
-func _on_ghost_hit_soft_lock(perpetrator, ghost: Ghost):
+func _on_ghost_hit_soft_lock(perpetrator, ghost: PlayerGhost):
+	ghost.toggle_visibility_light(false)
 	ghost.server_hit(perpetrator)
 	_toggle_ui(true)
 	_tutorial_text.typing_text = "Oh no, your ghost died! Try again."
