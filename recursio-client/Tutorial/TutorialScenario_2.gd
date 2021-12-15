@@ -185,12 +185,19 @@ func _on_ghost_hit(perpetrator, ghost):
 	ghost.server_hit(perpetrator)
 
 
-func _on_ghost_hit_soft_lock(perpetrator, ghost: PlayerGhost):
+func _on_ghost_hit_soft_lock(perpetrator, ghost: PlayerGhost):	
 	ghost.toggle_visibility_light(false)
 	ghost.server_hit(perpetrator)
 	_toggle_ui(true)
 	_tutorial_text.typing_text = "Oh no, your ghost died! Try again."
 	yield(_tutorial_text, "typing_completed")
 	yield(get_tree().create_timer(2), "timeout")
-	_toggle_ui(false)
 	_character_manager._round_manager.switch_to_phase(RoundManager.Phases.PREPARATION)
+	
+	if perpetrator is Player:
+		_tutorial_text.typing_text = "You can also melee by pressing RS."
+		yield(_tutorial_text, "typing_completed")
+		yield(get_tree().create_timer(2), "timeout")
+	
+	_toggle_ui(false)
+	

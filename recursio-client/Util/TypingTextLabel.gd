@@ -11,6 +11,8 @@ var _number_of_visible_characters: float = 0
 
 var typing_text setget set_typing_text, get_typing_text
 
+var typing_completed: bool = true
+
 
 func _ready():
 	self.visible_characters = 0
@@ -20,6 +22,7 @@ func _process(delta):
 	if _number_of_visible_characters >= _number_of_characters:
 		set_process(false)
 		self.visible_characters = -1
+		typing_completed = true
 		emit_signal("typing_completed")
 		return
 	
@@ -30,6 +33,7 @@ func _process(delta):
 
 
 func set_typing_text(typing_text) -> void:
+	typing_completed = false
 	_number_of_visible_characters = 0
 	self.visible_characters = 0
 	_number_of_characters = typing_text.length()

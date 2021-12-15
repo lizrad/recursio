@@ -72,7 +72,8 @@ func add_round_end_function(round_end_function: FuncRef):
 
 
 func _toggle_ui(show: bool) -> void:
-	$TutorialUI.visible = show if show_ui else false
+	if _tutorial_text.typing_completed:
+		$TutorialUI.visible = show if show_ui else false
 
 
 func _completed() -> void:
