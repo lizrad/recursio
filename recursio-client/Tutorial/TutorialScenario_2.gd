@@ -25,8 +25,10 @@ func _ready():
 	_player = _character_manager.get_player()
 	
 	_player.kb.visible = false
-	_player.hide_button_overlay = true
 	_player.block_switching = true
+	_player.hide_button_overlay = true
+	# Shorten prep phase
+	_round_manager._preparation_phase_time = 3.0
 	
 	var spawn_point = _game_manager.get_spawn_point(1, 0).global_transform.origin
 	_character_manager._on_spawn_enemy(1, spawn_point, 1)

@@ -273,3 +273,4 @@ func _on_tutorial_scenario_completed() -> void:
 func _on_tutorial_back_pressed() ->void:
 	_tutorial.hide()
 	_start_menu_buttons.show()
+	_btn_play_tutorial.grab_focus()

@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=2]
+[gd_scene load_steps=31 format=2]
 
 [ext_resource path="res://UI/Menus/StartMenu.gd" type="Script" id=1]
 [ext_resource path="res://UI/Menus/GameRooms/GameRoomCreation.gd" type="Script" id=2]
@@ -23,7 +23,6 @@
 [ext_resource path="res://Tutorial/TutorialScenario_1.tscn" type="PackedScene" id=21]
 [ext_resource path="res://Resources/Audio/UI/Click.ogg" type="AudioStream" id=22]
 [ext_resource path="res://Resources/Audio/UI/Back.ogg" type="AudioStream" id=23]
-[ext_resource path="res://Level/SpawnPoint.tscn" type="PackedScene" id=24]
 
 [sub_resource type="Shader" id=1]
 code = "shader_type canvas_item;
@@ -634,11 +633,11 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 margin_right = -1920.0
 margin_bottom = -1080.0
-script = ExtResource( 20 )
+script = ExtResource( 19 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
-tutorial_scenes = [ ExtResource( 23 ), ExtResource( 22 ) ]
+tutorial_scenes = [ ExtResource( 21 ), ExtResource( 20 ) ]
 
 [node name="TutorialMenu" type="VBoxContainer" parent="Tutorial"]
 margin_left = 812.0
@@ -677,12 +676,13 @@ margin_right = 333.0
 margin_bottom = 183.0
 shortcut_in_tooltip = false
 text = "Back"
+
 [node name="ClickSound" type="AudioStreamPlayer" parent="."]
-stream = ExtResource( 19 )
+stream = ExtResource( 22 )
 volume_db = -30.0
 bus = "Effects"
 
 [node name="BackSound" type="AudioStreamPlayer" parent="."]
-stream = ExtResource( 20 )
+stream = ExtResource( 23 )
 volume_db = -30.0
 bus = "Effects"
