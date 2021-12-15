@@ -57,7 +57,6 @@ func color_changed(color_name: String):
 
 # Remove every coupling where the object was already deleted
 func _clean_up_color(color_name: String):
-	var to_remove: Array = []
 	for i in range(_colored_objects[color_name].size()-1, -1, -1):
 		var coupling = _colored_objects[color_name][i]
 		if coupling.object.get_ref() == null:
