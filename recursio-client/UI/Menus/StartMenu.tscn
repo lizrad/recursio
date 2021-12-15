@@ -598,8 +598,8 @@ margin_left = 268.0
 margin_right = 636.0
 margin_bottom = 16.0
 focus_neighbour_top = NodePath("../../FullScreen/FullScreenCheckButton")
-focus_neighbour_bottom = NodePath("../../BackButton")
-focus_next = NodePath("../../BackButton")
+focus_neighbour_bottom = NodePath("../../Debug/DebugCheckButton")
+focus_next = NodePath("../../Debug/DebugCheckButton")
 focus_previous = NodePath("../../FullScreen/FullScreenCheckButton")
 size_flags_horizontal = 3
 min_value = 4.0
@@ -625,6 +625,10 @@ text = "Debug UI: "
 margin_left = 124.0
 margin_right = 200.0
 margin_bottom = 40.0
+focus_neighbour_top = NodePath("../../AsciiSize/AsciiSlider")
+focus_neighbour_bottom = NodePath("../../BackButton")
+focus_next = NodePath("../../BackButton")
+focus_previous = NodePath("../../AsciiSize/AsciiSlider")
 script = ExtResource( 8 )
 
 [node name="Space2" type="Control" parent="CenterContainer/SettingsContainer/SettingsList"]
@@ -640,10 +644,10 @@ __meta__ = {
 margin_top = 286.0
 margin_right = 636.0
 margin_bottom = 318.0
-focus_neighbour_top = NodePath("../AsciiSize/AsciiSlider")
+focus_neighbour_top = NodePath("../Debug/DebugCheckButton")
 focus_neighbour_bottom = NodePath("../MainVolume/VolumeSlider")
 focus_next = NodePath("../MainVolume/VolumeSlider")
-focus_previous = NodePath("../AsciiSize/AsciiSlider")
+focus_previous = NodePath("../Debug/DebugCheckButton")
 text = "Back"
 __meta__ = {
 "_edit_use_anchors_": false
