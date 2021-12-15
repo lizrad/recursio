@@ -38,10 +38,18 @@ func set_looking_at_positions(positions):
 
 
 func _process(delta):
-	for child in $Arrows.get_children():
-		child.free()
-	
-	for pos in looking_at:
-		var new_arrow = arrow.instance()
-		$Arrows.add_child(new_arrow)
-		new_arrow.look_at(pos, Vector3.UP)
+	# Spawn and position arrows
+	if $Arrows.get_children().size() == looking_at.size():
+		# If we already have the number of arrows we need, just reposition them
+		for i in range(looking_at.size()):
+			$Arrows.get_child(i).look_at(looking_at[i], Vector3.UP)
+	else:
+		# For simplicity, just free all arrows and instantiate new ones. Could be optimized, but
+		# doesn't seem like a bottleneck
+		for child in $Arrows.get_children():
+			child.free()
+		
+		for pos in looking_at:
+			var new_arrow = arrow.instance()
+			$Arrows.add_child(new_arrow)
+			new_arrow.look_at(pos, Vector3.UP)

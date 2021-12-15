@@ -40,6 +40,8 @@ func _process(delta):
 			var player_enemy_vector = enemy_pos - player_pos
 			
 			# Check if the enemy is within range and within view angle
+			# The values of 1.5 and 50 were found via trial-and-error - probably can't be generalized
+			# because it depends on many factors...
 			if player_enemy_vector.length() < Constants.get_value("visibility", "spot_range") + 1.5 \
 					and player_enemy_vector.angle_to(enemy.kb.transform.basis.z) < deg2rad(50):
 				# Check whether the line of sight is occluded via a raycast
