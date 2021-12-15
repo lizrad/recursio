@@ -8,7 +8,11 @@ onready var _toggle_time = Constants.get_value("visibility", "light_toggle_time"
 onready var _spot_range = Constants.get_value("visibility", "spot_range")
 
 func _ready():
+	# The light energy entered here is the energy of the visual light. The light for the visibility
+	# shader is multiplied by 10 in order to avoid artifacts.
 	$SightLight.light_energy = light_energy
+	light_energy *= 10
+	
 	$SightLight.spot_angle = spot_angle
 	spot_range = 0
 	$SightLight.spot_range = spot_range
