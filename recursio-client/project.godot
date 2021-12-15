@@ -238,6 +238,7 @@ _global_script_classes=[ {
 "class": "TypingTextLabel",
 "language": "GDScript",
 "path": "res://Util/TypingTextLabel.gd"
+}, {
 "base": "Node",
 "class": "VisibilityChecker",
 "language": "GDScript",
