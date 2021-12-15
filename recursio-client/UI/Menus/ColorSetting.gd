@@ -13,6 +13,7 @@ func _ready() -> void:
 	# listening to popup_closed instead of color_changed so it really only saves 
 	# to file when the user decided
 	var _error = _color_picker_button.connect("popup_closed", self, "_on_popup_closed")
+	_error = _color_picker_button.connect("picker_created", self, "_on_picker_created")
 
 
 func init(header: String, key: String) -> void:
@@ -30,6 +31,22 @@ func _on_popup_closed() -> void:
 	var color_string = "#" + color.to_html(false)
 	UserSettings.set_setting(_header, _key, color_string)
 	ColorManager.color_changed(_key)
+
+
+# Code from: https://godotforums.org/discussion/25786/how-to-customize-a-colorpickerbutton-to-make-colors-selectable-with-a-keyboard-or-controller
+func _on_picker_created() -> void:
+	var picker = $ColorPickerButton.get_child(0).get_child(0)
+	picker.get_child(1).get_child(1).set_focus_mode(1) # Eye dropper is a mouse tool
+	# Allow sliders to acquire focus and reserve the SpinBox's LineEdit (child 0) for a mouse
+	picker.get_child(4).get_child(0).get_child(1).set_focus_mode(2) # Red/Hue slider
+	picker.get_child(4).get_child(0).get_child(2).get_child(0).set_focus_mode(1) # Red/Hue spinbox
+	picker.get_child(4).get_child(1).get_child(1).set_focus_mode(2) # Green/Sat slider
+	picker.get_child(4).get_child(1).get_child(2).get_child(0).set_focus_mode(1) # Green/Sat spinbox
+	picker.get_child(4).get_child(2).get_child(1).set_focus_mode(2) # Blue/Value slider
+	picker.get_child(4).get_child(2).get_child(2).get_child(0).set_focus_mode(1) # Blue/Value spinbox
+	picker.get_child(4).get_child(4).get_child(1).hide() # Raw toggle; not a conventional feature
+	picker.get_child(4).get_child(4).get_child(2).set_focus_mode(0) # Skip the hex '#' label!
+	picker.get_child(4).get_child(4).get_child(3).set_focus_mode(1) # Hex LineEdit
 
 
 func set_next_focus(focus: NodePath) -> void:
