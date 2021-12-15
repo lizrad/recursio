@@ -477,19 +477,7 @@ margin_right = 636.0
 margin_bottom = 304.0
 rect_min_size = Vector2( 0, 250 )
 
-[node name="Colors" type="ScrollContainer" parent="CenterContainer/SettingsContainer/SettingsList/TabContainer"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = 4.0
-margin_top = 44.0
-margin_right = -4.0
-margin_bottom = -4.0
-script = ExtResource( 23 )
-
-[node name="ColorList" type="VBoxContainer" parent="CenterContainer/SettingsContainer/SettingsList/TabContainer/Colors"]
-
 [node name="Video" type="VBoxContainer" parent="CenterContainer/SettingsContainer/SettingsList/TabContainer"]
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 4.0
@@ -637,6 +625,18 @@ tick_count = 11
 ticks_on_borders = true
 script = ExtResource( 15 )
 audio_bus_name = "Effects"
+
+[node name="Colors" type="ScrollContainer" parent="CenterContainer/SettingsContainer/SettingsList/TabContainer"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 4.0
+margin_top = 44.0
+margin_right = -4.0
+margin_bottom = -4.0
+script = ExtResource( 23 )
+
+[node name="ColorList" type="VBoxContainer" parent="CenterContainer/SettingsContainer/SettingsList/TabContainer/Colors"]
 
 [node name="Space2" type="Control" parent="CenterContainer/SettingsContainer/SettingsList"]
 margin_top = 308.0
