@@ -40,18 +40,18 @@ class ObjectMethodCoupling:
 		return (object.get_ref() == other_coupling.object.get_ref() and method == other_coupling.method)
 
 
-var _header: String = "colors"
+var header: String = "colors"
 var _colored_objects: Dictionary = {}
 
 
 func _ready():
-	var colors = UserSettings.get_all_settings_for_header(_header)
+	var colors = UserSettings.get_all_settings_for_header(header)
 	for color_name in colors:
 		_colored_objects[color_name] = []
 
 
 func _get_color(color_name: String) -> Color:
-	return Color(UserSettings.get_setting(_header, color_name))
+	return Color(UserSettings.get_setting(header, color_name))
 
 
 func color_object_by_property(color_name: String, object: Object, property: String):
