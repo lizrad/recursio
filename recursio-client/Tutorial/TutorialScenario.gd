@@ -16,25 +16,17 @@ var _round_starts := []
 var _round_conditions := []
 var _round_ends := []
 
-var _tutorial_text: TypingTextLabel
-
-var _character_manager: CharacterManager
-var _ghost_manager: ClientGhostManager
-var _game_manager: GameManager
-var _round_manager: RoundManager
-var _action_manager: ActionManager
+onready var _tutorial_text: TypingTextLabel = get_node("TutorialUI/PanelContainer/TutorialText")
+onready var _character_manager: CharacterManager = get_node("TutorialWorld/CharacterManager")
+onready var _ghost_manager: ClientGhostManager = get_node("TutorialWorld/CharacterManager/GhostManager")
+onready var _game_manager: GameManager = get_node("TutorialWorld/CharacterManager/GameManager")
+onready var _round_manager: RoundManager = get_node("TutorialWorld/CharacterManager/RoundManager")
+onready var _action_manager: ActionManager = get_node("TutorialWorld/CharacterManager/ActionManager")
 
 var _level: Level
 
 
-func _ready():
-	_tutorial_text = get_node("TutorialUI/PanelContainer/TutorialText")
-	_character_manager = get_node("TutorialWorld/CharacterManager")
-	_ghost_manager = get_node("TutorialWorld/CharacterManager/GhostManager")
-	_game_manager = get_node("TutorialWorld/CharacterManager/GameManager")
-	_round_manager = get_node("TutorialWorld/CharacterManager/RoundManager")
-	_action_manager =  get_node("TutorialWorld/CharacterManager/ActionManager")
-	
+func _ready():	
 	_level = get_node("TutorialWorld/LevelH")
 	_game_manager.set_level(_level)
 
