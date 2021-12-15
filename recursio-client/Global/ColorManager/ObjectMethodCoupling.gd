@@ -2,24 +2,24 @@ extends ObjectCoupling
 class_name ObjectMethodCoupling
 
 
-var method: String
-var args: Array
+var _method: String
+var _args: Array
 
 # OVERRIDE #
 func _init(object: Object, method: String, args: Array).(object) -> void:
-	self.method = method
-	self.args = args
+	_method = method
+	_args = args
 
 
 # OVERRIDE #
 func apply_color(color: Color) -> void:
-	var all_args = args 
+	var all_args = _args 
 	all_args += [color]
-	object.get_ref().callv(method, all_args)
+	_object.get_ref().callv(_method, all_args)
 
 
 # OVERRIDE #
 func equals(other_coupling) -> bool:
 	if typeof(other_coupling) != typeof(self):
 		return false
-	return (object.get_ref() == other_coupling.object.get_ref() and method == other_coupling.method)
+	return (_object.get_ref() == other_coupling._object.get_ref() and _method == other_coupling._method)

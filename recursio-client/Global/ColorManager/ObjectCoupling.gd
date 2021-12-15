@@ -2,17 +2,17 @@ extends Object
 class_name ObjectCoupling
 
 
-var object
+var _object
 
 
 func _init(object) -> void: 
 	# using weakref here because coupling have to become invalid 
 	# if the object gets deleted 
-	self.object = weakref(object)
+	_object = weakref(object)
 
 
 func is_valid() -> bool:
-	return object.get_ref() != null
+	return _object.get_ref() != null
 
 
 func apply_color(_color: Color) -> void:
