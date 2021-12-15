@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Characters/Visuals/VisibilityVisualization.tres" type="Material" id=1]
+
+[sub_resource type="PrismMesh" id=8]
+size = Vector3( 0.7, 1.2, 0.1 )
+
+[node name="VisibleArrow" type="Spatial"]
+
+[node name="Arrow" type="MeshInstance" parent="."]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, -3 )
+material_override = ExtResource( 1 )
+cast_shadow = 0
+mesh = SubResource( 8 )
+skeleton = NodePath("../..")
+material/0 = null
