@@ -442,10 +442,11 @@ shortcut_in_tooltip = false
 text = "Leave"
 
 [node name="SettingsContainer" type="PanelContainer" parent="CenterContainer"]
+visible = false
 margin_left = 635.0
-margin_top = 351.0
+margin_top = 533.0
 margin_right = 1285.0
-margin_bottom = 729.0
+margin_bottom = 547.0
 rect_min_size = Vector2( 650, 0 )
 script = ExtResource( 14 )
 
