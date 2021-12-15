@@ -11,7 +11,7 @@ var _key
 func _ready():
 	# listening to popup_closed instead of color_changed so it really only saves 
 	# to file when the user decided
-	_color_picker_button.connect("popup_closed", self, "_on_popup_closed")
+	var _error = _color_picker_button.connect("popup_closed", self, "_on_popup_closed")
 
 
 func init(header: String, key: String):
