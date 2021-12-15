@@ -59,7 +59,6 @@ func _completed_round_1() -> void:
 
 
 func _started_round_2() -> void:	
-	
 	_toggle_ui(true)
 	_tutorial_text.typing_text = "Nice!"
 	yield(_tutorial_text, "typing_completed")

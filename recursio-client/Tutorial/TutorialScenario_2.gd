@@ -83,14 +83,16 @@ func _started_round_1():
 	
 	_toggle_ui(true)
 	_tutorial_text.typing_text = "When a player gets hit, he will be send back to the spawnpoint."
-	
 	yield(_tutorial_text, "typing_completed")
 	yield(get_tree().create_timer(2), "timeout")
 	
 	_tutorial_text.typing_text = "Try again! But this time, shoot the enemy before he can shoot you."
-	
 	yield(_tutorial_text, "typing_completed")
-	yield(get_tree().create_timer(2), "timeout")
+	yield(get_tree().create_timer(1), "timeout")
+	
+	_tutorial_text.typing_text = "You can shoot with RT and dash with LT."
+	yield(_tutorial_text, "typing_completed")
+	yield(get_tree().create_timer(3), "timeout")
 	_toggle_ui(false)
 
 
