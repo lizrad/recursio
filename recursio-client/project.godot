@@ -238,6 +238,10 @@ _global_script_classes=[ {
 "class": "TypingTextLabel",
 "language": "GDScript",
 "path": "res://Util/TypingTextLabel.gd"
+"base": "Node",
+"class": "VisibilityChecker",
+"language": "GDScript",
+"path": "res://Managers/VisibilityChecker.gd"
 }, {
 "base": "Object",
 "class": "WorldState",
@@ -291,6 +295,7 @@ _global_script_class_icons={
 "TutorialScenario_1": "",
 "TutorialScenario_2": "",
 "TypingTextLabel": "",
+"VisibilityChecker": "",
 "WorldState": ""
 }
 

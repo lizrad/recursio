@@ -7,6 +7,7 @@ onready var _action_manager: ActionManager = get_node("ActionManager")
 onready var _game_manager: GameManager = get_node("GameManager")
 onready var _round_manager: RoundManager = get_node("RoundManager")
 onready var _ghost_manager: GhostManager = get_node("GhostManager")
+onready var _visibility_checker: VisibilityChecker = get_node("VisibilityChecker")
 
 
 var enemy_is_server_driven: bool = true
@@ -123,6 +124,9 @@ func _on_preparation_phase_started() -> void:
 	_enemy.round_index = _round_manager.round_index
 	_enemy.spawn_point = _game_manager.get_spawn_point(_enemy.team_id, _enemy.timeline_index).global_transform.origin
 	_enemy.move_to_spawn_point()
+	
+	
+	_visibility_checker.reset()
 
 func _on_countdown_phase_started() -> void:
 	_game_manager.toggle_spawn_points(false)
@@ -188,6 +192,9 @@ func _on_timeline_picked(picking_player_id, timeline_index):
 	character.timeline_index = timeline_index
 	_ghost_manager.refresh_active_ghosts()
 	_ghost_manager.refresh_path_select()
+	
+	_visibility_checker.set_player(_player)
+	_visibility_checker.set_enemies(_enemy, _ghost_manager._enemy_ghosts)
 
 func _on_player_ready(button) -> void:
 	if button == ButtonOverlay.BUTTONS.DOWN:
