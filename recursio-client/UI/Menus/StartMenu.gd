@@ -25,6 +25,8 @@ onready var _debug_room = Constants.get_value("debug", "debug_room_enabled")
 
 onready var _random_names = TextFileToArray.load_text_file("res://Resources/Data/animal_names.txt")
 
+onready var _stats_hud = preload("res://Util/StatsHUD.tscn")
+
 var _player_user_name: String
 var _player_rpc_id: int
 
@@ -66,6 +68,11 @@ func _ready():
 	randomize()
 	var random_index = randi() % _random_names.size()
 	_player_user_name = _random_names[random_index]
+
+	var new_scene = _stats_hud.instance()
+	new_scene.visible = UserSettings.get_setting("developer", "debug")
+	# code execution happens in first scene init so hud creation musst be deferred
+	get_tree().get_root().call_deferred("add_child", new_scene)
 
 
 func _return_to_game_room_lobby():
