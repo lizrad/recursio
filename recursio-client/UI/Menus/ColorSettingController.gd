@@ -35,6 +35,5 @@ func get_previous_focus_for_back_button() -> NodePath:
 	return NodePath("../SettingsTabs/Colors/ColorList/"+color_settings.back().name+"/ColorPickerButton")
 
 
-
 func get_default_tab_focus() -> Node:
 	return color_settings.front().get_color_picker()
