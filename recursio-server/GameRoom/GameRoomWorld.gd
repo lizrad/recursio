@@ -134,6 +134,7 @@ func _on_game_phase_started() -> void:
 	var round_index = _round_manager.round_index
 	var switch_time = _round_manager.get_deadline()
 	for player_id in _character_manager.player_dic:
+		_character_manager.player_dic[player_id].set_record_data_timestamp(_server.get_server_time())
 		_server.send_phase_switch_to_client(player_id, round_index, RoundManager.Phases.PREPARATION, switch_time)
 	_character_manager.move_players_to_spawn_point()
 	_character_manager.set_block_player_input(false)
