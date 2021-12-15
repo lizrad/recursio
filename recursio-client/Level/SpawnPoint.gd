@@ -11,7 +11,8 @@ func set_type(type) -> void:
 	var idx_wall = Constants.get_value("ghosts", "wall_placing_timeline_index")
 	# TODO: get color and texture from already instantiated action?
 	$SpriteType.material_override.set_shader_param("albedo", _tex_wall if type == idx_wall else _tex_bullet)
-	$SpriteType/SpriteBG.modulate = Color(Constants.get_value("colors", "player_" + ("secondary" if type == idx_wall else "primary") + "_accent"))
+	var color_name = "player_" + ("secondary" if type == idx_wall else "primary") + "_accent"
+	ColorManager.color_object_by_property(color_name, $SpriteType/SpriteBG, "modulate")
 	set_active(false)
 
 
@@ -23,7 +24,8 @@ func rotate_ui(degrees) -> void:
 
 func set_active(value) -> void:
 	active = value
-	$SpriteArea.modulate = Color(Constants.get_value("colors", "selected")) if value else Constants.get_value("colors", "unselected")
+	var color_name = "selected" if value else "unselected"
+	ColorManager.color_object_by_property(color_name, $SpriteArea, "modulate")
 	$SpriteType.material_override.set_shader_param("is_greyscale", !value)
 
 

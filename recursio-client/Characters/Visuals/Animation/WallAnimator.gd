@@ -13,9 +13,9 @@ func _ready():
 	_wall_particles.lifetime = animation_duration;
 
 func _on_color_scheme_changed(new_color_scheme, _timeline_index):
-	var accent_color = Color(Constants.get_value("colors",new_color_scheme + "_secondary_accent"))
-	_wall_particles.material_override.albedo_color = accent_color
-	_wall_particles.material_override.emission = accent_color
+	var color_name = new_color_scheme + "_secondary_accent"
+	ColorManager.color_object_by_property(color_name, _wall_particles.material_override, "albedo_color")
+	ColorManager.color_object_by_property(color_name, _wall_particles.material_override, "emission")
 
 func start_animation():
 	_time_since_start = 0
