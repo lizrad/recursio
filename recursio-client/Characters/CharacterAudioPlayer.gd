@@ -18,5 +18,5 @@ func _on_die():
 	$DieAudio.play()
 
 
-func _process(delta):
+func _process(_delta):
 	$MoveAudio.unit_size = min(_parent.velocity.length() * 1.5, 6.75)

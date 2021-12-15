@@ -83,7 +83,8 @@ func action_status_changed(action_type, status):
 func death_active():
 	death_animator.start_animation()
 	_animation_status[death_animator]=true
-	death_animator.connect("animation_over", self, "_stop_death_animation")
+	if not death_animator.is_connected("animation_over", self, "_stop_death_animation"):
+		death_animator.connect("animation_over", self, "_stop_death_animation")
 
 func spawn_active():
 	spawn_animator.start_animation()

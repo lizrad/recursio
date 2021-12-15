@@ -49,10 +49,17 @@ func _physics_process(_delta):
 		InputManager.set_triggers_in_input_frame(buttons_pressed)
 		InputManager.close_current_input_frame()
 		InputManager.send_player_input_data_to_server()
-	elif cur_phase == RoundManager.Phases.PREPARATION:
-		if Input.is_action_just_pressed("player_switch") && not _player.block_switching:
-			var timeline_index: int = (_player.timeline_index + 1) % (Constants.get_value("ghosts", "max_amount") + 1)
-			_player.timeline_index = timeline_index
+	elif cur_phase == RoundManager.Phases.PREPARATION && not _player.block_switching:
+		if Input.is_action_just_pressed("player_switch"):
+			_select_timeline(true)
+		elif Input.is_action_just_pressed("player_switch_prev"):
+			_select_timeline(false)
+
+
+func _select_timeline(mode: bool):
+	var count = Constants.get_value("ghosts", "max_amount")
+	var timeline_index: int = (_player.timeline_index + (1 if mode else count)) % (count + 1)
+	_player.timeline_index = timeline_index
 
 
 func _on_player_initialized():

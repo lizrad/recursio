@@ -17,7 +17,6 @@ signal connection_successful()
 signal connection_failed()
 signal server_disconnected()
 signal spawning_enemy(enemy_id, spawn_point, team_id)
-signal despawning_enemy(enemy_id)
 signal spawning_player(player_id, spawn_point)
 signal world_state_received(world_state)
 signal player_ghost_record_received(timeline_index,round_index,  gameplay_record)
@@ -30,7 +29,7 @@ signal game_result(winning_player_id)
 signal player_hit(hit_player_id, perpetrator_player_id, perpetrator_timeline_index)
 signal ghost_hit(hit_ghost_player_owner, hit_ghost_id, perpetrator_player_id, perpetrator_timeline_index)
 signal quiet_ghost_hit(hit_ghost_player_owner, hit_ghost_id, perpetrator_player_id, perpetrator_timeline_index)
-signal timeline_picks(player_pick, enemy_picks)
+signal timeline_picked(picking_player_id, timeline_index)
 signal wall_spawn (position, rotation, wall_index)
 
 signal phase_switch_received(round_index,next_phase, switch_time)
@@ -75,9 +74,9 @@ func disconnect_from_server():
 	set_physics_process(false)
 	network.close_connection()
 	get_tree().network_peer = null
-	var _error = get_tree().disconnect("connection_failed", self, "_on_connection_failed")
-	_error = get_tree().disconnect("connected_to_server", self, "_on_connection_succeeded")
-	_error = get_tree().disconnect("server_disconnected", self, "_on_server_disconnected")
+	get_tree().disconnect("connection_failed", self, "_on_connection_failed")
+	get_tree().disconnect("connected_to_server", self, "_on_connection_succeeded")
+	get_tree().disconnect("server_disconnected", self, "_on_server_disconnected")
 	# Reset variables
 	latency = 0
 	server_clock = 0
@@ -265,9 +264,9 @@ remote func receive_player_action(action_player_id, action_type):
 	emit_signal("player_action", action_player_id, action_type)
 
 
-remote func receive_timeline_picks(player_pick, enemy_pick):
-	Logger.debug("Ghost picks received", "server")
-	emit_signal("timeline_picks",player_pick, enemy_pick)
+remote func receive_timeline_pick(picking_player_id, timeline_index):
+	Logger.debug("Ghost pick received", "server")
+	emit_signal("timeline_picked",picking_player_id, timeline_index)
 
 
 remote func receive_wall_spawn(position, rotation, wall_index):

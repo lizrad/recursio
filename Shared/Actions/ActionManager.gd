@@ -97,7 +97,10 @@ func set_active(action: Action, character: CharacterBase, tree_position: Spatial
 		return false
 
 	# No ammo left
+	# Note that this needs to check for `== 0` rather than `< 1` because actions with infinite ammo are expressed with `-1` ammo
 	if action.ammunition == 0:
+		action.blocked = true
+		action.activation_time = OS.get_system_time_msecs()
 		return false
 
 	# Fire actual action
@@ -120,6 +123,7 @@ func set_active(action: Action, character: CharacterBase, tree_position: Spatial
 	if action.recharge_time >= 0:
 		action.trigger_times.append(action.activation_time)
 
+	# Again, this check is needed to account for actions with infinite ammo that is stored as `-1`
 	if action.ammunition > 0:
 		action.ammunition -= 1
 		action.emit_signal("ammunition_changed", action.ammunition)

@@ -58,10 +58,9 @@ func _ready():
 	add_child(_death_timer)
 	add_child(_spawn_timer)
 
-
-func _physics_process(delta):
+func _physics_process(_delta):
+	#locking y to stop physics translation pushing characters into the ground/air
 	kb.transform.origin.y = 0
-
 
 func _process(delta):
 	if _spawn_imminent:
@@ -112,8 +111,9 @@ func set_velocity(new_velocity):
 
 
 func set_timeline_index(new_timeline_index: int):
-	timeline_index = new_timeline_index
-	emit_signal("timeline_index_changed", new_timeline_index)
+	if timeline_index != new_timeline_index:
+		timeline_index = new_timeline_index
+		emit_signal("timeline_index_changed", new_timeline_index)
 
 func hit(perpetrator) -> void:
 	emit_signal("hit", perpetrator)
@@ -124,16 +124,18 @@ func hit(perpetrator) -> void:
 # this is necessary because lots of gameplay functionality listens to hit (eg. recording 
 # of the death in the ghostmanager class) we do nott want this during special gameplay 
 # moments (for now only when a death is triggered by a previous death recording from the ghostmanager)
-func quiet_hit(perpetrator) -> void:
+func quiet_hit(_perpetrator) -> void:
 	set_dying(true)
 
+
 func set_dying(new_dying_status: bool):
-	Logger.info("Setting currently_dying to "+str(new_dying_status)+".", "death_and_spawn")
+	Logger.info("Setting currently_dying to " + str(new_dying_status) + ".", "death_and_spawn")
 	currently_dying = new_dying_status
 	if currently_dying:
 		_collision_shape.disabled = true
 		_death_timer.start()
 		emit_signal("dying")
+
 
 func _on_death_timer_timeout():
 	Logger.info("Death timer timeout.", "death_and_spawn")
@@ -141,21 +143,25 @@ func _on_death_timer_timeout():
 	if _auto_respawn_on_death:
 		set_spawning(true)
 
+
 func set_spawning(new_spawning_status: bool):
-	Logger.info("Setting currently_spawning to "+str(new_spawning_status)+".", "death_and_spawn")
+	Logger.info("Setting currently_spawning to " + str(new_spawning_status) + ".", "death_and_spawn")
 	currently_spawning = new_spawning_status
 	if currently_spawning:
 		move_to_spawn_point()
 		_spawn_timer.start()
 		emit_signal("spawning")
 
+
 func _on_spawn_timer_timeout():
 	Logger.info("Spawn timer timeout.", "death_and_spawn")
 	_collision_shape.disabled = false
 	set_spawning(false)
 
+
 func toggle_animation(value):
 	emit_signal("animation_status_changed", value)
+
 
 func trigger_actions(buttons: int) -> void:
 	if currently_dying or currently_spawning:
@@ -192,15 +198,19 @@ func _get_action(trigger, action_timeline_index):
 
 	return _actions[id]
 
+
 func get_body():
 	return kb
+
 
 func wall_spawned(_wall):
 	pass
 
+
 func visual_delayed_spawn(delay: float):
 	_spawn_imminent = true
 	_spawn_deadline = delay
+
 
 func visual_kill():
 	emit_signal("dying")
@@ -212,6 +222,7 @@ func visual_kill():
 # (eg. when dead ghost appear again during the prep phase)
 func non_vfx_spawn():
 	emit_signal("non_vfx_spawn")
+
 
 func is_collision_active() -> bool:
 	return !_collision_shape.disabled

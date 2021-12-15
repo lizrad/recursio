@@ -3,7 +3,7 @@ extends ColorRect
 
 func _ready():
 	update_ascii_size(UserSettings.get_setting("video", "ascii_size"))
-	UserSettings.connect("setting_changed", self, "_on_setting_changed")
+	var _error = UserSettings.connect("setting_changed", self, "_on_setting_changed")
 
 
 func _on_setting_changed(setting_header, setting_name, value):

@@ -76,7 +76,6 @@ func spawn_player(player_id, team_id, player_user_name) -> void:
 	player.player_id = player_id
 	player.user_name = player_user_name
 	player.team_id = team_id
-	player.timeline_index = 0
 	player.spawn_point = spawn_point
 	add_child(player)
 	var _error = player.connect("hit", self, "_on_player_hit", [player_id])
@@ -101,22 +100,29 @@ func set_block_player_input(blocked: bool) -> void:
 	for player_id in player_dic:
 		player_dic[player_id].block_movement = blocked
 
-func set_timeline_index(player_id, timeline_index):
-	Logger.info("Setting timeline index for player "+str(player_id)+" to "+str(timeline_index),"ghost_picking")
-	player_dic[player_id].timeline_index = timeline_index
-	player_dic[player_id].spawn_point = _game_manager.get_spawn_point(player_dic[player_id].team_id, timeline_index).global_transform.origin
-	player_dic[player_id].move_to_spawn_point()
+# propagate_to_picking_player is necessary because there are some moments where picking is 
+# server driven and some where it is client driven, to avoid endless loops of switching 
+# timelines because server and client are out of face because of a big latency we use this 
+# parameter to decide whether we send picks to the player itself
+func set_timeline_index(picking_player_id, timeline_index, propagate_to_picking_player):
+	Logger.info("Setting timeline index for player "+str(picking_player_id)+" to "+str(timeline_index),"ghost_picking")
+	var player = player_dic[picking_player_id]
+	player.timeline_index = timeline_index
+	player.spawn_point = _game_manager.get_spawn_point(player.team_id, timeline_index).global_transform.origin
+	player.move_to_spawn_point()
+	_propagate_current_timelines(picking_player_id, propagate_to_picking_player)
 
-func propagate_player_picks():
-	Logger.info("Propagating timeline picks", "ghost_picking")
+func propagate_all_timelines():
 	for player_id in player_dic:
-		var player_pick = player_dic[player_id].timeline_index
-		player_dic[player_id].set_record_data_timestamp(Server.get_server_time())
-		var enemy_pick
-		for enemy_id in player_dic:
-			if enemy_id != player_id:
-				enemy_pick = player_dic[enemy_id].timeline_index
-		Server.send_ghost_pick(player_id, player_pick, enemy_pick)
+		_propagate_current_timelines(player_id, true)
+
+func _propagate_current_timelines(picking_player_id, propagate_to_picking_player):
+	for player_id in player_dic:
+		for client_id in player_dic:
+			if not propagate_to_picking_player and picking_player_id == client_id and picking_player_id == player_id:
+				continue
+			Server.send_timeline_pick(client_id, player_id, player_dic[player_id].timeline_index)
+
 
 func _on_player_hit(perpetrator, victim_player_id):
 	Logger.info("Player hit!", "attacking")
