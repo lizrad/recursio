@@ -26,6 +26,5 @@ func init(header: String, key: String):
 func _on_popup_closed():
 	var color = _color_picker_button.color
 	var color_string = "#" + color.to_html(false)
-	print(color_string)
 	UserSettings.set_setting(_header, _key, color_string)
 	ColorManager.color_changed(_key)
