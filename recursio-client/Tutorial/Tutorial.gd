@@ -1,92 +1,54 @@
-extends Spatial
+extends Control
+class_name Tutorial
 
+signal scenario_completed()
+signal btn_back_pressed()
 
-enum Phases {
-	ROUND1,
-	ROUND2,
-	DONE
-}
+export(Array, PackedScene) var tutorial_scenes: Array = []
 
-var current_phase = Phases.ROUND1
-var show_text = false
+onready var _btn_tutorial_1: Button = get_node("TutorialMenu/Tutorial1")
+onready var _btn_tutorial_2: Button = get_node("TutorialMenu/Tutorial2")
+onready var _btn_back: Button = get_node("TutorialMenu/Btn_Back")
 
-
-func set_ui_visible(is_visible):
-	$TutorialUI.visible = is_visible if show_text else false
+onready var _click_sound: AudioStreamPlayer = get_node("../ClickSound")
+onready var _back_sound: AudioStreamPlayer = get_node("../BackSound")
 
 
 func _ready():
-	set_ui_visible(true)
-	$CharacterManager/GameManager.set_level($LevelH)
+	_btn_tutorial_1.connect("pressed", self, "start_scenario", [0])
+	_btn_tutorial_2.connect("pressed", self, "start_scenario", [1])
+	_btn_back.connect("pressed", self, "_on_back_pressed")
 
-	$TutorialUI/PanelContainer/TutorialText.text = "Welcome to the tutorial!"
-	if show_text:
-		yield(get_tree().create_timer(3), "timeout")
-	
-	$CharacterManager._on_spawn_player(0, Vector3.ZERO, 0)
-	$CharacterManager.get_player().kb.visible = false
-	
-	$TutorialUI/PanelContainer/TutorialText.text = "The goal is to capture both points at once."
-	if show_text:
-		yield(get_tree().create_timer(4), "timeout")
-	
-	$CharacterManager.get_player().set_custom_view_target($LevelH.get_capture_points()[1])
-	$TutorialUI/PanelContainer/TutorialText.text = "Try capturing this one!"
-	if show_text:
-		yield(get_tree().create_timer(3), "timeout")
-	
-	$CharacterManager.get_player().follow_camera()
-	set_ui_visible(false)
-	
-	$CharacterManager.get_player().kb.visible = true
-	
-	$CharacterManager._on_spawn_enemy(1, Vector3.FORWARD * 10.0, 0)
-	$CharacterManager.get_enemy().kb.visible = false
-	$CharacterManager/GhostManager.init($CharacterManager/GameManager,$CharacterManager/RoundManager,$CharacterManager/ActionManager, $CharacterManager)
-	$CharacterManager/RoundManager._start_game()
-	
-
-func _process(_delta):
-	if current_phase == Phases.ROUND1:
-		_update_phase1()
-	elif current_phase == Phases.ROUND2:
-		_update_phase2()
-	elif current_phase == Phases.DONE:
-		pass
+# OVERRIDE #
+func show() -> void:
+	_btn_tutorial_1.grab_focus()
+	.show()
 
 
-func _update_phase1():
-	if $LevelH.get_capture_points()[1]._capture_progress >= 0.9 \
-			and $LevelH.get_capture_points()[1]._capture_progress < 1.0:
-		$LevelH.get_capture_points()[1]._capture_progress = 1.0
-		set_ui_visible(true)
-		$TutorialUI/PanelContainer/TutorialText.text = "Nice!"
-		
-		if show_text:
-			yield(get_tree().create_timer(3), "timeout")
-		
-		$CharacterManager/RoundManager.round_index += 1
-		$CharacterManager/RoundManager.switch_to_phase(RoundManager.Phases.PREPARATION)
-		current_phase = Phases.ROUND2
-		
-		$TutorialUI/PanelContainer/TutorialText.text = "Now try capturing both points."
-		if show_text:
-			yield(get_tree().create_timer(3), "timeout")
-		$TutorialUI/PanelContainer/TutorialText.text = "Your past self will help you!"
+func start_scenario(scenario_index) -> void:
+	_click_sound.play()
+	_btn_tutorial_1.disabled = true
+	_btn_tutorial_2.disabled = true
+	var scenario: TutorialScenario = tutorial_scenes[scenario_index].instance()
+	add_child(scenario)
+	scenario.init()
+	
+	scenario.connect("scenario_completed", self, "on_scenario_completed")
+	
+	scenario.start()
 
 
-func _update_phase2():
-	if $LevelH.get_capture_points()[1]._capture_progress >= 0.9 \
-			and $LevelH.get_capture_points()[1]._capture_progress < 1.0 \
-			and $LevelH.get_capture_points()[0]._capture_progress >= 0.9 \
-			and $LevelH.get_capture_points()[0]._capture_progress < 1.0:
-		$LevelH.get_capture_points()[0]._capture_progress = 1.0
-		$LevelH.get_capture_points()[1]._capture_progress = 1.0
-		
-		set_ui_visible(true)
-		$TutorialUI/PanelContainer/TutorialText.text = "Good job!"
-		
-		current_phase = Phases.DONE
-		
-		yield(get_tree().create_timer(2.0), "timeout")
-		var _error = get_tree().change_scene("res://UI/Menus/StartMenu.tscn")
+func on_scenario_completed() -> void:
+	_btn_tutorial_1.disabled = false
+	_btn_tutorial_2.disabled = false
+	emit_signal("scenario_completed")
+
+
+func _on_back_pressed() -> void:
+	_back_sound.play()
+	emit_signal("btn_back_pressed")
+
+
+
+
+

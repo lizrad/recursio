@@ -21,6 +21,8 @@ onready var _game_room_search: GameRoomSearch = get_node("CenterContainer/GameRo
 onready var _game_room_creation: GameRoomCreation = get_node("CenterContainer/GameRoomCreation")
 onready var _game_room_lobby: GameRoomLobby = get_node("CenterContainer/GameRoomLobby")
 
+onready var _tutorial: Tutorial = get_node("Tutorial")
+
 onready var _debug_room = Constants.get_value("debug", "debug_room_enabled")
 
 onready var _random_names = TextFileToArray.load_text_file("res://Resources/Data/animal_names.txt")
@@ -62,6 +64,9 @@ func _ready():
 	_error = Server.connect("game_room_not_ready_received" , self, "_on_game_room_not_ready_received")
 	_error = Server.connect("load_level_received", self, "_on_load_level_received")
 	_error = Server.connect("game_result", self, "_on_game_result_received")
+	
+	_error = _tutorial.connect("scenario_completed", self, "_on_tutorial_scenario_completed")
+	_error = _tutorial.connect("btn_back_pressed", self, "_on_tutorial_back_pressed")
 
 	_btn_play_tutorial.grab_focus()
 
@@ -126,9 +131,8 @@ func _on_connection_failed():
 
 func _on_play_tutorial() -> void:
 	$ClickSound.play()
-	yield($ClickSound, "finished")
-	
-	var _error = get_tree().change_scene("res://Tutorial/Tutorial.tscn")
+	_start_menu_buttons.hide()
+	_tutorial.show()
 
 
 func _on_play_online() -> void:
@@ -268,3 +272,12 @@ func _on_game_result_received(_winning_player_id):
 	yield(get_tree().create_timer(3), "timeout")
 	_return_to_game_room_lobby()
 
+
+func _on_tutorial_scenario_completed() -> void:
+	_tutorial.show()
+
+
+func _on_tutorial_back_pressed() ->void:
+	_tutorial.hide()
+	_start_menu_buttons.show()
+	_btn_play_tutorial.grab_focus()

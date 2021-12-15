@@ -13,6 +13,7 @@ var aim_mode: bool = false
 
 # Blocks any movement applied to it (includes rotation-movement)
 var block_movement: bool = true
+var block_input: bool = false
 
 var input_movement_direction: Vector3 = Vector3.ZERO
 
@@ -73,11 +74,11 @@ func apply_input(movement_vector: Vector3, rotation_vector: Vector3, buttons: in
 	var _collision_velocity = kb.move_and_slide(velocity)
 	
 	# Trigger all actions with base
-	if aim_mode == false:
+	if aim_mode == false && not block_input:
 		.trigger_actions(buttons)
 
 	# Add everything to the recording
-	_record_manager.add_record_frame(.get_position(), .get_rotation_y(), buttons)
+	_record_manager.add_record_frame(.get_position(), .get_rotation_y(), 0 if block_input else buttons)
 
 func reset_record_data():
 	_record_manager.reset()
@@ -89,6 +90,10 @@ func get_record_data() -> RecordData:
 	var record_data: RecordData = _record_manager.record_data
 	record_data.timeline_index = self.timeline_index
 	return record_data
+
+
+func set_record_data_timestamp(timestamp: float) -> void:
+	_record_manager.record_data.timestamp = timestamp
 
 
 # OVERRIDE #

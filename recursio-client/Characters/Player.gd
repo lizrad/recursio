@@ -14,6 +14,11 @@ onready var _button_overlay: ButtonOverlay = get_node("KinematicBody/ButtonOverl
 onready var _aim_visuals = get_node("KinematicBody/AimVisuals")
 onready var _audio_player: AudioStreamPlayer = get_node("AudioStreamPlayer")
 
+
+
+var block_switching: bool = false
+
+
 var _walls = []
 var _past_frames = {}
 var _just_corrected = false
@@ -254,9 +259,10 @@ func toggle_visibility_light(value: bool):
 
 
 # OVERRIDE #
-# disable hit of base on client
-func hit(_perpetrator):
-	pass
+# Only emit signal for client
+func hit(perpetrator):
+	emit_signal("client_hit", perpetrator)
+
 
 # call hit of baseclass triggered by server
 func server_hit(perpetrator):

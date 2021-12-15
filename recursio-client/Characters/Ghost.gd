@@ -30,9 +30,9 @@ func start_playing(start_time: int) -> void:
 	.start_playing(start_time)
 
 # OVERRIDE #
-# disable hit of base on client
-func hit(_perpetrator):
-	pass
+# Only emit signal for client
+func hit(perpetrator):
+	emit_signal("client_hit", perpetrator)
 
 # Displays ghost as dead
 # calls hit of base function triggered by server

@@ -2,6 +2,7 @@ extends Node
 class_name CharacterBase
 
 signal hit(perpetrator)
+signal client_hit(perpetrator)
 signal dying()
 signal spawning()
 
