@@ -1,43 +1,5 @@
 extends Node
 
-class ObjectPropertyCoupling:
-	var object: Object
-	var property: String
-	
-	
-	func _init(object: Object, property: String):
-		self.object = weakref(object)
-		self.property = property
-	
-	
-	func apply_color(color: Color):
-		object.get_ref().set(property, color)
-	
-	
-	func equals(other_coupling) -> bool:
-		return (object.get_ref() == other_coupling.object.get_ref() and property == other_coupling.property)
-
-class ObjectMethodCoupling:
-	var object: Object
-	var method: String
-	var args: Array
-
-
-	func _init(object: Object, method: String, args: Array):
-		self.object = weakref(object)
-		self.method = method
-		self.args = args
-
-
-	func apply_color(color: Color):
-		var all_args = args 
-		all_args += [color]
-		object.get_ref().callv(method, all_args)
-	
-	
-	
-	func equals(other_coupling) -> bool:
-		return (object.get_ref() == other_coupling.object.get_ref() and method == other_coupling.method)
 
 
 var header: String = "colors"
