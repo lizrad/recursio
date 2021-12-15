@@ -72,7 +72,8 @@ func color_object_by_method(color_name: String, object: Object, method: String, 
 func _register_coupling(coupling, new_color_name: String):
 	# TODO: this clean up step is pretty unperformant, with many loops and dictionary lookups, 
 	# we might need to optimize this somehow or let the user take responsibility for
-	# deregistering objects himself (trading ease of use for speed)
+	# deregistering objects himself (trading ease of use for speed) but for now it seems fast enough
+	# during testing
 	for color_name in _colored_objects:
 		_clean_up_color(color_name)
 		# because we do this here it is ensured that every object only exists once, 
