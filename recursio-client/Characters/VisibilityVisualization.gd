@@ -8,6 +8,10 @@ var arrow = preload("res://Characters/Visuals/VisibleArrow.tscn")
 onready var tween = get_node("Tween")
 
 
+func _ready():
+	material_override.albedo_color = Color(Constants.get_value("colors", "visibility_visualization"))
+
+
 func set_visible(is_visible):
 	# Lerp to visible or invisible
 	if is_inside_tree():
