@@ -14,6 +14,7 @@ var _enemy_ghosts: Array = []
 func on_preparation_phase_started() -> void:
 	.on_preparation_phase_started()
 	_non_vfx_spawn_ghosts()
+	refresh_active_ghosts()
 	_toggle_ghost_animation(false)
 	_toggle_visbility_lights(false)
 	# Display paths of my ghosts
