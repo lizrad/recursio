@@ -117,10 +117,7 @@ func _started_round_2() -> void:
 	_player.block_movement = true
 	
 	for ghost in _ghost_manager._ghosts:
-		if ghost.team_id == 0:
-			ghost.connect("client_hit", self, "_on_ghost_hit_soft_lock", [ghost])
-		else:
-			ghost.connect("client_hit", self, "_on_ghost_hit", [ghost])
+		ghost.connect("client_hit", self, "_on_ghost_hit", [ghost])
 	
 	
 	_toggle_ui(true)
@@ -142,6 +139,7 @@ func _completed_round_2() -> void:
 
 
 func _started_round_3() -> void:
+	_ghost_manager._player_ghosts[0].connect("client_hit", self, "_on_ghost_hit_soft_lock", [_ghost_manager._player_ghosts[0]])
 	
 	yield(_tutorial_text, "typing_completed")
 	yield(get_tree().create_timer(2), "timeout")
@@ -181,9 +179,9 @@ func _on_enemy_hit(perpetrator):
 	_enemy.server_hit(perpetrator)
 
 
-func _on_ghost_hit(perpetrator, ghost: Ghost):
+func _on_ghost_hit(perpetrator, ghost):
 	if ghost is PlayerGhost:
-		ghost.toggle_visible_light = false
+		ghost.toggle_visibility_light(false)
 	ghost.server_hit(perpetrator)
 
 
