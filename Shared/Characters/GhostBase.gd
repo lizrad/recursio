@@ -1,7 +1,7 @@
 extends CharacterBase
 class_name GhostBase
 
-var _is_active = false
+var _is_active = true
 var _is_playing: bool = false
 var _record_data: RecordData = null
 var _current_frame_index: int = -1
