@@ -11,7 +11,6 @@ var _current_waypoint: int = 0
 var _character_to_shoot: CharacterBase
 var _shoot_timer: float = 1.0
 var _shoot_cooldown: float = 2.0
-var _rotation_lerp: float = 0.1
 
 var _is_running: bool = false
 
@@ -43,10 +42,8 @@ func _physics_process(delta):
 			_current_waypoint += 1
 		
 	if _enemy.get_position().distance_to(_character_to_shoot.get_position()) <= _range:
-		var diff = (character_pos - enemy_pos)
-		var enemy_rotation = Vector2(_enemy.kb.rotation.x, _enemy.kb.rotation.z)
-		enemy_rotation = lerp(enemy_rotation.normalized(), diff.normalized(), _rotation_lerp * delta)
-		rotation = Vector3(enemy_rotation.x, 0, enemy_rotation.y)
+		var diff = (character_pos - enemy_pos).normalized()
+		rotation = Vector3(diff.x, 0, diff.y)
 		_shoot_timer += delta
 		if _shoot_timer  >= _shoot_cooldown:
 			_shoot_timer = 0
