@@ -220,6 +220,7 @@ func visual_kill():
 # but there are moments during gameplay where we don't want to see the whole spawn procedure 
 # (eg. when dead ghost appear again during the prep phase)
 func non_vfx_spawn():
+	_collision_shape.disabled = false
 	emit_signal("non_vfx_spawn")
 
 
