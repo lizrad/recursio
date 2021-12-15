@@ -72,7 +72,6 @@ func _started_round_1():
 	
 	_tutorial_text.typing_text = "Try to capture the lower capture point again."
 	yield(_tutorial_text, "typing_completed")
-	yield(get_tree().create_timer(2), "timeout")
 	_player.block_movement = false
 	yield(get_tree().create_timer(2), "timeout")
 	_toggle_ui(false)
