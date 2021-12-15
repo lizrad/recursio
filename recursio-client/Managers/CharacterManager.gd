@@ -11,6 +11,7 @@ onready var _visibility_checker: VisibilityChecker = get_node("VisibilityChecker
 
 
 var enemy_is_server_driven: bool = true
+var hide_player_button_overlay: bool = false
 
 
 # Scenes for instanciating 
@@ -111,7 +112,8 @@ func _on_preparation_phase_started() -> void:
 	_game_manager.reset()
 	_action_manager.clear_action_instances()
 	_game_manager.hide_game_result_screen()
-	_player.show_preparation_hud(_round_manager.round_index)
+	if not hide_player_button_overlay:
+		_player.show_preparation_hud(_round_manager.round_index)
 	
 	# Show player whole level
 	_player.move_camera_to_overview()

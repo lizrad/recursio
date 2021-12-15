@@ -15,7 +15,7 @@ onready var _aim_visuals = get_node("KinematicBody/AimVisuals")
 onready var _audio_player: AudioStreamPlayer = get_node("AudioStreamPlayer")
 
 
-var hide_button_overlay: bool = false
+
 var block_switching: bool = false
 
 
@@ -189,8 +189,6 @@ func update_capture_point_hud(capture_points: Array) -> void:
 
 func show_preparation_hud(round_index) -> void:
 	_hud.prep_phase_start(round_index)
-	if hide_button_overlay:
-		return
 	_button_overlay.show_buttons(["ready!", "swap"], ButtonOverlay.BUTTONS.DOWN | ButtonOverlay.BUTTONS.RIGHT, ButtonOverlay.BUTTONS.DOWN)
 
 

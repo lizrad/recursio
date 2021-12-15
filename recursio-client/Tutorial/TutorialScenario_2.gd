@@ -26,7 +26,7 @@ func _ready():
 	
 	_player.kb.visible = false
 	_player.block_switching = true
-	_player.hide_button_overlay = true
+	_character_manager.hide_player_button_overlay = true
 	# Shorten prep phase
 	_round_manager._preparation_phase_time = 3.0
 	

@@ -15,7 +15,7 @@ func _ready():
 	
 	_character_manager._on_spawn_player(0, Vector3.ZERO, 0)
 	_character_manager.get_player().kb.visible = false
-	_character_manager.get_player().hide_button_overlay = true
+	_character_manager.hide_player_button_overlay = true
 	# Shorten prep phase
 	_round_manager._preparation_phase_time = 3.0
 	
