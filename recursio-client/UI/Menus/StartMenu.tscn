@@ -7,7 +7,7 @@
 [ext_resource path="res://UI/Menus/GameRoomLobby.gd" type="Script" id=5]
 [ext_resource path="res://Resources/Icons/icon_not_ready.png" type="Texture" id=6]
 [ext_resource path="res://World.tscn" type="PackedScene" id=7]
-[ext_resource path="res://Util/StatsHUD.tscn" type="PackedScene" id=8]
+[ext_resource path="res://UI/Menus/DebugCheckButton.gd" type="Script" id=8]
 [ext_resource path="res://Shared/Level/LevelH.tscn" type="PackedScene" id=9]
 [ext_resource path="res://Level/CapturePoint.tscn" type="PackedScene" id=10]
 [ext_resource path="res://addons/ascii-shader/character_map.png" type="Texture" id=11]
@@ -456,7 +456,7 @@ script = ExtResource( 14 )
 margin_left = 7.0
 margin_top = 7.0
 margin_right = 643.0
-margin_bottom = 281.0
+margin_bottom = 325.0
 
 [node name="Header" type="Label" parent="CenterContainer/SettingsContainer/SettingsList"]
 margin_right = 636.0
@@ -604,19 +604,36 @@ tick_count = 4
 ticks_on_borders = true
 script = ExtResource( 17 )
 
-[node name="Space2" type="Control" parent="CenterContainer/SettingsContainer/SettingsList"]
+[node name="Debug" type="HBoxContainer" parent="CenterContainer/SettingsContainer/SettingsList"]
 margin_top = 218.0
 margin_right = 636.0
-margin_bottom = 238.0
+margin_bottom = 258.0
+
+[node name="Label" type="Label" parent="CenterContainer/SettingsContainer/SettingsList/Debug"]
+margin_top = 7.0
+margin_right = 120.0
+margin_bottom = 33.0
+text = "Debug UI: "
+
+[node name="DebugCheckButton" type="CheckButton" parent="CenterContainer/SettingsContainer/SettingsList/Debug" groups=["Setting"]]
+margin_left = 124.0
+margin_right = 200.0
+margin_bottom = 40.0
+script = ExtResource( 8 )
+
+[node name="Space2" type="Control" parent="CenterContainer/SettingsContainer/SettingsList"]
+margin_top = 262.0
+margin_right = 636.0
+margin_bottom = 282.0
 rect_min_size = Vector2( 0, 20 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="BackButton" type="Button" parent="CenterContainer/SettingsContainer/SettingsList"]
-margin_top = 242.0
+margin_top = 286.0
 margin_right = 636.0
-margin_bottom = 274.0
+margin_bottom = 318.0
 focus_neighbour_top = NodePath("../AsciiSize/AsciiSlider")
 focus_neighbour_bottom = NodePath("../MainVolume/VolumeSlider")
 focus_next = NodePath("../MainVolume/VolumeSlider")
