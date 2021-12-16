@@ -227,3 +227,8 @@ func non_vfx_spawn():
 
 func is_collision_active() -> bool:
 	return !_collision_shape.disabled
+
+
+func _disable_signal_warnings() -> void:
+	assert(false) # this only exists so the signals don't throw warnings and should never be called
+	emit_signal("client_hit")

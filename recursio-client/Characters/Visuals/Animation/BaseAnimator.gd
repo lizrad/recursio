@@ -34,3 +34,8 @@ func _reset_keyframes():
 			_default_positions[pivot]
 		)
 		_keyframes[pivot].basis = _keyframes[pivot].basis.scaled(_default_scales[pivot])
+
+
+func _disable_signal_warnings() -> void:
+	assert(false) # this only exists so the signals don't throw warnings and should never be called
+	emit_signal("animation_over")

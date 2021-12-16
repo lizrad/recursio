@@ -52,8 +52,8 @@ func _started_round_1():
 	_enemy.kb.visible = true
 	_enemy.block_movement = false
 	
-	_player.connect("client_hit", self, "_on_player_hit")
-	_enemy.connect("client_hit", self, "_on_enemy_hit")
+	var _error = _player.connect("client_hit", self, "_on_player_hit")
+	_error = _enemy.connect("client_hit", self, "_on_enemy_hit")
 	
 	_enemyAI = EnemyAI.new(_enemy)
 	_enemyAI.add_waypoint(Vector2(-12, 8))

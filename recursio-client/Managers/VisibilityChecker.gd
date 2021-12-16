@@ -25,7 +25,7 @@ func set_enemies(enemy, enemy_ghosts):
 			_enemies.append(ghost)
 
 
-func _process(delta):
+func _process(_delta):
 	if _player and not _enemies.empty():
 		# Collect positions of enemies which are currently seeing the player
 		var at_least_one_visible = false

@@ -18,3 +18,9 @@ var trigger_times: Array = []
 signal ammunition_changed
 signal action_triggered
 signal action_released
+
+func _disable_signal_warnings() -> void:
+	assert(false) # this only exists so the signals don't throw warnings and should never be called
+	emit_signal("ammunition_changed")
+	emit_signal("action_triggered")
+	emit_signal("action_released")

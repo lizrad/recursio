@@ -29,15 +29,15 @@ func _process(delta):
 	var step_size = typing_speed * delta
 	
 	_number_of_visible_characters += step_size
-	self.visible_characters = _number_of_visible_characters
+	self.visible_characters = int(_number_of_visible_characters)
 
 
-func set_typing_text(typing_text) -> void:
+func set_typing_text(new_typing_text) -> void:
 	typing_completed = false
 	_number_of_visible_characters = 0
 	self.visible_characters = 0
-	_number_of_characters = typing_text.length()
-	.set_text(typing_text)
+	_number_of_characters = new_typing_text.length()
+	.set_text(new_typing_text)
 	set_process(true)
 
 
