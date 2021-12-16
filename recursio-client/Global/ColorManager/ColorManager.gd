@@ -66,6 +66,7 @@ func _clean_up_color(color_name: String) -> void:
 	for i in range(_colored_objects[color_name].size()-1, -1, -1):
 		var coupling = _colored_objects[color_name][i]
 		if not coupling.is_valid():
+			_colored_objects[color_name][i].free()
 			_colored_objects[color_name].remove(i)
 
 
@@ -74,6 +75,7 @@ func _delete_coupling(color_name, coupling) -> bool:
 	for i in range(_colored_objects[color_name].size()-1, -1, -1):
 		var current_coupling = _colored_objects[color_name][i]
 		if current_coupling.equals(coupling):
+			_colored_objects[color_name][i].free()
 			_colored_objects[color_name].remove(i)
 			return true
 	return false
