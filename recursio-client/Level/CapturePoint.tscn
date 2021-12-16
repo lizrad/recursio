@@ -14,7 +14,7 @@ albedo_color = Color( 0, 1, 0.811765, 1 )
 height = 0.4
 
 [sub_resource type="ViewportTexture" id=4]
-viewport_path = NodePath("Sprite3D/Viewport")
+viewport_path = NodePath("Viewport")
 
 [node name="CapturePoint" type="Spatial"]
 script = ExtResource( 1 )
