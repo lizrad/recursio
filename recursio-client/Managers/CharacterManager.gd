@@ -287,7 +287,8 @@ func _on_capture_point_captured(capturing_player_id, _capture_point):
 
 func _on_capture_point_capture_lost(capturing_player_id, _capture_point):
 	if capturing_player_id == _player_rpc_id:
-		_player.follow_camera()
+		if _round_manager.get_current_phase() == RoundManager.Phases.GAME:
+			_player.follow_camera()
 		_player.set_overview_light_enabled(false)
 
 func _spawn_character(character_scene, spawn_point, team_id):
