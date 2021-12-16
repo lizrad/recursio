@@ -9,11 +9,6 @@ onready var player_in_capture_color = Color(Constants.get_value("colors", "playe
 onready var player_captured_color = Color(Constants.get_value("colors", "player_ghost_main"))
 onready var enemy_in_capture_color = Color(Constants.get_value("colors", "enemy_ghost_primary_accent"))
 onready var enemy_captured_color = Color(Constants.get_value("colors", "enemy_ghost_main"))
-
-# TODO: should set Sprite3D texture in code because of errors:
-# "get_path: Cannot get path of node as it is not in a scene tree."
-# and "get_node: (Node not found: "Sprite3D/Viewport" (relative to "").)"
-# caused by setup ViewportTexture in Sprite3D
 onready var _progress = $Viewport/TextureProgress
 
 var active = true
@@ -39,11 +34,6 @@ func _ready():
 	_capture_speed = Constants.get_value("capture", "capture_speed")
 	_release_speed = Constants.get_value("capture", "release_speed")
 	_recapture_speed = Constants.get_value("capture", "recapture_speed")
-	
-	# TODO: should set Sprite3D texture in code 
-	#var texture = ViewportTexture.new()
-	#texture.set_viewport_path_in_scene("Sprite3D/Viewport")
-	#$Sprite3D.texture = texture
 
 func reset():
 	$MeshInstance.material_override.albedo_color = neutral_color
