@@ -14,7 +14,7 @@ onready var enemy_captured_color = Color(Constants.get_value("colors", "enemy_gh
 # "get_path: Cannot get path of node as it is not in a scene tree."
 # and "get_node: (Node not found: "Sprite3D/Viewport" (relative to "").)"
 # caused by setup ViewportTexture in Sprite3D
-onready var _progress = $Sprite3D/Viewport/TextureProgress
+onready var _progress = $Viewport/TextureProgress
 
 var active = true
 var player_id :=-1
