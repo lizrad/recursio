@@ -1,9 +1,6 @@
 tool
 extends SpotLight
-var _currently_toggling = false
-var _toggle_goal = -1
-var _toggle_start = -1
-var _time_since_toggle_start = -1
+onready var _tween = get_node("Tween")
 onready var _toggle_time = Constants.get_value("visibility", "light_toggle_time")
 onready var _spot_range = Constants.get_value("visibility", "spot_range")
 
@@ -12,29 +9,16 @@ func _ready():
 	# shader is multiplied by 10 in order to avoid artifacts.
 	$SightLight.light_energy = light_energy
 	light_energy *= 10
-	
 	$SightLight.spot_angle = spot_angle
 	spot_range = 0
 	$SightLight.spot_range = spot_range
 
-func _process(delta):
-	if _currently_toggling:
-		_time_since_toggle_start += delta
-		var ratio = _time_since_toggle_start/_toggle_time
-		if _time_since_toggle_start >_toggle_time:
-			_currently_toggling = false
-			ratio = 1
-		spot_range = lerp(_toggle_start,_toggle_goal, ratio)
-		$SightLight.spot_range = spot_range
-	
 
 # toggling lerps the light range between 0 and 12 for a smooth effect
 func toggle(value):
-	_time_since_toggle_start = 0
-	_currently_toggling = true
-	if value:
-		_toggle_goal = _spot_range
-		_toggle_start = spot_range
-	else:
-		_toggle_goal = 0
-		_toggle_start = spot_range
+	var start = spot_range
+	var goal = _spot_range if value else 0
+	_tween.remove_all()
+	_tween.interpolate_property(self, "spot_range", start, goal, _toggle_time, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
+	_tween.interpolate_property($SightLight, "spot_range", start, goal, _toggle_time, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
+	_tween.start()
