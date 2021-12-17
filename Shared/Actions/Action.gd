@@ -15,12 +15,9 @@ var blocked := false
 var activation_time: int # ts in ticks when the action was initially triggered
 var trigger_times: Array = []
 
+#warning-ignore:unused_signal
 signal ammunition_changed
+#warning-ignore:unused_signal
 signal action_triggered
+#warning-ignore:unused_signal
 signal action_released
-
-func _disable_signal_warnings() -> void:
-	assert(false) # this only exists so the signals don't throw warnings and should never be called
-	emit_signal("ammunition_changed")
-	emit_signal("action_triggered")
-	emit_signal("action_released")

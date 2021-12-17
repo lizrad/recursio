@@ -1,8 +1,11 @@
 extends Node
 class_name GhostManager
 
+#warning-ignore:unused_signal
 signal ghost_hit(victim_player_id, victim_timeline_index, perpetrator_player_id, perpetrator_timeline_index)
+#warning-ignore:unused_signal
 signal quiet_ghost_hit(victim_player_id, victim_timeline_index, perpetrator_player_id, perpetrator_timeline_index)
+#warning-ignore:unused_signal
 signal new_record_data_applied(player)
 
 onready var _server = get_node("/root/Server")
@@ -75,7 +78,7 @@ func _use_new_record_data():
 
 
 # ABSTRACT #
-func _on_ghost_hit(perpetrator, victim):
+func _on_ghost_hit(_perpetrator, _victim):
 	assert(false) #this must be overwritten in child class
 
 
