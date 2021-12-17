@@ -1,14 +1,14 @@
 extends Spatial
 class_name CapturePoint
 
-onready var neutral_color_name = "neutral"
+var neutral_color_name = "neutral"
 # TODO: better use main schema for all coloring?
-onready var player_color_name = "player_main"
-onready var enemy_color_name = "enemy_main"
-onready var player_in_capture_color_name = "player_ghost_primary_accent"
-onready var player_captured_color_name = "player_ghost_main"
-onready var enemy_in_capture_color_name = "enemy_ghost_primary_accent"
-onready var enemy_captured_color_name = "enemy_ghost_main"
+var player_color_name = "player_main"
+var enemy_color_name = "enemy_main"
+var player_in_capture_color_name = "player_ghost_primary_accent"
+var player_captured_color_name = "player_ghost_main"
+var enemy_in_capture_color_name = "enemy_ghost_primary_accent"
+var enemy_captured_color_name = "enemy_ghost_main"
 
 # TODO: should set Sprite3D texture in code because of errors:
 # "get_path: Cannot get path of node as it is not in a scene tree."
