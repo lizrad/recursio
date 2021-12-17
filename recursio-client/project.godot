@@ -321,6 +321,7 @@ UserSettings="*res://Global/UserSettings.gd"
 
 [debug]
 
+gdscript/warnings/treat_warnings_as_errors=true
 multirun/number_of_windows=2
 multirun/window_distance=1024
 multirun/add_custom_args=false
@@ -345,6 +346,7 @@ enabled=PoolStringArray( "res://addons/multirun/plugin.cfg", "res://addons/proje
 [global]
 
 layer=false
+warning=false
 
 [gui]
 
