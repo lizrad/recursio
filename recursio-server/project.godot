@@ -187,6 +187,10 @@ Logger="*res://addons/recursio-loggerplugin/Logger.gd"
 LoggerPluginSingleton="*res://addons/recursio-loggerplugin/LoggerPluginSingleton.gd"
 Constants="*res://Shared/Constants.gd"
 
+[debug]
+
+gdscript/warnings/treat_warnings_as_errors=true
+
 [editor_plugins]
 
 enabled=PoolStringArray( "res://addons/project_editor_settings/plugin.cfg", "res://addons/recursio-loggerplugin/plugin.cfg" )
