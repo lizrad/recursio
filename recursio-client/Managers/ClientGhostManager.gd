@@ -41,7 +41,12 @@ func on_game_phase_started() -> void:
 	_toggle_ghost_animation(true)
 
 
-# OVERRIDE ABSTRACT #
+# OVERRIDE #
+func on_game_phase_stopped() -> void:
+	.on_game_phase_stopped()
+
+
+# OVERRIDE #
 func _spawn_all_ghosts():
 	for timeline_index in range(_max_ghosts+1):
 		var player_id = _character_manager._player.player_id
@@ -63,8 +68,9 @@ func _spawn_all_ghosts():
 		_ghosts.append(enemy_ghost)
 
 
-# OVERRIDE ABSTRACT #
+# OVERRIDE #
 func _enable_active_ghosts() -> void:
+	# Not calling super here because client and server have completely different concepts of ghost seperation - player/enemy and player[0]/player[1]
 	for timeline_index in range(_max_ghosts+1):
 		if timeline_index != _character_manager._player.timeline_index:
 			if _player_ghosts[timeline_index].is_record_data_set():
@@ -75,8 +81,10 @@ func _enable_active_ghosts() -> void:
 				_enemy_ghosts[timeline_index].enable_body()
 
 
-# OVERRIDE ABSTRACT #
+# OVERRIDE #
 func _use_new_record_data():
+	# Not calling super because we dont want local values to overwrite remote ones
+	# But we will use them until we get better ones
 	var current_round_index = _round_manager.round_index-1
 	var record_data = _character_manager._player.get_record_data()
 	if current_round_index > _player_ghosts[record_data.timeline_index].round_index:
@@ -89,10 +97,23 @@ func _use_new_record_data():
 		_enemy_ghosts[record_data.timeline_index].player_id = _character_manager._enemy.player_id
 
 
-# OVERRIDE ABSTRACT #
+# OVERRIDE #
 func _on_ghost_hit(_perpetrator, _victim):
 	# local ghost hits should not trigger anything on the client
 	pass
+
+
+# OVERRIDE #
+func _refresh_previous_ghost_deaths():
+	#again having to override this because of different concepts in charactermanager 
+	var current_round_index = _round_manager.round_index
+	_add_new_previous_ghost_deaths_data()
+	var player = _character_manager._player
+	var enemy  = _character_manager._enemy
+	_clear_old_ghost_death_data(player.team_id, player.timeline_index, current_round_index)
+	_clear_old_ghost_death_data(enemy.team_id, enemy.timeline_index, current_round_index)
+	_current_ghost_death_index = 0
+	_game_phase_start_time = _server.get_server_time()
 
 
 func on_player_ghost_record_received(timeline_index, round_index,  record_data):
