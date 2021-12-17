@@ -37,13 +37,11 @@ func start_shake(amount: float, speed: float):
 func _start_shake_tween(start_vector: Vector3, goal_vector: Vector3):
 	_tween.remove_all()
 	var time = 1.0/_shake_speed
-	print(time)
 	_tween.interpolate_property(self,"_shake_vector", start_vector, goal_vector, time, Tween.TRANS_LINEAR, Tween.EASE_IN)
 	_tween.start()
 
 
 func _on_shake_complete():
-	print("_on_shake_complete")
 	var start_vector = Vector3(_shake_vector.x, 0, _shake_vector.z)
 	var goal_vector = Vector3(rand_range(-_shake_amount,_shake_amount),0,rand_range(-_shake_amount,_shake_amount))
 	_start_shake_tween(start_vector, goal_vector)
