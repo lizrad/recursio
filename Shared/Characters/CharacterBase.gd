@@ -40,8 +40,10 @@ onready var kb: KinematicBody = get_node("KinematicBody")
 onready var _collision_shape: CollisionShape = get_node("KinematicBody/CollisionShape")
 
 var _action_manager
+var _death_time = Constants.get_value("vfx", "death_time")
 var _death_timer
 var _auto_respawn_on_death = false
+var _spawn_time = Constants.get_value("vfx", "spawn_time")
 var _spawn_timer
 
 var _spawn_imminent = false;
@@ -50,8 +52,8 @@ var _spawn_deadline = -1;
 func _ready():
 	_death_timer = Timer.new()
 	_spawn_timer = Timer.new()
-	_death_timer.wait_time = Constants.get_value("vfx", "death_time")
-	_spawn_timer.wait_time = Constants.get_value("vfx", "spawn_time")
+	_death_timer.wait_time = _death_time
+	_spawn_timer.wait_time = _spawn_time
 	_death_timer.one_shot = true
 	_spawn_timer.one_shot = true
 	_death_timer.connect("timeout", self, "_on_death_timer_timeout")
