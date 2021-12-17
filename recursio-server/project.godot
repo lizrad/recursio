@@ -67,7 +67,7 @@ _global_script_classes=[ {
 "base": "Node",
 "class": "GhostManager",
 "language": "GDScript",
-"path": "res://Shared/GhostManager.gd"
+"path": "res://Shared/GhostManagerBase.gd"
 }, {
 "base": "Object",
 "class": "InputData",
@@ -124,6 +124,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://Globals/Server.gd"
 }, {
+"base": "GhostManager",
+"class": "ServerGhostManager",
+"language": "GDScript",
+"path": "res://GameRoom/ServerGhostManager.gd"
+}, {
 "base": "Object",
 "class": "StaticInput",
 "language": "GDScript",
@@ -163,6 +168,7 @@ _global_script_class_icons={
 "RingBuffer": "",
 "RoundManager": "",
 "Server": "",
+"ServerGhostManager": "",
 "StaticInput": "",
 "WorldState": "",
 "WorldStateManager": ""
@@ -180,6 +186,10 @@ config/icon="res://icon.png"
 Logger="*res://addons/recursio-loggerplugin/Logger.gd"
 LoggerPluginSingleton="*res://addons/recursio-loggerplugin/LoggerPluginSingleton.gd"
 Constants="*res://Shared/Constants.gd"
+
+[debug]
+
+gdscript/warnings/treat_warnings_as_errors=true
 
 [editor_plugins]
 

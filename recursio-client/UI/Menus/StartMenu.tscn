@@ -683,8 +683,6 @@ follow_focus = true
 script = ExtResource( 22 )
 
 [node name="ColorList" type="VBoxContainer" parent="CenterContainer/SettingsContainer/SettingsList/SettingsTabs/Colors"]
-margin_right = 244.0
-margin_bottom = 124.0
 
 [node name="Space2" type="Control" parent="CenterContainer/SettingsContainer/SettingsList"]
 margin_top = 330.0

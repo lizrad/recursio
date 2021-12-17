@@ -38,7 +38,7 @@ func set_looking_at_positions(positions):
 	looking_at = positions
 
 
-func _process(delta):
+func _process(_delta):
 	# Spawn and position arrows
 	if $Arrows.get_children().size() == looking_at.size():
 		# If we already have the number of arrows we need, just reposition them

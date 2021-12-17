@@ -1,6 +1,7 @@
 extends Node
 class_name BaseAnimator
 
+#warning-ignore:unused_signal
 signal animation_over
 
 export var _root_pivot_node_path = NodePath("../RootPivot")
@@ -34,3 +35,5 @@ func _reset_keyframes():
 			_default_positions[pivot]
 		)
 		_keyframes[pivot].basis = _keyframes[pivot].basis.scaled(_default_scales[pivot])
+
+

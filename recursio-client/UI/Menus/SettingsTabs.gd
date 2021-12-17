@@ -18,7 +18,7 @@ onready var _back_button = get_node("../BackButton")
 
 
 func _ready() -> void:
-	self.connect("tab_changed",self,"_on_tab_changed")
+	var _error = self.connect("tab_changed",self,"_on_tab_changed")
 
 
 func _input(_event: InputEvent) -> void:

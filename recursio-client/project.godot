@@ -122,7 +122,7 @@ _global_script_classes=[ {
 "base": "Node",
 "class": "GhostManager",
 "language": "GDScript",
-"path": "res://Shared/GhostManager.gd"
+"path": "res://Shared/GhostManagerBase.gd"
 }, {
 "base": "Control",
 "class": "HUD",
@@ -352,6 +352,7 @@ ColorManager="*res://Global/ColorManager/ColorManager.gd"
 
 [debug]
 
+gdscript/warnings/treat_warnings_as_errors=true
 multirun/number_of_windows=2
 multirun/window_distance=1024
 multirun/add_custom_args=false
@@ -376,6 +377,7 @@ enabled=PoolStringArray( "res://addons/multirun/plugin.cfg", "res://addons/proje
 [global]
 
 layer=false
+warning=false
 
 [gui]
 
@@ -507,6 +509,7 @@ common/enable_pause_aware_picking=true
 [rendering]
 
 environment/default_environment="res://default_env.tres"
+quality/dynamic_fonts/use_oversampling=false
 
 [run]
 

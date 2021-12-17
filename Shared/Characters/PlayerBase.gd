@@ -92,7 +92,7 @@ func get_record_data() -> RecordData:
 	return record_data
 
 
-func set_record_data_timestamp(timestamp: float) -> void:
+func set_record_data_timestamp(timestamp: int) -> void:
 	_record_manager.record_data.timestamp = timestamp
 
 

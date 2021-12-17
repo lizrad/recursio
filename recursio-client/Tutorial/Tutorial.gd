@@ -15,9 +15,9 @@ onready var _back_sound: AudioStreamPlayer = get_node("../BackSound")
 
 
 func _ready():
-	_btn_tutorial_1.connect("pressed", self, "start_scenario", [0])
-	_btn_tutorial_2.connect("pressed", self, "start_scenario", [1])
-	_btn_back.connect("pressed", self, "_on_back_pressed")
+	var _error = _btn_tutorial_1.connect("pressed", self, "start_scenario", [0])
+	_error = _btn_tutorial_2.connect("pressed", self, "start_scenario", [1])
+	_error = _btn_back.connect("pressed", self, "_on_back_pressed")
 
 # OVERRIDE #
 func show() -> void:
@@ -33,7 +33,7 @@ func start_scenario(scenario_index) -> void:
 	add_child(scenario)
 	scenario.init()
 	
-	scenario.connect("scenario_completed", self, "on_scenario_completed")
+	var _error = scenario.connect("scenario_completed", self, "on_scenario_completed")
 	
 	scenario.start()
 

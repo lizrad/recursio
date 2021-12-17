@@ -22,7 +22,7 @@ func _ready():
 		settings_config.save(SETTINGS_PATH)
 
 
-func _input(event: InputEvent) -> void:
+func _input(_event: InputEvent) -> void:
 	if Input.is_action_just_pressed("toggle_fullscreen"):
 		OS.set_window_fullscreen(!OS.window_fullscreen)
 		set_setting("video", "fullscreen", OS.window_fullscreen)

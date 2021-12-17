@@ -15,4 +15,4 @@ func _on_toggled(is_enabled):
 
 func _on_fullscreen_changed(setting_header, setting_name, value):
 	if setting_header == "video" and setting_name == "fullscreen":
-		pressed = OS.window_fullscreen
+		pressed = value
