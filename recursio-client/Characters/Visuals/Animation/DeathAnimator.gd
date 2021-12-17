@@ -16,7 +16,7 @@ export var back_extent := -1.0
 export var middle_scale_extent := 0.15
 export var middle_rotation_periods := 2
 
-var _max_time = Constants.get_value("gameplay", "death_time")
+var _max_time = Constants.get_value("vfx", "death_time")
 var _time_since_start = 0
 var _default_color 
 

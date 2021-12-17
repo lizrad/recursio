@@ -13,7 +13,8 @@ onready var _visibility_light = get_node("KinematicBody/VisibilityLight")
 onready var _button_overlay: ButtonOverlay = get_node("KinematicBody/ButtonOverlay")
 onready var _aim_visuals = get_node("KinematicBody/AimVisuals")
 onready var _audio_player: AudioStreamPlayer = get_node("AudioStreamPlayer")
-
+onready var _camera_shake_amount = Constants.get_value("vfx","camera_shake_amount")
+onready var _camera_shake_speed  = Constants.get_value("vfx","camera_shake_speed")
 
 
 var block_switching: bool = false
@@ -121,6 +122,7 @@ func _get_action(trigger, timeline_index):
 func wall_spawned(wall):
 	_walls.append(wall)
 
+
 func _on_wall_spawn_received(position, rotation, wall_index):
 	if _walls.size()>wall_index:
 		if _walls[wall_index]:
@@ -132,6 +134,30 @@ func _on_wall_spawn_received(position, rotation, wall_index):
 		var wall_action_index = Constants.get_value("ghosts", "wall_placing_timeline_index")
 		_action_manager.set_active(_get_action(ActionManager.Trigger.FIRE_START, wall_action_index) as Action, self, kb, get_parent())
 
+
+# OVERRIDE #
+func set_dying(new_dying_status: bool):
+	.set_dying(new_dying_status)
+	if currently_dying:
+		_visibility_light.toggle(false)
+		_lerped_follow.stop_following()
+		_lerped_follow.start_shake(_camera_shake_amount,_camera_shake_speed)
+
+
+# OVERRIDE #
+func set_spawning(new_spawning_status: bool):
+	.set_spawning(new_spawning_status)
+	if currently_spawning:
+		_visibility_light.toggle(true)
+		_lerped_follow.start_following()
+		_lerped_follow.stop_shake()
+
+# OVERRIDE #
+func non_vfx_spawn():
+	.non_vfx_spawn()
+	_visibility_light.toggle(true)
+	_lerped_follow.start()
+	_lerped_follow.stop_shake()
 
 func get_visibility_mask():
 	return _light_viewport.get_texture()

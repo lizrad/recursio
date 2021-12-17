@@ -3,7 +3,7 @@ extends BaseAnimator
 onready var _spawn_particles = get_node("../RootPivot/SpawnParticles")
 onready var _middle = get_node("../RootPivot/MiddlePivot/Middle")
 
-var _max_time = Constants.get_value("gameplay", "spawn_time")
+var _max_time = Constants.get_value("vfx", "spawn_time")
 var _time_since_start = 0
 
 
