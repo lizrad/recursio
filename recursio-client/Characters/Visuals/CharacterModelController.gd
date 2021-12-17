@@ -50,17 +50,19 @@ func set_shader_param(param, value):
 
 func _set_color_scheme(new_color_scheme:String, timeline_index):
 	var color_parameter = "color"
-	_front.material_override.set_shader_param(color_parameter, Color(Constants.get_value("colors", new_color_scheme + "_main"))) 
-	_front_variant.material_override.set_shader_param(color_parameter, Color(Constants.get_value("colors", new_color_scheme + "_main"))) 
+	var main_color_name = new_color_scheme + "_main"
+	ColorManager.color_object_by_method(main_color_name,_front.material_override, "set_shader_param", [color_parameter])
+	ColorManager.color_object_by_method(main_color_name,_front_variant.material_override, "set_shader_param", [color_parameter])
 
 	var wall_index = Constants.get_value("ghosts","wall_placing_timeline_index")
 	var accent_type = "primary" if wall_index != timeline_index else "secondary"
-	_middle.material_override.set_shader_param(color_parameter,Color(Constants.get_value("colors", new_color_scheme + "_"+accent_type + "_accent")))
+	var accent_color_name = new_color_scheme + "_"+accent_type + "_accent"
+	ColorManager.color_object_by_method(accent_color_name,_middle.material_override, "set_shader_param", [color_parameter])
 
-	_back.material_override.set_shader_param(color_parameter,Color(Constants.get_value("colors", new_color_scheme + "_main")))
-	_back_variant.material_override.set_shader_param(color_parameter, Color(Constants.get_value("colors", new_color_scheme + "_main")))
+	ColorManager.color_object_by_method(main_color_name,_back.material_override, "set_shader_param", [color_parameter])
+	ColorManager.color_object_by_method(main_color_name,_back_variant.material_override, "set_shader_param", [color_parameter])
 	
-	_death_particles.material_override.emission = Color(Constants.get_value("colors", new_color_scheme + "_"+accent_type + "_accent"))
+	ColorManager.color_object_by_property(accent_color_name, _death_particles.material_override, "emission")
 	emit_signal("color_scheme_changed", new_color_scheme, timeline_index)
 
 

@@ -14,14 +14,19 @@ func _init() -> void:
 func initialize(owning_player) -> void:
 	Logger.info("initialize action", "HitscanShot")
 
-	var color = Color(Constants.get_value("colors","neutral"))
+	var color_name = "neutral"
 	if owning_player.has_node("KinematicBody/CharacterModel"):
 		var character_model_controller = owning_player.get_node("KinematicBody/CharacterModel")
 		var color_scheme = character_model_controller.color_scheme
-		color = Color(Constants.get_value("colors", color_scheme + "_primary_accent"))
-	$Visualisation.material_override.albedo_color = color
-	$HitPoint/FrontParticles.material_override.emission = color
-	$HitPoint/BackParticles.material_override.emission = color
+		color_name = color_scheme + "_primary_accent"
+	
+	# TODO: Check is necessary because server does not do any coloring, we should maybe 
+	# make a client only version for this class
+	if get_node("/root").has_node("ColorManager"):
+		var color_manager = get_node("/root/ColorManager")
+		color_manager.color_object_by_property(color_name, $Visualisation.material_override, "albedo_color")
+		color_manager.color_object_by_property(color_name, $HitPoint/FrontParticles.material_override, "emission")
+		color_manager.color_object_by_property(color_name, $HitPoint/BackParticles.material_override, "emission")
 
 	cast_to = Vector3(0,0,-_bullet_range)
 	_owning_player = owning_player

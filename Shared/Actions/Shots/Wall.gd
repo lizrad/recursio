@@ -39,13 +39,17 @@ func initialize(owning_player) -> void:
 
 
 func initialize_visual(owning_player) -> void:
-	var color = Color(Constants.get_value("colors", "neutral"))
+	var color_name = "neutral"
 	if owning_player.has_node("KinematicBody/CharacterModel"):
 		var character_model_controller = owning_player.get_node("KinematicBody/CharacterModel")
 		var color_scheme = character_model_controller.color_scheme
-		color = Color(Constants.get_value("colors", color_scheme + "_main"))
-	_mesh_instance.material_override.albedo_color = color
-	_mesh_instance.material_override.emission = color
+		color_name = color_scheme + "_main"
+	# TODO: Check is necessary because server does not do any coloring, we should maybe 
+	# make a client only version for this class
+	if get_node("/root").has_node("ColorManager"):
+		var color_manager = get_node("/root/ColorManager")
+		color_manager.color_object_by_property(color_name, _mesh_instance.material_override, "albedo_color")
+		color_manager.color_object_by_property(color_name, _mesh_instance.material_override, "emission")
 
 
 func handle_hit(collider):

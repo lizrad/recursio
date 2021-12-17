@@ -1,14 +1,15 @@
 extends Spatial
 class_name CapturePoint
 
-onready var neutral_color = Color(Constants.get_value("colors", "neutral"))
+var neutral_color_name = "neutral"
 # TODO: better use main schema for all coloring?
-onready var player_color = Color(Constants.get_value("colors", "player_main"))
-onready var enemy_color = Color(Constants.get_value("colors", "enemy_main"))
-onready var player_in_capture_color = Color(Constants.get_value("colors", "player_ghost_primary_accent"))
-onready var player_captured_color = Color(Constants.get_value("colors", "player_ghost_main"))
-onready var enemy_in_capture_color = Color(Constants.get_value("colors", "enemy_ghost_primary_accent"))
-onready var enemy_captured_color = Color(Constants.get_value("colors", "enemy_ghost_main"))
+var player_color_name = "player_main"
+var enemy_color_name = "enemy_main"
+var player_in_capture_color_name = "player_ghost_primary_accent"
+var player_captured_color_name = "player_ghost_main"
+var enemy_in_capture_color_name = "enemy_ghost_primary_accent"
+var enemy_captured_color_name = "enemy_ghost_main"
+
 onready var _progress = $Viewport/TextureProgress
 
 var active = true
@@ -36,7 +37,7 @@ func _ready():
 	_recapture_speed = Constants.get_value("capture", "recapture_speed")
 
 func reset():
-	$MeshInstance.material_override.albedo_color = neutral_color
+	ColorManager.color_object_by_property(neutral_color_name, $MeshInstance.material_override, "albedo_color")
 	active = false
 	_capture_progress = 0
 	_capturing_team = -1
@@ -101,23 +102,23 @@ func capture(capturing_player_id):
 	_captured_by = capturing_player_id
 	_capture_progress = 1
 	if capturing_player_id == player_id:
-		$MeshInstance.material_override.albedo_color = player_captured_color
+		ColorManager.color_object_by_property(player_captured_color_name, $MeshInstance.material_override, "albedo_color")
 		Logger.info("I captured a point", "capture_point")
 	else:
-		$MeshInstance.material_override.albedo_color = enemy_captured_color
+		ColorManager.color_object_by_property(enemy_captured_color_name, $MeshInstance.material_override, "albedo_color")
 		Logger.info("Enemy captured a point", "capture_point")
 
 func set_capturing_player(capturing_player_id):
 	_capturing_team = capturing_player_id
 	if capturing_player_id == -1:
-		$MeshInstance.material_override.albedo_color = neutral_color
-		_progress.tint_progress = neutral_color
+		ColorManager.color_object_by_property(neutral_color_name, $MeshInstance.material_override, "albedo_color")
+		ColorManager.color_object_by_property(neutral_color_name, _progress, "tint_progress")
 	elif capturing_player_id == player_id:
-		$MeshInstance.material_override.albedo_color = player_in_capture_color
-		_progress.tint_progress = player_color
+		ColorManager.color_object_by_property(player_in_capture_color_name, $MeshInstance.material_override, "albedo_color")
+		ColorManager.color_object_by_property(player_color_name,_progress, "tint_progress")
 	else:
-		$MeshInstance.material_override.albedo_color = enemy_in_capture_color
-		_progress.tint_progress = enemy_color
+		ColorManager.color_object_by_property(enemy_in_capture_color_name, $MeshInstance.material_override, "albedo_color")
+		ColorManager.color_object_by_property(enemy_color_name, _progress, "tint_progress")
 	
 func set_capture_status(capturing_player_id, capture_progress):
 	Logger.info("Capture progress of " + str(capture_progress) + " received", "capture_point")
@@ -130,10 +131,10 @@ func set_capture_status(capturing_player_id, capture_progress):
 func capture_lost(capturing_player_id):
 	_captured_by = -1
 	if capturing_player_id == player_id:
-		$MeshInstance.material_override.albedo_color = player_in_capture_color
+		ColorManager.color_object_by_property(player_in_capture_color_name, $MeshInstance.material_override, "albedo_color")
 		Logger.info("I lost a capture point", "capture_point")
 	else:
-		$MeshInstance.material_override.albedo_color = enemy_in_capture_color
+		ColorManager.color_object_by_property(enemy_in_capture_color_name, $MeshInstance.material_override, "albedo_color")
 		Logger.info("Enemy lost a capture point", "capture_point")
 
 func get_capture_progress():

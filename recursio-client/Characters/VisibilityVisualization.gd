@@ -9,7 +9,8 @@ onready var tween = get_node("Tween")
 
 
 func _ready():
-	material_override.albedo_color = Color(Constants.get_value("colors", "visibility_visualization"))
+	var color_name = "visibility_visualization"
+	ColorManager.color_object_by_property(color_name, material_override, "albedo_color")
 
 
 func set_visible(is_visible):

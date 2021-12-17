@@ -7,9 +7,9 @@ onready var _name: Label = get_node("AspectRatioContainer/Control/TextureRect/Ca
 onready var _progress_bar: TextureProgress = get_node("AspectRatioContainer/TextureProgress")
 onready var _background: TextureRect = get_node("AspectRatioContainer/Control/TextureRect")
 
-onready var neutral_color = Color(Constants.get_value("colors", "neutral"))
-onready var player_color = Color(Constants.get_value("colors", "player_main"))
-onready var enemy_color = Color(Constants.get_value("colors", "enemy_main"))
+onready var neutral_color_name = "neutral"
+onready var player_color_name = "player_main"
+onready var enemy_color_name = "enemy_main"
 
 var _player_id: int = -1
 var _current_capture_team: int = -1
@@ -21,7 +21,7 @@ func _ready():
 
 func reset():
 	_progress_bar.value = 0
-	_background.modulate = neutral_color
+	ColorManager.color_object_by_property(neutral_color_name, _background, "modulate")
 
 
 func set_player_id(player_id):
@@ -38,7 +38,8 @@ func update_status(progress, team):
 		return
 
 	_current_capture_team = team
-	_background.modulate = neutral_color if team == -1 else player_color if team == _player_id else enemy_color
+	var color_name = neutral_color_name if team == -1 else player_color_name if team == _player_id else enemy_color_name
+	ColorManager.color_object_by_property(color_name, _background, "modulate")
 
 
 func set_name(new_name):

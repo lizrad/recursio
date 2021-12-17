@@ -73,10 +73,10 @@ func _swap_weapon_type(timeline_index) -> void:
 	var img_bullet = _action_manager.get_img_bullet_for_trigger(ActionManager.Trigger.FIRE_START, timeline_index)
 	var wall_index = Constants.get_value("ghosts", "wall_placing_timeline_index")
 	var accent_type = "primary" if wall_index != timeline_index else "secondary"
-	var color = Color(Constants.get_value("colors", "player_" + accent_type + "_accent"))
+	var color_name = "player_" + accent_type + "_accent"
 
 	_player.activate_spawn_point_hud(timeline_index)
-	_player.update_weapon_type_hud(max_ammo, img_bullet, color)
+	_player.update_weapon_type_hud(max_ammo, img_bullet, color_name)
 
 
 # Reads the input of the given type e.g. "player_move" or "player_look"
