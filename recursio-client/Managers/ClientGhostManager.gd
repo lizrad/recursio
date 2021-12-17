@@ -28,10 +28,6 @@ func on_countdown_phase_started() -> void:
 	for ghost in _player_ghosts:
 		ghost.delete_path()
 	_toggle_ghost_animation(true)
-	_visual_kill_ghosts()
-	var countdown_phase_seconds = Constants.get_value("gameplay","countdown_phase_seconds")
-	var spawn_time = Constants.get_value("gameplay","spawn_time")
-	_visual_delay_spawn_ghosts(countdown_phase_seconds-spawn_time)
 
 
 # OVERRIDE #
