@@ -54,13 +54,14 @@ func reset():
 func _process(_delta):
 	var val = _calculate_progress()
 	_timer_pb.value = val
+	var color_name
 	if val < 0.15:
-		_timer_pb.tint_progress = Constants.get_value("colors", "ui_error")
+		color_name = "ui_error"
 	elif val < 0.35:
-		_timer_pb.tint_progress = Constants.get_value("colors", "ui_warning")
+		color_name = "ui_warning"
 	else:
-		_timer_pb.tint_progress = Constants.get_value("colors", "ui_ok")
-
+		color_name = "ui_ok"
+	ColorManager.color_object_by_property(color_name, _timer_pb, "tint_progress")
 
 # Calculates the remaining time and maps it between 0 and 1
 func _calculate_progress() -> float:
@@ -95,20 +96,23 @@ func update_fire_action_ammo(amount: int) -> void:
 	_ammo.text = str(amount)
 	# mark ammo ui red -> is reset to weapon depending color in update_weapon_type
 	if amount < 1:
-		_ammo.set("custom_colors/font_color", Constants.get_value("colors", "ui_error"))
-		_ammo_type_bg.modulate = Constants.get_value("colors", "ui_error")
+		var color_name = "ui_error"
+		ColorManager.color_object_by_property(color_name, _ammo, "custom_colors/font_color")
+		ColorManager.color_object_by_property(color_name, _ammo_type_bg, "modulate")
 
 
 func update_special_movement_ammo(amount: int) -> void:
 	Logger.info("Set special movement ammo to: " + str(amount), "HUD")
-	_dash.set("custom_colors/font_color", Constants.get_value("colors", "ui_ok") if amount > 0 else Constants.get_value("colors", "ui_error"))
+	var color_name = "ui_ok" if amount > 0 else "ui_error"
+	ColorManager.color_object_by_property(color_name, _dash, "custom_colors/font_color")
+	ColorManager.color_object_by_property(color_name, _ammo_type_bg, "modulate")
 	_dash.text = str(amount)
 
 
-func update_weapon_type(img_bullet, color) -> void:
+func update_weapon_type(img_bullet, color_name: String) -> void:
 	Logger.info("Update ammo type", "HUD")
-	_ammo.set("custom_colors/font_color", Constants.get_value("colors", "ui_ok"))
-	_ammo_type_bg.modulate = color
+	ColorManager.color_object_by_property("ui_ok", _ammo, "custom_colors/font_color")
+	ColorManager.color_object_by_property(color_name, _ammo_type_bg, "modulate")
 	_ammo_type.texture = img_bullet
 
 

@@ -18,10 +18,10 @@ func _set_index(new_index:int):
 	change_color()
 
 func change_color():
-	var color = Color(Constants.get_value("colors", "neutral"))
+	var color_name = "neutral"
 	if not selected:
 		var color_scheme = "player_ghost_"
 		var wall_index = Constants.get_value("ghosts","wall_placing_timeline_index")
 		var accent_type = "primary_accent" if wall_index != index else "secondary_accent"
-		color = Color(Constants.get_value("colors", color_scheme+accent_type))
-	$Path/CSGPolygon.material_override.albedo_color = color
+		color_name = color_scheme+accent_type
+	ColorManager.color_object_by_property(color_name, $Path/CSGPolygon.material_override, "albedo_color")

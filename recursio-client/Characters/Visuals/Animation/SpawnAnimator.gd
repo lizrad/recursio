@@ -12,9 +12,9 @@ func _ready():
 	_spawn_particles.lifetime = _max_time;
 
 func _on_color_scheme_changed(new_color_scheme, _timeline_index):
-	var main_color = Color(Constants.get_value("colors",new_color_scheme + "_main"))
-	_spawn_particles.material_override.albedo_color = main_color
-	_spawn_particles.material_override.emission = main_color
+	var color_name = new_color_scheme + "_main"
+	ColorManager.color_object_by_property(color_name, _spawn_particles.material_override, "albedo_color")
+	ColorManager.color_object_by_property(color_name, _spawn_particles.material_override, "emission")
 
 func non_vfx_spawn():
 	_front_pivot.visible = true

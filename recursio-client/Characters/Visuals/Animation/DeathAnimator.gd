@@ -32,15 +32,16 @@ func _ready():
 func _on_color_scheme_changed(new_color_scheme, timeline_index):
 	var wall_index = Constants.get_value("ghosts","wall_placing_timeline_index")
 	var accent_type = "primary" if wall_index != timeline_index else "secondary"
-	var accent_color = Color(Constants.get_value("colors", new_color_scheme+"_"+accent_type+"_accent"))
-	var main_color = Color(Constants.get_value("colors",new_color_scheme + "_main"))
-	_middle_death_variant.material_override.emission = accent_color
-	_middle_death_variant.material_override.albedo_color = accent_color
-	_middle_death_front_particles.material_override.albedo_color = main_color
-	_middle_death_front_particles.material_override.emission =main_color
-	_middle_death_back_particles.material_override.albedo_color = main_color
-	_middle_death_back_particles.material_override.emission = main_color
-	
+	var accent_color_name = new_color_scheme+"_"+accent_type+"_accent"
+	ColorManager.color_object_by_property(accent_color_name, _middle_death_variant.material_override, "emission")
+	ColorManager.color_object_by_property(accent_color_name, _middle_death_variant.material_override, "albedo_color")
+	var main_color_name = new_color_scheme + "_main"
+	ColorManager.color_object_by_property(main_color_name, _middle_death_front_particles.material_override, "albedo_color")
+	ColorManager.color_object_by_property(main_color_name, _middle_death_front_particles.material_override, "emission")
+	ColorManager.color_object_by_property(main_color_name, _middle_death_back_particles.material_override, "albedo_color")
+	ColorManager.color_object_by_property(main_color_name, _middle_death_back_particles.material_override, "emission")
+
+
 func start_animation():
 	_time_since_start = 0
 

@@ -40,12 +40,12 @@ func _on_color_scheme_changed(new_color_scheme, timeline_index):
 	
 	var wall_index = Constants.get_value("ghosts","wall_placing_timeline_index")
 	var accent_type = "primary" if wall_index != timeline_index else "secondary"
-	var accent_color = Color(Constants.get_value("colors", new_color_scheme+"_"+accent_type+"_accent"))
-	var main_color = Color(Constants.get_value("colors",new_color_scheme + "_main"))
-	_back_dash_variant.material_override.set_shader_param("color", main_color)
-	_back_dash.material_override.set_shader_param("color", main_color)
-	_dash_particles_left.material_override.albedo_color = accent_color
-	_dash_particles_right.material_override.albedo_color = accent_color
+	var accent_color_name = new_color_scheme+"_"+accent_type+"_accent"
+	var main_color_name = new_color_scheme + "_main"
+	ColorManager.color_object_by_method(main_color_name, _back_dash_variant.material_override, "set_shader_param", ["color"])
+	ColorManager.color_object_by_method(main_color_name, _back_dash.material_override, "set_shader_param", ["color"])
+	ColorManager.color_object_by_property(accent_color_name, _dash_particles_left.material_override, "albedo_color")
+	ColorManager.color_object_by_property(accent_color_name, _dash_particles_right.material_override, "albedo_color")
 	_timeline_index = timeline_index
 
 func stop_animation():

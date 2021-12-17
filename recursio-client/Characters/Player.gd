@@ -163,8 +163,8 @@ func setup_spawn_point_hud(spawn_points) -> void:
 	_hud.set_spawn_points(spawn_points)
 
 
-func update_weapon_type_hud(max_ammo, img_bullet, color) -> void:
-	_hud.update_weapon_type(img_bullet, color)
+func update_weapon_type_hud(max_ammo, img_bullet, color_name: String) -> void:
+	_hud.update_weapon_type(img_bullet, color_name)
 	_hud.update_fire_action_ammo(max_ammo)
 
 

@@ -26,13 +26,13 @@ func _on_color_scheme_changed(new_color_scheme, timeline_index):
 	_timeline_index = timeline_index
 	var wall_index = Constants.get_value("ghosts","wall_placing_timeline_index")
 	var accent_type = "primary" if wall_index != timeline_index else "secondary"
-	var attack_color = Color(Constants.get_value("colors", new_color_scheme+"_"+accent_type+"_accent"))
-	_front_melee_attack.material_override.albedo_color = attack_color
-	_front_melee_attack_variant.material_override.albedo_color = attack_color
-	_front_melee_attack.material_override.emission = attack_color
-	_front_melee_attack_variant.material_override.emission = attack_color
-	_melee_particles_left.material_override.emission = attack_color
-	_melee_particles_right.material_override.emission = attack_color
+	var color_name = new_color_scheme+"_"+accent_type+"_accent"
+	ColorManager.color_object_by_property(color_name, _front_melee_attack.material_override, "albedo_color")
+	ColorManager.color_object_by_property(color_name, _front_melee_attack_variant.material_override, "albedo_color")
+	ColorManager.color_object_by_property(color_name, _front_melee_attack.material_override, "emission")
+	ColorManager.color_object_by_property(color_name, _front_melee_attack_variant.material_override, "emission")
+	ColorManager.color_object_by_property(color_name, _melee_particles_left.material_override, "emission")
+	ColorManager.color_object_by_property(color_name, _melee_particles_right.material_override, "emission")
 	
 func start_animation():
 	_time_since_start = 0
