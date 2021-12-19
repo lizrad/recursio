@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/PlaceWall.ogg-e760170adc2ed8eff6281767bcc8e0a9.oggstr"
+
+[deps]
+
+source_file="res://Resources/Audio/Effects/PlaceWall.ogg"
+dest_files=[ "res://.import/PlaceWall.ogg-e760170adc2ed8eff6281767bcc8e0a9.oggstr" ]
+
+[params]
+
+loop=false
+loop_offset=0

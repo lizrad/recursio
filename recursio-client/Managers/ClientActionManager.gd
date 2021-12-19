@@ -8,7 +8,7 @@ var action_icons = {
 
 var action_sounds = {
 	action_resources[ActionType.HITSCAN].name: preload("res://Resources/Audio/Effects/Shoot.ogg"),
-	action_resources[ActionType.WALL].name: preload("res://Resources/Audio/Effects/Shoot.ogg"),
+	action_resources[ActionType.WALL].name: preload("res://Resources/Audio/Effects/PlaceWall.ogg"),
 	action_resources[ActionType.DASH].name: preload("res://Resources/Audio/Effects/Dash.ogg"),
 	action_resources[ActionType.MELEE].name: preload("res://Resources/Audio/Effects/Shoot.ogg")
 }
