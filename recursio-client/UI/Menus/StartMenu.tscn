@@ -721,9 +721,8 @@ focus_neighbour_bottom = NodePath("../SettingsTabs/Video/FullScreen/FullScreenCh
 focus_next = NodePath("../SettingsTabs/Video/FullScreen/FullScreenCheckButton")
 focus_previous = NodePath("../SettingsTabs/Video/Debug/DebugCheckButton")
 text = "Back"
-__meta__ = {
-"_edit_use_anchors_": false
-}
+script = ExtResource( 27 )
+sound_type = 1
 
 [node name="Tutorial" type="Control" parent="."]
 visible = false

@@ -8,4 +8,4 @@ func _ready():
 	var _err = self.connect("pressed", self, "_on_button_pressed")
 
 func _on_button_pressed() -> void:
-	SoundManager.play_sound_ui(sound_type)
+	SoundManager.play_sound(sound_type)

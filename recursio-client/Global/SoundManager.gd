@@ -6,14 +6,14 @@ enum SoundType {
 }
 
 # TODO: Would be nice to map those in the inspector
-var _ui_sounds: Array = [
+var _sounds: Array = [
 	preload("res://Resources/Audio/UI/Click.ogg"),
 	preload("res://Resources/Audio/UI/Back.ogg")
 ]
 
-onready var _ui_player: AudioStreamPlayer = get_node("UIPlayer")
+onready var _player: AudioStreamPlayer = get_node("AudioStreamPlayer")
 
 
-func play_sound_ui(sound_type: int) -> void:	
-	_ui_player.stream = _ui_sounds[sound_type]
-	_ui_player.play()
+func play_sound(sound_type: int) -> void:	
+	_player.stream = _sounds[sound_type]
+	_player.play()
