@@ -16,7 +16,7 @@ func toggle_visibility_light(value: bool):
 func create_path():
 	assert(is_record_data_set())
 	var _curve = Curve3D.new()
-	for frame in range(0, _record_data.record_frames.size(), 30):
+	for frame in range(0, _record_data.record_frames.size(), 15):
 		var record_frame: RecordFrame = _record_data.record_frames[frame]
 		_curve.add_point(record_frame.position)
 	$GhostPath.set_curve(_curve)
