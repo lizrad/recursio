@@ -71,7 +71,7 @@ func _physics_process(delta):
 	if _round_manager.get_current_phase() != RoundManager.Phases.GAME:
 		return
 
-	if enemy_is_server_driven:
+	if enemy_is_server_driven and _enemy:
 		_update_enemy(delta)
 
 	# Update CapturePoints in player HUD
