@@ -83,7 +83,6 @@ func _on_create_game_room_pressed() -> void:
 
 
 func _on_refresh_pressed() -> void:
-	get_parent().get_parent().get_node("ClickSound").play()
 	_on_send_get_game_rooms()
 
 
