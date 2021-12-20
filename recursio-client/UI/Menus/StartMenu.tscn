@@ -1,4 +1,4 @@
-[gd_scene load_steps=34 format=2]
+[gd_scene load_steps=35 format=2]
 
 [ext_resource path="res://UI/Menus/StartMenu.gd" type="Script" id=1]
 [ext_resource path="res://UI/Menus/GameRooms/GameRoomCreation.gd" type="Script" id=2]
@@ -19,6 +19,7 @@
 [ext_resource path="res://UI/Menus/AsciiSlider.gd" type="Script" id=17]
 [ext_resource path="res://UI/Menus/AsciiBackground.gd" type="Script" id=18]
 [ext_resource path="res://Tutorial/Tutorial.gd" type="Script" id=19]
+[ext_resource path="res://Global/SoundManager.tscn" type="PackedScene" id=20]
 [ext_resource path="res://Level/SpawnPoint.tscn" type="PackedScene" id=21]
 [ext_resource path="res://UI/Menus/ColorSettingController.gd" type="Script" id=22]
 [ext_resource path="res://Tutorial/TutorialScenario_2.tscn" type="PackedScene" id=24]
@@ -141,6 +142,8 @@ world_scene = ExtResource( 7 )
 level_scene = ExtResource( 9 )
 capture_point_scene = ExtResource( 10 )
 spawn_point_scene = ExtResource( 21 )
+
+[node name="SoundManager" parent="." instance=ExtResource( 20 )]
 
 [node name="AsciiBackground" type="ColorRect" parent="."]
 material = SubResource( 6 )

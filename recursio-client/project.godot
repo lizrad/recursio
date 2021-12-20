@@ -355,6 +355,7 @@ InputManager="*res://Global/InputManager.gd"
 GlobalActionManager="*res://Shared/Actions/ActionManager.gd"
 UserSettings="*res://Global/UserSettings.gd"
 ColorManager="*res://Global/ColorManager/ColorManager.gd"
+SoundManager="*res://Global/SoundManager.tscn"
 
 [debug]
 
