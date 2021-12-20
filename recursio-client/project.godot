@@ -219,6 +219,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://UI/Menus/SettingsTabs.gd"
 }, {
+"base": "Button",
+"class": "SoundButton",
+"language": "GDScript",
+"path": "res://UI/SoundButton.gd"
+}, {
 "base": "Spatial",
 "class": "SpawnPoint",
 "language": "GDScript",
@@ -317,6 +322,7 @@ _global_script_class_icons={
 "RingBuffer": "",
 "RoundManager": "",
 "SettingsTabs": "",
+"SoundButton": "",
 "SpawnPoint": "",
 "StartMenu": "",
 "StaticInput": "",
@@ -349,6 +355,7 @@ InputManager="*res://Global/InputManager.gd"
 GlobalActionManager="*res://Shared/Actions/ActionManager.gd"
 UserSettings="*res://Global/UserSettings.gd"
 ColorManager="*res://Global/ColorManager/ColorManager.gd"
+SoundManager="*res://Global/SoundManager.tscn"
 
 [debug]
 
