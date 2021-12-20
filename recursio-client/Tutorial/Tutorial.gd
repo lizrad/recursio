@@ -10,9 +10,6 @@ onready var _btn_tutorial_1: Button = get_node("TutorialMenu/Tutorial1")
 onready var _btn_tutorial_2: Button = get_node("TutorialMenu/Tutorial2")
 onready var _btn_back: Button = get_node("TutorialMenu/Btn_Back")
 
-onready var _click_sound: AudioStreamPlayer = get_node("../ClickSound")
-onready var _back_sound: AudioStreamPlayer = get_node("../BackSound")
-
 
 func _ready():
 	var _error = _btn_tutorial_1.connect("pressed", self, "start_scenario", [0])
@@ -26,7 +23,6 @@ func show() -> void:
 
 
 func start_scenario(scenario_index) -> void:
-	_click_sound.play()
 	_btn_tutorial_1.disabled = true
 	_btn_tutorial_2.disabled = true
 	var scenario: TutorialScenario = tutorial_scenes[scenario_index].instance()
@@ -45,7 +41,6 @@ func on_scenario_completed() -> void:
 
 
 func _on_back_pressed() -> void:
-	_back_sound.play()
 	emit_signal("btn_back_pressed")
 
 

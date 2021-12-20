@@ -7,8 +7,6 @@ func _ready():
 
 
 func _on_back_pressed():
-	get_parent().get_parent().get_node("BackSound").play()
-	
 	hide()
 
 
