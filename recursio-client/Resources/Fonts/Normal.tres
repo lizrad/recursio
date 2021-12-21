@@ -3,6 +3,7 @@
 [ext_resource path="res://Resources/Fonts/FiraCode-Regular.ttf" type="DynamicFontData" id=1]
 
 [resource]
+resource_local_to_scene = true
 size = 20
 use_mipmaps = true
 use_filter = true

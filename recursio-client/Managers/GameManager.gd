@@ -2,7 +2,7 @@ extends Node
 class_name GameManager
 
 # These are optional
-var _game_result_screen
+onready var _game_end_screen
 var _countdown_screen
 
 var _level: Level
@@ -11,16 +11,11 @@ var _team_id := -1
 var _countdown_time: float = Constants.get_value("gameplay", "countdown_phase_seconds")
 
 func _ready():
-	if has_node("../../GameResultScreen"):
-		_game_result_screen = get_node("../../GameResultScreen")
+	if has_node("../../GameEndScreen"):
+		_game_end_screen = get_node("../../GameEndScreen")
 	
 	if has_node("../../CountdownScreen"):
 		_countdown_screen = get_node("../../CountdownScreen")
-	
-	# Hide screens
-	if _game_result_screen and _countdown_screen:
-		_game_result_screen.visible = false
-		_countdown_screen.visible = false
 	
 	var _error = Server.connect("capture_point_captured", self, "_on_capture_point_captured") 
 	_error = Server.connect("capture_point_team_changed", self, "_on_capture_point_team_changed") 
@@ -42,34 +37,66 @@ func set_level(level: Level):
 
 
 func show_countdown_screen() -> void:
-	if _game_result_screen and _countdown_screen:
-		_countdown_screen.visible = true
+	if _countdown_screen:
+		_countdown_screen.show()
 
 
 func hide_countdown_screen() -> void:
-	if _game_result_screen and _countdown_screen:
-		_countdown_screen.visible = false
+	if _countdown_screen:
+		_countdown_screen.hide()
 	_countdown_time = Constants.get_value("gameplay","countdown_phase_seconds")
 
 
 func hide_game_result_screen() -> void:
-	if _game_result_screen and _countdown_screen:
-		_game_result_screen.visible = false
+	if _game_end_screen:
+		_game_end_screen.hide()
+
+func set_stats(player_kills: Array, player_deaths: Array, ghost_kills: Array, ghost_deaths: Array):
+	if _game_end_screen:
+		_game_end_screen.set_stats(_team_id, player_kills, player_deaths, ghost_kills, ghost_deaths)
 
 
 func show_win() -> void:
 	Logger.info("Player won!", "gameplay")
-	if _game_result_screen and _countdown_screen:
-		_game_result_screen.get_node("ResultText").text = "You Won!"
-		_game_result_screen.visible = true
+	if _game_end_screen:
+		_game_end_screen.set_panel_color("player_main")
+		_game_end_screen.enable_room_button()
+		_game_end_screen.enable_title_button()
+		_game_end_screen.set_title("You Won!")
+		_game_end_screen.show_stats()
+		_game_end_screen.show()
 
 
 func show_loss() -> void:
 	Logger.info("Player lost!", "gameplay")
-	if _game_result_screen and _countdown_screen:
-		_game_result_screen.get_node("ResultText").text = "You Lost!"
-		_game_result_screen.visible = true
+	if _game_end_screen:
+		_game_end_screen.set_panel_color("enemy_main")
+		_game_end_screen.enable_room_button()
+		_game_end_screen.enable_title_button()
+		_game_end_screen.set_title("You Lost!")
+		_game_end_screen.show_stats()
+		_game_end_screen.show()
 
+func show_enemy_disconnect() -> void:
+	Logger.info("Enemy disconnected!", "connection")
+	if _game_end_screen:
+		_game_end_screen.set_panel_color("ui_error")
+		_game_end_screen.enable_room_button()
+		_game_end_screen.enable_title_button()
+		_game_end_screen.set_title("Opponent disconnected!")
+		_game_end_screen.hide_stats()
+		_game_end_screen.show()
+
+
+func show_player_disconnect() -> void:
+	Logger.info("Server disconnected!", "connection")
+	if _game_end_screen:
+		_game_end_screen.set_panel_color("ui_error")
+		_game_end_screen.disable_room_button()
+		_game_end_screen.enable_title_button()
+		_game_end_screen.set_title("Server disconnected!")
+		_game_end_screen.hide_stats()
+		_game_end_screen.show()
 
 func get_spawn_points(team_id) -> Array:
 	return _level.get_spawn_points(team_id)
@@ -99,9 +126,9 @@ func set_team_id(team_id):
 
 
 func reset() -> void:
-	if _game_result_screen and _countdown_screen:
-		_game_result_screen.visible = false
-		_countdown_screen.visible = false
+	if _game_end_screen and _countdown_screen:
+		_game_end_screen.hide()
+		_countdown_screen.hide()
 	# Reset level
 	_level.reset()
 	_level.toggle_capture_points(false)

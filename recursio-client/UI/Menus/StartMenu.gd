@@ -70,7 +70,6 @@ func _ready():
 	_error = Server.connect("game_room_ready_received" , self, "_on_game_room_ready_received")
 	_error = Server.connect("game_room_not_ready_received" , self, "_on_game_room_not_ready_received")
 	_error = Server.connect("load_level_received", self, "_on_load_level_received")
-	_error = Server.connect("game_result", self, "_on_game_result_received")
 	
 	_error = _tutorial.connect("scenario_completed", self, "_on_tutorial_scenario_completed")
 	_error = _tutorial.connect("btn_back_pressed", self, "_on_tutorial_back_pressed")
@@ -87,13 +86,29 @@ func _ready():
 	get_tree().get_root().call_deferred("add_child", new_scene)
 
 
-func _return_to_game_room_lobby():
+func return_to_game_room_lobby():
 	_world.queue_free()
 	_world = null
 	_game_room_lobby.reset_players()
 	$CenterContainer.show()
 
 
+func return_to_title():
+	if _world != null:
+		_world.queue_free()
+		_world = null
+	# Reset all sub screens
+	_game_room_creation.hide()
+	_game_room_lobby.hide()
+	_game_room_lobby.reset()
+	_game_room_search.hide()
+	_game_room_search.reset()
+	_in_game_room = false
+	# Show start screen
+	_start_menu_buttons.show()
+	$CenterContainer.show()
+	_toggle_enabled_start_menu_buttons(true)
+	_btn_play_tutorial.grab_focus()
 func _toggle_enabled_start_menu_buttons(enabled: bool):
 	_btn_play_online.disabled = !enabled
 	_btn_play_local.disabled = !enabled
@@ -117,21 +132,10 @@ func _on_connection_successful():
 
 
 func _on_server_disconnected():
-	if _world != null:
-		_world.queue_free()
-		_world = null
-	# Reset all sub screens
-	_game_room_creation.hide()
-	_game_room_lobby.hide()
-	_game_room_lobby.reset()
-	_game_room_search.hide()
-	_game_room_search.reset()
-	_in_game_room = false
-	# Show start screen
-	_start_menu_buttons.show()
-	$CenterContainer.show()
-	_toggle_enabled_start_menu_buttons(true)
-	_btn_play_tutorial.grab_focus()
+	if _world:
+		return
+	return_to_title()
+
 
 
 func _on_connection_failed():
@@ -227,10 +231,6 @@ func _on_game_rooms_received(game_room_dic) -> void:
 func _on_game_room_joined(player_id_name_dic, game_room_id):
 	_game_room_lobby.set_players(player_id_name_dic, _player_rpc_id)
 	
-	if _world != null:
-		_return_to_game_room_lobby()
-		return
-	
 	if _in_game_room:
 		return
 
@@ -264,11 +264,6 @@ func _on_load_level_received():
 	_world.set_level(level)
 	_world.add_child(level)
 	_world.level_set_up_done()
-
-
-func _on_game_result_received(_winning_player_id):
-	yield(get_tree().create_timer(3), "timeout")
-	_return_to_game_room_lobby()
 
 
 func _on_tutorial_scenario_completed() -> void:

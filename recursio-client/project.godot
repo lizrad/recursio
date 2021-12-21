@@ -80,6 +80,11 @@ _global_script_classes=[ {
 "path": "res://Tutorial/EnemyAI.gd"
 }, {
 "base": "Node",
+"class": "GameEndScreen",
+"language": "GDScript",
+"path": "res://UI/Menus/GameEndScreen.gd"
+}, {
+"base": "Node",
 "class": "GameManager",
 "language": "GDScript",
 "path": "res://Managers/GameManager.gd"
@@ -239,6 +244,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://Shared/Input/StaticInput.gd"
 }, {
+"base": "VBoxContainer",
+"class": "StatsUI",
+"language": "GDScript",
+"path": "res://UI/Menus/StatsUI.gd"
+}, {
 "base": "Object",
 "class": "TextFileToArray",
 "language": "GDScript",
@@ -294,6 +304,7 @@ _global_script_class_icons={
 "DeadZones": "",
 "Enemy": "",
 "EnemyAI": "",
+"GameEndScreen": "",
 "GameManager": "",
 "GameRoomCreation": "",
 "GameRoomLobby": "",
@@ -326,6 +337,7 @@ _global_script_class_icons={
 "SpawnPoint": "",
 "StartMenu": "",
 "StaticInput": "",
+"StatsUI": "",
 "TextFileToArray": "",
 "Tutorial": "",
 "TutorialScenario": "",

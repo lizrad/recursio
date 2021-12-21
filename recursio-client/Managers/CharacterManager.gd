@@ -54,6 +54,11 @@ func _ready():
 	_error = _round_manager.connect("game_phase_stopped", _ghost_manager, "on_game_phase_stopped") 
 	####################################################
 	
+	#TODO: this connection is ugly af, but I don't know enough about the whole room management thing to play around with that signal flow
+	_error = Server.connect("game_room_joined", self, "_on_game_room_joined")
+	_error = Server.connect("server_disconnected", self, "_on_server_disconnected")
+	
+	
 	_error = Server.connect("world_state_received", self, "_on_world_state_received") 
 	_error = Server.connect("player_hit", self, "_on_player_hit") 
 
@@ -109,9 +114,7 @@ func _on_preparation_phase_started() -> void:
 	_enemy.toggle_animation(false)
 
 	_toggle_visbility_lights(false)
-	_game_manager.reset()
 	_action_manager.clear_action_instances()
-	_game_manager.hide_game_result_screen()
 	if not hide_player_button_overlay:
 		_player.show_preparation_hud(_round_manager.round_index)
 	
@@ -155,6 +158,7 @@ func _on_game_phase_stopped() -> void:
 
 
 func _on_game_result(winning_player_index) -> void:
+	_game_manager.set_stats([10,4],[5,10],[6,4],[8,9])
 	if winning_player_index == _player_rpc_id:
 		_game_manager.show_win()
 	else:
@@ -359,3 +363,10 @@ func _update_enemy(delta) -> void:
 
 	_enemy.trigger_actions(_enemy.last_triggers)
 	_enemy.last_triggers = 0
+
+
+func _on_game_room_joined(_player_id_name_dic, _game_room_id):
+	_game_manager.show_enemy_disconnect()
+
+func _on_server_disconnected():
+	_game_manager.show_player_disconnect()
