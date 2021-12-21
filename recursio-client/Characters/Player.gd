@@ -139,6 +139,9 @@ func _on_wall_spawn_received(position, rotation, wall_index):
 func set_dying(new_dying_status: bool):
 	.set_dying(new_dying_status)
 	if currently_dying:
+		PostProcess.glitch = true
+		PostProcess.vignette = true
+		PostProcess.animate_property("vignette_softness", 10, 1, _death_time)
 		_visibility_light.toggle(false)
 		_lerped_follow.stop_following()
 		_lerped_follow.start_shake(_camera_shake_amount,_camera_shake_speed)
@@ -148,13 +151,19 @@ func set_dying(new_dying_status: bool):
 func set_spawning(new_spawning_status: bool):
 	.set_spawning(new_spawning_status)
 	if currently_spawning:
+		PostProcess.glitch = false
+		PostProcess.animate_property("vignette_softness", 1, 10, _spawn_time)
 		_visibility_light.toggle(true)
 		_lerped_follow.start_following()
 		_lerped_follow.stop_shake()
+	else:
+		PostProcess.vignette = false
 
 # OVERRIDE #
 func non_vfx_spawn():
 	.non_vfx_spawn()
+	PostProcess.glitch = false
+	PostProcess.vignette = false
 	_visibility_light.toggle(true)
 	_lerped_follow.start()
 	_lerped_follow.stop_shake()
