@@ -17,9 +17,9 @@
 [ext_resource path="res://Tutorial/Tutorial.gd" type="Script" id=19]
 [ext_resource path="res://Global/SoundManager.tscn" type="PackedScene" id=20]
 [ext_resource path="res://Level/SpawnPoint.tscn" type="PackedScene" id=21]
-[ext_resource path="res://UI/SoundButton.gd" type="Script" id=23]
 [ext_resource path="res://Tutorial/TutorialScenario_2.tscn" type="PackedScene" id=24]
 [ext_resource path="res://Tutorial/TutorialScenario_1.tscn" type="PackedScene" id=25]
+[ext_resource path="res://UI/SoundButton.gd" type="Script" id=27]
 
 [sub_resource type="Shader" id=1]
 code = "shader_type canvas_item;
@@ -175,7 +175,7 @@ margin_right = 400.0
 margin_bottom = 111.0
 shortcut_in_tooltip = false
 text = "Play Tutorial"
-script = ExtResource( 23 )
+script = ExtResource( 27 )
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="CenterContainer/MainMenu"]
 margin_top = 115.0
@@ -188,7 +188,7 @@ margin_bottom = 32.0
 size_flags_horizontal = 3
 shortcut_in_tooltip = false
 text = "Play Online"
-script = ExtResource( 23 )
+script = ExtResource( 27 )
 
 [node name="CancelOnline" type="Button" parent="CenterContainer/MainMenu/HBoxContainer2"]
 visible = false
@@ -210,7 +210,7 @@ margin_right = 132.0
 margin_bottom = 36.0
 shortcut_in_tooltip = false
 text = "Play Local"
-script = ExtResource( 23 )
+script = ExtResource( 27 )
 
 [node name="LocalIPAddress" type="LineEdit" parent="CenterContainer/MainMenu/HBoxContainer"]
 margin_left = 136.0
@@ -239,7 +239,7 @@ margin_right = 400.0
 margin_bottom = 223.0
 shortcut_in_tooltip = false
 text = "Settings"
-script = ExtResource( 23 )
+script = ExtResource( 27 )
 
 [node name="Btn_Exit" type="Button" parent="CenterContainer/MainMenu"]
 margin_top = 227.0
@@ -247,7 +247,7 @@ margin_right = 400.0
 margin_bottom = 259.0
 shortcut_in_tooltip = false
 text = "Exit"
-script = ExtResource( 23 )
+script = ExtResource( 27 )
 sound_type = 1
 
 [node name="GameRoomSearch" type="PanelContainer" parent="CenterContainer"]
@@ -273,7 +273,7 @@ margin_right = 204.0
 margin_bottom = 32.0
 shortcut_in_tooltip = false
 text = "Create Game Room"
-script = ExtResource( 23 )
+script = ExtResource( 27 )
 
 [node name="LineEdit_GameRoomFilter" type="LineEdit" parent="CenterContainer/GameRoomSearch/Content/TopBar"]
 visible = false
@@ -292,7 +292,7 @@ margin_right = 304.0
 margin_bottom = 32.0
 shortcut_in_tooltip = false
 text = "Refresh"
-script = ExtResource( 23 )
+script = ExtResource( 27 )
 
 [node name="Btn_Back" type="Button" parent="CenterContainer/GameRoomSearch/Content/TopBar"]
 margin_left = 308.0
@@ -300,7 +300,7 @@ margin_right = 368.0
 margin_bottom = 32.0
 shortcut_in_tooltip = false
 text = "Back"
-script = ExtResource( 23 )
+script = ExtResource( 27 )
 sound_type = 1
 
 [node name="ItemList_GameRooms" type="ItemList" parent="CenterContainer/GameRoomSearch/Content"]
@@ -319,7 +319,7 @@ margin_right = 180.0
 margin_bottom = 32.0
 shortcut_in_tooltip = false
 text = "Join Game Room"
-script = ExtResource( 23 )
+script = ExtResource( 27 )
 
 [node name="GameRoomCreation" type="PanelContainer" parent="CenterContainer"]
 visible = false
@@ -385,7 +385,7 @@ margin_right = 144.0
 margin_bottom = 32.0
 shortcut_in_tooltip = false
 text = "Create Room"
-script = ExtResource( 23 )
+script = ExtResource( 27 )
 
 [node name="Space" type="Control" parent="CenterContainer/GameRoomCreation/Content/BottomBar"]
 margin_left = 148.0
@@ -400,7 +400,7 @@ margin_right = 292.0
 margin_bottom = 32.0
 shortcut_in_tooltip = false
 text = "Back"
-script = ExtResource( 23 )
+script = ExtResource( 27 )
 sound_type = 1
 
 [node name="GameRoomLobby" type="PanelContainer" parent="CenterContainer"]
@@ -468,7 +468,7 @@ focus_next = NodePath("../Btn_Leave")
 focus_previous = NodePath("../Btn_Leave")
 shortcut_in_tooltip = false
 text = "Ready"
-script = ExtResource( 23 )
+script = ExtResource( 27 )
 
 [node name="Space" type="Control" parent="CenterContainer/GameRoomLobby/Content/BottomBar"]
 margin_left = 76.0
@@ -488,7 +488,7 @@ focus_next = NodePath("../Btn_Ready")
 focus_previous = NodePath("../Btn_Ready")
 shortcut_in_tooltip = false
 text = "Leave"
-script = ExtResource( 23 )
+script = ExtResource( 27 )
 sound_type = 1
 
 [node name="SettingsContainer" parent="CenterContainer" instance=ExtResource( 8 )]
@@ -528,7 +528,7 @@ shortcut_in_tooltip = false
 text = "Tutorial 1: Capture Points"
 align = 0
 expand_icon = true
-script = ExtResource( 23 )
+script = ExtResource( 27 )
 
 [node name="Tutorial2" type="Button" parent="Tutorial/TutorialMenu"]
 margin_top = 115.0
@@ -538,7 +538,7 @@ shortcut_in_tooltip = false
 text = "Tutorial 2: Enemies"
 align = 0
 expand_icon = true
-script = ExtResource( 23 )
+script = ExtResource( 27 )
 
 [node name="Btn_Back" type="Button" parent="Tutorial/TutorialMenu"]
 margin_top = 151.0
@@ -546,5 +546,5 @@ margin_right = 333.0
 margin_bottom = 183.0
 shortcut_in_tooltip = false
 text = "Back"
-script = ExtResource( 23 )
+script = ExtResource( 27 )
 sound_type = 1
