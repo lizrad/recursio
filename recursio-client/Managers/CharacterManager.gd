@@ -158,7 +158,6 @@ func _on_game_phase_stopped() -> void:
 
 
 func _on_game_result(winning_player_index) -> void:
-	_game_manager.set_stats([10,4],[5,10],[6,4],[8,9])
 	if winning_player_index == _player_rpc_id:
 		_game_manager.show_win()
 	else:
@@ -211,7 +210,6 @@ func _on_spawn_player(player_id, spawn_point, team_id):
 	_player.player_id = player_id
 	_player.set_name(str(player_id))
 	_player.toggle_animation(false)
-	_game_manager.set_team_id(team_id)
 	# Apply visibility mask to all entities which have been here before the player
 	_apply_visibility_always(_player)
 	if _enemy: 
@@ -224,6 +222,7 @@ func _on_spawn_player(player_id, spawn_point, team_id):
 	# Initialize spawn points for current level
 	_player.setup_spawn_point_hud(_game_manager.get_spawn_points(team_id))
 	
+	_game_manager.set_player(_player)
 	_error = _player.connect("timeline_index_changed", self, "_on_player_timeline_changed") 
 
 	_error = Server.connect("wall_spawn", _player, "_on_wall_spawn_received") 
@@ -237,6 +236,7 @@ func _on_spawn_enemy(enemy_id, spawn_point, team_id):
 	_enemy.set_name(str(enemy_id))
 	_enemy.toggle_animation(false)
 	_apply_visibility_mask(_enemy)
+	_game_manager.set_enemy(_enemy)
 	var _error = _enemy.connect("timeline_index_changed", self, "_on_enemy_timeline_changed") 
 
 
