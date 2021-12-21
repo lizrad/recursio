@@ -26,7 +26,7 @@ onready var _action_manager: ActionManager = get_node("TutorialWorld/CharacterMa
 var _level: Level
 
 
-func _ready():	
+func _ready():
 	_level = get_node("TutorialWorld/LevelH")
 	_game_manager.set_level(_level)
 
@@ -51,23 +51,27 @@ func _process(delta):
 	_round_starts[_current_round].call_func()
 
 
-func init():
+func init() -> void:
 	_ghost_manager.init(_game_manager, _round_manager, _action_manager, _character_manager)
 
 
-func start():
+func start() -> void:
 	_round_starts[_current_round].call_func()
 
 
-func add_round_start_function(round_start_function: FuncRef):
+func stop() -> void:
+	queue_free()
+
+
+func add_round_start_function(round_start_function: FuncRef) -> void:
 	_round_starts.append(round_start_function)
 
 
-func add_round_condition_function(round_condition_function: FuncRef):
+func add_round_condition_function(round_condition_function: FuncRef) -> void:
 	_round_conditions.append(round_condition_function)
 
 
-func add_round_end_function(round_end_function: FuncRef):
+func add_round_end_function(round_end_function: FuncRef) -> void:
 	_round_ends.append(round_end_function)
 
 
