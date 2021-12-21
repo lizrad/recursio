@@ -199,8 +199,7 @@ func setup_spawn_point_hud(spawn_points) -> void:
 
 
 func update_weapon_type_hud(max_ammo, img_bullet, color_name: String) -> void:
-	_hud.update_weapon_type(img_bullet, color_name)
-	_hud.update_fire_action_ammo(max_ammo)
+	_hud.update_weapon_type(max_ammo, img_bullet, color_name)
 
 
 func activate_spawn_point_hud(timeline_index) -> void:
