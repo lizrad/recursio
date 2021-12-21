@@ -11,9 +11,14 @@ export var spawn_point_scene: PackedScene
 onready var _start_menu_buttons: VBoxContainer = get_node("CenterContainer/MainMenu")
 
 onready var _btn_play_tutorial = get_node("CenterContainer/MainMenu/PlayTutorial")
-onready var _btn_play_online = get_node("CenterContainer/MainMenu/PlayOnline")
+
+onready var _btn_play_online = get_node("CenterContainer/MainMenu/HBoxContainer2/PlayOnline")
+onready var _btn_cancel_online = get_node("CenterContainer/MainMenu/HBoxContainer2/CancelOnline")
+
 onready var _btn_play_local = get_node("CenterContainer/MainMenu/HBoxContainer/Btn_PlayLocal")
 onready var _lineEdit_local_ip = get_node("CenterContainer/MainMenu/HBoxContainer/LocalIPAddress")
+onready var _btn_cancel_local = get_node("CenterContainer/MainMenu/HBoxContainer/CancelLocal")
+
 onready var _btn_settings = get_node("CenterContainer/MainMenu/SettingsButton")
 onready var _btn_exit = get_node("CenterContainer/MainMenu/Btn_Exit")
 
@@ -39,7 +44,9 @@ var _world
 func _ready():
 	var _error = _btn_play_tutorial.connect("pressed", self, "_on_play_tutorial")
 	_error = _btn_play_online.connect("pressed", self, "_on_play_online")
+	_error = _btn_cancel_online.connect("pressed", self, "_on_cancel_online")
 	_error = _btn_play_local.connect("pressed", self, "_on_play_local")
+	_error = _btn_cancel_local.connect("pressed", self, "_on_cancel_local")
 	_error = _btn_settings.connect("pressed", self, "_on_open_settings")
 	_error = _btn_exit.connect("pressed", self, "_on_exit")
 
@@ -97,6 +104,8 @@ func _toggle_enabled_start_menu_buttons(enabled: bool):
 func _on_connection_successful():
 	_player_rpc_id = get_tree().get_network_unique_id()
 	_start_menu_buttons.hide()
+	_btn_cancel_online.hide()
+	_btn_cancel_local.hide()
 	_game_room_search.show()
 	if _debug_room:
 		_game_room_search.add_game_room(1, "GameRoom")
@@ -126,6 +135,8 @@ func _on_server_disconnected():
 
 
 func _on_connection_failed():
+	_btn_cancel_online.hide()
+	_btn_cancel_local.hide()
 	_toggle_enabled_start_menu_buttons(true)
 
 
@@ -135,13 +146,27 @@ func _on_play_tutorial() -> void:
 
 
 func _on_play_online() -> void:
+	_btn_cancel_online.show()
 	_toggle_enabled_start_menu_buttons(false)
 	Server.connect_to_server(REMOTE_SERVER_IP)
 
 
+func _on_cancel_online() -> void:
+	_btn_cancel_online.hide()
+	_toggle_enabled_start_menu_buttons(true)
+	Server.disconnect_from_server()
+
+
 func _on_play_local() -> void:
+	_btn_cancel_local.show()
 	_toggle_enabled_start_menu_buttons(false)
 	Server.connect_to_server(_lineEdit_local_ip.text)
+
+
+func _on_cancel_local() -> void:
+	_btn_cancel_local.hide()
+	_toggle_enabled_start_menu_buttons(true)
+	Server.disconnect_from_server()
 
 
 func _on_open_settings() -> void:	
