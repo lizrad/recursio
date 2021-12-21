@@ -6,6 +6,11 @@ onready var _bullet_range = Constants.get_value("hitscan", "range")
 var _owning_player
 var _first_frame := true
 
+var _current_animated_range := 0.0
+var _animated_range_increase_velocity := 80.0
+
+var _current_range := 0.0
+
 
 func _init() -> void:
 	Logger.info("_init action", "HitscanShot")
@@ -43,6 +48,9 @@ func _physics_process(delta):
 	if  _first_frame:
 		_update_collision()
 		_first_frame = false
+	
+	_current_animated_range += _animated_range_increase_velocity * delta
+	_update_visual_range()
 
 
 func handle_hit(collider):
@@ -50,8 +58,7 @@ func handle_hit(collider):
 	Logger.debug("hit collider: %s" %[collider.get_class()] , "HitscanShot")
 	var collision_point = get_collision_point()
 	var distance = (collision_point- global_transform.origin).length()
-	$Visualisation.scale.y = distance*0.5
-	$Visualisation.transform.origin.z = -distance*0.5
+	_current_range = distance
 
 	if _first_frame:
 		$HitPoint.global_transform.origin = collision_point
@@ -70,5 +77,11 @@ func _update_collision():
 		Logger.debug("Collision Point: " + str(collision_point), "HitscanShot")
 		handle_hit(collider)
 	else:
-		$Visualisation.scale.y = _bullet_range*0.5
-		$Visualisation.transform.origin.z = -_bullet_range*0.5
+		_current_range = _bullet_range
+
+
+func _update_visual_range():
+	var animated_range = min(_current_range, _current_animated_range)
+	$Visualisation.scale.y = animated_range * 0.5
+	$Visualisation.scale.x = 0.025 + 0.01 / (_current_animated_range * 0.05)
+	$Visualisation.transform.origin.z = -animated_range * 0.5
