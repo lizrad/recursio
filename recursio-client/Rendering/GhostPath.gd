@@ -13,15 +13,13 @@ func _set_selected(new_selected:bool):
 	selected = new_selected
 	change_color()
 
+
 func _set_index(new_index:int):
 	index = new_index
 	change_color()
 
+
 func change_color():
-	var color_name = "neutral"
-	if not selected:
-		var color_scheme = "player_ghost_"
-		var wall_index = Constants.get_value("ghosts","wall_placing_timeline_index")
-		var accent_type = "primary_accent" if wall_index != index else "secondary_accent"
-		color_name = color_scheme+accent_type
-	ColorManager.color_object_by_property(color_name, $Path/CSGPolygon.material_override, "albedo_color")
+	var color_name = "player_ghost_secondary_accent" if selected else "unselected"
+	transform.origin.y = 0.5 if selected else 0.0 # Make sure this path is on top
+	ColorManager.color_object_by_property(color_name, $Path/PathCSGPolygon, "color")
