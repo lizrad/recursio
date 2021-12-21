@@ -1,12 +1,13 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://Resources/Fonts/FiraCode-Regular.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://UI/SoundButton.gd" type="Script" id=2]
 [ext_resource path="res://UI/Menus/GameplayMenu.gd" type="Script" id=3]
 [ext_resource path="res://UI/Menus/SettingsMenu.tscn" type="PackedScene" id=4]
+[ext_resource path="res://UI/Default.tres" type="Theme" id=5]
 
 [sub_resource type="StyleBoxFlat" id=8]
-bg_color = Color( 0, 0, 0, 0.470588 )
+bg_color = Color( 0, 0, 0, 0.54902 )
 
 [sub_resource type="DynamicFont" id=7]
 size = 60
@@ -32,13 +33,14 @@ __meta__ = {
 }
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
-margin_left = 812.0
-margin_top = 466.0
-margin_right = 1108.0
-margin_bottom = 613.0
+margin_left = 760.0
+margin_top = 440.0
+margin_right = 1160.0
+margin_bottom = 640.0
+rect_min_size = Vector2( 400, 200 )
 
 [node name="Label" type="Label" parent="CenterContainer/VBoxContainer"]
-margin_right = 296.0
+margin_right = 400.0
 margin_bottom = 75.0
 custom_fonts/font = SubResource( 7 )
 text = "recursio"
@@ -46,24 +48,33 @@ align = 1
 
 [node name="Btn_Resume" type="Button" parent="CenterContainer/VBoxContainer"]
 margin_top = 79.0
-margin_right = 296.0
-margin_bottom = 99.0
+margin_right = 400.0
+margin_bottom = 116.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme = ExtResource( 5 )
 shortcut_in_tooltip = false
 text = "Resume"
 script = ExtResource( 2 )
 
 [node name="Btn_Settings" type="Button" parent="CenterContainer/VBoxContainer"]
-margin_top = 103.0
-margin_right = 296.0
-margin_bottom = 123.0
+margin_top = 120.0
+margin_right = 400.0
+margin_bottom = 158.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme = ExtResource( 5 )
 shortcut_in_tooltip = false
 text = "Settings"
 script = ExtResource( 2 )
 
 [node name="Btn_Leave" type="Button" parent="CenterContainer/VBoxContainer"]
-margin_top = 127.0
-margin_right = 296.0
-margin_bottom = 147.0
+margin_top = 162.0
+margin_right = 400.0
+margin_bottom = 200.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme = ExtResource( 5 )
 shortcut_in_tooltip = false
 text = "Leave"
 script = ExtResource( 2 )
