@@ -2,6 +2,9 @@ extends RayCast
 
 onready var _max_time = Constants.get_value("hitscan", "max_time")
 onready var _bullet_range = Constants.get_value("hitscan", "range")
+onready var _camera_shake_amount = Constants.get_value("vfx","shoot_camera_shake_amount")
+onready var _camera_shake_speed  = Constants.get_value("vfx","shoot_camera_shake_speed")
+onready var _camera_shake_duration  = 0.2
 
 var _owning_player
 var _first_frame := true
@@ -23,19 +26,23 @@ func initialize(owning_player) -> void:
 	if owning_player.has_node("KinematicBody/CharacterModel"):
 		var character_model_controller = owning_player.get_node("KinematicBody/CharacterModel")
 		var color_scheme = character_model_controller.color_scheme
-		color_name = color_scheme + "_primary_accent"
+		color_name = color_scheme + "_main"
 	
 	# TODO: Check is necessary because server does not do any coloring, we should maybe 
 	# make a client only version for this class
 	if get_node("/root").has_node("ColorManager"):
 		var color_manager = get_node("/root/ColorManager")
 		color_manager.color_object_by_property(color_name, $Visualisation.material_override, "albedo_color")
+		color_manager.color_object_by_property(color_name, $Visualisation.material_override, "emission")
 		color_manager.color_object_by_property(color_name, $HitPoint/FrontParticles.material_override, "emission")
 		color_manager.color_object_by_property(color_name, $HitPoint/BackParticles.material_override, "emission")
 
 	cast_to = Vector3(0,0,-_bullet_range)
 	_owning_player = owning_player
 	add_exception(owning_player.get_body())
+	
+	PostProcess.animate_property("chromatic_ab_strength", 0.5, 0, _max_time)
+	PostProcess.shake_camera(_camera_shake_amount, _camera_shake_speed, _camera_shake_duration)
 
 
 func _physics_process(delta):
@@ -84,5 +91,5 @@ func _update_visual_range():
 	var animated_range = min(_current_range, _current_animated_range)
 	
 	$Visualisation.scale.y = animated_range * 0.5
-	$Visualisation.scale.x = 0.005 + 0.02 / (_current_animated_range * 0.1)
+	$Visualisation.scale.x = 0.01 / (_current_animated_range * 0.05)
 	$Visualisation.transform.origin.z = -animated_range * 0.5

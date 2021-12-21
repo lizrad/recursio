@@ -18,6 +18,10 @@ var _shake_amount: float = 0
 var _shake_speed: float = 0
 
 
+func _ready():
+	var _error = PostProcess.connect("shaking_camera", self, "shake")
+
+
 func stop_following():
 	_following = false
 
@@ -25,6 +29,12 @@ func stop_following():
 func start_following():
 	_following = true
 	set_physics_process(true)
+
+
+func shake(amount: float, speed: float, duration: float):
+	start_shake(amount, speed)
+	yield(get_tree().create_timer(duration), "timeout")
+	stop_shake()
 
 
 func start_shake(amount: float, speed: float):
