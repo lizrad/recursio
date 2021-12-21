@@ -1,4 +1,4 @@
-[gd_scene load_steps=35 format=2]
+[gd_scene load_steps=36 format=2]
 
 [ext_resource path="res://UI/Menus/StartMenu.gd" type="Script" id=1]
 [ext_resource path="res://UI/Menus/GameRooms/GameRoomCreation.gd" type="Script" id=2]
@@ -22,6 +22,7 @@
 [ext_resource path="res://Global/SoundManager.tscn" type="PackedScene" id=20]
 [ext_resource path="res://Level/SpawnPoint.tscn" type="PackedScene" id=21]
 [ext_resource path="res://UI/Menus/ColorSettingController.gd" type="Script" id=22]
+[ext_resource path="res://lizrad.png" type="Texture" id=23]
 [ext_resource path="res://Tutorial/TutorialScenario_2.tscn" type="PackedScene" id=24]
 [ext_resource path="res://Tutorial/TutorialScenario_1.tscn" type="PackedScene" id=25]
 [ext_resource path="res://UI/Menus/SettingsTabs.gd" type="Script" id=26]
@@ -804,3 +805,22 @@ shortcut_in_tooltip = false
 text = "Back"
 script = ExtResource( 27 )
 sound_type = 1
+
+[node name="Panel" type="Control" parent="."]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -350.0
+margin_top = -180.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Lizrad" type="Sprite" parent="Panel"]
+position = Vector2( -43, -40 )
+scale = Vector2( 0.211111, 0.211111 )
+texture = ExtResource( 23 )
+centered = false
+
+[connection signal="gui_input" from="Panel" to="." method="_on_Panel_gui_input"]

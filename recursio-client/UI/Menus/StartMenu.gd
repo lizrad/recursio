@@ -279,3 +279,10 @@ func _on_tutorial_back_pressed() ->void:
 	_tutorial.hide()
 	_start_menu_buttons.show()
 	_btn_play_tutorial.grab_focus()
+
+
+func _on_Panel_gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton \
+	and event.button_index == BUTTON_LEFT \
+	and event.is_pressed():
+		var _ret = OS.shell_open("https://github.com/lizrad/recursio")
