@@ -1,4 +1,4 @@
-[gd_scene load_steps=35 format=2]
+[gd_scene load_steps=36 format=2]
 
 [ext_resource path="res://UI/Menus/StartMenu.gd" type="Script" id=1]
 [ext_resource path="res://UI/Menus/GameRooms/GameRoomCreation.gd" type="Script" id=2]
@@ -22,6 +22,7 @@
 [ext_resource path="res://Global/SoundManager.tscn" type="PackedScene" id=20]
 [ext_resource path="res://Level/SpawnPoint.tscn" type="PackedScene" id=21]
 [ext_resource path="res://UI/Menus/ColorSettingController.gd" type="Script" id=22]
+[ext_resource path="res://UI/Menus/StatsUI.tscn" type="PackedScene" id=23]
 [ext_resource path="res://Tutorial/TutorialScenario_2.tscn" type="PackedScene" id=24]
 [ext_resource path="res://Tutorial/TutorialScenario_1.tscn" type="PackedScene" id=25]
 [ext_resource path="res://UI/Menus/SettingsTabs.gd" type="Script" id=26]
@@ -750,6 +751,57 @@ focus_previous = NodePath("../SettingsTabs/Video/Debug/DebugCheckButton")
 text = "Back"
 script = ExtResource( 27 )
 sound_type = 1
+
+[node name="GameEndContainer" type="PanelContainer" parent="CenterContainer"]
+margin_left = 635.0
+margin_top = 340.0
+margin_right = 1285.0
+margin_bottom = 740.0
+rect_min_size = Vector2( 650, 400 )
+
+[node name="ElementsList" type="VBoxContainer" parent="CenterContainer/GameEndContainer"]
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 643.0
+margin_bottom = 393.0
+
+[node name="Titel" type="Label" parent="CenterContainer/GameEndContainer/ElementsList"]
+margin_right = 636.0
+margin_bottom = 26.0
+text = "You Won"
+align = 1
+valign = 1
+
+[node name="StatsUI" parent="CenterContainer/GameEndContainer/ElementsList" instance=ExtResource( 23 )]
+
+[node name="Buttons" type="HBoxContainer" parent="CenterContainer/GameEndContainer/ElementsList"]
+margin_top = 120.0
+margin_right = 636.0
+margin_bottom = 152.0
+
+[node name="BackToTitelButton" type="Button" parent="CenterContainer/GameEndContainer/ElementsList/Buttons"]
+margin_right = 209.0
+margin_bottom = 32.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "Back to Title"
+script = ExtResource( 27 )
+
+[node name="Space" type="Control" parent="CenterContainer/GameEndContainer/ElementsList/Buttons"]
+margin_left = 213.0
+margin_right = 422.0
+margin_bottom = 32.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="BackToRoomButton" type="Button" parent="CenterContainer/GameEndContainer/ElementsList/Buttons"]
+margin_left = 426.0
+margin_right = 636.0
+margin_bottom = 32.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "Back to Room"
+script = ExtResource( 27 )
 
 [node name="Tutorial" type="Control" parent="."]
 visible = false
