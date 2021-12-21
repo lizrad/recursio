@@ -106,10 +106,8 @@ func _process(_delta):
 	if not _in_game:
 		return
 	
-	if not Input.is_action_just_pressed("ui_cancel"):
-		return
-	
-	_gameplay_menu.visible = !_gameplay_menu.visible
+	if Input.is_action_just_pressed("gameplay_menu"):
+		_gameplay_menu.visible = !_gameplay_menu.visible
 
 
 func _return_to_game_room_lobby():
@@ -319,6 +317,7 @@ func _on_gameplay_menu_leave_pressed() -> void:
 	if _world != null:
 		_return_to_game_room_lobby()
 	else:
+		assert(_tutorial._scenario != null)
 		_tutorial.stop_scenario()
 	
 	_in_game = false

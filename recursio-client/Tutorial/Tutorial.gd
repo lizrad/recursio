@@ -41,6 +41,8 @@ func stop_scenario() -> void:
 	_btn_tutorial_1.disabled = false
 	_btn_tutorial_2.disabled = false
 	_scenario.stop()
+	_scenario = null
+	_btn_tutorial_1.grab_focus()
 
 
 func on_scenario_completed() -> void:

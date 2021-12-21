@@ -14,6 +14,18 @@ func _ready():
 	var _err = _btn_resume.connect("pressed", self, "_on_resume_pressed")
 	_err = _btn_settings.connect("pressed", self, "_on_settings_pressed")
 	_err = _btn_leave.connect("pressed", self, "_on_leave_pressed")
+	_err = self.connect("visibility_changed", self, "_on_visibility_changed")
+	_err = _settings.connect("visibility_changed", self, "_on_settings_visibility_changed")
+
+
+func _on_visibility_changed() -> void:
+	if visible:
+		_btn_resume.grab_focus()
+
+
+func _on_settings_visibility_changed() -> void:
+	if not _settings.visible:
+		_btn_settings.grab_focus()
 
 
 func _on_resume_pressed() -> void:
