@@ -263,6 +263,7 @@ projection = 1
 size = 60.0
 
 [node name="TextureRect" type="TextureRect" parent="."]
+visible = false
 margin_left = 832.318
 margin_top = 447.159
 margin_right = 922.318
