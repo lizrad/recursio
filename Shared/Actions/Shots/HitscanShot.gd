@@ -6,8 +6,8 @@ onready var _bullet_range = Constants.get_value("hitscan", "range")
 var _owning_player
 var _first_frame := true
 
-var _current_animated_range := 0.0
-var _animated_range_increase_velocity := 80.0
+var _current_animated_range := 0.001
+var _animated_range_increase_velocity := 100.0
 
 var _current_range := 0.0
 
@@ -82,6 +82,7 @@ func _update_collision():
 
 func _update_visual_range():
 	var animated_range = min(_current_range, _current_animated_range)
+	
 	$Visualisation.scale.y = animated_range * 0.5
-	$Visualisation.scale.x = 0.025 + 0.01 / (_current_animated_range * 0.05)
+	$Visualisation.scale.x = 0.005 + 0.02 / (_current_animated_range * 0.1)
 	$Visualisation.transform.origin.z = -animated_range * 0.5
