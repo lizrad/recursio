@@ -1,6 +1,6 @@
 extends Node
 
-var _post_process_tool_scene = preload("res://Post Processing tool/PostProcessing_tool.tscn")
+var _post_process_tool_scene = preload("res://addons/PostProcessingTool/PostProcessing_tool.tscn")
 
 var _pp
 var _tween
