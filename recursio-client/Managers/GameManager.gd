@@ -124,11 +124,11 @@ func _on_server_disconnected() -> void:
 func _on_game_result(winning_player_index) -> void:
 	_player.hide_hud()
 	if _game_end_screen:
-			_game_end_screen.set_stats(_player.team_id, _player_kills, _player_deaths, _ghost_kills, _ghost_deaths)
-			_game_end_screen.show_stats()
-			_game_end_screen.enable_room_button()
-			_game_end_screen.enable_title_button()
-			_game_end_screen.show()
+		_game_end_screen.set_stats(_player.team_id, _player_kills, _player_deaths, _ghost_kills, _ghost_deaths)
+		_game_end_screen.show_stats()
+		_game_end_screen.enable_room_button()
+		_game_end_screen.enable_title_button()
+		_game_end_screen.show()
 	if winning_player_index == _player.player_id:
 		Logger.info("Player won!", "gameplay")
 		if _game_end_screen:
