@@ -126,7 +126,7 @@ use_mipmaps = true
 use_filter = true
 font_data = ExtResource( 13 )
 
-[node name="World" type="Node"]
+[node name="StartScreen" type="Node"]
 
 [node name="StartMenu" type="Control" parent="."]
 anchor_right = 1.0

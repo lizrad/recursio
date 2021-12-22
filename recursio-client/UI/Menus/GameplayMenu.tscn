@@ -19,6 +19,7 @@ font_data = ExtResource( 1 )
 visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
+theme = ExtResource( 5 )
 custom_styles/panel = SubResource( 8 )
 script = ExtResource( 3 )
 __meta__ = {

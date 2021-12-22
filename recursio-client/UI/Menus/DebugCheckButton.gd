@@ -1,7 +1,7 @@
 extends CheckButton
 
 
-onready var _stats_hud: Control = get_tree().get_root().get_node("World/StatsHUD")
+onready var _stats_hud: Control = get_tree().get_root().get_node("StartScreen/StatsHUD")
 
 
 func _ready():
