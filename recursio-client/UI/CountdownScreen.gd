@@ -4,12 +4,15 @@ extends Control
 export var scale_mod := 8
 export var scale_time := 0.5
 
+
 onready var start_pos = $CountdownText.get_transform().get_origin()
+
 
 var _text := ""
 var _countdown_time: float = Constants.get_value("gameplay", "countdown_phase_seconds")
 
-func _process(delta):
+
+func _process(delta) -> void:
 	_update_text(int(_countdown_time))
 	_countdown_time -= delta
 	# Hide if countdown is finished
@@ -17,15 +20,17 @@ func _process(delta):
 		deactivate()
 
 
-func activate():
+func activate() -> void:
 	show()
 	_countdown_time = Constants.get_value("gameplay","countdown_phase_seconds")
 
-func deactivate():
+
+func deactivate() -> void:
 	hide()
 	_countdown_time = 0
 
-func _update_text(sec) -> void:
+
+func _update_text(sec: float) -> void:
 	var text = str(sec) if sec > 0 else "GO!"
 	
 	if _text != text:
