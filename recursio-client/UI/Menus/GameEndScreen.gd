@@ -83,7 +83,7 @@ func hide_connection_lost_text() -> void:
 
 
 func _on_back_to_title_button_pressed() -> void:
-	Server.disconnect_from_server()
+	Server.disconnect_from_server(true)
 	_start_menu.return_to_title()
 
 

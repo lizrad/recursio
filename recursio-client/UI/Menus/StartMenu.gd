@@ -160,7 +160,8 @@ func _on_play_online() -> void:
 func _on_cancel_online() -> void:
 	_btn_cancel_online.hide()
 	_toggle_enabled_start_menu_buttons(true)
-	Server.disconnect_from_server()
+	Server.disconnect_from_server(true)
+	return_to_title()
 
 
 func _on_play_local() -> void:
@@ -172,7 +173,8 @@ func _on_play_local() -> void:
 func _on_cancel_local() -> void:
 	_btn_cancel_local.hide()
 	_toggle_enabled_start_menu_buttons(true)
-	Server.disconnect_from_server()
+	Server.disconnect_from_server(true)
+	return_to_title()
 
 
 func _on_open_settings() -> void:	
@@ -197,7 +199,8 @@ func _on_creation_create_game_room_pressed(game_room_name) -> void:
 
 func _on_search_back_pressed() -> void:
 	_start_menu_buttons.show()
-	Server.disconnect_from_server()
+	Server.disconnect_from_server(true)
+	return_to_title()
 
 
 func _on_creation_back_pressed() -> void:
