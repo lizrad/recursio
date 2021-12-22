@@ -25,6 +25,7 @@ onready var _btn_exit = get_node("CenterContainer/MainMenu/Btn_Exit")
 onready var _game_room_search: GameRoomSearch = get_node("CenterContainer/GameRoomSearch")
 onready var _game_room_creation: GameRoomCreation = get_node("CenterContainer/GameRoomCreation")
 onready var _game_room_lobby: GameRoomLobby = get_node("CenterContainer/GameRoomLobby")
+onready var _connection_lost_container = get_node("CenterContainer/ConnectionLostContainer")
 
 onready var _tutorial: Tutorial = get_node("Tutorial")
 
@@ -134,6 +135,7 @@ func _on_connection_successful():
 func _on_server_disconnected():
 	if _world:
 		return
+	_connection_lost_container.show()
 	return_to_title()
 
 

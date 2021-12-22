@@ -1,4 +1,4 @@
-[gd_scene load_steps=35 format=2]
+[gd_scene load_steps=36 format=2]
 
 [ext_resource path="res://UI/Menus/StartMenu.gd" type="Script" id=1]
 [ext_resource path="res://UI/Menus/GameRooms/GameRoomCreation.gd" type="Script" id=2]
@@ -22,6 +22,7 @@
 [ext_resource path="res://Global/SoundManager.tscn" type="PackedScene" id=20]
 [ext_resource path="res://Level/SpawnPoint.tscn" type="PackedScene" id=21]
 [ext_resource path="res://UI/Menus/ColorSettingController.gd" type="Script" id=22]
+[ext_resource path="res://UI/Menus/ConnectionLostContainer.gd" type="Script" id=23]
 [ext_resource path="res://Tutorial/TutorialScenario_2.tscn" type="PackedScene" id=24]
 [ext_resource path="res://Tutorial/TutorialScenario_1.tscn" type="PackedScene" id=25]
 [ext_resource path="res://UI/Menus/SettingsTabs.gd" type="Script" id=26]
@@ -163,9 +164,9 @@ __meta__ = {
 
 [node name="MainMenu" type="VBoxContainer" parent="CenterContainer"]
 margin_left = 760.0
-margin_top = 410.0
+margin_top = 390.0
 margin_right = 1160.0
-margin_bottom = 669.0
+margin_bottom = 689.0
 rect_min_size = Vector2( 400, 0 )
 
 [node name="Label" type="Label" parent="CenterContainer/MainMenu"]
@@ -178,19 +179,19 @@ align = 1
 [node name="PlayTutorial" type="Button" parent="CenterContainer/MainMenu"]
 margin_top = 79.0
 margin_right = 400.0
-margin_bottom = 111.0
+margin_bottom = 119.0
 shortcut_in_tooltip = false
 text = "Play Tutorial"
 script = ExtResource( 27 )
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="CenterContainer/MainMenu"]
-margin_top = 115.0
+margin_top = 123.0
 margin_right = 400.0
-margin_bottom = 147.0
+margin_bottom = 163.0
 
 [node name="PlayOnline" type="Button" parent="CenterContainer/MainMenu/HBoxContainer2"]
 margin_right = 400.0
-margin_bottom = 32.0
+margin_bottom = 40.0
 size_flags_horizontal = 3
 shortcut_in_tooltip = false
 text = "Play Online"
@@ -207,21 +208,21 @@ script = ExtResource( 27 )
 sound_type = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/MainMenu"]
-margin_top = 151.0
+margin_top = 167.0
 margin_right = 400.0
-margin_bottom = 187.0
+margin_bottom = 211.0
 
 [node name="Btn_PlayLocal" type="Button" parent="CenterContainer/MainMenu/HBoxContainer"]
-margin_right = 132.0
-margin_bottom = 36.0
+margin_right = 182.0
+margin_bottom = 44.0
 shortcut_in_tooltip = false
 text = "Play Local"
 script = ExtResource( 27 )
 
 [node name="LocalIPAddress" type="LineEdit" parent="CenterContainer/MainMenu/HBoxContainer"]
-margin_left = 136.0
+margin_left = 186.0
 margin_right = 400.0
-margin_bottom = 36.0
+margin_bottom = 44.0
 rect_min_size = Vector2( 150, 0 )
 size_flags_horizontal = 3
 text = "127.0.0.1"
@@ -240,17 +241,17 @@ script = ExtResource( 27 )
 sound_type = 1
 
 [node name="SettingsButton" type="Button" parent="CenterContainer/MainMenu"]
-margin_top = 191.0
+margin_top = 215.0
 margin_right = 400.0
-margin_bottom = 223.0
+margin_bottom = 255.0
 shortcut_in_tooltip = false
 text = "Settings"
 script = ExtResource( 27 )
 
 [node name="Btn_Exit" type="Button" parent="CenterContainer/MainMenu"]
-margin_top = 227.0
+margin_top = 259.0
 margin_right = 400.0
-margin_bottom = 259.0
+margin_bottom = 299.0
 shortcut_in_tooltip = false
 text = "Exit"
 script = ExtResource( 27 )
@@ -627,7 +628,7 @@ visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 4.0
-margin_top = 44.0
+margin_top = 52.0
 margin_right = -4.0
 margin_bottom = -4.0
 
@@ -722,7 +723,7 @@ visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 4.0
-margin_top = 44.0
+margin_top = 52.0
 margin_right = -4.0
 margin_bottom = -4.0
 follow_focus = true
@@ -747,6 +748,83 @@ focus_neighbour_top = NodePath("../SettingsTabs/Video/Debug/DebugCheckButton")
 focus_neighbour_bottom = NodePath("../SettingsTabs/Video/FullScreen/FullScreenCheckButton")
 focus_next = NodePath("../SettingsTabs/Video/FullScreen/FullScreenCheckButton")
 focus_previous = NodePath("../SettingsTabs/Video/Debug/DebugCheckButton")
+text = "Back"
+script = ExtResource( 27 )
+sound_type = 1
+
+[node name="ConnectionLostContainer" type="PanelContainer" parent="CenterContainer"]
+visible = false
+margin_left = 635.0
+margin_top = 340.0
+margin_right = 1285.0
+margin_bottom = 740.0
+rect_min_size = Vector2( 650, 400 )
+script = ExtResource( 23 )
+
+[node name="SettingsList" type="VBoxContainer" parent="CenterContainer/ConnectionLostContainer"]
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 643.0
+margin_bottom = 393.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Header" type="Label" parent="CenterContainer/ConnectionLostContainer/SettingsList"]
+margin_right = 636.0
+margin_bottom = 34.0
+text = "Connection Lost"
+align = 1
+
+[node name="Space" type="Control" parent="CenterContainer/ConnectionLostContainer/SettingsList"]
+margin_top = 38.0
+margin_right = 636.0
+margin_bottom = 87.0
+rect_min_size = Vector2( 0, 20 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Space3" type="Control" parent="CenterContainer/ConnectionLostContainer/SettingsList"]
+margin_top = 91.0
+margin_right = 636.0
+margin_bottom = 288.0
+rect_min_size = Vector2( 0, 20 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 4.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="CenterContainer/ConnectionLostContainer/SettingsList/Space3"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 20.0
+margin_right = -20.0
+text = "OOPSIE WOOPSIE!! Uwu We made a fucky wucky!! A wittle fucko boingo! The code monkeys at our headquarters are working VEWY HAWD to fix this!"
+valign = 1
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Space2" type="Control" parent="CenterContainer/ConnectionLostContainer/SettingsList"]
+margin_top = 292.0
+margin_right = 636.0
+margin_bottom = 341.0
+rect_min_size = Vector2( 0, 20 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="BackButton" type="Button" parent="CenterContainer/ConnectionLostContainer/SettingsList"]
+margin_top = 345.0
+margin_right = 636.0
+margin_bottom = 385.0
 text = "Back"
 script = ExtResource( 27 )
 sound_type = 1
