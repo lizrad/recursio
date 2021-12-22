@@ -109,6 +109,7 @@ func _on_opponent_disconnected(_player_id_name_dic, _game_room_id) -> void:
 
 func _on_server_disconnected() -> void:
 	Logger.info("Server disconnected!", "connection")
+	_player.hide_hud()
 	if _game_end_screen:
 		_game_end_screen.set_panel_color("ui_error")
 		_game_end_screen.disable_room_button()
@@ -120,6 +121,7 @@ func _on_server_disconnected() -> void:
 
 
 func _on_game_result(winning_player_index) -> void:
+	_player.hide_hud()
 	if _game_end_screen:
 			_game_end_screen.set_stats(_player.team_id, _player_kills, _player_deaths, _ghost_kills, _ghost_deaths)
 			_game_end_screen.show_stats()
