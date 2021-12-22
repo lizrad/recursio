@@ -1,6 +1,10 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://UI/Menus/StatsUI.gd" type="Script" id=1]
+
+[sub_resource type="StyleBoxFlat" id=1]
+
+[sub_resource type="StyleBoxFlat" id=2]
 
 [node name="StatsUI" type="VBoxContainer"]
 margin_top = 30.0
@@ -11,20 +15,9 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Titel" type="Label" parent="."]
+[node name="Descriptions" type="HBoxContainer" parent="."]
 margin_right = 636.0
 margin_bottom = 14.0
-text = "Title"
-align = 1
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Descriptions" type="HBoxContainer" parent="."]
-margin_top = 18.0
-margin_right = 636.0
-margin_bottom = 32.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -45,6 +38,16 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 size_flags_stretch_ratio = 4.0
 
+[node name="Title" type="Label" parent="Descriptions/Space"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+text = "Title"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="RightDescription" type="Label" parent="Descriptions"]
 margin_left = 531.0
 margin_right = 636.0
@@ -55,9 +58,9 @@ align = 1
 valign = 1
 
 [node name="Values" type="HBoxContainer" parent="."]
-margin_top = 36.0
+margin_top = 18.0
 margin_right = 636.0
-margin_bottom = 50.0
+margin_bottom = 32.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -77,6 +80,8 @@ margin_bottom = 14.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 size_flags_stretch_ratio = 4.0
+custom_styles/fg = SubResource( 1 )
+custom_styles/bg = SubResource( 2 )
 value = 30.0
 percent_visible = false
 __meta__ = {
