@@ -14,9 +14,10 @@ onready var _ghost_death_stats: StatsUI = get_node("ElementsList/GhostDeathStats
 onready var connection_lost_container: Control = get_node("ElementsList/ConnectionLostContainer")
 
 
-func _ready():
+func _ready() -> void:
 	var _error = _back_to_title_button.connect("pressed", self, "_on_back_to_title_button_pressed");
 	_error = _back_to_room_button.connect("pressed", self, "_on_back_to_room_button_pressed");
+	
 	_player_kill_stats.set_title("Player Kills")
 	_player_kill_stats.set_descriptions("You", "Opponent")
 	_player_death_stats.set_title("Player Deaths")
@@ -27,7 +28,7 @@ func _ready():
 	_ghost_death_stats.set_descriptions("Yours", "Opponents")
 
 
-func set_stats(player_team_id: int, _player_kills: Array, _player_deaths: Array, _ghost_kills: Array, _ghost_deaths: Array):
+func set_stats(player_team_id: int, _player_kills: Array, _player_deaths: Array, _ghost_kills: Array, _ghost_deaths: Array) -> void:
 	var enemy_team_id = abs(player_team_id-1)
 	_player_kill_stats.set_values(_player_kills[player_team_id], _player_kills[enemy_team_id])
 	_player_death_stats.set_values(_player_deaths[player_team_id], _player_deaths[enemy_team_id])
@@ -35,17 +36,12 @@ func set_stats(player_team_id: int, _player_kills: Array, _player_deaths: Array,
 	_ghost_death_stats.set_values(_ghost_deaths[player_team_id], _ghost_deaths[enemy_team_id])
 
 
-func set_title(title: String)->void:
+func set_title(title: String) -> void:
 	_title.text = title
 
 
-func _on_back_to_title_button_pressed():
-	Server.disconnect_from_server()
-	_start_menu.return_to_title()
-
-
-func _on_back_to_room_button_pressed():
-	_start_menu.return_to_game_room_lobby()
+func set_panel_color(color_name: String) -> void:
+	ColorManager.color_object_by_property(color_name, _title_background_panel, "self_modulate")
 
 
 func enable_room_button() -> void:
@@ -86,5 +82,10 @@ func hide_connection_lost_text() -> void:
 	connection_lost_container.hide()
 
 
-func set_panel_color(color_name: String):
-	ColorManager.color_object_by_property(color_name, _title_background_panel, "self_modulate")
+func _on_back_to_title_button_pressed() -> void:
+	Server.disconnect_from_server()
+	_start_menu.return_to_title()
+
+
+func _on_back_to_room_button_pressed() -> void:
+	_start_menu.return_to_game_room_lobby()
