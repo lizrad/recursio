@@ -134,7 +134,6 @@ func _on_countdown_phase_started() -> void:
 	_enemy.toggle_animation(true)
 	_player.follow_camera()
 	_player.show_countdown_hud()
-	_game_manager.show_countdown_screen()
 	
 
 func _on_game_phase_started() -> void:
