@@ -33,8 +33,8 @@ onready var _debug_room = Constants.get_value("debug", "debug_room_enabled")
 
 onready var _random_names = TextFileToArray.load_text_file("res://Resources/Data/animal_names.txt")
 
-onready var _stats_hud = preload("res://Util/StatsHUD.tscn")
-onready var _gameplay_menu_scene = preload("res://UI/Menus/GameplayMenu.tscn")
+onready var _stats_hud = get_node("../StatsHUD")
+onready var _gameplay_menu = get_node("../GameplayMenu")
 
 var _player_user_name: String
 var _player_rpc_id: int
@@ -44,13 +44,8 @@ var _in_game_room: bool = false
 
 var _world
 
-var _gameplay_menu: GameplayMenu
-
 
 func _ready():
-	# Add gameplay menu at the bottom for rendering order
-	_gameplay_menu = _gameplay_menu_scene.instance()
-	get_tree().get_root().call_deferred("add_child", _gameplay_menu)
 	
 	var _error = _btn_play_tutorial.connect("pressed", self, "_on_play_tutorial")
 	_error = _btn_play_online.connect("pressed", self, "_on_play_online")
@@ -95,11 +90,8 @@ func _ready():
 	randomize()
 	var random_index = randi() % _random_names.size()
 	_player_user_name = _random_names[random_index]
-
-	var new_scene = _stats_hud.instance()
-	new_scene.visible = UserSettings.get_setting("developer", "debug")
-	# code execution happens in first scene init so hud creation musst be deferred
-	get_tree().get_root().call_deferred("add_child", new_scene)
+	
+	_stats_hud.visible = UserSettings.get_setting("developer", "debug")
 
 
 func _process(_delta):
