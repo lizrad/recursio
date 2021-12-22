@@ -85,6 +85,10 @@ func disconnect_from_server():
 	latency_array.clear()
 	if _clock_update_timer != null:
 		_clock_update_timer.free()
+		# this prevents a race condition that appears when one 
+		# cancels the connection process after forcefully loosing 
+		# connection to the server before hand and then trying to 
+		# reconnect
 		_clock_update_timer = null
 	
 	emit_signal("server_disconnected")
