@@ -85,6 +85,7 @@ func disconnect_from_server():
 	latency_array.clear()
 	if _clock_update_timer != null:
 		_clock_update_timer.free()
+		_clock_update_timer = null
 	
 	emit_signal("server_disconnected")
 
