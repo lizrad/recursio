@@ -7,9 +7,25 @@ export var scale_time := 0.5
 onready var start_pos = $CountdownText.get_transform().get_origin()
 
 var _text := ""
+var _countdown_time: float = Constants.get_value("gameplay", "countdown_phase_seconds")
+
+func _process(delta):
+	_update_text(int(_countdown_time))
+	_countdown_time -= delta
+	# Hide if countdown is finished
+	if _countdown_time <= 0.0:
+		deactivate()
 
 
-func update_text(sec) -> void:
+func activate():
+	show()
+	_countdown_time = Constants.get_value("gameplay","countdown_phase_seconds")
+
+func deactivate():
+	hide()
+	_countdown_time = 0
+
+func _update_text(sec) -> void:
 	var text = str(sec) if sec > 0 else "GO!"
 	
 	if _text != text:

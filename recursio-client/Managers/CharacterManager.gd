@@ -125,9 +125,8 @@ func _on_preparation_phase_started() -> void:
 	_enemy.round_index = _round_manager.round_index
 	_enemy.spawn_point = _game_manager.get_spawn_point(_enemy.team_id, _enemy.timeline_index).global_transform.origin
 	_enemy.move_to_spawn_point()
-	
-	
 	_visibility_checker.reset()
+	_game_manager.reset_level()
 
 func _on_countdown_phase_started() -> void:
 	_game_manager.toggle_spawn_points(false)
@@ -145,7 +144,6 @@ func _on_game_phase_started() -> void:
 	_enemy.block_movement = false
 	_player.set_overview_light_enabled(false)
 	_toggle_visbility_lights(true)
-	_game_manager.hide_countdown_screen()
 	_player.show_game_hud(_round_manager.round_index)
 	_game_manager.toggle_capture_points(true)
 
