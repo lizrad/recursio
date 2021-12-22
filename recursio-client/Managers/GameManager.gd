@@ -110,6 +110,7 @@ func show_loss() -> void:
 		_game_end_screen.enable_title_button()
 		_game_end_screen.set_title("You Lost!")
 		_game_end_screen.show_stats()
+		_game_end_screen.hide_connection_lost_text()
 		_game_end_screen.show()
 
 
@@ -121,6 +122,7 @@ func show_enemy_disconnect() -> void:
 		_game_end_screen.enable_title_button()
 		_game_end_screen.set_title("Opponent disconnected!")
 		_game_end_screen.hide_stats()
+		_game_end_screen.show_connection_lost_text()
 		_game_end_screen.show()
 
 
@@ -132,6 +134,7 @@ func show_player_disconnect() -> void:
 		_game_end_screen.enable_title_button()
 		_game_end_screen.set_title("Server disconnected!")
 		_game_end_screen.hide_stats()
+		_game_end_screen.show_connection_lost_text()
 		_game_end_screen.show()
 
 

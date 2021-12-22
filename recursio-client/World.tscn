@@ -91,8 +91,9 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="Title" type="Label" parent="GameEndScreen/ElementsList"]
+margin_top = 24.0
 margin_right = 636.0
-margin_bottom = 63.0
+margin_bottom = 87.0
 size_flags_horizontal = 3
 size_flags_vertical = 6
 size_flags_stretch_ratio = 2.0
@@ -115,37 +116,58 @@ __meta__ = {
 }
 
 [node name="Space1" type="Control" parent="GameEndScreen/ElementsList"]
-margin_top = 68.0
+margin_top = 116.0
 margin_right = 636.0
-margin_bottom = 100.0
+margin_bottom = 172.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
+[node name="ConnectionLostContainer" type="Control" parent="GameEndScreen/ElementsList"]
+visible = false
+margin_top = 194.0
+margin_right = 636.0
+margin_bottom = 442.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 4.0
+
+[node name="ConnectionLostText" type="Label" parent="GameEndScreen/ElementsList/ConnectionLostContainer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 20.0
+margin_right = -20.0
+text = "OOPSIE WOOPSIE!! Uwu We made a fucky wucky!! A wittle fucko boingo! The code monkeys at our headquarters are working VEWY HAWD to fix this!"
+valign = 1
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="PlayerKillStats" parent="GameEndScreen/ElementsList" instance=ExtResource( 11 )]
-margin_top = 104.0
-margin_bottom = 208.0
+margin_top = 176.0
+margin_bottom = 244.0
 
 [node name="PlayerDeathStats" parent="GameEndScreen/ElementsList" instance=ExtResource( 11 )]
-margin_top = 212.0
+margin_top = 248.0
 margin_bottom = 316.0
 
 [node name="GhostKillStats" parent="GameEndScreen/ElementsList" instance=ExtResource( 11 )]
 margin_top = 320.0
-margin_bottom = 424.0
+margin_bottom = 388.0
 
 [node name="GhostDeathStats" parent="GameEndScreen/ElementsList" instance=ExtResource( 11 )]
-margin_top = 428.0
-margin_bottom = 532.0
+margin_top = 392.0
+margin_bottom = 460.0
 
 [node name="Space2" type="Control" parent="GameEndScreen/ElementsList"]
-margin_top = 536.0
+margin_top = 464.0
 margin_right = 636.0
-margin_bottom = 568.0
+margin_bottom = 520.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="Buttons" type="HBoxContainer" parent="GameEndScreen/ElementsList"]
-margin_top = 572.0
+margin_top = 524.0
 margin_right = 636.0
 margin_bottom = 636.0
 size_flags_horizontal = 3
@@ -154,7 +176,7 @@ size_flags_stretch_ratio = 2.0
 
 [node name="BackToTitleButton" type="Button" parent="GameEndScreen/ElementsList/Buttons"]
 margin_right = 220.0
-margin_bottom = 64.0
+margin_bottom = 112.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Back to Title"
@@ -163,14 +185,14 @@ script = ExtResource( 4 )
 [node name="Space" type="Control" parent="GameEndScreen/ElementsList/Buttons"]
 margin_left = 224.0
 margin_right = 428.0
-margin_bottom = 64.0
+margin_bottom = 112.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="BackToRoomButton" type="Button" parent="GameEndScreen/ElementsList/Buttons"]
 margin_left = 432.0
 margin_right = 636.0
-margin_bottom = 64.0
+margin_bottom = 112.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Back to Room"
