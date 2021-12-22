@@ -45,6 +45,10 @@ func stop_scenario() -> void:
 	_btn_tutorial_1.grab_focus()
 
 
+func toggle_player_input(disabled: bool) -> void:
+	_scenario.toggle_player_input(disabled)
+
+
 func on_scenario_completed() -> void:
 	_btn_tutorial_1.disabled = false
 	_btn_tutorial_2.disabled = false

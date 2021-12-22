@@ -65,6 +65,7 @@ func _ready():
 
 	_error = _game_room_lobby.connect("btn_leave_pressed", self, "_on_game_room_leave_pressed")
 	
+	_error = _gameplay_menu.connect("resume_pressed", self, "_on_gameplay_menu_resume_pressed")
 	_error = _gameplay_menu.connect("leave_pressed", self, "_on_gameplay_menu_leave_pressed")
 	
 	_error = Server.connect("server_disconnected", self, "_on_server_disconnected")
@@ -100,6 +101,7 @@ func _process(_delta):
 	
 	if Input.is_action_just_pressed("gameplay_menu"):
 		_gameplay_menu.visible = !_gameplay_menu.visible
+		_toggle_player_input(_gameplay_menu.visible)
 
 
 func _return_to_game_room_lobby():
@@ -302,6 +304,10 @@ func _on_tutorial_back_pressed() -> void:
 	_btn_play_tutorial.grab_focus()
 
 
+func _on_gameplay_menu_resume_pressed() -> void:
+	_toggle_player_input(false)
+
+
 func _on_gameplay_menu_leave_pressed() -> void:
 	if not _in_game:
 		return
@@ -314,3 +320,12 @@ func _on_gameplay_menu_leave_pressed() -> void:
 	
 	_in_game = false
 
+
+func _toggle_player_input(disabled: bool) -> void:
+	if not _in_game:
+		return
+	
+	if _world != null:
+		_world.toggle_player_input(disabled)
+	else:
+		_tutorial.toggle_player_input(disabled)

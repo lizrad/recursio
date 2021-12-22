@@ -63,6 +63,10 @@ func stop() -> void:
 	queue_free()
 
 
+func toggle_player_input(disabled: bool) -> void:
+	_character_manager.toggle_player_input(disabled)
+
+
 func add_round_start_function(round_start_function: FuncRef) -> void:
 	_round_starts.append(round_start_function)
 

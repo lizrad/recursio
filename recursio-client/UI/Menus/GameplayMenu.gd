@@ -2,6 +2,7 @@ extends Control
 class_name GameplayMenu
 
 signal leave_pressed()
+signal resume_pressed()
 
 onready var _btn_resume: Button = get_node("CenterContainer/VBoxContainer/Btn_Resume")
 onready var _btn_settings: Button = get_node("CenterContainer/VBoxContainer/Btn_Settings")
@@ -30,6 +31,7 @@ func _on_settings_visibility_changed() -> void:
 
 func _on_resume_pressed() -> void:
 	self.hide()
+	emit_signal("resume_pressed")
 
 
 func _on_settings_pressed() -> void:
