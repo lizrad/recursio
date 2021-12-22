@@ -22,6 +22,8 @@ func _ready():
 func _on_visibility_changed() -> void:
 	if visible:
 		_btn_resume.grab_focus()
+	else:
+		_settings.hide()
 
 
 func _on_settings_visibility_changed() -> void:
