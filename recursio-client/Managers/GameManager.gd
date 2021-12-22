@@ -2,7 +2,7 @@ extends Node
 class_name GameManager
 
 
-onready var _round_manager: RoundManager = get_node("RoundManager")
+onready var _round_manager: RoundManager = get_node("../RoundManager")
 
 
 # These are optional
@@ -26,12 +26,12 @@ func _ready() -> void:
 	if has_node("../../CountdownScreen"):
 		_countdown_screen = get_node("../../CountdownScreen")
 	
-	_error = _round_manager.connect("game_phase_started", self, "_on_game_phase_started") 
+	var _error = _round_manager.connect("game_phase_started", self, "_on_game_phase_started") 
 	_error = _round_manager.connect("countdown_phase_started", self, "_on_countdown_phase_started")
 	
 	# TODO: this connection is messy af and the server should probably send a specific message when an opponent disconnect happens, 
 	# but I don't know enough about the whole room management thing to play around with that signal flow
-	var _error = Server.connect("game_room_joined", self, "_on_opponent_disconnected")
+	_error = Server.connect("game_room_joined", self, "_on_opponent_disconnected")
 	_error = Server.connect("server_disconnected", self, "_on_server_disconnected")
 	_error = Server.connect("game_result", self, "_on_game_result")
 	
