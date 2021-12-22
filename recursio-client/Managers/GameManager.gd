@@ -97,6 +97,7 @@ func _on_countdown_phase_started() -> void:
 
 func _on_opponent_disconnected(_player_id_name_dic, _game_room_id) -> void:
 	Logger.info("Opponent disconnected!", "connection")
+	_player.hide_hud()
 	if _game_end_screen:
 		_game_end_screen.set_panel_color("ui_error")
 		_game_end_screen.enable_room_button()
