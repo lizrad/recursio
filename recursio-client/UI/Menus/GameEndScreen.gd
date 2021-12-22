@@ -1,17 +1,17 @@
-extends Node
+extends Panel
 class_name GameEndScreen
 
 
 onready var _start_menu: StartMenu = get_node("/root/StartMenu")
-onready var _back_to_title_button: SoundButton = get_node("ElementsList/Buttons/BackToTitleButton")
-onready var _back_to_room_button: SoundButton = get_node("ElementsList/Buttons/BackToRoomButton")
-onready var _title: Label = get_node("ElementsList/Title")
-onready var _title_background_panel: Panel = get_node("ElementsList/Title/TitleBackgroundPanel")
-onready var _player_kill_stats: StatsUI = get_node("ElementsList/PlayerKillStats")
-onready var _player_death_stats: StatsUI = get_node("ElementsList/PlayerDeathStats")
-onready var _ghost_kill_stats: StatsUI = get_node("ElementsList/GhostKillStats")
-onready var _ghost_death_stats: StatsUI = get_node("ElementsList/GhostDeathStats")
-onready var connection_lost_container: Control = get_node("ElementsList/ConnectionLostContainer")
+onready var _back_to_title_button: SoundButton = get_node("GameEndScreenContainer/ElementsList/Buttons/BackToTitleButton")
+onready var _back_to_room_button: SoundButton = get_node("GameEndScreenContainer/ElementsList/Buttons/BackToRoomButton")
+onready var _title: Label = get_node("GameEndScreenContainer/ElementsList/Title")
+onready var _title_background_panel: Panel = get_node("GameEndScreenContainer/ElementsList/Title/TitleBackgroundPanel")
+onready var _player_kill_stats: StatsUI = get_node("GameEndScreenContainer/ElementsList/PlayerKillStats")
+onready var _player_death_stats: StatsUI = get_node("GameEndScreenContainer/ElementsList/PlayerDeathStats")
+onready var _ghost_kill_stats: StatsUI = get_node("GameEndScreenContainer/ElementsList/GhostKillStats")
+onready var _ghost_death_stats: StatsUI = get_node("GameEndScreenContainer/ElementsList/GhostDeathStats")
+onready var connection_lost_container: Control = get_node("GameEndScreenContainer/ElementsList/ConnectionLostContainer")
 
 
 func _ready() -> void:

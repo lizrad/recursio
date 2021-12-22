@@ -227,6 +227,7 @@ func show_hud() -> void:
 
 
 func hide_hud() -> void:
+	print("askdfhjaklsdj")
 	_hud.hide()
 
 
