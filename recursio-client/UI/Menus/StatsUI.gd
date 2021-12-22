@@ -24,4 +24,13 @@ func set_descriptions(left_description: String, right_description: String) -> vo
 func set_values(left_value: int, right_value: int) -> void:
 	_left_value.text = str(left_value)
 	_right_value.text = str(right_value)
-	_visualisation.value = 100.0*(float(left_value)/float(left_value+right_value))
+	if left_value == 0 and  right_value == 0:
+		_visualisation.value = 50
+	elif left_value == 0 :
+		_visualisation.value = 0
+	elif right_value == 0 :
+		_visualisation.value = 100
+	else:
+		_visualisation.value = 100.0*(float(left_value)/float(left_value+right_value))
+
+		
