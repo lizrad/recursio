@@ -1,17 +1,10 @@
-[gd_resource type="Theme" load_steps=4 format=2]
+[gd_resource type="Theme" load_steps=3 format=2]
 
-[ext_resource path="res://Resources/Fonts/FiraCode-Regular.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://Resources/Fonts/Normal.tres" type="DynamicFont" id=1]
 [ext_resource path="res://UI/StyleBoxFlat.tres" type="StyleBox" id=2]
 
-[sub_resource type="DynamicFont" id=1]
-resource_local_to_scene = true
-size = 27
-use_mipmaps = true
-use_filter = true
-font_data = ExtResource( 1 )
-
 [resource]
-default_font = SubResource( 1 )
+default_font = ExtResource( 1 )
 Button/styles/focus = ExtResource( 2 )
 LineEdit/styles/focus = ExtResource( 2 )
 TextEdit/styles/focus = ExtResource( 2 )
