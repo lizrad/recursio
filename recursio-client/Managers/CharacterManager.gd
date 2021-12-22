@@ -54,9 +54,6 @@ func _ready():
 	_error = _round_manager.connect("game_phase_stopped", _ghost_manager, "on_game_phase_stopped") 
 	####################################################
 	
-	#TODO: this connection is ugly af, but I don't know enough about the whole room management thing to play around with that signal flow
-	_error = Server.connect("game_room_joined", self, "_on_game_room_joined")
-	_error = Server.connect("server_disconnected", self, "_on_server_disconnected")
 	
 	
 	_error = Server.connect("world_state_received", self, "_on_world_state_received") 
@@ -67,7 +64,6 @@ func _ready():
 	_error = Server.connect("capture_point_captured", self, "_on_capture_point_captured") 
 	_error = Server.connect("capture_point_capture_lost", self, "_on_capture_point_capture_lost")
 	
-	_error = Server.connect("game_result", self, "_on_game_result")
 
 	_player_rpc_id = get_tree().get_network_unique_id()
 	set_physics_process(false)
@@ -157,11 +153,7 @@ func _on_game_phase_stopped() -> void:
 	_game_manager.toggle_capture_points(false)
 
 
-func _on_game_result(winning_player_index) -> void:
-	if winning_player_index == _player_rpc_id:
-		_game_manager.show_win()
-	else:
-		_game_manager.show_loss()
+
 
 func _on_player_timeline_changed(timeline_index) -> void:
 	_player.spawn_point = _game_manager.get_spawn_point(_player.team_id, timeline_index).global_transform.origin
@@ -364,9 +356,3 @@ func _update_enemy(delta) -> void:
 	_enemy.trigger_actions(_enemy.last_triggers)
 	_enemy.last_triggers = 0
 
-
-func _on_game_room_joined(_player_id_name_dic, _game_room_id):
-	_game_manager.show_enemy_disconnect()
-
-func _on_server_disconnected():
-	_game_manager.show_player_disconnect()
