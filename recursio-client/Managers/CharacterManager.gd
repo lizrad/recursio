@@ -84,6 +84,12 @@ func set_level(level: Level):
 func get_player_id() -> int:
 	return _player_rpc_id
 
+
+func toggle_player_input(disabled: bool) -> void:
+	_player.block_input = disabled
+	_player.block_movement = disabled
+
+
 func _on_game_start_received(start_time):
 	_round_manager.future_start_game(start_time)
 	_ghost_manager.init(_game_manager,_round_manager, _action_manager, self)

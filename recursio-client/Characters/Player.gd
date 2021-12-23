@@ -87,7 +87,7 @@ func apply_input(movement_vector: Vector3, rotation_vector: Vector3, buttons: in
 	# visual appearance for aim_mode
 	# TODO: update drag_factor
 	# _drag_factor = 2*Constants.get_value("movement", "drag_factor") -> needs to be updated also on server
-	if aim_mode:
+	if aim_mode && !block_input:
 		var action = _get_action(ActionManager.Trigger.FIRE_START, timeline_index) as Action
 		if action.ammunition > 0:
 			_aim_visuals.visible = true

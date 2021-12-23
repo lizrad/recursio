@@ -1,0 +1,84 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://Resources/Fonts/FiraCode-Regular.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://UI/SoundButton.gd" type="Script" id=2]
+[ext_resource path="res://UI/Menus/GameplayMenu.gd" type="Script" id=3]
+[ext_resource path="res://UI/Menus/SettingsMenu.tscn" type="PackedScene" id=4]
+[ext_resource path="res://UI/Default.tres" type="Theme" id=5]
+
+[sub_resource type="StyleBoxFlat" id=8]
+bg_color = Color( 0, 0, 0, 0.54902 )
+
+[sub_resource type="DynamicFont" id=7]
+size = 60
+use_mipmaps = true
+use_filter = true
+font_data = ExtResource( 1 )
+
+[node name="GameplayMenu" type="Panel"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource( 5 )
+custom_styles/panel = SubResource( 8 )
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
+margin_left = 760.0
+margin_top = 440.0
+margin_right = 1160.0
+margin_bottom = 640.0
+rect_min_size = Vector2( 400, 200 )
+
+[node name="Label" type="Label" parent="CenterContainer/VBoxContainer"]
+margin_right = 400.0
+margin_bottom = 75.0
+custom_fonts/font = SubResource( 7 )
+text = "recursio"
+align = 1
+
+[node name="Btn_Resume" type="Button" parent="CenterContainer/VBoxContainer"]
+margin_top = 79.0
+margin_right = 400.0
+margin_bottom = 116.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme = ExtResource( 5 )
+shortcut_in_tooltip = false
+text = "Resume"
+script = ExtResource( 2 )
+
+[node name="Btn_Settings" type="Button" parent="CenterContainer/VBoxContainer"]
+margin_top = 120.0
+margin_right = 400.0
+margin_bottom = 158.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme = ExtResource( 5 )
+shortcut_in_tooltip = false
+text = "Settings"
+script = ExtResource( 2 )
+
+[node name="Btn_Leave" type="Button" parent="CenterContainer/VBoxContainer"]
+margin_top = 162.0
+margin_right = 400.0
+margin_bottom = 200.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme = ExtResource( 5 )
+shortcut_in_tooltip = false
+text = "Leave"
+script = ExtResource( 2 )
+sound_type = 1
+
+[node name="SettingsContainer" parent="CenterContainer" instance=ExtResource( 4 )]

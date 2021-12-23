@@ -1,4 +1,4 @@
-[gd_scene load_steps=36 format=2]
+[gd_scene load_steps=31 format=2]
 
 [ext_resource path="res://UI/Menus/StartMenu.gd" type="Script" id=1]
 [ext_resource path="res://UI/Menus/GameRooms/GameRoomCreation.gd" type="Script" id=2]
@@ -7,25 +7,20 @@
 [ext_resource path="res://UI/Menus/GameRoomLobby.gd" type="Script" id=5]
 [ext_resource path="res://Resources/Icons/icon_not_ready.png" type="Texture" id=6]
 [ext_resource path="res://World.tscn" type="PackedScene" id=7]
-[ext_resource path="res://UI/Menus/DebugCheckButton.gd" type="Script" id=8]
+[ext_resource path="res://UI/Menus/SettingsMenu.tscn" type="PackedScene" id=8]
 [ext_resource path="res://Shared/Level/LevelH.tscn" type="PackedScene" id=9]
 [ext_resource path="res://Level/CapturePoint.tscn" type="PackedScene" id=10]
 [ext_resource path="res://addons/ascii-shader/character_map.png" type="Texture" id=11]
 [ext_resource path="res://UI/Default.tres" type="Theme" id=12]
 [ext_resource path="res://Resources/Fonts/FiraCode-Regular.ttf" type="DynamicFontData" id=13]
-[ext_resource path="res://UI/Menus/SettingsContainer.gd" type="Script" id=14]
-[ext_resource path="res://UI/Menus/VolumeSlider.gd" type="Script" id=15]
-[ext_resource path="res://UI/Menus/FullScreenCheckButton.gd" type="Script" id=16]
-[ext_resource path="res://UI/Menus/AsciiSlider.gd" type="Script" id=17]
+[ext_resource path="res://UI/Menus/GameplayMenu.tscn" type="PackedScene" id=14]
+[ext_resource path="res://Util/StatsHUD.tscn" type="PackedScene" id=15]
 [ext_resource path="res://UI/Menus/AsciiBackground.gd" type="Script" id=18]
 [ext_resource path="res://Tutorial/Tutorial.gd" type="Script" id=19]
 [ext_resource path="res://Global/SoundManager.tscn" type="PackedScene" id=20]
 [ext_resource path="res://Level/SpawnPoint.tscn" type="PackedScene" id=21]
-[ext_resource path="res://UI/Menus/ColorSettingController.gd" type="Script" id=22]
-[ext_resource path="res://UI/Menus/ConnectionLostContainer.gd" type="Script" id=23]
 [ext_resource path="res://Tutorial/TutorialScenario_2.tscn" type="PackedScene" id=24]
 [ext_resource path="res://Tutorial/TutorialScenario_1.tscn" type="PackedScene" id=25]
-[ext_resource path="res://UI/Menus/SettingsTabs.gd" type="Script" id=26]
 [ext_resource path="res://UI/SoundButton.gd" type="Script" id=27]
 
 [sub_resource type="Shader" id=1]
@@ -131,7 +126,9 @@ use_mipmaps = true
 use_filter = true
 font_data = ExtResource( 13 )
 
-[node name="StartMenu" type="Control"]
+[node name="StartScreen" type="Node"]
+
+[node name="StartMenu" type="Control" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
 theme = ExtResource( 12 )
@@ -144,9 +141,9 @@ level_scene = ExtResource( 9 )
 capture_point_scene = ExtResource( 10 )
 spawn_point_scene = ExtResource( 21 )
 
-[node name="SoundManager" parent="." instance=ExtResource( 20 )]
+[node name="SoundManager" parent="StartMenu" instance=ExtResource( 20 )]
 
-[node name="AsciiBackground" type="ColorRect" parent="."]
+[node name="AsciiBackground" type="ColorRect" parent="StartMenu"]
 material = SubResource( 6 )
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -155,49 +152,49 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="CenterContainer" type="CenterContainer" parent="."]
+[node name="CenterContainer" type="CenterContainer" parent="StartMenu"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="MainMenu" type="VBoxContainer" parent="CenterContainer"]
+[node name="MainMenu" type="VBoxContainer" parent="StartMenu/CenterContainer"]
 margin_left = 760.0
-margin_top = 390.0
+margin_top = 410.0
 margin_right = 1160.0
-margin_bottom = 689.0
+margin_bottom = 669.0
 rect_min_size = Vector2( 400, 0 )
 
-[node name="Label" type="Label" parent="CenterContainer/MainMenu"]
+[node name="Label" type="Label" parent="StartMenu/CenterContainer/MainMenu"]
 margin_right = 400.0
 margin_bottom = 75.0
 custom_fonts/font = SubResource( 7 )
 text = "recursio"
 align = 1
 
-[node name="PlayTutorial" type="Button" parent="CenterContainer/MainMenu"]
+[node name="PlayTutorial" type="Button" parent="StartMenu/CenterContainer/MainMenu"]
 margin_top = 79.0
 margin_right = 400.0
-margin_bottom = 119.0
+margin_bottom = 111.0
 shortcut_in_tooltip = false
 text = "Play Tutorial"
 script = ExtResource( 27 )
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="CenterContainer/MainMenu"]
-margin_top = 123.0
+[node name="HBoxContainer2" type="HBoxContainer" parent="StartMenu/CenterContainer/MainMenu"]
+margin_top = 115.0
 margin_right = 400.0
-margin_bottom = 163.0
+margin_bottom = 147.0
 
-[node name="PlayOnline" type="Button" parent="CenterContainer/MainMenu/HBoxContainer2"]
+[node name="PlayOnline" type="Button" parent="StartMenu/CenterContainer/MainMenu/HBoxContainer2"]
 margin_right = 400.0
-margin_bottom = 40.0
+margin_bottom = 32.0
 size_flags_horizontal = 3
 shortcut_in_tooltip = false
 text = "Play Online"
 script = ExtResource( 27 )
 
-[node name="CancelOnline" type="Button" parent="CenterContainer/MainMenu/HBoxContainer2"]
+[node name="CancelOnline" type="Button" parent="StartMenu/CenterContainer/MainMenu/HBoxContainer2"]
 visible = false
 margin_left = 316.0
 margin_right = 400.0
@@ -207,22 +204,22 @@ text = "Cancel"
 script = ExtResource( 27 )
 sound_type = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/MainMenu"]
-margin_top = 167.0
+[node name="HBoxContainer" type="HBoxContainer" parent="StartMenu/CenterContainer/MainMenu"]
+margin_top = 151.0
 margin_right = 400.0
-margin_bottom = 211.0
+margin_bottom = 187.0
 
-[node name="Btn_PlayLocal" type="Button" parent="CenterContainer/MainMenu/HBoxContainer"]
-margin_right = 182.0
-margin_bottom = 44.0
+[node name="Btn_PlayLocal" type="Button" parent="StartMenu/CenterContainer/MainMenu/HBoxContainer"]
+margin_right = 132.0
+margin_bottom = 36.0
 shortcut_in_tooltip = false
 text = "Play Local"
 script = ExtResource( 27 )
 
-[node name="LocalIPAddress" type="LineEdit" parent="CenterContainer/MainMenu/HBoxContainer"]
-margin_left = 186.0
+[node name="LocalIPAddress" type="LineEdit" parent="StartMenu/CenterContainer/MainMenu/HBoxContainer"]
+margin_left = 136.0
 margin_right = 400.0
-margin_bottom = 44.0
+margin_bottom = 36.0
 rect_min_size = Vector2( 150, 0 )
 size_flags_horizontal = 3
 text = "127.0.0.1"
@@ -230,7 +227,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="CancelLocal" type="Button" parent="CenterContainer/MainMenu/HBoxContainer"]
+[node name="CancelLocal" type="Button" parent="StartMenu/CenterContainer/MainMenu/HBoxContainer"]
 visible = false
 margin_left = 316.0
 margin_right = 400.0
@@ -240,24 +237,24 @@ text = "Cancel"
 script = ExtResource( 27 )
 sound_type = 1
 
-[node name="SettingsButton" type="Button" parent="CenterContainer/MainMenu"]
-margin_top = 215.0
+[node name="SettingsButton" type="Button" parent="StartMenu/CenterContainer/MainMenu"]
+margin_top = 191.0
 margin_right = 400.0
-margin_bottom = 255.0
+margin_bottom = 223.0
 shortcut_in_tooltip = false
 text = "Settings"
 script = ExtResource( 27 )
 
-[node name="Btn_Exit" type="Button" parent="CenterContainer/MainMenu"]
-margin_top = 259.0
+[node name="Btn_Exit" type="Button" parent="StartMenu/CenterContainer/MainMenu"]
+margin_top = 227.0
 margin_right = 400.0
-margin_bottom = 299.0
+margin_bottom = 259.0
 shortcut_in_tooltip = false
 text = "Exit"
 script = ExtResource( 27 )
 sound_type = 1
 
-[node name="GameRoomSearch" type="PanelContainer" parent="CenterContainer"]
+[node name="GameRoomSearch" type="PanelContainer" parent="StartMenu/CenterContainer"]
 visible = false
 margin_left = 953.0
 margin_top = 533.0
@@ -265,24 +262,24 @@ margin_right = 967.0
 margin_bottom = 547.0
 script = ExtResource( 4 )
 
-[node name="Content" type="VBoxContainer" parent="CenterContainer/GameRoomSearch"]
+[node name="Content" type="VBoxContainer" parent="StartMenu/CenterContainer/GameRoomSearch"]
 margin_left = 7.0
 margin_top = 7.0
 margin_right = 375.0
 margin_bottom = 279.0
 
-[node name="TopBar" type="HBoxContainer" parent="CenterContainer/GameRoomSearch/Content"]
+[node name="TopBar" type="HBoxContainer" parent="StartMenu/CenterContainer/GameRoomSearch/Content"]
 margin_right = 368.0
 margin_bottom = 32.0
 
-[node name="Btn_CreateGameRoom" type="Button" parent="CenterContainer/GameRoomSearch/Content/TopBar"]
+[node name="Btn_CreateGameRoom" type="Button" parent="StartMenu/CenterContainer/GameRoomSearch/Content/TopBar"]
 margin_right = 204.0
 margin_bottom = 32.0
 shortcut_in_tooltip = false
 text = "Create Game Room"
 script = ExtResource( 27 )
 
-[node name="LineEdit_GameRoomFilter" type="LineEdit" parent="CenterContainer/GameRoomSearch/Content/TopBar"]
+[node name="LineEdit_GameRoomFilter" type="LineEdit" parent="StartMenu/CenterContainer/GameRoomSearch/Content/TopBar"]
 visible = false
 margin_left = 140.0
 margin_right = 340.0
@@ -293,7 +290,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Btn_Refresh" type="Button" parent="CenterContainer/GameRoomSearch/Content/TopBar"]
+[node name="Btn_Refresh" type="Button" parent="StartMenu/CenterContainer/GameRoomSearch/Content/TopBar"]
 margin_left = 208.0
 margin_right = 304.0
 margin_bottom = 32.0
@@ -301,7 +298,7 @@ shortcut_in_tooltip = false
 text = "Refresh"
 script = ExtResource( 27 )
 
-[node name="Btn_Back" type="Button" parent="CenterContainer/GameRoomSearch/Content/TopBar"]
+[node name="Btn_Back" type="Button" parent="StartMenu/CenterContainer/GameRoomSearch/Content/TopBar"]
 margin_left = 308.0
 margin_right = 368.0
 margin_bottom = 32.0
@@ -310,25 +307,25 @@ text = "Back"
 script = ExtResource( 27 )
 sound_type = 1
 
-[node name="ItemList_GameRooms" type="ItemList" parent="CenterContainer/GameRoomSearch/Content"]
+[node name="ItemList_GameRooms" type="ItemList" parent="StartMenu/CenterContainer/GameRoomSearch/Content"]
 margin_top = 36.0
 margin_right = 368.0
 margin_bottom = 236.0
 rect_min_size = Vector2( 0, 200 )
 
-[node name="BottomBar" type="HBoxContainer" parent="CenterContainer/GameRoomSearch/Content"]
+[node name="BottomBar" type="HBoxContainer" parent="StartMenu/CenterContainer/GameRoomSearch/Content"]
 margin_top = 240.0
 margin_right = 368.0
 margin_bottom = 272.0
 
-[node name="Btn_JoinGameRoom" type="Button" parent="CenterContainer/GameRoomSearch/Content/BottomBar"]
+[node name="Btn_JoinGameRoom" type="Button" parent="StartMenu/CenterContainer/GameRoomSearch/Content/BottomBar"]
 margin_right = 180.0
 margin_bottom = 32.0
 shortcut_in_tooltip = false
 text = "Join Game Room"
 script = ExtResource( 27 )
 
-[node name="GameRoomCreation" type="PanelContainer" parent="CenterContainer"]
+[node name="GameRoomCreation" type="PanelContainer" parent="StartMenu/CenterContainer"]
 visible = false
 margin_left = 953.0
 margin_top = 533.0
@@ -336,72 +333,72 @@ margin_right = 967.0
 margin_bottom = 547.0
 script = ExtResource( 2 )
 
-[node name="Content" type="VBoxContainer" parent="CenterContainer/GameRoomCreation"]
+[node name="Content" type="VBoxContainer" parent="StartMenu/CenterContainer/GameRoomCreation"]
 margin_left = 7.0
 margin_top = 7.0
 margin_right = 299.0
 margin_bottom = 163.0
 
-[node name="Label" type="Label" parent="CenterContainer/GameRoomCreation/Content"]
+[node name="Label" type="Label" parent="StartMenu/CenterContainer/GameRoomCreation/Content"]
 margin_right = 292.0
 margin_bottom = 26.0
 text = "Create a Game Room"
 align = 1
 
-[node name="Space" type="Control" parent="CenterContainer/GameRoomCreation/Content"]
+[node name="Space" type="Control" parent="StartMenu/CenterContainer/GameRoomCreation/Content"]
 margin_top = 30.0
 margin_right = 292.0
 margin_bottom = 50.0
 rect_min_size = Vector2( 0, 20 )
 
-[node name="VBoxContainer" type="HBoxContainer" parent="CenterContainer/GameRoomCreation/Content"]
+[node name="VBoxContainer" type="HBoxContainer" parent="StartMenu/CenterContainer/GameRoomCreation/Content"]
 margin_top = 54.0
 margin_right = 292.0
 margin_bottom = 90.0
 
-[node name="Label" type="Label" parent="CenterContainer/GameRoomCreation/Content/VBoxContainer"]
+[node name="Label" type="Label" parent="StartMenu/CenterContainer/GameRoomCreation/Content/VBoxContainer"]
 margin_top = 5.0
 margin_right = 120.0
 margin_bottom = 31.0
 text = "Room Name:"
 
-[node name="Space" type="Control" parent="CenterContainer/GameRoomCreation/Content/VBoxContainer"]
+[node name="Space" type="Control" parent="StartMenu/CenterContainer/GameRoomCreation/Content/VBoxContainer"]
 margin_left = 124.0
 margin_right = 134.0
 margin_bottom = 36.0
 rect_min_size = Vector2( 10, 0 )
 
-[node name="GameRoomName" type="LineEdit" parent="CenterContainer/GameRoomCreation/Content/VBoxContainer"]
+[node name="GameRoomName" type="LineEdit" parent="StartMenu/CenterContainer/GameRoomCreation/Content/VBoxContainer"]
 margin_left = 138.0
 margin_right = 292.0
 margin_bottom = 36.0
 rect_min_size = Vector2( 150, 0 )
 
-[node name="ErrorMesaage" type="Label" parent="CenterContainer/GameRoomCreation/Content"]
+[node name="ErrorMesaage" type="Label" parent="StartMenu/CenterContainer/GameRoomCreation/Content"]
 margin_top = 94.0
 margin_right = 292.0
 margin_bottom = 120.0
 
-[node name="BottomBar" type="HBoxContainer" parent="CenterContainer/GameRoomCreation/Content"]
+[node name="BottomBar" type="HBoxContainer" parent="StartMenu/CenterContainer/GameRoomCreation/Content"]
 margin_top = 124.0
 margin_right = 292.0
 margin_bottom = 156.0
 
-[node name="Btn_CreateRoom" type="Button" parent="CenterContainer/GameRoomCreation/Content/BottomBar"]
+[node name="Btn_CreateRoom" type="Button" parent="StartMenu/CenterContainer/GameRoomCreation/Content/BottomBar"]
 margin_right = 144.0
 margin_bottom = 32.0
 shortcut_in_tooltip = false
 text = "Create Room"
 script = ExtResource( 27 )
 
-[node name="Space" type="Control" parent="CenterContainer/GameRoomCreation/Content/BottomBar"]
+[node name="Space" type="Control" parent="StartMenu/CenterContainer/GameRoomCreation/Content/BottomBar"]
 margin_left = 148.0
 margin_right = 228.0
 margin_bottom = 32.0
 rect_min_size = Vector2( 0, 20 )
 size_flags_horizontal = 3
 
-[node name="Btn_Back" type="Button" parent="CenterContainer/GameRoomCreation/Content/BottomBar"]
+[node name="Btn_Back" type="Button" parent="StartMenu/CenterContainer/GameRoomCreation/Content/BottomBar"]
 margin_left = 232.0
 margin_right = 292.0
 margin_bottom = 32.0
@@ -410,7 +407,7 @@ text = "Back"
 script = ExtResource( 27 )
 sound_type = 1
 
-[node name="GameRoomLobby" type="PanelContainer" parent="CenterContainer"]
+[node name="GameRoomLobby" type="PanelContainer" parent="StartMenu/CenterContainer"]
 visible = false
 margin_left = 953.0
 margin_top = 533.0
@@ -420,29 +417,29 @@ script = ExtResource( 5 )
 icon_ready = ExtResource( 3 )
 icon_not_ready = ExtResource( 6 )
 
-[node name="Content" type="VBoxContainer" parent="CenterContainer/GameRoomLobby"]
+[node name="Content" type="VBoxContainer" parent="StartMenu/CenterContainer/GameRoomLobby"]
 margin_left = 7.0
 margin_top = 7.0
 margin_right = 507.0
 margin_bottom = 421.0
 
-[node name="TopBar" type="VBoxContainer" parent="CenterContainer/GameRoomLobby/Content"]
+[node name="TopBar" type="VBoxContainer" parent="StartMenu/CenterContainer/GameRoomLobby/Content"]
 margin_right = 500.0
 margin_bottom = 26.0
 
-[node name="GameRoomName" type="Label" parent="CenterContainer/GameRoomLobby/Content/TopBar"]
+[node name="GameRoomName" type="Label" parent="StartMenu/CenterContainer/GameRoomLobby/Content/TopBar"]
 margin_right = 500.0
 margin_bottom = 26.0
 text = "Room1"
 align = 1
 
-[node name="Space" type="Control" parent="CenterContainer/GameRoomLobby/Content"]
+[node name="Space" type="Control" parent="StartMenu/CenterContainer/GameRoomLobby/Content"]
 margin_top = 30.0
 margin_right = 500.0
 margin_bottom = 50.0
 rect_min_size = Vector2( 0, 20 )
 
-[node name="PlayerList" type="ItemList" parent="CenterContainer/GameRoomLobby/Content"]
+[node name="PlayerList" type="ItemList" parent="StartMenu/CenterContainer/GameRoomLobby/Content"]
 margin_top = 54.0
 margin_right = 500.0
 margin_bottom = 354.0
@@ -450,7 +447,7 @@ rect_min_size = Vector2( 500, 300 )
 focus_mode = 0
 fixed_icon_size = Vector2( 60, 15 )
 
-[node name="Space2" type="Control" parent="CenterContainer/GameRoomLobby/Content"]
+[node name="Space2" type="Control" parent="StartMenu/CenterContainer/GameRoomLobby/Content"]
 margin_top = 358.0
 margin_right = 500.0
 margin_bottom = 378.0
@@ -459,12 +456,12 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="BottomBar" type="HBoxContainer" parent="CenterContainer/GameRoomLobby/Content"]
+[node name="BottomBar" type="HBoxContainer" parent="StartMenu/CenterContainer/GameRoomLobby/Content"]
 margin_top = 382.0
 margin_right = 500.0
 margin_bottom = 414.0
 
-[node name="Btn_Ready" type="Button" parent="CenterContainer/GameRoomLobby/Content/BottomBar"]
+[node name="Btn_Ready" type="Button" parent="StartMenu/CenterContainer/GameRoomLobby/Content/BottomBar"]
 margin_right = 72.0
 margin_bottom = 32.0
 focus_neighbour_left = NodePath("../Btn_Leave")
@@ -477,13 +474,13 @@ shortcut_in_tooltip = false
 text = "Ready"
 script = ExtResource( 27 )
 
-[node name="Space" type="Control" parent="CenterContainer/GameRoomLobby/Content/BottomBar"]
+[node name="Space" type="Control" parent="StartMenu/CenterContainer/GameRoomLobby/Content/BottomBar"]
 margin_left = 76.0
 margin_right = 424.0
 margin_bottom = 32.0
 size_flags_horizontal = 3
 
-[node name="Btn_Leave" type="Button" parent="CenterContainer/GameRoomLobby/Content/BottomBar"]
+[node name="Btn_Leave" type="Button" parent="StartMenu/CenterContainer/GameRoomLobby/Content/BottomBar"]
 margin_left = 428.0
 margin_right = 500.0
 margin_bottom = 32.0
@@ -498,363 +495,36 @@ text = "Leave"
 script = ExtResource( 27 )
 sound_type = 1
 
-[node name="SettingsContainer" type="PanelContainer" parent="CenterContainer"]
-visible = false
-margin_left = 635.0
-margin_top = 340.0
-margin_right = 1285.0
-margin_bottom = 740.0
-rect_min_size = Vector2( 650, 400 )
-script = ExtResource( 14 )
+[node name="SettingsContainer" parent="StartMenu/CenterContainer" instance=ExtResource( 8 )]
 
-[node name="SettingsList" type="VBoxContainer" parent="CenterContainer/SettingsContainer"]
-margin_left = 7.0
-margin_top = 7.0
-margin_right = 643.0
-margin_bottom = 393.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="Header" type="Label" parent="CenterContainer/SettingsContainer/SettingsList"]
-margin_right = 636.0
-margin_bottom = 26.0
-text = "Settings"
-align = 1
-
-[node name="Space" type="Control" parent="CenterContainer/SettingsContainer/SettingsList"]
-margin_top = 30.0
-margin_right = 636.0
-margin_bottom = 50.0
-rect_min_size = Vector2( 0, 20 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="SettingsTabs" type="TabContainer" parent="CenterContainer/SettingsContainer/SettingsList"]
-margin_top = 54.0
-margin_right = 636.0
-margin_bottom = 326.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-script = ExtResource( 26 )
-
-[node name="Video" type="Control" parent="CenterContainer/SettingsContainer/SettingsList/SettingsTabs"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = 4.0
-margin_top = 52.0
-margin_right = -4.0
-margin_bottom = -4.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="FullScreen" type="HBoxContainer" parent="CenterContainer/SettingsContainer/SettingsList/SettingsTabs/Video"]
-margin_left = -4.0
-margin_top = 8.0
-margin_right = 632.0
-margin_bottom = 48.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label" type="Label" parent="CenterContainer/SettingsContainer/SettingsList/SettingsTabs/Video/FullScreen"]
-margin_top = 7.0
-margin_right = 156.0
-margin_bottom = 33.0
-text = "Full Screen: "
-
-[node name="FullScreenCheckButton" type="CheckButton" parent="CenterContainer/SettingsContainer/SettingsList/SettingsTabs/Video/FullScreen" groups=["Setting"]]
-margin_left = 160.0
-margin_right = 236.0
-margin_bottom = 40.0
-focus_neighbour_top = NodePath("../../../../BackButton")
-focus_neighbour_bottom = NodePath("../../AsciiSize/AsciiSlider")
-focus_next = NodePath("../../AsciiSize/AsciiSlider")
-focus_previous = NodePath("../../../../BackButton")
-script = ExtResource( 16 )
-
-[node name="AsciiSize" type="HBoxContainer" parent="CenterContainer/SettingsContainer/SettingsList/SettingsTabs/Video"]
-margin_left = -4.0
-margin_top = 52.0
-margin_right = 632.0
-margin_bottom = 78.0
-
-[node name="Label" type="Label" parent="CenterContainer/SettingsContainer/SettingsList/SettingsTabs/Video/AsciiSize"]
-margin_right = 264.0
-margin_bottom = 26.0
-text = "ASCII Character Size: "
-
-[node name="AsciiSlider" type="HSlider" parent="CenterContainer/SettingsContainer/SettingsList/SettingsTabs/Video/AsciiSize"]
-margin_left = 268.0
-margin_right = 636.0
-margin_bottom = 16.0
-focus_neighbour_top = NodePath("../../FullScreen/FullScreenCheckButton")
-focus_neighbour_bottom = NodePath("../../Debug/DebugCheckButton")
-focus_next = NodePath("../../Debug/DebugCheckButton")
-focus_previous = NodePath("../../FullScreen/FullScreenCheckButton")
-size_flags_horizontal = 3
-min_value = 4.0
-max_value = 16.0
-step = 4.0
-value = 8.0
-tick_count = 4
-ticks_on_borders = true
-script = ExtResource( 17 )
-
-[node name="Debug" type="HBoxContainer" parent="CenterContainer/SettingsContainer/SettingsList/SettingsTabs/Video"]
-margin_left = -4.0
-margin_top = 82.0
-margin_right = 632.0
-margin_bottom = 122.0
-
-[node name="Label" type="Label" parent="CenterContainer/SettingsContainer/SettingsList/SettingsTabs/Video/Debug"]
-margin_top = 7.0
-margin_right = 120.0
-margin_bottom = 33.0
-text = "Debug UI: "
-
-[node name="DebugCheckButton" type="CheckButton" parent="CenterContainer/SettingsContainer/SettingsList/SettingsTabs/Video/Debug" groups=["Setting"]]
-margin_left = 124.0
-margin_right = 200.0
-margin_bottom = 40.0
-focus_neighbour_top = NodePath("../../AsciiSize/AsciiSlider")
-focus_neighbour_bottom = NodePath("../../../../BackButton")
-focus_next = NodePath("../../../../BackButton")
-focus_previous = NodePath("../../AsciiSize/AsciiSlider")
-script = ExtResource( 8 )
-
-[node name="Audio" type="Control" parent="CenterContainer/SettingsContainer/SettingsList/SettingsTabs"]
+[node name="Tutorial" type="Control" parent="StartMenu"]
 visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 4.0
-margin_top = 52.0
-margin_right = -4.0
-margin_bottom = -4.0
-
-[node name="MainVolume" type="HBoxContainer" parent="CenterContainer/SettingsContainer/SettingsList/SettingsTabs/Audio"]
-margin_left = -4.0
-margin_top = 8.0
-margin_right = 632.0
-margin_bottom = 34.0
-
-[node name="Label" type="Label" parent="CenterContainer/SettingsContainer/SettingsList/SettingsTabs/Audio/MainVolume"]
-margin_right = 156.0
-margin_bottom = 26.0
-text = "Main Volume: "
-
-[node name="VolumeSlider" type="HSlider" parent="CenterContainer/SettingsContainer/SettingsList/SettingsTabs/Audio/MainVolume" groups=["Setting"]]
-margin_left = 160.0
-margin_right = 636.0
-margin_bottom = 16.0
-rect_min_size = Vector2( 400, 0 )
-focus_neighbour_top = NodePath("../../../../BackButton")
-focus_neighbour_bottom = NodePath("../../MusicVolume/VolumeSlider")
-focus_next = NodePath("../../MusicVolume/VolumeSlider")
-focus_previous = NodePath("../../../../BackButton")
-size_flags_horizontal = 3
-max_value = 1.0
-step = 0.05
-value = 1.0
-tick_count = 11
-ticks_on_borders = true
-script = ExtResource( 15 )
-
-[node name="MusicVolume" type="HBoxContainer" parent="CenterContainer/SettingsContainer/SettingsList/SettingsTabs/Audio"]
-margin_left = -4.0
-margin_top = 38.0
-margin_right = 632.0
-margin_bottom = 64.0
-
-[node name="Label" type="Label" parent="CenterContainer/SettingsContainer/SettingsList/SettingsTabs/Audio/MusicVolume"]
-margin_right = 192.0
-margin_bottom = 26.0
-text = "  Music Volume: "
-
-[node name="VolumeSlider" type="HSlider" parent="CenterContainer/SettingsContainer/SettingsList/SettingsTabs/Audio/MusicVolume" groups=["Setting"]]
-margin_left = 196.0
-margin_right = 636.0
-margin_bottom = 16.0
-rect_min_size = Vector2( 400, 0 )
-focus_neighbour_top = NodePath("../../MainVolume/VolumeSlider")
-focus_neighbour_bottom = NodePath("../../EffectsVolume/VolumeSlider")
-focus_next = NodePath("../../EffectsVolume/VolumeSlider")
-focus_previous = NodePath("../../MainVolume/VolumeSlider")
-size_flags_horizontal = 3
-max_value = 1.0
-step = 0.05
-value = 1.0
-tick_count = 11
-ticks_on_borders = true
-script = ExtResource( 15 )
-audio_bus_name = "Music"
-
-[node name="EffectsVolume" type="HBoxContainer" parent="CenterContainer/SettingsContainer/SettingsList/SettingsTabs/Audio"]
-margin_left = -4.0
-margin_top = 68.0
-margin_right = 632.0
-margin_bottom = 94.0
-
-[node name="Label" type="Label" parent="CenterContainer/SettingsContainer/SettingsList/SettingsTabs/Audio/EffectsVolume"]
-margin_right = 216.0
-margin_bottom = 26.0
-text = "  Effects Volume: "
-
-[node name="VolumeSlider" type="HSlider" parent="CenterContainer/SettingsContainer/SettingsList/SettingsTabs/Audio/EffectsVolume" groups=["Setting"]]
-margin_left = 220.0
-margin_right = 636.0
-margin_bottom = 16.0
-rect_min_size = Vector2( 400, 0 )
-focus_neighbour_top = NodePath("../../MusicVolume/VolumeSlider")
-focus_neighbour_bottom = NodePath("../../../../BackButton")
-focus_next = NodePath("../../../../BackButton")
-focus_previous = NodePath("../../MusicVolume/VolumeSlider")
-size_flags_horizontal = 3
-max_value = 1.0
-step = 0.05
-value = 1.0
-tick_count = 11
-ticks_on_borders = true
-script = ExtResource( 15 )
-audio_bus_name = "Effects"
-
-[node name="Colors" type="ScrollContainer" parent="CenterContainer/SettingsContainer/SettingsList/SettingsTabs"]
-visible = false
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = 4.0
-margin_top = 52.0
-margin_right = -4.0
-margin_bottom = -4.0
-follow_focus = true
-script = ExtResource( 22 )
-
-[node name="ColorList" type="VBoxContainer" parent="CenterContainer/SettingsContainer/SettingsList/SettingsTabs/Colors"]
-
-[node name="Space2" type="Control" parent="CenterContainer/SettingsContainer/SettingsList"]
-margin_top = 330.0
-margin_right = 636.0
-margin_bottom = 350.0
-rect_min_size = Vector2( 0, 20 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="BackButton" type="Button" parent="CenterContainer/SettingsContainer/SettingsList"]
-margin_top = 354.0
-margin_right = 636.0
-margin_bottom = 386.0
-focus_neighbour_top = NodePath("../SettingsTabs/Video/Debug/DebugCheckButton")
-focus_neighbour_bottom = NodePath("../SettingsTabs/Video/FullScreen/FullScreenCheckButton")
-focus_next = NodePath("../SettingsTabs/Video/FullScreen/FullScreenCheckButton")
-focus_previous = NodePath("../SettingsTabs/Video/Debug/DebugCheckButton")
-text = "Back"
-script = ExtResource( 27 )
-sound_type = 1
-
-[node name="ConnectionLostContainer" type="PanelContainer" parent="CenterContainer"]
-visible = false
-margin_left = 635.0
-margin_top = 340.0
-margin_right = 1285.0
-margin_bottom = 740.0
-rect_min_size = Vector2( 650, 400 )
-script = ExtResource( 23 )
-
-[node name="ConnectionLostList" type="VBoxContainer" parent="CenterContainer/ConnectionLostContainer"]
-margin_left = 7.0
-margin_top = 7.0
-margin_right = 643.0
-margin_bottom = 393.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="Header" type="Label" parent="CenterContainer/ConnectionLostContainer/ConnectionLostList"]
-margin_right = 636.0
-margin_bottom = 34.0
-text = "Connection Lost"
-align = 1
-
-[node name="Space" type="Control" parent="CenterContainer/ConnectionLostContainer/ConnectionLostList"]
-margin_top = 38.0
-margin_right = 636.0
-margin_bottom = 87.0
-rect_min_size = Vector2( 0, 20 )
-size_flags_horizontal = 3
-size_flags_vertical = 3
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="LabelSpacePlaceholder" type="Control" parent="CenterContainer/ConnectionLostContainer/ConnectionLostList"]
-margin_top = 91.0
-margin_right = 636.0
-margin_bottom = 288.0
-rect_min_size = Vector2( 0, 20 )
-size_flags_horizontal = 3
-size_flags_vertical = 3
-size_flags_stretch_ratio = 4.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label" type="Label" parent="CenterContainer/ConnectionLostContainer/ConnectionLostList/LabelSpacePlaceholder"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = 20.0
-margin_right = -20.0
-text = "OOPSIE WOOPSIE!! Uwu We made a fucky wucky!! A wittle fucko boingo! The code monkeys at our headquarters are working VEWY HAWD to fix this!"
-valign = 1
-autowrap = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Space2" type="Control" parent="CenterContainer/ConnectionLostContainer/ConnectionLostList"]
-margin_top = 292.0
-margin_right = 636.0
-margin_bottom = 341.0
-rect_min_size = Vector2( 0, 20 )
-size_flags_horizontal = 3
-size_flags_vertical = 3
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="BackButton" type="Button" parent="CenterContainer/ConnectionLostContainer/ConnectionLostList"]
-margin_top = 345.0
-margin_right = 636.0
-margin_bottom = 385.0
-text = "Back"
-script = ExtResource( 27 )
-sound_type = 1
-
-[node name="Tutorial" type="Control" parent="."]
-visible = false
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_right = -1920.0
-margin_bottom = -1080.0
 script = ExtResource( 19 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 tutorial_scenes = [ ExtResource( 25 ), ExtResource( 24 ) ]
 
-[node name="TutorialMenu" type="VBoxContainer" parent="Tutorial"]
-margin_left = 812.0
-margin_top = 410.0
-margin_right = 1108.0
-margin_bottom = 669.0
+[node name="TutorialMenu" type="VBoxContainer" parent="StartMenu/Tutorial"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -166.5
+margin_top = -129.5
+margin_right = 166.5
+margin_bottom = 129.5
 
-[node name="Label" type="Label" parent="Tutorial/TutorialMenu"]
+[node name="Label" type="Label" parent="StartMenu/Tutorial/TutorialMenu"]
 margin_right = 333.0
 margin_bottom = 75.0
 custom_fonts/font = SubResource( 8 )
 text = "Tutorials"
 align = 1
 
-[node name="Tutorial1" type="Button" parent="Tutorial/TutorialMenu"]
+[node name="Tutorial1" type="Button" parent="StartMenu/Tutorial/TutorialMenu"]
 margin_top = 79.0
 margin_right = 333.0
 margin_bottom = 111.0
@@ -864,7 +534,7 @@ align = 0
 expand_icon = true
 script = ExtResource( 27 )
 
-[node name="Tutorial2" type="Button" parent="Tutorial/TutorialMenu"]
+[node name="Tutorial2" type="Button" parent="StartMenu/Tutorial/TutorialMenu"]
 margin_top = 115.0
 margin_right = 333.0
 margin_bottom = 147.0
@@ -874,7 +544,7 @@ align = 0
 expand_icon = true
 script = ExtResource( 27 )
 
-[node name="Btn_Back" type="Button" parent="Tutorial/TutorialMenu"]
+[node name="Btn_Back" type="Button" parent="StartMenu/Tutorial/TutorialMenu"]
 margin_top = 151.0
 margin_right = 333.0
 margin_bottom = 183.0
@@ -882,3 +552,8 @@ shortcut_in_tooltip = false
 text = "Back"
 script = ExtResource( 27 )
 sound_type = 1
+
+[node name="StatsHUD" parent="." instance=ExtResource( 15 )]
+visible = false
+
+[node name="GameplayMenu" parent="." instance=ExtResource( 14 )]
