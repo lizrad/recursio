@@ -315,7 +315,7 @@ func _on_gameplay_menu_leave_pressed() -> void:
 		return
 	
 	if _world != null:
-		_return_to_game_room_lobby()
+		return_to_game_room_lobby()
 	else:
 		assert(_tutorial._scenario != null)
 		_tutorial.stop_scenario()

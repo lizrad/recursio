@@ -2,7 +2,7 @@ extends Panel
 class_name GameEndScreen
 
 
-onready var _start_menu: StartMenu = get_node("/root/StartMenu")
+onready var _start_menu: StartMenu = get_node("/root/StartScreen/StartMenu")
 onready var _back_to_title_button: SoundButton = get_node("GameEndScreenContainer/ElementsList/Buttons/BackToTitleButton")
 onready var _back_to_room_button: SoundButton = get_node("GameEndScreenContainer/ElementsList/Buttons/BackToRoomButton")
 onready var _title: Label = get_node("GameEndScreenContainer/ElementsList/Title")
