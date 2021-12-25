@@ -25,6 +25,7 @@ onready var _btn_exit = get_node("CenterContainer/MainMenu/Btn_Exit")
 onready var _game_room_search: GameRoomSearch = get_node("CenterContainer/GameRoomSearch")
 onready var _game_room_creation: GameRoomCreation = get_node("CenterContainer/GameRoomCreation")
 onready var _game_room_lobby: GameRoomLobby = get_node("CenterContainer/GameRoomLobby")
+onready var _connection_lost_container = get_node("CenterContainer/ConnectionLostContainer")
 onready var _settings: Control = get_node("CenterContainer/SettingsContainer")
 
 onready var _tutorial: Tutorial = get_node("Tutorial")
@@ -78,7 +79,6 @@ func _ready():
 	_error = Server.connect("game_room_ready_received" , self, "_on_game_room_ready_received")
 	_error = Server.connect("game_room_not_ready_received" , self, "_on_game_room_not_ready_received")
 	_error = Server.connect("load_level_received", self, "_on_load_level_received")
-	_error = Server.connect("game_result", self, "_on_game_result_received")
 	
 	_error = _tutorial.connect("scenario_started", self, "_on_tutorial_scenario_started")
 	_error = _tutorial.connect("scenario_completed", self, "_on_tutorial_scenario_completed")
@@ -104,12 +104,30 @@ func _process(_delta):
 		_toggle_player_input(_gameplay_menu.visible)
 
 
-func _return_to_game_room_lobby():
+func return_to_game_room_lobby():
 	_in_game = false
 	_world.queue_free()
 	_world = null
 	_game_room_lobby.reset_players()
 	$CenterContainer.show()
+
+
+func return_to_title():
+	if _world != null:
+		_world.queue_free()
+		_world = null
+	# Reset all sub screens
+	_game_room_creation.hide()
+	_game_room_lobby.hide()
+	_game_room_lobby.reset()
+	_game_room_search.hide()
+	_game_room_search.reset()
+	_in_game_room = false
+	# Show start screen
+	_start_menu_buttons.show()
+	$CenterContainer.show()
+	_toggle_enabled_start_menu_buttons(true)
+	_btn_play_tutorial.grab_focus()
 
 
 func _toggle_enabled_start_menu_buttons(enabled: bool):
@@ -135,21 +153,11 @@ func _on_connection_successful():
 
 
 func _on_server_disconnected():
-	if _world != null:
-		_world.queue_free()
-		_world = null
-	# Reset all sub screens
-	_game_room_creation.hide()
-	_game_room_lobby.hide()
-	_game_room_lobby.reset()
-	_game_room_search.hide()
-	_game_room_search.reset()
-	_in_game_room = false
-	# Show start screen
-	_start_menu_buttons.show()
-	$CenterContainer.show()
-	_toggle_enabled_start_menu_buttons(true)
-	_btn_play_tutorial.grab_focus()
+	if _world:
+		return
+	_connection_lost_container.show()
+	return_to_title()
+
 
 
 func _on_connection_failed():
@@ -172,7 +180,8 @@ func _on_play_online() -> void:
 func _on_cancel_online() -> void:
 	_btn_cancel_online.hide()
 	_toggle_enabled_start_menu_buttons(true)
-	Server.disconnect_from_server()
+	Server.disconnect_from_server(true)
+	return_to_title()
 
 
 func _on_play_local() -> void:
@@ -184,7 +193,8 @@ func _on_play_local() -> void:
 func _on_cancel_local() -> void:
 	_btn_cancel_local.hide()
 	_toggle_enabled_start_menu_buttons(true)
-	Server.disconnect_from_server()
+	Server.disconnect_from_server(true)
+	return_to_title()
 
 
 func _on_open_settings() -> void:	
@@ -208,7 +218,8 @@ func _on_creation_create_game_room_pressed(game_room_name) -> void:
 
 func _on_search_back_pressed() -> void:
 	_start_menu_buttons.show()
-	Server.disconnect_from_server()
+	Server.disconnect_from_server(true)
+	return_to_title()
 
 
 func _on_creation_back_pressed() -> void:
@@ -243,10 +254,6 @@ func _on_game_rooms_received(game_room_dic) -> void:
 
 func _on_game_room_joined(player_id_name_dic, game_room_id):
 	_game_room_lobby.set_players(player_id_name_dic, _player_rpc_id)
-	
-	if _world != null:
-		_return_to_game_room_lobby()
-		return
 	
 	if _in_game_room:
 		return
@@ -284,11 +291,6 @@ func _on_load_level_received():
 	_world.level_set_up_done()
 
 
-func _on_game_result_received(_winning_player_id):
-	yield(get_tree().create_timer(3), "timeout")
-	_return_to_game_room_lobby()
-
-
 func _on_tutorial_scenario_started() -> void:
 	_in_game = true
 
@@ -313,7 +315,7 @@ func _on_gameplay_menu_leave_pressed() -> void:
 		return
 	
 	if _world != null:
-		_return_to_game_room_lobby()
+		return_to_game_room_lobby()
 	else:
 		assert(_tutorial._scenario != null)
 		_tutorial.stop_scenario()

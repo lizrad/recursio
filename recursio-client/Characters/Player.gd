@@ -222,6 +222,14 @@ func update_capture_point_hud(capture_points: Array) -> void:
 		index += 1
 
 
+func show_hud() -> void:
+	_hud.show()
+
+
+func hide_hud() -> void:
+	_hud.hide()
+
+
 func show_preparation_hud(round_index) -> void:
 	_hud.prep_phase_start(round_index)
 	_button_overlay.show_buttons(["ready!", "swap"], ButtonOverlay.BUTTONS.DOWN | ButtonOverlay.BUTTONS.RIGHT, ButtonOverlay.BUTTONS.DOWN)

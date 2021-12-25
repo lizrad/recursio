@@ -64,12 +64,16 @@ func spawn_world():
 		_server.send_game_start_to_client(player_id, _server.get_server_time()+game_warm_up*1000)
 		
 	yield(get_tree().create_timer(game_warm_up), "timeout")
-	_game_room_world.start_game()
+	if _game_room_world != null:
+		_game_room_world.start_game()
 
 
 func despawn_world():
 	_game_room_players_ready.clear()
 	_game_room_world.queue_free()
+	# this fixes a race condition that appears when one player disconnects 
+	# while we are still waiting to start the game
+	_game_room_world = null
 	_player_levels_loaded.clear()
 	_game_room_world_exists = false
 

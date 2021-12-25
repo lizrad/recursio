@@ -69,7 +69,7 @@ func connect_to_server(server_ip):
 	_error = get_tree().connect("server_disconnected", self, "_on_server_disconnected")
 
 
-func disconnect_from_server():
+func disconnect_from_server(quiet: bool = false):
 	Logger.info("Disconnecting from server", "connection")
 	set_physics_process(false)
 	network.close_connection()
@@ -85,8 +85,13 @@ func disconnect_from_server():
 	latency_array.clear()
 	if _clock_update_timer != null:
 		_clock_update_timer.free()
-	
-	emit_signal("server_disconnected")
+		# this prevents a race condition that appears when one 
+		# cancels the connection process after forcefully loosing 
+		# connection to the server before hand and then trying to 
+		# reconnect
+		_clock_update_timer = null
+	if not quiet:
+		emit_signal("server_disconnected")
 
 
 func _notification(what):
