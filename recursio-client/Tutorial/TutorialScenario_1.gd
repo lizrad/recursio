@@ -59,8 +59,8 @@ func _started_round_1():
 	_character_manager.get_player().kb.visible = true
 	_character_manager._round_manager._start_game()
 	yield(get_tree().create_timer(6), "timeout")
-	_bottom_element.set_text("Move!")
-	_bottom_element.set_control(TutorialUIBottomElement.Controls.Move)
+	add_sub_condition(funcref(self, "_move_sub_condition_start"), funcref(self, "_move_sub_condition"), funcref(self, "_move_sub_condition_end"))
+	add_sub_condition(funcref(self, "_dash_sub_condition_start"), funcref(self, "_dash_sub_condition"), funcref(self, "_dash_sub_condition_end"))
 
 
 func _check_completed_round_1() -> bool:
@@ -112,3 +112,21 @@ func _completed_round_2() -> void:
 	
 	_toggle_ui(true)
 	_tutorial_text.typing_text = "Good job!"
+
+
+func _move_sub_condition_start() -> void:
+	_bottom_element.show()
+	_bottom_element.set_text("Move!")
+	_bottom_element.set_control(TutorialUIBottomElement.Controls.Move)
+func _move_sub_condition() -> bool:
+	return (_character_manager.get_player().spawn_point - _character_manager.get_player().get_position()).length() > 5
+func _move_sub_condition_end() -> void:
+	_bottom_element.hide()
+func _dash_sub_condition_start() -> void:
+	_bottom_element.show()
+	_bottom_element.set_text("Dash!")
+	_bottom_element.set_control(TutorialUIBottomElement.Controls.Dash)
+func _dash_sub_condition() -> bool:
+	return _character_manager.get_player().get_dash_ammunition() != 2
+func _dash_sub_condition_end() -> void:
+	_bottom_element.hide()

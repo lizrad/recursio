@@ -27,6 +27,7 @@ var _just_corrected = false
 var _last_server_position
 var _last_server_time
 var _round_manager
+var _dash_ammunition := 2
 
 class MovementFrame:
 	var position: Vector3 = Vector3.ZERO
@@ -213,6 +214,7 @@ func update_fire_action_ammo_hud(amount: int) -> void:
 
 
 func update_special_movement_ammo_hud(amount: int) -> void:
+	_dash_ammunition = amount
 	_hud.update_special_movement_ammo(amount)
 
 
@@ -318,3 +320,7 @@ func server_hit(perpetrator):
 # TODO: this should probably not be in player.gd, but I don't really know where else to put it
 func get_camera():
 	return _camera
+
+
+func get_dash_ammunition():
+	return _dash_ammunition

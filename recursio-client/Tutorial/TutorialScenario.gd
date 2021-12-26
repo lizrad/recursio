@@ -10,11 +10,19 @@ var _rounds: int = 0
 # Currently active round in this scenario
 var _current_round: int = 0
 
+
 var _completion_delay: float = 0
 
 var _round_starts := []
 var _round_conditions := []
 var _round_ends := []
+
+# Currently active sub condition
+var _current_sub_condition: int = 0
+
+var _sub_conditions_starts := []
+var _sub_conditions := []
+var _sub_conditions_ends := []
 
 onready var _goal_element_1 = get_node("TutorialUI/GoalElement1")
 onready var _goal_element_2 = get_node("TutorialUI/GoalElement2")
@@ -41,6 +49,14 @@ func _process(delta):
 	# stop the timer from moving
 	if _character_manager._round_manager.get_current_phase() == RoundManager.Phases.GAME:
 		_character_manager._round_manager._phase_deadline += delta * 1000
+	
+	# check subconditions:
+	if _sub_conditions.size() > _current_sub_condition:
+		if _sub_conditions[_current_sub_condition].call_func():
+			_sub_conditions_ends[_current_sub_condition].call_func()
+			_current_sub_condition  += 1
+		if _sub_conditions.size() > _current_sub_condition:
+			_sub_conditions_starts[_current_sub_condition].call_func()
 	
 	if not _round_conditions[_current_round].call_func():
 		return
@@ -85,6 +101,20 @@ func add_round_condition_function(round_condition_function: FuncRef) -> void:
 func add_round_end_function(round_end_function: FuncRef) -> void:
 	_round_ends.append(round_end_function)
 
+func add_sub_condition(start: FuncRef, condition: FuncRef, end: FuncRef) -> void:
+	_sub_conditions_starts.append(start)
+	_sub_conditions.append(condition)
+	_sub_conditions_ends.append(end)
+	# immediately starting the first start function if this is the first subcondition
+	if _sub_conditions.size() == 1:
+		_sub_conditions_starts[0].call_func()
+
+
+func clear_sub_conditions():
+	_sub_conditions_starts.clear()
+	_sub_conditions.clear()
+	_sub_conditions_ends.clear()
+	_current_sub_condition = 0
 
 func _toggle_ui(show: bool) -> void:
 	if _tutorial_text.typing_completed:
