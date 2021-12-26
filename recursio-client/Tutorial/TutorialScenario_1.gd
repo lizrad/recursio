@@ -16,6 +16,8 @@ func _ready():
 	_character_manager._on_spawn_player(0, Vector3.ZERO, 0)
 	_character_manager.get_player().kb.visible = false
 	_character_manager.hide_player_button_overlay = true
+	_goal_element.init(_character_manager.get_player().get_camera())
+
 	# Shorten prep phase
 	_round_manager._preparation_phase_time = 3.0
 	
@@ -25,7 +27,8 @@ func _ready():
 	_character_manager.get_enemy().kb.visible = false
 
 
-func _started_round_1():	
+func _started_round_1():
+	_goal_element.set_goal(_level.get_capture_points()[1])
 	_toggle_ui(true)
 	_tutorial_text.typing_text = "Welcome to the tutorial!"
 	

@@ -8,6 +8,7 @@ onready var _light_viewport = get_node("KinematicBody/LightViewport")
 onready var _overview_light = get_node("KinematicBody/TransformReset/OverviewLight")
 onready var _overview_target = get_node("KinematicBody/TransformReset/OverviewTarget")
 onready var _lerped_follow: LerpedFollow = get_node("KinematicBody/AsciiViewportContainer/Viewport/LerpedFollow")
+onready var _camera: Camera = get_node("KinematicBody/AsciiViewportContainer/Viewport/LerpedFollow/Camera")
 onready var _view_target = get_node("KinematicBody/ViewTarget")
 onready var _visibility_light = get_node("KinematicBody/VisibilityLight")
 onready var _button_overlay: ButtonOverlay = get_node("KinematicBody/ButtonOverlay")
@@ -310,3 +311,7 @@ func hit(perpetrator):
 # call hit of baseclass triggered by server
 func server_hit(perpetrator):
 	.hit(perpetrator)
+
+# TODO: this should probably not be in player.gd, but I don't really know where else to put it
+func get_camera():
+	return _camera
