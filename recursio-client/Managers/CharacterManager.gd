@@ -118,7 +118,9 @@ func _on_preparation_phase_started() -> void:
 	_toggle_visbility_lights(false)
 	_action_manager.clear_action_instances()
 	if not hide_player_button_overlay:
-		_player.show_preparation_hud(_round_manager.round_index)
+		_player.show_button_overlay()
+	
+	_player.show_preparation_hud(_round_manager.round_index)
 	
 	# Show player whole level
 	_player.move_camera_to_overview()

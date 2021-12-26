@@ -233,6 +233,9 @@ func hide_hud() -> void:
 
 func show_preparation_hud(round_index) -> void:
 	_hud.prep_phase_start(round_index)
+
+
+func show_button_overlay() -> void:
 	_button_overlay.show_buttons(["ready!", "swap"], ButtonOverlay.BUTTONS.DOWN | ButtonOverlay.BUTTONS.RIGHT, ButtonOverlay.BUTTONS.DOWN)
 
 
