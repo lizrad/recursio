@@ -40,7 +40,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="CenterContainer" type="CenterContainer" parent="."]
+[node name="BottomElement" type="CenterContainer" parent="."]
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -50,7 +50,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="PanelContainer" type="PanelContainer" parent="CenterContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="BottomElement"]
 margin_left = 703.0
 margin_top = 43.0
 margin_right = 1217.0
@@ -59,7 +59,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="TutorialText" type="RichTextLabel" parent="CenterContainer/PanelContainer"]
+[node name="TutorialText" type="RichTextLabel" parent="BottomElement/PanelContainer"]
 margin_left = 7.0
 margin_top = 7.0
 margin_right = 507.0
@@ -69,7 +69,7 @@ text = "Welcome to the tutorial!"
 scroll_active = false
 script = ExtResource( 4 )
 
-[node name="BottomElement" type="HBoxContainer" parent="CenterContainer"]
+[node name="ElementsList" type="HBoxContainer" parent="BottomElement"]
 margin_left = 496.0
 margin_top = 25.0
 margin_right = 1424.0
@@ -78,7 +78,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ControlTexture" type="TextureRect" parent="CenterContainer/BottomElement"]
+[node name="ControlTexture" type="TextureRect" parent="BottomElement/ElementsList"]
 margin_right = 150.0
 margin_bottom = 150.0
 rect_min_size = Vector2( 150, 150 )
@@ -91,7 +91,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Space" type="Control" parent="CenterContainer/BottomElement"]
+[node name="Space" type="Control" parent="BottomElement/ElementsList"]
 margin_left = 154.0
 margin_right = 174.0
 margin_bottom = 150.0
@@ -99,7 +99,7 @@ rect_min_size = Vector2( 20, 0 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="ControlText" type="Label" parent="CenterContainer/BottomElement"]
+[node name="ControlText" type="Label" parent="BottomElement/ElementsList"]
 margin_left = 178.0
 margin_right = 928.0
 margin_bottom = 150.0
