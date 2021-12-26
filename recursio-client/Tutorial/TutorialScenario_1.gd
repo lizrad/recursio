@@ -16,7 +16,8 @@ func _ready():
 	_character_manager._on_spawn_player(0, Vector3.ZERO, 0)
 	_character_manager.get_player().kb.visible = false
 	_character_manager.hide_player_button_overlay = true
-	_goal_element.init(_character_manager.get_player().get_camera())
+	_goal_element_1.init(_character_manager.get_player().get_camera())
+	_goal_element_2.init(_character_manager.get_player().get_camera())
 
 	# Shorten prep phase
 	_round_manager._preparation_phase_time = 3.0
@@ -31,26 +32,35 @@ func _started_round_1():
 	_toggle_ui(true)
 	_bottom_element.set_text("Welcome to the first tutorial!")
 	_bottom_element.set_control(TutorialUIBottomElement.Controls.None)
+	_bottom_element.show()
 	
 	yield(get_tree().create_timer(2), "timeout")
 	
 	_bottom_element.set_text("Capture both points to win!")
-	
+	_goal_element_1.set_goal(_level.get_capture_points()[1])
+	_goal_element_1.set_text("")
+	_goal_element_1.show()
+	_goal_element_2.set_goal(_level.get_capture_points()[0])
+	_goal_element_2.set_text("")
+	_goal_element_2.show()
 	yield(get_tree().create_timer(2), "timeout")
 	
-	_bottom_element.set_text("Move!")
-	_bottom_element.set_control(TutorialUIBottomElement.Controls.Move)
-	
+	_goal_element_2.hide()
+	_bottom_element.set_text("Start with this one!")
 	_character_manager.get_player().set_custom_view_target(_level.get_capture_points()[1])
-	_goal_element.set_goal(_level.get_capture_points()[1])
-	_goal_element.set_text("Capture!")
+	_goal_element_1.set_text("Capture!")
+	_goal_element_1.show()
 	
 	yield(get_tree().create_timer(2), "timeout")
 	
 	_character_manager.get_player().follow_camera()
 	
+	
 	_character_manager.get_player().kb.visible = true
 	_character_manager._round_manager._start_game()
+	yield(get_tree().create_timer(6), "timeout")
+	_bottom_element.set_text("Move!")
+	_bottom_element.set_control(TutorialUIBottomElement.Controls.Move)
 
 
 func _check_completed_round_1() -> bool:
@@ -58,6 +68,9 @@ func _check_completed_round_1() -> bool:
 
 
 func _completed_round_1() -> void:
+	_bottom_element.hide()
+	_goal_element_1.hide()
+	_goal_element_2.hide()
 	_level.get_capture_points()[1]._capture_progress = 1.0
 
 
@@ -67,12 +80,20 @@ func _started_round_2() -> void:
 	_character_manager._round_manager.round_index += 1
 	_character_manager._round_manager.switch_to_phase(RoundManager.Phases.PREPARATION)
 	print(_round_manager.round_index)
-	_bottom_element.set_text("Capture the other point.")
+	_bottom_element.set_text("Now get the other one.")
 	_bottom_element.set_control(TutorialUIBottomElement.Controls.None)
+	_bottom_element.show()
 	
 	_character_manager.get_player().set_custom_view_target(_level.get_capture_points()[0])
-	_goal_element.set_goal(_level.get_capture_points()[0])
-	_goal_element.set_text("Capture!")
+	_goal_element_1.set_goal(_level.get_capture_points()[0])
+	_goal_element_1.set_text("Capture!")
+	_goal_element_1.show()
+	
+	yield(get_tree().create_timer(2), "timeout")
+	
+	_goal_element_2.set_goal(_ghost_manager._player_ghosts[0].kb)
+	_goal_element_2.set_text("Your past")
+	_goal_element_2.show()
 	
 	yield(get_tree().create_timer(2), "timeout")
 	

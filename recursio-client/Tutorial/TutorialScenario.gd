@@ -16,7 +16,8 @@ var _round_starts := []
 var _round_conditions := []
 var _round_ends := []
 
-onready var _goal_element = get_node("TutorialUI/GoalElement")
+onready var _goal_element_1 = get_node("TutorialUI/GoalElement1")
+onready var _goal_element_2 = get_node("TutorialUI/GoalElement2")
 onready var _bottom_element = get_node("TutorialUI/BottomElement")
 onready var _tutorial_text: TypingTextLabel = get_node("TutorialUI/BottomElement/PanelContainer/TutorialText")
 onready var _character_manager: CharacterManager = get_node("TutorialWorld/CharacterManager")
@@ -31,6 +32,9 @@ var _level: Level
 func _ready():
 	_level = get_node("TutorialWorld/LevelH")
 	_game_manager.set_level(_level)
+	_bottom_element.hide()
+	_goal_element_1.hide()
+	_goal_element_2.hide()
 
 
 func _process(delta):

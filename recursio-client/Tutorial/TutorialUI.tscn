@@ -116,7 +116,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="GoalElement" type="HBoxContainer" parent="."]
+[node name="GoalElement1" type="HBoxContainer" parent="."]
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
@@ -131,7 +131,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ArrowTexture" type="TextureRect" parent="GoalElement"]
+[node name="ArrowTexture" type="TextureRect" parent="GoalElement1"]
 margin_right = 150.0
 margin_bottom = 150.0
 rect_min_size = Vector2( 150, 150 )
@@ -141,13 +141,58 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Space" type="Control" parent="GoalElement"]
+[node name="Space" type="Control" parent="GoalElement1"]
 margin_left = 154.0
 margin_right = 174.0
 margin_bottom = 150.0
 rect_min_size = Vector2( 20, 0 )
 
-[node name="GoalText" type="Label" parent="GoalElement"]
+[node name="GoalText" type="Label" parent="GoalElement1"]
+margin_left = 178.0
+margin_right = 437.0
+margin_bottom = 150.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 10.0
+theme = SubResource( 4 )
+text = "Capture"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="GoalElement2" type="HBoxContainer" parent="."]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -1920.0
+margin_top = -1080.0
+margin_right = -1483.0
+margin_bottom = -930.0
+rect_pivot_offset = Vector2( 0, 75 )
+script = ExtResource( 7 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ArrowTexture" type="TextureRect" parent="GoalElement2"]
+margin_right = 150.0
+margin_bottom = 150.0
+rect_min_size = Vector2( 150, 150 )
+texture = ExtResource( 6 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Space" type="Control" parent="GoalElement2"]
+margin_left = 154.0
+margin_right = 174.0
+margin_bottom = 150.0
+rect_min_size = Vector2( 20, 0 )
+
+[node name="GoalText" type="Label" parent="GoalElement2"]
 margin_left = 178.0
 margin_right = 437.0
 margin_bottom = 150.0
