@@ -1,0 +1,159 @@
+[gd_scene load_steps=12 format=2]
+
+[ext_resource path="res://UI/Default.tres" type="Theme" id=1]
+[ext_resource path="res://Resources/Fonts/FiraCode-Regular.ttf" type="DynamicFontData" id=2]
+[ext_resource path="res://UI/StyleBoxFlat.tres" type="StyleBox" id=3]
+[ext_resource path="res://Util/TypingTextLabel.gd" type="Script" id=4]
+[ext_resource path="res://icon.png" type="Texture" id=5]
+[ext_resource path="res://Tutorial/Arrow.png" type="Texture" id=6]
+[ext_resource path="res://Tutorial/GoalElement.gd" type="Script" id=7]
+
+[sub_resource type="DynamicFont" id=2]
+size = 40
+use_mipmaps = true
+use_filter = true
+font_data = ExtResource( 2 )
+
+[sub_resource type="Theme" id=1]
+default_font = SubResource( 2 )
+Button/styles/focus = ExtResource( 3 )
+LineEdit/styles/focus = ExtResource( 3 )
+TextEdit/styles/focus = ExtResource( 3 )
+
+[sub_resource type="DynamicFont" id=3]
+size = 60
+use_mipmaps = true
+use_filter = true
+font_data = ExtResource( 2 )
+
+[sub_resource type="Theme" id=4]
+default_font = SubResource( 3 )
+Button/styles/focus = ExtResource( 3 )
+LineEdit/styles/focus = ExtResource( 3 )
+TextEdit/styles/focus = ExtResource( 3 )
+
+[node name="TutorialUI" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = -236.0
+margin_bottom = -36.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PanelContainer" type="PanelContainer" parent="CenterContainer"]
+margin_left = 703.0
+margin_top = 43.0
+margin_right = 1217.0
+margin_bottom = 157.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TutorialText" type="RichTextLabel" parent="CenterContainer/PanelContainer"]
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 507.0
+margin_bottom = 107.0
+rect_min_size = Vector2( 500, 100 )
+text = "Welcome to the tutorial!"
+scroll_active = false
+script = ExtResource( 4 )
+
+[node name="BottomElement" type="HBoxContainer" parent="CenterContainer"]
+margin_left = 496.0
+margin_top = 25.0
+margin_right = 1424.0
+margin_bottom = 175.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ControlTexture" type="TextureRect" parent="CenterContainer/BottomElement"]
+margin_right = 150.0
+margin_bottom = 150.0
+rect_min_size = Vector2( 150, 150 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 2.0
+texture = ExtResource( 5 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Space" type="Control" parent="CenterContainer/BottomElement"]
+margin_left = 154.0
+margin_right = 174.0
+margin_bottom = 150.0
+rect_min_size = Vector2( 20, 0 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ControlText" type="Label" parent="CenterContainer/BottomElement"]
+margin_left = 178.0
+margin_right = 928.0
+margin_bottom = 150.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 10.0
+theme = SubResource( 1 )
+text = "Welcome to the first Tutorial!"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="GoalElement" type="HBoxContainer" parent="."]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -1920.0
+margin_top = -1080.0
+margin_right = -1483.0
+margin_bottom = -930.0
+rect_pivot_offset = Vector2( 0, 75 )
+script = ExtResource( 7 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ArrowTexture" type="TextureRect" parent="GoalElement"]
+margin_right = 150.0
+margin_bottom = 150.0
+rect_min_size = Vector2( 150, 150 )
+texture = ExtResource( 6 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Space" type="Control" parent="GoalElement"]
+margin_left = 154.0
+margin_right = 174.0
+margin_bottom = 150.0
+rect_min_size = Vector2( 20, 0 )
+
+[node name="GoalText" type="Label" parent="GoalElement"]
+margin_left = 178.0
+margin_right = 437.0
+margin_bottom = 150.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 10.0
+theme = SubResource( 4 )
+text = "Capture"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
