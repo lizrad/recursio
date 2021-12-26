@@ -16,6 +16,7 @@ var _round_starts := []
 var _round_conditions := []
 var _round_ends := []
 
+onready var _goal_element = get_node("TutorialUI/GoalElement")
 onready var _tutorial_text: TypingTextLabel = get_node("TutorialUI/CenterContainer/PanelContainer/TutorialText")
 onready var _character_manager: CharacterManager = get_node("TutorialWorld/CharacterManager")
 onready var _ghost_manager: ClientGhostManager = get_node("TutorialWorld/CharacterManager/GhostManager")
