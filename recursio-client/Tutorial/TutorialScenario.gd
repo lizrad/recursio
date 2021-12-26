@@ -17,6 +17,7 @@ var _round_conditions := []
 var _round_ends := []
 
 onready var _goal_element = get_node("TutorialUI/GoalElement")
+onready var _bottom_element = get_node("TutorialUI/BottomElement")
 onready var _tutorial_text: TypingTextLabel = get_node("TutorialUI/BottomElement/PanelContainer/TutorialText")
 onready var _character_manager: CharacterManager = get_node("TutorialWorld/CharacterManager")
 onready var _ghost_manager: ClientGhostManager = get_node("TutorialWorld/CharacterManager/GhostManager")
@@ -33,6 +34,7 @@ func _ready():
 
 
 func _process(delta):
+	# stop the timer from moving
 	if _character_manager._round_manager.get_current_phase() == RoundManager.Phases.GAME:
 		_character_manager._round_manager._phase_deadline += delta * 1000
 	

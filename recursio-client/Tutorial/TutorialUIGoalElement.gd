@@ -8,6 +8,9 @@ func init(camera: Camera):
 
 func set_goal(goal: Spatial):
 	_goal = goal
+	
+func set_text(text: String):
+	_goal_text.text = text
 
 func _process(_delta):
 	if _goal:

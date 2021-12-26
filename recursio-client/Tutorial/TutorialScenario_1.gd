@@ -28,26 +28,26 @@ func _ready():
 
 
 func _started_round_1():
-	_goal_element.set_goal(_level.get_capture_points()[1])
 	_toggle_ui(true)
-	_tutorial_text.typing_text = "Welcome to the tutorial!"
+	_bottom_element.set_text("Welcome to the first tutorial!")
+	_bottom_element.set_control(TutorialUIBottomElement.Controls.None)
 	
-	yield(_tutorial_text, "typing_completed")
 	yield(get_tree().create_timer(2), "timeout")
 	
-	_tutorial_text.typing_text = "The goal is to capture both points at once."
+	_bottom_element.set_text("Capture both points to win!")
 	
-	yield(_tutorial_text, "typing_completed")
 	yield(get_tree().create_timer(2), "timeout")
+	
+	_bottom_element.set_text("Move!")
+	_bottom_element.set_control(TutorialUIBottomElement.Controls.Move)
 	
 	_character_manager.get_player().set_custom_view_target(_level.get_capture_points()[1])
-	_tutorial_text.typing_text = "Try capturing this one!"
+	_goal_element.set_goal(_level.get_capture_points()[1])
+	_goal_element.set_text("Capture!")
 	
-	yield(_tutorial_text, "typing_completed")
 	yield(get_tree().create_timer(2), "timeout")
 	
 	_character_manager.get_player().follow_camera()
-	_toggle_ui(false)
 	
 	_character_manager.get_player().kb.visible = true
 	_character_manager._round_manager._start_game()
@@ -62,20 +62,23 @@ func _completed_round_1() -> void:
 
 
 func _started_round_2() -> void:	
-	_toggle_ui(true)
-	_tutorial_text.typing_text = "Nice!"
-	yield(_tutorial_text, "typing_completed")
 	yield(get_tree().create_timer(2), "timeout")
 	
 	_character_manager._round_manager.round_index += 1
 	_character_manager._round_manager.switch_to_phase(RoundManager.Phases.PREPARATION)
+	print(_round_manager.round_index)
+	_bottom_element.set_text("Capture the other point.")
+	_bottom_element.set_control(TutorialUIBottomElement.Controls.None)
 	
-	_tutorial_text.typing_text = "Now try capturing both points."
+	_character_manager.get_player().set_custom_view_target(_level.get_capture_points()[0])
+	_goal_element.set_goal(_level.get_capture_points()[0])
+	_goal_element.set_text("Capture!")
 	
-	yield(_tutorial_text, "typing_completed")
 	yield(get_tree().create_timer(2), "timeout")
 	
-	_tutorial_text.typing_text = "Your past self will help you!"
+	_bottom_element.set_text("Move!")
+	_bottom_element.set_control(TutorialUIBottomElement.Controls.Move)
+	_character_manager.get_player().follow_camera()
 
 
 func _check_completed_round_2() -> bool:
