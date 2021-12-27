@@ -1,9 +1,8 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://UI/Default.tres" type="Theme" id=1]
 [ext_resource path="res://Resources/Fonts/FiraCode-Regular.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://UI/StyleBoxFlat.tres" type="StyleBox" id=3]
-[ext_resource path="res://Util/TypingTextLabel.gd" type="Script" id=4]
 [ext_resource path="res://icon.png" type="Texture" id=5]
 [ext_resource path="res://Tutorial/Arrow.png" type="Texture" id=6]
 [ext_resource path="res://Tutorial/TutorialUIGoalElement.gd" type="Script" id=7]
@@ -52,26 +51,6 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="PanelContainer" type="PanelContainer" parent="BottomElement"]
-visible = false
-margin_left = 953.0
-margin_top = 93.0
-margin_right = 967.0
-margin_bottom = 107.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="TutorialText" type="RichTextLabel" parent="BottomElement/PanelContainer"]
-margin_left = 7.0
-margin_top = 7.0
-margin_right = 507.0
-margin_bottom = 107.0
-rect_min_size = Vector2( 500, 100 )
-text = "Welcome to the tutorial!"
-scroll_active = false
-script = ExtResource( 4 )
-
 [node name="ElementsList" type="HBoxContainer" parent="BottomElement"]
 margin_left = 496.0
 margin_top = 25.0
@@ -112,6 +91,21 @@ size_flags_stretch_ratio = 10.0
 theme = SubResource( 1 )
 text = "Welcome to the first Tutorial!"
 valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ContinueTexture" type="TextureRect" parent="BottomElement/ElementsList"]
+visible = false
+margin_left = 932.0
+margin_right = 1082.0
+margin_bottom = 150.0
+rect_min_size = Vector2( 150, 150 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 2.0
+texture = ExtResource( 5 )
+expand = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
