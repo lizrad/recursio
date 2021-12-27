@@ -27,7 +27,7 @@ func show_buttons(texts, buttons: int, close_on_activation: int = 0) -> void:
 	var i = 0
 	for button in BUTTONS.values():
 		if buttons & button:
-			$Buttons.get_node(str(button)).show()
+			#$Buttons.get_node(str(button)).show()
 			_triggers.append(_conf[button])
 			$Labels.get_node("Label" + str(button)).text = texts[i]
 			i += 1
