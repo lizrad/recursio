@@ -4,7 +4,7 @@ onready var _max_time = Constants.get_value("hitscan", "max_time")
 onready var _bullet_range = Constants.get_value("hitscan", "range")
 onready var _camera_shake_amount = Constants.get_value("vfx","shoot_camera_shake_amount")
 onready var _camera_shake_speed  = Constants.get_value("vfx","shoot_camera_shake_speed")
-onready var _camera_shake_duration  = 0.2
+onready var _camera_shake_duration  = Constants.get_value("vfx","shoot_camera_shake_duration")
 
 var _owning_player
 var _first_frame := true
