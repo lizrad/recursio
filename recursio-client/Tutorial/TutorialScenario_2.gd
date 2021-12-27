@@ -42,8 +42,7 @@ func _ready():
 
 func _started_round_1():
 	_bottom_element.show()
-	_bottom_element.set_text("Welcome to the second tutorial!")
-	_bottom_element.set_control(TutorialUIBottomElement.Controls.None)
+	_bottom_element.set_content("Welcome to the second tutorial!")
 	_player.kb.visible = true
 	_player.block_movement = true
 	_player.block_input = true
@@ -67,7 +66,7 @@ func _started_round_1():
 	yield(_round_manager, "game_phase_started")
 	_player.block_movement = true
 	
-	_bottom_element.set_text("Capture this point!")
+	_bottom_element.set_content("Capture this point!")
 	_goal_element_1.show()
 	_goal_element_1.set_goal(_level.get_capture_points()[1])
 	_goal_element_1.set_text("Capture!")
@@ -78,21 +77,18 @@ func _started_round_1():
 	yield(_player, "client_hit")
 	_player.block_input = false
 	
-	_bottom_element.set_text("You got hit!")
-	
+	_bottom_element.set_content("You got hit!")
 	yield(get_tree().create_timer(2), "timeout")
 	
 	_goal_element_1.set_goal(_enemy.get_body())
 	_goal_element_1.set_text("Kill!")
-	_bottom_element.set_text("Kill the enemy before they can kill you!")
+	_bottom_element.set_content("Kill the enemy before they can kill you!")
 	yield(get_tree().create_timer(2), "timeout")
 	
-	_bottom_element.set_text("Fire")
-	_bottom_element.set_control(TutorialUIBottomElement.Controls.Fire)
+	_bottom_element.set_content("Fire!", TutorialUIBottomElement.Controls.Fire)
 	
 	yield(_enemy, "client_hit")
-	_bottom_element.set_text("Now capture the point.")
-	_bottom_element.set_control(TutorialUIBottomElement.Controls.None)
+	_bottom_element.set_content("Now capture the point.")
 	_goal_element_1.set_goal(_level.get_capture_points()[1])
 	_goal_element_1.set_text("Capture!")
 
@@ -107,8 +103,8 @@ func _completed_round_1() -> void:
 
 func _started_round_2() -> void:
 	_goal_element_1.hide()
-	_bottom_element.set_text("Good job!")
-	_bottom_element.set_control(TutorialUIBottomElement.Controls.None)
+	
+	_bottom_element.set_content("Good job!")
 	yield(get_tree().create_timer(2), "timeout")
 	
 	_character_manager._round_manager.round_index += 1
@@ -120,7 +116,7 @@ func _started_round_2() -> void:
 	for ghost in _ghost_manager._ghosts:
 		var _error = ghost.connect("client_hit", self, "_on_ghost_hit", [ghost])
 	
-	_bottom_element.set_text("Now watch what happens with your ghost.")
+	_bottom_element.set_content("Now watch what happens with your ghost.")
 	
 	yield(get_tree().create_timer(_character_manager._round_manager._preparation_phase_time + 0.1), "timeout")
 	_player.move_camera_to_overview()
@@ -139,28 +135,27 @@ func _check_completed_round_2() -> bool:
 
 func _completed_round_2() -> void:
 	_goal_element_1.hide()
-	_bottom_element.set_text("Hitting your past timeline stops it completely.")
-	_bottom_element.set_control(TutorialUIBottomElement.Controls.None)
+	_bottom_element.set_content("Killing your past timeline stops it completely.")
 	
 
 func _started_round_3() -> void:
 	_ghost_manager._player_ghosts[0].disconnect("client_hit", self, "_on_ghost_hit")
 	var _error = _ghost_manager._player_ghosts[0].connect("client_hit", self, "_on_ghost_hit_soft_lock", [_ghost_manager._player_ghosts[0]])
 	yield(get_tree().create_timer(4), "timeout")
-	_bottom_element.set_text("Prevent your past death!")
-	_bottom_element.set_control(TutorialUIBottomElement.Controls.None)
+	
+	_bottom_element.set_content("Prevent your past death!")
 	_character_manager._round_manager.switch_to_phase(RoundManager.Phases.PREPARATION)
 	_player.kb.visible = true
 	_enemy.kb.visible = true
 	yield(_round_manager, "game_phase_started")
-	_bottom_element.set_text("Fire!")
-	_bottom_element.set_control(TutorialUIBottomElement.Controls.Fire)
+	
+	_bottom_element.set_content("Fire!", TutorialUIBottomElement.Controls.Fire)
 	_goal_element_1.show()
 	_goal_element_1.set_text("Place Wall!")
 	_goal_element_1.set_goal(_ghost_manager._enemy_ghosts[0].get_body())
 	yield(_ghost_manager._enemy_ghosts[0], "client_hit")
-	_bottom_element.set_text("Now get the other point!")
-	_bottom_element.set_control(TutorialUIBottomElement.Controls.None)
+	
+	_bottom_element.set_content("Now get the other point!")
 	_goal_element_1.set_text("Capture!")
 	_goal_element_1.set_goal(_level.get_capture_points()[0])
 	_goal_element_1.set_text("Capture")
@@ -173,8 +168,7 @@ func _check_completed_round_3() -> bool:
 
 
 func _completed_round_3() -> void:
-	_bottom_element.set_text("Good job!")
-	_bottom_element.set_control(TutorialUIBottomElement.Controls.None)
+	_bottom_element.set_content("Good job!")
 
 
 func _on_player_hit(perpetrator):
@@ -194,12 +188,10 @@ func _on_ghost_hit(perpetrator, ghost):
 func _on_ghost_hit_soft_lock(perpetrator, ghost: PlayerGhost):	
 	ghost.toggle_visibility_light(false)
 	ghost.server_hit(perpetrator)
-	_bottom_element.set_text("Oh no, your ghost died! Try again.")
-	_bottom_element.set_control(TutorialUIBottomElement.Controls.None)
+	_bottom_element.set_content("Oh no, your ghost died! Try again.")
 	yield(get_tree().create_timer(2), "timeout")
 	_character_manager._round_manager.switch_to_phase(RoundManager.Phases.PREPARATION)
 	
 	if perpetrator is Player:
-		_bottom_element.set_text("Melee")
-		_bottom_element.set_control(TutorialUIBottomElement.Controls.Melee)
+		_bottom_element.set_content("Melee!", TutorialUIBottomElement.Controls.Melee)
 		yield(get_tree().create_timer(2), "timeout")

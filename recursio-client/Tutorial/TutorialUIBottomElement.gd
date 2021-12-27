@@ -26,15 +26,11 @@ var _control_textures_dictionary: Dictionary = {
 }
 
 
-
-func set_control(control):
+func set_content(text, control = Controls.None):
 	assert(_control_textures_dictionary.has(control))
 	_control_texture.texture = _control_textures_dictionary[control]
 	if control == Controls.None:
 		_control_texture.hide()
 	else:
 		_control_texture.show()
-
-
-func set_text(text: String):
 	_control_text.text = text
