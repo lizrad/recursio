@@ -57,8 +57,8 @@ func _process(delta):
 		if _sub_conditions[_current_sub_condition].call_func():
 			_sub_conditions_ends[_current_sub_condition].call_func()
 			_current_sub_condition  += 1
-		if _sub_conditions.size() > _current_sub_condition:
-			_sub_conditions_starts[_current_sub_condition].call_func()
+			if _sub_conditions.size() > _current_sub_condition:
+				_sub_conditions_starts[_current_sub_condition].call_func()
 	
 	if not _round_conditions[_current_round].call_func():
 		return
