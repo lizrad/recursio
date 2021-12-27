@@ -36,16 +36,14 @@ func _ready():
 	
 	_character_manager.enemy_is_server_driven = false
 	_enemy.kb.visible = false
+	_goal_element_1.init(_player.get_camera())
+	_goal_element_2.init(_player.get_camera())
 
 
 func _started_round_1():
-	
-	yield(get_tree().create_timer(2), "timeout")
-	
-	_toggle_ui(true)
-	_tutorial_text.typing_text = "This scenario will teach you about enemies."
-	
-	
+	_bottom_element.show()
+	_bottom_element.set_text("Welcome to the second tutorial!")
+	_bottom_element.set_control(TutorialUIBottomElement.Controls.None)
 	_player.kb.visible = true
 	_player.block_movement = true
 	_player.block_input = true
@@ -66,48 +64,51 @@ func _started_round_1():
 	
 	_character_manager._round_manager._start_game()
 	_player.block_movement = true
-	yield(_tutorial_text, "typing_completed")
 	yield(_round_manager, "game_phase_started")
 	_player.block_movement = true
 	
-	_tutorial_text.typing_text = "Try to capture the lower capture point again."
-	yield(_tutorial_text, "typing_completed")
+	_bottom_element.set_text("Capture this point!")
+	_goal_element_1.show()
+	_goal_element_1.set_goal(_level.get_capture_points()[1])
+	_goal_element_1.set_text("Capture!")
 	_player.block_movement = false
 	yield(get_tree().create_timer(2), "timeout")
-	_toggle_ui(false)
 	
 	# Wait until player gets hit
 	yield(_player, "client_hit")
 	_player.block_input = false
 	
-	_toggle_ui(true)
-	_tutorial_text.typing_text = "When a player gets hit, he will be send back to the spawnpoint."
-	yield(_tutorial_text, "typing_completed")
+	_bottom_element.set_text("You got hit!")
+	
 	yield(get_tree().create_timer(2), "timeout")
 	
-	_tutorial_text.typing_text = "Try again! But this time, shoot the enemy before he can shoot you."
-	yield(_tutorial_text, "typing_completed")
-	yield(get_tree().create_timer(1), "timeout")
+	_goal_element_1.set_goal(_enemy.get_body())
+	_goal_element_1.set_text("Kill!")
+	_bottom_element.set_text("Kill the enemy before they can kill you!")
+	yield(get_tree().create_timer(2), "timeout")
 	
-	_tutorial_text.typing_text = "You can shoot with RT and dash with LT."
-	yield(_tutorial_text, "typing_completed")
-	yield(get_tree().create_timer(3), "timeout")
-	_toggle_ui(false)
+	_bottom_element.set_text("Fire")
+	_bottom_element.set_control(TutorialUIBottomElement.Controls.Fire)
+	
+	yield(_enemy, "client_hit")
+	_bottom_element.set_text("Now capture the point.")
+	_bottom_element.set_control(TutorialUIBottomElement.Controls.None)
+	_goal_element_1.set_goal(_level.get_capture_points()[1])
+	_goal_element_1.set_text("Capture!")
 
 
 func _check_completed_round_1() -> bool:
-	return _level.get_capture_points()[1]._capture_progress >= 0.9
+	return _level.get_capture_points()[1].capture_progress == 1.0
 
 
 func _completed_round_1() -> void:
-	_level.get_capture_points()[1]._capture_progress = 1.0
 	_enemyAI.stop()
 
 
 func _started_round_2() -> void:
-	_toggle_ui(true)
-	_tutorial_text.typing_text = "Good job!"
-	yield(_tutorial_text, "typing_completed")
+	_goal_element_1.hide()
+	_bottom_element.set_text("Good job!")
+	_bottom_element.set_control(TutorialUIBottomElement.Controls.None)
 	yield(get_tree().create_timer(2), "timeout")
 	
 	_character_manager._round_manager.round_index += 1
@@ -117,15 +118,19 @@ func _started_round_2() -> void:
 	_player.block_movement = true
 	
 	for ghost in _ghost_manager._ghosts:
-		ghost.connect("client_hit", self, "_on_ghost_hit", [ghost])
+		var _error = ghost.connect("client_hit", self, "_on_ghost_hit", [ghost])
 	
+	_bottom_element.set_text("Now watch what happens with your ghost.")
 	
-	_toggle_ui(true)
-	_tutorial_text.typing_text = "Now watch what happens with your ghost."
-	
-	_level.get_capture_points()[1]._capture_progress = 0.0
 	yield(get_tree().create_timer(_character_manager._round_manager._preparation_phase_time + 0.1), "timeout")
 	_player.move_camera_to_overview()
+	
+	yield(get_tree().create_timer(3), "timeout")
+	_goal_element_1.show()
+	_goal_element_1.set_goal(_ghost_manager._player_ghosts[0].get_body())
+	_goal_element_1.set_text("Repeats!")
+	yield(_ghost_manager._player_ghosts[0], "client_hit")
+	_goal_element_1.set_text("Died!")
 
 
 func _check_completed_round_2() -> bool:
@@ -133,42 +138,43 @@ func _check_completed_round_2() -> bool:
 
 
 func _completed_round_2() -> void:
+	_goal_element_1.hide()
+	_bottom_element.set_text("Hitting your past timeline stops it completely.")
+	_bottom_element.set_control(TutorialUIBottomElement.Controls.None)
 	
-	_toggle_ui(true)
-	_tutorial_text.typing_text = "After a ghost is hit, he is dead for the round and will not come back like the player."
-
 
 func _started_round_3() -> void:
-	_ghost_manager._player_ghosts[0].connect("client_hit", self, "_on_ghost_hit_soft_lock", [_ghost_manager._player_ghosts[0]])
-	
-	yield(_tutorial_text, "typing_completed")
-	yield(get_tree().create_timer(2), "timeout")
-	_toggle_ui(true)
-	_tutorial_text.typing_text = "This round, instead of shooting, you can place 2 walls. Ghosts that touch these walls die."
+	_ghost_manager._player_ghosts[0].disconnect("client_hit", self, "_on_ghost_hit")
+	var _error = _ghost_manager._player_ghosts[0].connect("client_hit", self, "_on_ghost_hit_soft_lock", [_ghost_manager._player_ghosts[0]])
+	yield(get_tree().create_timer(4), "timeout")
+	_bottom_element.set_text("Prevent your past death!")
+	_bottom_element.set_control(TutorialUIBottomElement.Controls.None)
 	_character_manager._round_manager.switch_to_phase(RoundManager.Phases.PREPARATION)
 	_player.kb.visible = true
 	_enemy.kb.visible = true
-	yield(_tutorial_text, "typing_completed")
-	yield(get_tree().create_timer(2), "timeout")	
+	yield(_round_manager, "game_phase_started")
+	_bottom_element.set_text("Fire!")
+	_bottom_element.set_control(TutorialUIBottomElement.Controls.Fire)
+	_goal_element_1.show()
+	_goal_element_1.set_text("Place Wall!")
+	_goal_element_1.set_goal(_ghost_manager._enemy_ghosts[0].get_body())
+	yield(_ghost_manager._enemy_ghosts[0], "client_hit")
+	_bottom_element.set_text("Now get the other point!")
+	_bottom_element.set_control(TutorialUIBottomElement.Controls.None)
+	_goal_element_1.set_text("Capture!")
+	_goal_element_1.set_goal(_level.get_capture_points()[0])
+	_goal_element_1.set_text("Capture")
 	
-	_tutorial_text.typing_text = "Try to capture both points by rescuing your ghost!"
-	yield(_tutorial_text, "typing_completed")
-	yield(get_tree().create_timer(2), "timeout")
-	
-	_toggle_ui(false)
 
 
 func _check_completed_round_3() -> bool:
-	return _level.get_capture_points()[1]._capture_progress >= 0.9 \
-			and _level.get_capture_points()[0]._capture_progress >= 0.9 \
+	return _level.get_capture_points()[1].capture_progress == 1.0 \
+			and _level.get_capture_points()[0].capture_progress == 1.0 \
 
 
 func _completed_round_3() -> void:
-	_level.get_capture_points()[0]._capture_progress = 1.0
-	_level.get_capture_points()[1]._capture_progress = 1.0
-	
-	_toggle_ui(true)
-	_tutorial_text.typing_text = "Good job!"
+	_bottom_element.set_text("Good job!")
+	_bottom_element.set_control(TutorialUIBottomElement.Controls.None)
 
 
 func _on_player_hit(perpetrator):
@@ -188,16 +194,12 @@ func _on_ghost_hit(perpetrator, ghost):
 func _on_ghost_hit_soft_lock(perpetrator, ghost: PlayerGhost):	
 	ghost.toggle_visibility_light(false)
 	ghost.server_hit(perpetrator)
-	_toggle_ui(true)
-	_tutorial_text.typing_text = "Oh no, your ghost died! Try again."
-	yield(_tutorial_text, "typing_completed")
+	_bottom_element.set_text("Oh no, your ghost died! Try again.")
+	_bottom_element.set_control(TutorialUIBottomElement.Controls.None)
 	yield(get_tree().create_timer(2), "timeout")
 	_character_manager._round_manager.switch_to_phase(RoundManager.Phases.PREPARATION)
 	
 	if perpetrator is Player:
-		_tutorial_text.typing_text = "You can also melee by pressing RS."
-		yield(_tutorial_text, "typing_completed")
+		_bottom_element.set_text("Melee")
+		_bottom_element.set_control(TutorialUIBottomElement.Controls.Melee)
 		yield(get_tree().create_timer(2), "timeout")
-	
-	_toggle_ui(false)
-	
