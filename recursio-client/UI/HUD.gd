@@ -30,8 +30,12 @@ enum {
 	Game_Phase
 }
 
+var _custom_max_time: Dictionary = {}
 var _max_time := -1.0
 
+
+func add_custom_max_time(phase: String, time: float):
+	_custom_max_time[phase] = time
 
 func pass_round_manager(round_manager):
 	_round_manager = round_manager
@@ -73,7 +77,11 @@ func _calculate_progress() -> float:
 
 func prep_phase_start(round_index) -> void:
 	_phase.text = "Preparation Phase " + str(round_index + 1)
-	_max_time = Constants.get_value("gameplay", "prep_phase_time")
+	var phase_string = "prep_phase_time"
+	if _custom_max_time.has(phase_string):
+		_max_time = _custom_max_time[phase_string]
+	else:
+		_max_time = Constants.get_value( "gameplay", phase_string)
 	_dash.visible = true
 	_ammo.visible = true
 
@@ -83,12 +91,20 @@ func prep_phase_start(round_index) -> void:
 
 func countdown_phase_start() -> void:
 	_phase.text = "Get ready!"
-	_max_time = Constants.get_value("gameplay", "countdown_phase_seconds")
+	var phase_string = "countdown_phase_seconds"
+	if _custom_max_time.has(phase_string):
+		_max_time = _custom_max_time[phase_string]
+	else:
+		_max_time = Constants.get_value("gameplay", phase_string)
 
 
 func game_phase_start(round_index) -> void:
 	_phase.text = "Game Phase " + str(round_index + 1)
-	_max_time = Constants.get_value("gameplay", "game_phase_time")
+	var phase_string = "game_phase_time"
+	if _custom_max_time.has(phase_string):
+		_max_time = _custom_max_time[phase_string]
+	else:
+		_max_time = Constants.get_value("gameplay", phase_string)
 
 
 func update_fire_action_ammo(amount: int) -> void:
