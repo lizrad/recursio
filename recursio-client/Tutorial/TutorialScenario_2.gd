@@ -68,8 +68,7 @@ func _started_round_1():
 	
 	_bottom_element.set_content("Capture this point!")
 	_goal_element_1.show()
-	_goal_element_1.set_goal(_level.get_capture_points()[1])
-	_goal_element_1.set_text("Capture!")
+	_goal_element_1.set_content("Capture!", _level.get_capture_points()[1])
 	_player.block_movement = false
 	yield(get_tree().create_timer(2), "timeout")
 	
@@ -80,8 +79,7 @@ func _started_round_1():
 	_bottom_element.set_content("You got hit!")
 	yield(get_tree().create_timer(2), "timeout")
 	
-	_goal_element_1.set_goal(_enemy.get_body())
-	_goal_element_1.set_text("Kill!")
+	_goal_element_1.set_content("Kill!", _enemy.get_body())
 	_bottom_element.set_content("Kill the enemy before they can kill you!")
 	yield(get_tree().create_timer(2), "timeout")
 	
@@ -89,8 +87,7 @@ func _started_round_1():
 	
 	yield(_enemy, "client_hit")
 	_bottom_element.set_content("Now capture the point.")
-	_goal_element_1.set_goal(_level.get_capture_points()[1])
-	_goal_element_1.set_text("Capture!")
+	_goal_element_1.set_content("Capture!", _level.get_capture_points()[1])
 
 
 func _check_completed_round_1() -> bool:
@@ -123,10 +120,9 @@ func _started_round_2() -> void:
 	
 	yield(get_tree().create_timer(3), "timeout")
 	_goal_element_1.show()
-	_goal_element_1.set_goal(_ghost_manager._player_ghosts[0].get_body())
-	_goal_element_1.set_text("Repeats!")
+	_goal_element_1.set_content("Repeats!", _ghost_manager._player_ghosts[0].get_body())
 	yield(_ghost_manager._player_ghosts[0], "client_hit")
-	_goal_element_1.set_text("Died!")
+	_goal_element_1.set_content("Dead!", _ghost_manager._player_ghosts[0].get_body())
 
 
 func _check_completed_round_2() -> bool:
@@ -151,14 +147,11 @@ func _started_round_3() -> void:
 	
 	_bottom_element.set_content("Fire!", TutorialUIBottomElement.Controls.Fire)
 	_goal_element_1.show()
-	_goal_element_1.set_text("Place Wall!")
-	_goal_element_1.set_goal(_ghost_manager._enemy_ghosts[0].get_body())
+	_goal_element_1.set_content("Place Wall!",_ghost_manager._enemy_ghosts[0].get_body())
 	yield(_ghost_manager._enemy_ghosts[0], "client_hit")
 	
 	_bottom_element.set_content("Now get the other point!")
-	_goal_element_1.set_text("Capture!")
-	_goal_element_1.set_goal(_level.get_capture_points()[0])
-	_goal_element_1.set_text("Capture")
+	_goal_element_1.set_content("Capture!",_level.get_capture_points()[0])
 	
 
 

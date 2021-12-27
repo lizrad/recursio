@@ -46,18 +46,16 @@ func _started_round_1():
 	yield(get_tree().create_timer(2), "timeout")
 	
 	_bottom_element.set_content("Capture both points to win!")
-	_goal_element_1.set_goal(_level.get_capture_points()[1])
-	_goal_element_1.set_text("")
+	_goal_element_1.set_content("", _level.get_capture_points()[1])
 	_goal_element_1.show()
-	_goal_element_2.set_goal(_level.get_capture_points()[0])
-	_goal_element_2.set_text("")
+	_goal_element_2.set_content("", _level.get_capture_points()[0])
 	_goal_element_2.show()
 	yield(get_tree().create_timer(2), "timeout")
 	
 	_goal_element_2.hide()
 	_bottom_element.set_content("Start with this one!")
 	_player.set_custom_view_target(_level.get_capture_points()[1])
-	_goal_element_1.set_text("Capture!")
+	_goal_element_1.set_content("Capture!", _level.get_capture_points()[1])
 	_goal_element_1.show()
 	
 	yield(get_tree().create_timer(2), "timeout")
@@ -96,14 +94,12 @@ func _started_round_2() -> void:
 	_bottom_element.show()
 	
 	_player.set_custom_view_target(_level.get_capture_points()[0])
-	_goal_element_1.set_goal(_level.get_capture_points()[0])
-	_goal_element_1.set_text("Capture!")
+	_goal_element_1.set_content("Capture!", _level.get_capture_points()[0])
 	_goal_element_1.show()
 	
 	yield(get_tree().create_timer(2), "timeout")
 	
-	_goal_element_2.set_goal(_ghost_manager._player_ghosts[0].kb)
-	_goal_element_2.set_text("Your past")
+	_goal_element_2.set_content("Your past", _ghost_manager._player_ghosts[0].kb)
 	_goal_element_2.show()
 	
 	yield(get_tree().create_timer(2), "timeout")
@@ -157,22 +153,19 @@ func _enemy_point_captured_condition() -> bool:
 			and _level.get_capture_points()[0].get_progress_team() == 1 
 func _enemy_point_captured_condition_end() -> void:
 	_bottom_element.set_content("The enemy captured a point!")
-	_goal_element_1.set_goal(_enemy.get_body())
-	_goal_element_1.set_text("Enemy")
+	_goal_element_1.set_content("Enemy", _enemy.get_body())
 	_player.set_custom_view_target(_enemy.get_body())
 
 func _enemy_killed_condition_start() -> void:
 	yield(get_tree().create_timer(2), "timeout")
-	_goal_element_1.set_goal(_enemy.get_body())
-	_goal_element_1.set_text("Kill!")
+	_goal_element_1.set_content("Kill!", _enemy.get_body())
 	_player.follow_camera()
 	_bottom_element.set_content("Melee!",TutorialUIBottomElement.Controls.Melee)
 func _enemy_killed_condition() -> bool:
 	return _enemy.currently_dying
 func _enemy_killed_condition_end() -> void:
 	_bottom_element.set_content("Capture the point!")
-	_goal_element_1.set_goal(_level.get_capture_points()[0])
-	_goal_element_1.set_text("Capture!")
+	_goal_element_1.set_content("Capture!", _level.get_capture_points()[0])
 	_enemyAI.stop()
 	_enemy.kb.visible = false
 
