@@ -1,7 +1,8 @@
 extends BaseCapturePoint
 class_name ClientCapturePoint
 
-
+#TODO: this is duplicated on the server capture point, maybe just implement this in the base class
+signal captured(team_id)
 onready var _progress = $Viewport/TextureProgress
 
 
@@ -21,6 +22,7 @@ var enemy_captured_color_name = "enemy_ghost_main"
 func apply_server_capture_gained(capturing_player_team_id: int)  -> void:
 	current_owning_team = capturing_player_team_id
 	capture_progress = 1
+	emit_signal("captured", current_owning_team)
 	_update_media()
 
 
@@ -73,6 +75,7 @@ func _lose_capture() -> void:
 func _gain_capture(new_owning_team: int) -> void:
 	if not server_driven:
 		._gain_capture(new_owning_team)
+		emit_signal("captured", new_owning_team)
 		_update_media()
 
 

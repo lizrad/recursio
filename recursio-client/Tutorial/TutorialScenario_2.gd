@@ -70,18 +70,23 @@ func _started_round_1():
 	_goal_element_1.show()
 	_goal_element_1.set_content("Capture!", _level.get_capture_points()[1])
 	_player.block_movement = false
-	yield(get_tree().create_timer(2), "timeout")
 	
 	# Wait until player gets hit
 	yield(_player, "client_hit")
-	_player.block_input = false
 	
+	_player.block_movement = true
 	_bottom_element.set_content("You got hit!")
+	
+	#TODO: wait for continue
 	yield(get_tree().create_timer(2), "timeout")
 	
 	_goal_element_1.set_content("Kill!", _enemy.get_body())
 	_bottom_element.set_content("Kill the enemy before they can kill you!")
+	
+	#TODO: wait for continue
 	yield(get_tree().create_timer(2), "timeout")
+	_player.block_movement = false
+	_player.block_input = false
 	
 	_bottom_element.set_content("Fire!", TutorialUIBottomElement.Controls.Fire)
 	
@@ -102,6 +107,7 @@ func _started_round_2() -> void:
 	_goal_element_1.hide()
 	
 	_bottom_element.set_content("Good job!")
+	#TODO: wait for continue
 	yield(get_tree().create_timer(2), "timeout")
 	
 	_character_manager._round_manager.round_index += 1
@@ -115,14 +121,12 @@ func _started_round_2() -> void:
 	
 	_bottom_element.set_content("Now watch what happens with your ghost.")
 	
-	yield(get_tree().create_timer(_character_manager._round_manager._preparation_phase_time + 0.1), "timeout")
+	yield(_round_manager, "game_phase_started")
 	_player.move_camera_to_overview()
-	
-	yield(get_tree().create_timer(3), "timeout")
 	_goal_element_1.show()
-	_goal_element_1.set_content("Repeats!", _ghost_manager._player_ghosts[0].get_body())
+	_goal_element_1.set_content("Repeats", _ghost_manager._player_ghosts[0].get_body())
 	yield(_ghost_manager._player_ghosts[0], "client_hit")
-	_goal_element_1.set_content("Dead!", _ghost_manager._player_ghosts[0].get_body())
+	_goal_element_1.set_content("Stays dead", _ghost_manager._player_ghosts[0].get_body())
 
 
 func _check_completed_round_2() -> bool:
@@ -137,6 +141,8 @@ func _completed_round_2() -> void:
 func _started_round_3() -> void:
 	_ghost_manager._player_ghosts[0].disconnect("client_hit", self, "_on_ghost_hit")
 	var _error = _ghost_manager._player_ghosts[0].connect("client_hit", self, "_on_ghost_hit_soft_lock", [_ghost_manager._player_ghosts[0]])
+	
+	#TODO: wait for continue
 	yield(get_tree().create_timer(4), "timeout")
 	
 	_bottom_element.set_content("Prevent your past death!")
@@ -148,7 +154,7 @@ func _started_round_3() -> void:
 	_bottom_element.set_content("Fire!", TutorialUIBottomElement.Controls.Fire)
 	_goal_element_1.show()
 	_goal_element_1.set_content("Place Wall!",_ghost_manager._enemy_ghosts[0].get_body())
-	yield(_ghost_manager._enemy_ghosts[0], "client_hit")
+	yield(_level.get_capture_points()[1], "captured")
 	
 	_bottom_element.set_content("Now get the other point!")
 	_goal_element_1.set_content("Capture!",_level.get_capture_points()[0])
@@ -182,9 +188,9 @@ func _on_ghost_hit_soft_lock(perpetrator, ghost: PlayerGhost):
 	ghost.toggle_visibility_light(false)
 	ghost.server_hit(perpetrator)
 	_bottom_element.set_content("Oh no, your ghost died! Try again.")
+	#TODO: wait for continue
 	yield(get_tree().create_timer(2), "timeout")
 	_character_manager._round_manager.switch_to_phase(RoundManager.Phases.PREPARATION)
 	
 	if perpetrator is Player:
 		_bottom_element.set_content("Melee!", TutorialUIBottomElement.Controls.Melee)
-		yield(get_tree().create_timer(2), "timeout")

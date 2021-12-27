@@ -43,6 +43,7 @@ func _started_round_1():
 	_bottom_element.show()
 	_bottom_element.set_content("Welcome to the first tutorial!")
 	
+	#TODO: wait for continue
 	yield(get_tree().create_timer(2), "timeout")
 	
 	_bottom_element.set_content("Capture both points to win!")
@@ -50,6 +51,8 @@ func _started_round_1():
 	_goal_element_1.show()
 	_goal_element_2.set_content("", _level.get_capture_points()[0])
 	_goal_element_2.show()
+	
+	#TODO: wait for continue
 	yield(get_tree().create_timer(2), "timeout")
 	
 	_goal_element_2.hide()
@@ -58,14 +61,12 @@ func _started_round_1():
 	_goal_element_1.set_content("Capture!", _level.get_capture_points()[1])
 	_goal_element_1.show()
 	
+	#TODO: wait for continue
 	yield(get_tree().create_timer(2), "timeout")
 	
 	_player.follow_camera()
-	
-	
 	_player.kb.visible = true
 	_character_manager._round_manager._start_game()
-	yield(get_tree().create_timer(6), "timeout")
 	add_sub_condition(funcref(self, "_move_sub_condition_start"), funcref(self, "_move_sub_condition"), funcref(self, "_move_sub_condition_end"))
 	add_sub_condition(funcref(self, "_dash_sub_condition_start"), funcref(self, "_dash_sub_condition"), funcref(self, "_dash_sub_condition_end"))
 
@@ -97,13 +98,9 @@ func _started_round_2() -> void:
 	_goal_element_1.set_content("Capture!", _level.get_capture_points()[0])
 	_goal_element_1.show()
 	
-	yield(get_tree().create_timer(2), "timeout")
-	
 	_goal_element_2.set_content("Your past", _ghost_manager._player_ghosts[0].kb)
 	_goal_element_2.show()
 	
-	yield(get_tree().create_timer(2), "timeout")
-	_player.follow_camera()
 	add_sub_condition(funcref(self, "_enemy_point_captured_condition_start"), funcref(self, "_enemy_point_captured_condition"), funcref(self, "_enemy_point_captured_condition_end"))
 	add_sub_condition(funcref(self, "_enemy_killed_condition_start"), funcref(self, "_enemy_killed_condition"), funcref(self, "_enemy_killed_condition_end"))
 	
@@ -157,6 +154,7 @@ func _enemy_point_captured_condition_end() -> void:
 	_player.set_custom_view_target(_enemy.get_body())
 
 func _enemy_killed_condition_start() -> void:
+	#TODO: wait for continue
 	yield(get_tree().create_timer(2), "timeout")
 	_goal_element_1.set_content("Kill!", _enemy.get_body())
 	_player.follow_camera()
