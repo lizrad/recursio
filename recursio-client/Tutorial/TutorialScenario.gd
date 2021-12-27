@@ -39,6 +39,8 @@ var _level: Level
 
 func _ready():
 	_level = get_node("TutorialWorld/LevelH")
+	for capture_point in _level.get_capture_points():
+		 capture_point.server_driven = false
 	_game_manager.set_level(_level)
 	_bottom_element.hide()
 	_goal_element_1.hide()

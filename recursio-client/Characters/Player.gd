@@ -194,6 +194,7 @@ func setup_capture_point_hud(number_of_capture_points) -> void:
 	for i in number_of_capture_points:
 		_hud.add_capture_point()
 	_hud.set_player_id(self.player_id)
+	_hud.set_player_team_id(self.team_id)
 
 
 func setup_spawn_point_hud(spawn_points) -> void:
@@ -221,7 +222,7 @@ func update_special_movement_ammo_hud(amount: int) -> void:
 func update_capture_point_hud(capture_points: Array) -> void:
 	var index: int = 0
 	for capture_point in capture_points:
-		_hud.update_capture_point(index, capture_point.get_capture_progress(), capture_point.get_capture_team())
+		_hud.update_capture_point(index, capture_point.get_capture_progress(), capture_point.get_progress_team())
 		index += 1
 
 

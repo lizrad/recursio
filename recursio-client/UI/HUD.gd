@@ -129,6 +129,12 @@ func set_player_id(player_id) -> void:
 		capture_point.set_player_id(player_id)
 
 
+# Sets the internal player teamid for the capture points
+func set_player_team_id(team_id) -> void:
+	for capture_point in _capture_points:
+		capture_point.set_player_team_id(team_id)
+
+
 # Adds a new capture point HUD item to the HUD
 func add_capture_point() -> void:
 	var capture_point: CapturePointHUD = _capture_point_scene.instance()

@@ -161,33 +161,21 @@ func _on_world_state_updated(world_state):
 ##############################
 
 func _on_capture_point_team_changed(team_id, capture_point):
-	var capturing_player_id = -1
-	if team_id != -1:
-		capturing_player_id = _team_id_to_player_id[team_id]
 	for player_id in _player_id_user_name_dic:
-		_server.send_capture_point_team_changed(player_id, capturing_player_id, capture_point)
+		_server.send_capture_point_team_changed(player_id, team_id, capture_point)
 
 
 func _on_capture_point_captured(team_id, capture_point):
-	var capturing_player_id = -1
-	if team_id != -1:
-		capturing_player_id = _team_id_to_player_id[team_id]
 	for player_id in _player_id_user_name_dic:
-		_server.send_capture_point_captured(player_id, capturing_player_id, capture_point)
+		_server.send_capture_point_captured(player_id, team_id, capture_point)
 
 func _on_capture_point_status_changed(capture_progress, team_id, capture_point):
-	var capturing_player_id = -1
-	if team_id != -1:
-		capturing_player_id = _team_id_to_player_id[team_id]
 	for player_id in _player_id_user_name_dic:
-		_server.send_capture_point_status_changed(player_id, capturing_player_id, capture_point, capture_progress)
+		_server.send_capture_point_status_changed(player_id, team_id, capture_point, capture_progress)
 
 func _on_capture_point_capture_lost(team_id, capture_point):
-	var capturing_player_id = -1
-	if team_id != -1:
-		capturing_player_id = _team_id_to_player_id[team_id]
 	for player_id in _player_id_user_name_dic:
-		_server.send_capture_point_capture_lost(player_id, capturing_player_id, capture_point)
+		_server.send_capture_point_capture_lost(player_id, team_id, capture_point)
 
 func _on_game_result(team_id):
 	var winning_player_id = _team_id_to_player_id[team_id]

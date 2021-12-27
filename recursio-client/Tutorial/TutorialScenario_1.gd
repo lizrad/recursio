@@ -73,14 +73,13 @@ func _started_round_1():
 
 
 func _check_completed_round_1() -> bool:
-	return _level.get_capture_points()[1].get_capture_progress() >= 0.9
+	return _level.get_capture_points()[1].get_capture_progress() == 1.0
 
 
 func _completed_round_1() -> void:
 	_bottom_element.hide()
 	_goal_element_1.hide()
 	_goal_element_2.hide()
-	_level.get_capture_points()[1]._capture_progress = 1.0
 
 
 func _started_round_2() -> void:	
@@ -127,13 +126,12 @@ func _started_round_2() -> void:
 
 
 func _check_completed_round_2() -> bool:
-	return _level.get_capture_points()[1].get_capture_progress() >= 0.9 \
-			and _level.get_capture_points()[0].get_capture_progress() >= 0.9 \
-			and _level.get_capture_points()[0].get_capture_team() == 0 \
+	return _level.get_capture_points()[0].get_capture_progress() == 1.0 \
+			and _level.get_capture_points()[1].get_capture_progress() >= 1.0 \
+			and _level.get_capture_points()[0].get_progress_team() == 0 \
+			and _level.get_capture_points()[1].get_progress_team() == 0 \
 
 func _completed_round_2() -> void:
-	_level.get_capture_points()[0]._capture_progress = 1.0
-	_level.get_capture_points()[1]._capture_progress = 1.0
 	
 	_toggle_ui(true)
 	_tutorial_text.typing_text = "Good job!"

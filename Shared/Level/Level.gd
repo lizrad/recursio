@@ -46,7 +46,6 @@ func _ready():
 func reset():
 	for capture_point in _capture_points:
 		capture_point.reset()
-
 	toggle_capture_points(false)
 	toggle_spawn_points(true)
 
@@ -88,3 +87,8 @@ func toggle_capture_points(toggle: bool) -> void:
 	Logger.info("Toggling capture points " + ("on" if toggle else "off") + ".", "capture_point")
 	for capture_point in _capture_points:
 		capture_point.active = toggle
+
+func set_team_id(team_id):
+	for capture_point in _capture_points:
+		if "player_team_id" in capture_point:
+			capture_point.player_team_id = team_id
