@@ -27,7 +27,6 @@ var _sub_conditions_ends := []
 onready var _goal_element_1 = get_node("TutorialUI/GoalElement1")
 onready var _goal_element_2 = get_node("TutorialUI/GoalElement2")
 onready var _bottom_element = get_node("TutorialUI/BottomElement")
-onready var _tutorial_text: TypingTextLabel = get_node("TutorialUI/BottomElement/PanelContainer/TutorialText")
 onready var _character_manager: CharacterManager = get_node("TutorialWorld/CharacterManager")
 onready var _ghost_manager: ClientGhostManager = get_node("TutorialWorld/CharacterManager/GhostManager")
 onready var _game_manager: GameManager = get_node("TutorialWorld/CharacterManager/GameManager")
@@ -117,10 +116,6 @@ func clear_sub_conditions():
 	_sub_conditions.clear()
 	_sub_conditions_ends.clear()
 	_current_sub_condition = 0
-
-func _toggle_ui(show: bool) -> void:
-	if _tutorial_text.typing_completed:
-		$TutorialUI.visible = show if show_ui else false
 
 
 func _completed() -> void:
