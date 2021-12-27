@@ -39,7 +39,6 @@ func _ready():
 
 
 func _started_round_1():
-	_toggle_ui(true)
 	_bottom_element.set_text("Welcome to the first tutorial!")
 	_bottom_element.set_control(TutorialUIBottomElement.Controls.None)
 	_bottom_element.show()
@@ -122,7 +121,6 @@ func _check_completed_round_2() -> bool:
 			and _level.get_capture_points()[1].get_progress_team() == 0 \
 
 func _completed_round_2() -> void:
-	_toggle_ui(true)
 	_bottom_element.set_text("Good job!")
 	_bottom_element.set_control(TutorialUIBottomElement.Controls.None)
 
