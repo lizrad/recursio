@@ -22,6 +22,9 @@ func _ready() -> void:
 
 
 func _input(_event: InputEvent) -> void:
+	if not get_parent().get_parent().visible:
+		return
+	
 	if Input.is_action_just_pressed("ui_page_up"):
 		var tab_number = min(get_tab_count()-1, current_tab + 1)
 		current_tab = tab_number

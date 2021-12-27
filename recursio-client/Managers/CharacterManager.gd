@@ -54,6 +54,8 @@ func _ready():
 	_error = _round_manager.connect("game_phase_stopped", _ghost_manager, "on_game_phase_stopped") 
 	####################################################
 	
+	
+	
 	_error = Server.connect("world_state_received", self, "_on_world_state_received") 
 	_error = Server.connect("player_hit", self, "_on_player_hit") 
 
@@ -62,7 +64,6 @@ func _ready():
 	_error = Server.connect("capture_point_captured", self, "_on_capture_point_captured") 
 	_error = Server.connect("capture_point_capture_lost", self, "_on_capture_point_capture_lost")
 	
-	_error = Server.connect("game_result", self, "_on_game_result")
 
 	_player_rpc_id = get_tree().get_network_unique_id()
 	set_physics_process(false)
@@ -82,6 +83,12 @@ func set_level(level: Level):
 
 func get_player_id() -> int:
 	return _player_rpc_id
+
+
+func toggle_player_input(disabled: bool) -> void:
+	_player.block_input = disabled
+	_player.block_movement = disabled
+
 
 func _on_game_start_received(start_time):
 	_round_manager.future_start_game(start_time)
@@ -109,9 +116,7 @@ func _on_preparation_phase_started() -> void:
 	_enemy.toggle_animation(false)
 
 	_toggle_visbility_lights(false)
-	_game_manager.reset()
 	_action_manager.clear_action_instances()
-	_game_manager.hide_game_result_screen()
 	if not hide_player_button_overlay:
 		_player.show_preparation_hud(_round_manager.round_index)
 	
@@ -126,9 +131,8 @@ func _on_preparation_phase_started() -> void:
 	_enemy.round_index = _round_manager.round_index
 	_enemy.spawn_point = _game_manager.get_spawn_point(_enemy.team_id, _enemy.timeline_index).global_transform.origin
 	_enemy.move_to_spawn_point()
-	
-	
 	_visibility_checker.reset()
+	_game_manager.reset_level()
 
 func _on_countdown_phase_started() -> void:
 	_game_manager.toggle_spawn_points(false)
@@ -136,7 +140,6 @@ func _on_countdown_phase_started() -> void:
 	_enemy.toggle_animation(true)
 	_player.follow_camera()
 	_player.show_countdown_hud()
-	_game_manager.show_countdown_screen()
 	
 
 func _on_game_phase_started() -> void:
@@ -146,7 +149,6 @@ func _on_game_phase_started() -> void:
 	_enemy.block_movement = false
 	_player.set_overview_light_enabled(false)
 	_toggle_visbility_lights(true)
-	_game_manager.hide_countdown_screen()
 	_player.show_game_hud(_round_manager.round_index)
 	_game_manager.toggle_capture_points(true)
 
@@ -154,11 +156,7 @@ func _on_game_phase_stopped() -> void:
 	_game_manager.toggle_capture_points(false)
 
 
-func _on_game_result(winning_player_index) -> void:
-	if winning_player_index == _player_rpc_id:
-		_game_manager.show_win()
-	else:
-		_game_manager.show_loss()
+
 
 func _on_player_timeline_changed(timeline_index) -> void:
 	_player.spawn_point = _game_manager.get_spawn_point(_player.team_id, timeline_index).global_transform.origin
@@ -207,7 +205,6 @@ func _on_spawn_player(player_id, spawn_point, team_id):
 	_player.player_id = player_id
 	_player.set_name(str(player_id))
 	_player.toggle_animation(false)
-	_game_manager.set_team_id(team_id)
 	# Apply visibility mask to all entities which have been here before the player
 	_apply_visibility_always(_player)
 	if _enemy: 
@@ -220,6 +217,7 @@ func _on_spawn_player(player_id, spawn_point, team_id):
 	# Initialize spawn points for current level
 	_player.setup_spawn_point_hud(_game_manager.get_spawn_points(team_id))
 	
+	_game_manager.set_player(_player)
 	_error = _player.connect("timeline_index_changed", self, "_on_player_timeline_changed") 
 
 	_error = Server.connect("wall_spawn", _player, "_on_wall_spawn_received") 
@@ -233,6 +231,7 @@ func _on_spawn_enemy(enemy_id, spawn_point, team_id):
 	_enemy.set_name(str(enemy_id))
 	_enemy.toggle_animation(false)
 	_apply_visibility_mask(_enemy)
+	_game_manager.set_enemy(_enemy)
 	var _error = _enemy.connect("timeline_index_changed", self, "_on_enemy_timeline_changed") 
 
 
@@ -359,3 +358,4 @@ func _update_enemy(delta) -> void:
 
 	_enemy.trigger_actions(_enemy.last_triggers)
 	_enemy.last_triggers = 0
+

@@ -1,0 +1,98 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://UI/Menus/StatsUI.gd" type="Script" id=1]
+
+[sub_resource type="StyleBoxFlat" id=1]
+
+[sub_resource type="StyleBoxFlat" id=2]
+
+[node name="StatsUI" type="VBoxContainer"]
+margin_top = 30.0
+margin_right = 636.0
+margin_bottom = 116.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Descriptions" type="HBoxContainer" parent="."]
+margin_right = 636.0
+margin_bottom = 14.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="LeftDescription" type="Label" parent="Descriptions"]
+margin_right = 104.0
+margin_bottom = 14.0
+size_flags_horizontal = 3
+text = "You"
+align = 1
+valign = 1
+
+[node name="Space" type="Control" parent="Descriptions"]
+margin_left = 108.0
+margin_right = 527.0
+margin_bottom = 14.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 4.0
+
+[node name="Title" type="Label" parent="Descriptions/Space"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+text = "Title"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RightDescription" type="Label" parent="Descriptions"]
+margin_left = 531.0
+margin_right = 636.0
+margin_bottom = 14.0
+size_flags_horizontal = 3
+text = "Opponent"
+align = 1
+valign = 1
+
+[node name="Values" type="HBoxContainer" parent="."]
+margin_top = 18.0
+margin_right = 636.0
+margin_bottom = 32.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="LeftValue" type="Label" parent="Values"]
+margin_right = 104.0
+margin_bottom = 14.0
+size_flags_horizontal = 3
+text = "3"
+align = 1
+valign = 1
+
+[node name="Visualisation" type="ProgressBar" parent="Values"]
+margin_left = 108.0
+margin_right = 527.0
+margin_bottom = 14.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 4.0
+custom_styles/fg = SubResource( 1 )
+custom_styles/bg = SubResource( 2 )
+value = 30.0
+percent_visible = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RightValue" type="Label" parent="Values"]
+margin_left = 531.0
+margin_right = 636.0
+margin_bottom = 14.0
+size_flags_horizontal = 3
+text = "7"
+align = 1
+valign = 1

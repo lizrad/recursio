@@ -25,6 +25,8 @@ onready var _btn_exit = get_node("CenterContainer/MainMenu/Btn_Exit")
 onready var _game_room_search: GameRoomSearch = get_node("CenterContainer/GameRoomSearch")
 onready var _game_room_creation: GameRoomCreation = get_node("CenterContainer/GameRoomCreation")
 onready var _game_room_lobby: GameRoomLobby = get_node("CenterContainer/GameRoomLobby")
+onready var _connection_lost_container = get_node("CenterContainer/ConnectionLostContainer")
+onready var _settings: Control = get_node("CenterContainer/SettingsContainer")
 
 onready var _tutorial: Tutorial = get_node("Tutorial")
 
@@ -32,16 +34,20 @@ onready var _debug_room = Constants.get_value("debug", "debug_room_enabled")
 
 onready var _random_names = TextFileToArray.load_text_file("res://Resources/Data/animal_names.txt")
 
-onready var _stats_hud = preload("res://Util/StatsHUD.tscn")
+onready var _stats_hud = get_node("../StatsHUD")
+onready var _gameplay_menu = get_node("../GameplayMenu")
 
 var _player_user_name: String
 var _player_rpc_id: int
 
+var _in_game: bool = false
 var _in_game_room: bool = false
 
 var _world
 
+
 func _ready():
+	
 	var _error = _btn_play_tutorial.connect("pressed", self, "_on_play_tutorial")
 	_error = _btn_play_online.connect("pressed", self, "_on_play_online")
 	_error = _btn_cancel_online.connect("pressed", self, "_on_cancel_online")
@@ -60,6 +66,9 @@ func _ready():
 
 	_error = _game_room_lobby.connect("btn_leave_pressed", self, "_on_game_room_leave_pressed")
 	
+	_error = _gameplay_menu.connect("resume_pressed", self, "_on_gameplay_menu_resume_pressed")
+	_error = _gameplay_menu.connect("leave_pressed", self, "_on_gameplay_menu_leave_pressed")
+	
 	_error = Server.connect("server_disconnected", self, "_on_server_disconnected")
 	_error = Server.connect("connection_failed", self, "_on_connection_failed")
 	
@@ -70,28 +79,55 @@ func _ready():
 	_error = Server.connect("game_room_ready_received" , self, "_on_game_room_ready_received")
 	_error = Server.connect("game_room_not_ready_received" , self, "_on_game_room_not_ready_received")
 	_error = Server.connect("load_level_received", self, "_on_load_level_received")
-	_error = Server.connect("game_result", self, "_on_game_result_received")
 	
+	_error = _tutorial.connect("scenario_started", self, "_on_tutorial_scenario_started")
 	_error = _tutorial.connect("scenario_completed", self, "_on_tutorial_scenario_completed")
 	_error = _tutorial.connect("btn_back_pressed", self, "_on_tutorial_back_pressed")
+	
+	_error = _settings.connect("visibility_changed", self, "_on_room_search_visibility_changed")
 
 	_btn_play_tutorial.grab_focus()
 
 	randomize()
 	var random_index = randi() % _random_names.size()
 	_player_user_name = _random_names[random_index]
-
-	var new_scene = _stats_hud.instance()
-	new_scene.visible = UserSettings.get_setting("developer", "debug")
-	# code execution happens in first scene init so hud creation musst be deferred
-	get_tree().get_root().call_deferred("add_child", new_scene)
+	
+	_stats_hud.visible = UserSettings.get_setting("developer", "debug")
 
 
-func _return_to_game_room_lobby():
+func _process(_delta):
+	if not _in_game:
+		return
+	
+	if Input.is_action_just_pressed("gameplay_menu"):
+		_gameplay_menu.visible = !_gameplay_menu.visible
+		_toggle_player_input(_gameplay_menu.visible)
+
+
+func return_to_game_room_lobby():
+	_in_game = false
 	_world.queue_free()
 	_world = null
 	_game_room_lobby.reset_players()
 	$CenterContainer.show()
+
+
+func return_to_title():
+	if _world != null:
+		_world.queue_free()
+		_world = null
+	# Reset all sub screens
+	_game_room_creation.hide()
+	_game_room_lobby.hide()
+	_game_room_lobby.reset()
+	_game_room_search.hide()
+	_game_room_search.reset()
+	_in_game_room = false
+	# Show start screen
+	_start_menu_buttons.show()
+	$CenterContainer.show()
+	_toggle_enabled_start_menu_buttons(true)
+	_btn_play_tutorial.grab_focus()
 
 
 func _toggle_enabled_start_menu_buttons(enabled: bool):
@@ -117,21 +153,11 @@ func _on_connection_successful():
 
 
 func _on_server_disconnected():
-	if _world != null:
-		_world.queue_free()
-		_world = null
-	# Reset all sub screens
-	_game_room_creation.hide()
-	_game_room_lobby.hide()
-	_game_room_lobby.reset()
-	_game_room_search.hide()
-	_game_room_search.reset()
-	_in_game_room = false
-	# Show start screen
-	_start_menu_buttons.show()
-	$CenterContainer.show()
-	_toggle_enabled_start_menu_buttons(true)
-	_btn_play_tutorial.grab_focus()
+	if _world:
+		return
+	_connection_lost_container.show()
+	return_to_title()
+
 
 
 func _on_connection_failed():
@@ -154,7 +180,8 @@ func _on_play_online() -> void:
 func _on_cancel_online() -> void:
 	_btn_cancel_online.hide()
 	_toggle_enabled_start_menu_buttons(true)
-	Server.disconnect_from_server()
+	Server.disconnect_from_server(true)
+	return_to_title()
 
 
 func _on_play_local() -> void:
@@ -166,12 +193,12 @@ func _on_play_local() -> void:
 func _on_cancel_local() -> void:
 	_btn_cancel_local.hide()
 	_toggle_enabled_start_menu_buttons(true)
-	Server.disconnect_from_server()
+	Server.disconnect_from_server(true)
+	return_to_title()
 
 
 func _on_open_settings() -> void:	
-	$CenterContainer/SettingsContainer.show()
-	var _error = $CenterContainer/SettingsContainer.connect("visibility_changed", self, "_on_room_search_visibility_changed")
+	_settings.show()
 
 
 func _on_exit() -> void:
@@ -191,7 +218,8 @@ func _on_creation_create_game_room_pressed(game_room_name) -> void:
 
 func _on_search_back_pressed() -> void:
 	_start_menu_buttons.show()
-	Server.disconnect_from_server()
+	Server.disconnect_from_server(true)
+	return_to_title()
 
 
 func _on_creation_back_pressed() -> void:
@@ -227,10 +255,6 @@ func _on_game_rooms_received(game_room_dic) -> void:
 func _on_game_room_joined(player_id_name_dic, game_room_id):
 	_game_room_lobby.set_players(player_id_name_dic, _player_rpc_id)
 	
-	if _world != null:
-		_return_to_game_room_lobby()
-		return
-	
 	if _in_game_room:
 		return
 
@@ -255,6 +279,7 @@ func _on_game_room_not_ready_received(player_id):
 
 
 func _on_load_level_received():
+	_in_game = true
 	$CenterContainer.hide()
 	_world = world_scene.instance()
 	var level = level_scene.instance()
@@ -266,19 +291,46 @@ func _on_load_level_received():
 	_world.level_set_up_done()
 
 
-func _on_game_result_received(_winning_player_id):
-	yield(get_tree().create_timer(3), "timeout")
-	_return_to_game_room_lobby()
+func _on_tutorial_scenario_started() -> void:
+	_in_game = true
 
 
 func _on_tutorial_scenario_completed() -> void:
+	_in_game = false
 	_tutorial.show()
 
 
-func _on_tutorial_back_pressed() ->void:
+func _on_tutorial_back_pressed() -> void:
 	_tutorial.hide()
 	_start_menu_buttons.show()
 	_btn_play_tutorial.grab_focus()
+
+
+func _on_gameplay_menu_resume_pressed() -> void:
+	_toggle_player_input(false)
+
+
+func _on_gameplay_menu_leave_pressed() -> void:
+	if not _in_game:
+		return
+	
+	if _world != null:
+		return_to_game_room_lobby()
+	else:
+		assert(_tutorial._scenario != null)
+		_tutorial.stop_scenario()
+	
+	_in_game = false
+
+
+func _toggle_player_input(disabled: bool) -> void:
+	if not _in_game:
+		return
+	
+	if _world != null:
+		_world.toggle_player_input(disabled)
+	else:
+		_tutorial.toggle_player_input(disabled)
 
 
 func _on_Panel_gui_input(event: InputEvent) -> void:
