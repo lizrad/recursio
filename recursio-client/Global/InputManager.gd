@@ -1,6 +1,23 @@
 extends Node
 
 
+signal controller_changed(controller)
+
+# joypad type or "keyboard"
+var _current_controller := ""
+
+
+func _ready() -> void:
+	if not Input.is_connected("joy_connection_changed", self, "_on_joy_connection_changed"):
+		var _error = Input.connect("joy_connection_changed", self, "_on_joy_connection_changed")
+
+	_update_controller_buttons()
+
+
+func get_current_controller() -> String:
+	return _current_controller
+
+
 # All input frames for sending to the server
 # Consists of 15 
 var _input_data: InputData = InputData.new()
@@ -41,4 +58,30 @@ func send_player_input_data_to_server() -> void:
 		Server.send_player_input_data(_input_data)
 
 
+func _on_joy_connection_changed(_device_id, _connected) -> void:
+	_update_controller_buttons()
 
+
+func _update_controller_buttons() -> void:
+	var controller = Input.get_connected_joypads()
+	Logger.info("connected controllers: " + str(controller.size()), "InputManager")
+	for device_id in controller:
+		Logger.info(Input.get_joy_name(device_id), "InputManager")
+
+	# no controller: "keyboard"
+	if controller.size() < 1:
+		_current_controller = "keyboard"
+	else:
+		# take the first connected controller
+		var name = Input.get_joy_name(controller[0])
+		# Xbox Series Controller or XInput Gamepad for older: "xbox"
+		if name.count("Xbox") > 0 or name.begins_with("XInput"):
+			_current_controller = "xbox"
+		# PS???
+		#	"ps"
+		# switch???
+		# 	"switch"
+		else:
+			_current_controller = "generic"
+
+	emit_signal("controller_changed", _current_controller)

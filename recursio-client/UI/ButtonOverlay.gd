@@ -20,6 +20,21 @@ var _conf = {
 var _triggers := []
 var _close := 0
 
+
+func _ready() -> void:
+	var _error = InputManager.connect("controller_changed", self, "_on_controller_changed")
+	_on_controller_changed(InputManager.get_current_controller())
+
+
+func _on_controller_changed(controller) -> void:
+	#for sprite in $Schemes.get_children():
+	for sprite in get_tree().get_nodes_in_group("controller"):
+		sprite.hide()
+
+	if has_node(controller):
+		get_node(controller).visible = true
+
+
 # displays a dialog with given marked buttons as bitmask
 # supports array for text: are added in enum order
 # specify buttons which close the dialog

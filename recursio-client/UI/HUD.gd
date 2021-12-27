@@ -36,15 +36,11 @@ enum {
 var _max_time := -1.0
 
 # joypad name or "keyboard"
-var _controller := ""
+#var _controller := ""
 
 
 func pass_round_manager(round_manager):
 	_round_manager = round_manager
-
-
-func ready() -> void:
-	_ready()
 
 
 func _ready() -> void:
@@ -52,41 +48,14 @@ func _ready() -> void:
 	if not $Tween.is_connected("tween_all_completed", self, "_on_tween_completed"):
 		var _error = $Tween.connect("tween_all_completed", self, "_on_tween_completed")
 
-	if not Input.is_connected("joy_connection_changed", self, "_on_joy_connection_changed"):
-		var _error = Input.connect("joy_connection_changed", self, "_on_joy_connection_changed")
-
-	_update_controller_buttons()
-
+	var _error = InputManager.connect("controller_changed", self, "_on_controller_changed")
+	_on_controller_changed(InputManager.get_current_controller())
 	reset()
 
 
-func _update_controller_buttons() -> void:
-
-	var controller = Input.get_connected_joypads()
-	print("connected controllers: " + str(controller.size()))
-	for device_id in controller:
-		print(Input.get_joy_name(device_id))
-
-	if controller.size() < 1:
-		_controller = "keyboard"
-	else:
-		# take the first connected controller
-		var name = Input.get_joy_name(controller[0])
-		if name.count("Xbox") > 0 or name.begins_with("XInput"):
-			_controller = "xbox"
-		# Xbox Series Controller or XInput Gamepad for older
-		#		"xbox"
-		# PS???
-		#		"ps"
-		# switch???
-		# 		"switch"
-		# generic
-		#		"generic"
-		# no controller
-		#		"keyboard"
-
-	_controller_shoot.texture = load("res://Resources/Icons/" + _controller + "/shoot.png")
-	_controller_dash.texture = load("res://Resources/Icons/" + _controller + "/dash.png")
+func _on_controller_changed(controller) -> void:
+	_controller_shoot.texture = load("res://Resources/Icons/" + controller + "/shoot.png")
+	_controller_dash.texture = load("res://Resources/Icons/" + controller + "/dash.png")
 
 
 func reset():
@@ -242,11 +211,3 @@ func animate_weapon_selection(pos: Vector2) -> void:
 func _on_tween_completed() -> void:
 	if not $AnimationPlayer.is_playing():
 		$AnimationPlayer.play("select_weapon")
-
-
-func _on_joy_connection_changed(_device_id, _connected) -> void:
-	_update_controller_buttons()
-	#if connected:
-	#	print(Input.get_joy_name(device_id))
-	#else:
-	#	print("Keyboard")

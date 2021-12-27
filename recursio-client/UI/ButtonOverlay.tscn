@@ -18,18 +18,19 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ps" type="Sprite" parent="."]
+[node name="ps" type="Sprite" parent="." groups=["controller"]]
 visible = false
 position = Vector2( 102, 115 )
 scale = Vector2( 0.5, 0.5 )
 texture = ExtResource( 6 )
 
-[node name="keyboard" type="Sprite" parent="."]
+[node name="keyboard" type="Sprite" parent="." groups=["controller"]]
+visible = false
 position = Vector2( 102, 115 )
 scale = Vector2( 0.5, 0.5 )
 texture = ExtResource( 7 )
 
-[node name="xbox" type="Sprite" parent="."]
+[node name="xbox" type="Sprite" parent="." groups=["controller"]]
 visible = false
 position = Vector2( 134, 114 )
 scale = Vector2( 0.5, 0.5 )
