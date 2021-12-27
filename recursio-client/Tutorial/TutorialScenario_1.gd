@@ -41,28 +41,25 @@ func _ready():
 func _started_round_1():
 	
 	_bottom_element.show()
-	_bottom_element.set_content("Welcome to the first tutorial!")
+	_bottom_element.set_content("Welcome to the first tutorial!", TutorialUIBottomElement.Controls.None, true)
 	
-	#TODO: wait for continue
-	yield(get_tree().create_timer(2), "timeout")
+	yield(_bottom_element, "continue_pressed")
 	
-	_bottom_element.set_content("Capture both points to win!")
+	_bottom_element.set_content("Capture both points to win!", TutorialUIBottomElement.Controls.None, true)
 	_goal_element_1.set_content("", _level.get_capture_points()[1])
 	_goal_element_1.show()
 	_goal_element_2.set_content("", _level.get_capture_points()[0])
 	_goal_element_2.show()
 	
-	#TODO: wait for continue
-	yield(get_tree().create_timer(2), "timeout")
+	yield(_bottom_element, "continue_pressed")
 	
 	_goal_element_2.hide()
-	_bottom_element.set_content("Start with this one!")
+	_bottom_element.set_content("Start with this one!", TutorialUIBottomElement.Controls.None, true)
 	_player.set_custom_view_target(_level.get_capture_points()[1])
 	_goal_element_1.set_content("Capture!", _level.get_capture_points()[1])
 	_goal_element_1.show()
 	
-	#TODO: wait for continue
-	yield(get_tree().create_timer(2), "timeout")
+	yield(_bottom_element, "continue_pressed")
 	
 	_player.follow_camera()
 	_player.kb.visible = true
@@ -113,7 +110,7 @@ func _check_completed_round_2() -> bool:
 			and _level.get_capture_points()[1].get_progress_team() == 0 \
 
 func _completed_round_2() -> void:
-	_bottom_element.set_content("Good job!")
+	pass
 
 
 func _move_sub_condition_start() -> void:
@@ -149,15 +146,12 @@ func _enemy_point_captured_condition() -> bool:
 	return _level.get_capture_points()[0].get_capture_progress() >= 1.0 \
 			and _level.get_capture_points()[0].get_progress_team() == 1 
 func _enemy_point_captured_condition_end() -> void:
-	_bottom_element.set_content("The enemy captured a point!")
+	_bottom_element.set_content("The enemy captured a point!", TutorialUIBottomElement.Controls.None, true)
 	_goal_element_1.set_content("Enemy", _enemy.get_body())
-	_player.set_custom_view_target(_enemy.get_body())
 
 func _enemy_killed_condition_start() -> void:
-	#TODO: wait for continue
-	yield(get_tree().create_timer(2), "timeout")
+	yield(_bottom_element, "continue_pressed")
 	_goal_element_1.set_content("Kill!", _enemy.get_body())
-	_player.follow_camera()
 	_bottom_element.set_content("Melee!",TutorialUIBottomElement.Controls.Melee)
 func _enemy_killed_condition() -> bool:
 	return _enemy.currently_dying

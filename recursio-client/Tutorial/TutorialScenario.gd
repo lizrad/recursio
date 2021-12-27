@@ -1,6 +1,7 @@
 extends Node
 class_name TutorialScenario
 
+#warning-ignore:unused_signal
 signal scenario_completed()
 
 var show_ui: bool = true
@@ -119,6 +120,9 @@ func clear_sub_conditions():
 
 
 func _completed() -> void:
-	yield(get_tree().create_timer(_completion_delay), "timeout")
-	emit_signal("scenario_completed")
-	queue_free()
+	_bottom_element.show()
+	_bottom_element.set_content("Good job!", TutorialUIBottomElement.Controls.None, true)
+	yield(_bottom_element, "continue_pressed")
+	# this is needed so we don't instantly start the tutorial again because the accept input is not consumed
+	call_deferred("emit_signal","scenario_completed")
+	call_deferred("queue_free")
