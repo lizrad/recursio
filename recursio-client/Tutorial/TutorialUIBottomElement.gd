@@ -35,7 +35,7 @@ func _input(_event: InputEvent) -> void:
 	if not visible:
 		return
 	
-	if Input.is_action_just_pressed("ui_accept"):
+	if Input.is_action_just_released("ui_accept"):
 		emit_signal("continue_pressed")
 
 func _process(delta):

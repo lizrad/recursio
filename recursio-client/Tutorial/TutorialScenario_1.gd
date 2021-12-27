@@ -2,14 +2,12 @@ extends TutorialScenario
 class_name TutorialScenario_1
 
 
-var _player: Player
-var _enemy: Enemy
-var _enemyAI: EnemyAI
 
 
 func _ready():
+	# Shorten prep phase
+	_round_manager._preparation_phase_time = 3.0
 	_rounds = 2
-	_completion_delay = 2.0
 	add_round_start_function(funcref(self, "_started_round_1"))
 	add_round_condition_function(funcref(self, "_check_completed_round_1"))
 	add_round_end_function(funcref(self, "_completed_round_1"))
@@ -18,24 +16,6 @@ func _ready():
 	add_round_condition_function(funcref(self, "_check_completed_round_2"))
 	add_round_end_function(funcref(self, "_completed_round_2"))
 	
-	_character_manager._on_spawn_player(0, Vector3.ZERO, 0)
-	
-	_character_manager.hide_player_button_overlay = true
-
-	# Shorten prep phase
-	_round_manager._preparation_phase_time = 3.0
-	
-	var spawn_point = _game_manager.get_spawn_point(1, 0).global_transform.origin
-	_character_manager._on_spawn_enemy(1, spawn_point, 1)
-	_character_manager.enemy_is_server_driven = false
-	_character_manager.get_enemy().kb.visible = false
-	
-	_enemy = _character_manager.get_enemy()
-	_player = _character_manager.get_player()
-	
-	_player.kb.visible = false
-	_goal_element_1.init(_player.get_camera())
-	_goal_element_2.init(_player.get_camera())
 
 
 func _started_round_1():
@@ -43,7 +23,9 @@ func _started_round_1():
 	_bottom_element.show()
 	_bottom_element.set_content("Welcome to the first tutorial!", TutorialUIBottomElement.Controls.None, true)
 	
+	pause()
 	yield(_bottom_element, "continue_pressed")
+	unpause(false)
 	
 	_bottom_element.set_content("Capture both points to win!", TutorialUIBottomElement.Controls.None, true)
 	_goal_element_1.set_content("", _level.get_capture_points()[1])
@@ -51,15 +33,16 @@ func _started_round_1():
 	_goal_element_2.set_content("", _level.get_capture_points()[0])
 	_goal_element_2.show()
 	
+	pause()
 	yield(_bottom_element, "continue_pressed")
+	unpause(true)
 	
 	_goal_element_2.hide()
-	_bottom_element.set_content("Start with this one!", TutorialUIBottomElement.Controls.None, true)
+	_bottom_element.set_content("Start with this one!")
 	_player.set_custom_view_target(_level.get_capture_points()[1])
 	_goal_element_1.set_content("Capture!", _level.get_capture_points()[1])
 	_goal_element_1.show()
-	
-	yield(_bottom_element, "continue_pressed")
+
 	
 	_player.follow_camera()
 	_player.kb.visible = true
@@ -150,7 +133,9 @@ func _enemy_point_captured_condition_end() -> void:
 	_goal_element_1.set_content("Enemy", _enemy.get_body())
 
 func _enemy_killed_condition_start() -> void:
+	pause()
 	yield(_bottom_element, "continue_pressed")
+	unpause(true)
 	_goal_element_1.set_content("Kill!", _enemy.get_body())
 	_bottom_element.set_content("Melee!",TutorialUIBottomElement.Controls.Melee)
 func _enemy_killed_condition() -> bool:

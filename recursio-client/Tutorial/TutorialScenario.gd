@@ -12,7 +12,7 @@ var _rounds: int = 0
 var _current_round: int = 0
 
 
-var _completion_delay: float = 0
+var _paused: bool = false
 
 var _round_starts := []
 var _round_conditions := []
@@ -35,19 +35,42 @@ onready var _round_manager: RoundManager = get_node("TutorialWorld/CharacterMana
 onready var _action_manager: ActionManager = get_node("TutorialWorld/CharacterManager/ActionManager")
 
 var _level: Level
-
+var _player: Player
+var _enemy: Enemy
+var _enemyAI: EnemyAI
 
 func _ready():
+	# setup level
 	_level = get_node("TutorialWorld/LevelH")
 	for capture_point in _level.get_capture_points():
 		 capture_point.server_driven = false
 	_game_manager.set_level(_level)
-	_bottom_element.hide()
+	
+	# setup player
+	_character_manager._on_spawn_player(0, Vector3.ZERO, 0)
+	_character_manager.hide_player_button_overlay = true
+	_player = _character_manager.get_player()
+	_player.get_body().hide()
+	_player.block_switching = true
+	
+	# setup enemy
+	var spawn_point = _game_manager.get_spawn_point(1, 0).global_transform.origin
+	_character_manager._on_spawn_enemy(1, spawn_point, 1)
+	_enemy = _character_manager.get_enemy()
+	_enemy.get_body().hide()
+	_character_manager.enemy_is_server_driven = false
+	
+	# setup ui
+	_goal_element_1.init(_player.get_camera())
+	_goal_element_2.init(_player.get_camera())
 	_goal_element_1.hide()
 	_goal_element_2.hide()
+	_bottom_element.hide()
 
 
 func _process(delta):
+	if _paused:
+		return
 	# stop the timer from moving
 	if _character_manager._round_manager.get_current_phase() == RoundManager.Phases.GAME:
 		_character_manager._round_manager._phase_deadline += delta * 1000
@@ -83,6 +106,26 @@ func init() -> void:
 func start() -> void:
 	_round_starts[_current_round].call_func()
 
+
+# TODO: add PostProcessing to make clear game is paused
+func pause() -> void:
+	_paused = true
+	_player.block_input = true
+	_player.block_movement = true
+	_round_manager.pause()
+	if _enemyAI:
+		_enemyAI.stop()
+
+# TODO: add PostProcessing to make clear game is paused
+func unpause(enable_player_input: bool) -> void:
+	_paused = false
+	#because otherwise we will fire on unpause sometime
+	yield(get_tree().create_timer(0.1), "timeout")
+	_player.block_input = !enable_player_input
+	_player.block_movement = !enable_player_input
+	if _enemyAI:
+		_enemyAI.start()
+	_round_manager.unpause()
 
 func stop() -> void:
 	queue_free()
@@ -122,7 +165,9 @@ func clear_sub_conditions():
 func _completed() -> void:
 	_bottom_element.show()
 	_bottom_element.set_content("Good job!", TutorialUIBottomElement.Controls.None, true)
+	pause()
 	yield(_bottom_element, "continue_pressed")
+	unpause(false)
 	# this is needed so we don't instantly start the tutorial again because the accept input is not consumed
 	call_deferred("emit_signal","scenario_completed")
 	call_deferred("queue_free")
