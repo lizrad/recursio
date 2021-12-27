@@ -4,6 +4,7 @@ class_name TutorialScenario_1
 
 var _player: Player
 var _enemy: Enemy
+var _enemyAI: EnemyAI
 
 
 func _ready():
@@ -73,36 +74,25 @@ func _started_round_1():
 
 
 func _check_completed_round_1() -> bool:
-	return _level.get_capture_points()[1].get_capture_progress() == 1.0
+	return _level.get_capture_points()[0].get_capture_progress() == 1.0  \
+			or _level.get_capture_points()[1].get_capture_progress() >= 1.0 \
 
 
 func _completed_round_1() -> void:
 	_bottom_element.hide()
 	_goal_element_1.hide()
 	_goal_element_2.hide()
+	clear_sub_conditions()
 
 
 func _started_round_2() -> void:	
-	yield(get_tree().create_timer(2), "timeout")
-	
 	_character_manager._round_manager.round_index += 1
 	_character_manager._round_manager.switch_to_phase(RoundManager.Phases.PREPARATION)
 	# setting enemy timeline back to the first one
 	_character_manager._on_timeline_picked(1,0)
 	
-	_enemy.kb.visible = true
-	var _error = _enemy.connect("client_hit", self, "_on_enemy_hit")
-	_enemy.set_position(Vector3(0,0,-4))
-	var enemyAI = EnemyAI.new(_enemy)
-	enemyAI.add_waypoint(Vector2(0, -3))
-	enemyAI.set_character_to_shoot(_player)
-	enemyAI.peaceful = true
-	add_child(enemyAI)
-	enemyAI.start()
 	
 	
-	
-	print(_round_manager.round_index)
 	_bottom_element.set_text("Now get the other one.")
 	_bottom_element.set_control(TutorialUIBottomElement.Controls.None)
 	_bottom_element.show()
@@ -119,10 +109,10 @@ func _started_round_2() -> void:
 	_goal_element_2.show()
 	
 	yield(get_tree().create_timer(2), "timeout")
-	
-	_bottom_element.set_text("Move!")
-	_bottom_element.set_control(TutorialUIBottomElement.Controls.Move)
 	_player.follow_camera()
+	add_sub_condition(funcref(self, "_enemy_point_captured_condition_start"), funcref(self, "_enemy_point_captured_condition"), funcref(self, "_enemy_point_captured_condition_end"))
+	add_sub_condition(funcref(self, "_enemy_killed_condition_start"), funcref(self, "_enemy_killed_condition"), funcref(self, "_enemy_killed_condition_end"))
+	
 
 
 func _check_completed_round_2() -> bool:
@@ -132,21 +122,17 @@ func _check_completed_round_2() -> bool:
 			and _level.get_capture_points()[1].get_progress_team() == 0 \
 
 func _completed_round_2() -> void:
-	
 	_toggle_ui(true)
-	_tutorial_text.typing_text = "Good job!"
+	_bottom_element.set_text("Good job!")
+	_bottom_element.set_control(TutorialUIBottomElement.Controls.None)
 
 
 func _move_sub_condition_start() -> void:
 	_bottom_element.show()
 	_bottom_element.set_text("Move!")
 	_bottom_element.set_control(TutorialUIBottomElement.Controls.Move)
-
-
 func _move_sub_condition() -> bool:
 	return (_player.spawn_point - _player.get_position()).length() > 5
-
-
 func _move_sub_condition_end() -> void:
 	_bottom_element.hide()
 
@@ -155,15 +141,48 @@ func _dash_sub_condition_start() -> void:
 	_bottom_element.show()
 	_bottom_element.set_text("Dash!")
 	_bottom_element.set_control(TutorialUIBottomElement.Controls.Dash)
-
-
 func _dash_sub_condition() -> bool:
 	return _player.get_dash_ammunition() != 2
-
-
 func _dash_sub_condition_end() -> void:
 	_bottom_element.hide()
 
+
+
+func _enemy_point_captured_condition_start() -> void:
+	_enemy.kb.visible = true
+	var _error = _enemy.connect("client_hit", self, "_on_enemy_hit")
+	_enemy.set_position(Vector3(0,0,-12))
+	_enemyAI = EnemyAI.new(_enemy)
+	_enemyAI.add_waypoint(Vector2(0, -3))
+	_enemyAI.set_character_to_shoot(_player)
+	_enemyAI.peaceful = true
+	add_child(_enemyAI)
+	_enemyAI.start()
+func _enemy_point_captured_condition() -> bool:
+	return _level.get_capture_points()[0].get_capture_progress() >= 1.0 \
+			and _level.get_capture_points()[0].get_progress_team() == 1 
+func _enemy_point_captured_condition_end() -> void:
+	_bottom_element.set_text("The enemy captured a point!")
+	_bottom_element.set_control(TutorialUIBottomElement.Controls.None)
+	_goal_element_1.set_goal(_enemy.get_body())
+	_goal_element_1.set_text("Enemy")
+	_player.set_custom_view_target(_enemy.get_body())
+
+func _enemy_killed_condition_start() -> void:
+	yield(get_tree().create_timer(2), "timeout")
+	_goal_element_1.set_goal(_enemy.get_body())
+	_goal_element_1.set_text("Kill!")
+	_player.follow_camera()
+	_bottom_element.set_text("Melee Attack")
+	_bottom_element.set_control(TutorialUIBottomElement.Controls.Melee)
+func _enemy_killed_condition() -> bool:
+	return _enemy.currently_dying
+func _enemy_killed_condition_end() -> void:
+	_bottom_element.set_text("Capture the point!")
+	_goal_element_1.set_goal(_level.get_capture_points()[0])
+	_goal_element_1.set_text("Capture!")
+	_enemyAI.stop()
+	_enemy.kb.visible = false
 
 func _on_enemy_hit(perpetrator):
 	_enemy.server_hit(perpetrator)
