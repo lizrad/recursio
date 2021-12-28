@@ -40,8 +40,10 @@ func initialize(owning_player) -> void:
 	_owning_player = owning_player
 	add_exception(owning_player.get_body())
 	
-	PostProcess.animate_property("chromatic_ab_strength", 0.5, 0, _max_time)
-	PostProcess.shake_camera(_camera_shake_amount, _camera_shake_speed, _camera_shake_duration)
+	# Trigger post processing effects if this is an active player
+	if _owning_player is PlayerBase:
+		PostProcess.animate_property("chromatic_ab_strength", 0.5, 0, _max_time)
+		PostProcess.shake_camera(_camera_shake_amount, _camera_shake_speed, _camera_shake_duration)
 
 
 func _physics_process(delta):
