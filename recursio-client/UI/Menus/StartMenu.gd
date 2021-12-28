@@ -205,7 +205,7 @@ func _on_exit() -> void:
 	get_tree().quit()
 
 
-func _on_search_create_game_room_pressed() -> void:	
+func _on_search_create_game_room_pressed() -> void:
 	# just create room with default naming
 	# 	otherwise would need virtual keyboard vor controller support
 	#_game_room_creation.show()
