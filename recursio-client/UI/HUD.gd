@@ -124,14 +124,17 @@ func update_fire_action_ammo(amount: int) -> void:
 
 func update_special_movement_ammo(amount: int) -> void:
 	Logger.info("Set special movement ammo to: " + str(amount), "HUD")
-	var color_name = "ui_ok" if amount > 0 else "ui_error"
-	var animation = "add_dash" if amount > int(_dash.text) else "sub_dash"
-	ColorManager.color_object_by_property(color_name, _dash, "custom_colors/font_color")
-	ColorManager.color_object_by_property(color_name, _dash_bg, "modulate")
-	_dash.text = str(amount)
+	var cur_amount = int(_dash.text)
+	if cur_amount != amount:
+		var color_name = "ui_ok" if amount > 0 else "ui_error"
+		var animation = "add_dash" if amount > cur_amount else "sub_dash"
+		ColorManager.color_object_by_property(color_name, _dash, "custom_colors/font_color")
+		ColorManager.color_object_by_property(color_name, _dash_bg, "modulate")
+		_dash.text = str(amount)
 
-	# just override current animation
-	$AnimationDash.play(animation)
+		# just override current animation
+		$AnimationDash.stop()
+		$AnimationDash.play(animation)
 
 
 func update_weapon_type(max_ammo, img_bullet, color_name: String) -> void:
