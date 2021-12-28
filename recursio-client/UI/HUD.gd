@@ -2,7 +2,7 @@ extends Control
 class_name HUD
 
 onready var _timer_pb: TextureProgress = get_node("TimerProgressBar")
-onready var _phase = get_node("Phase")
+onready var _phase = get_node("TimerProgressBar/Phase")
 onready var _ammo: Label= get_node("WeaponAmmo")
 onready var _ammo_type_bg = get_node("WeaponAmmo/WeaponTypeBG")
 onready var _ammo_type = get_node("WeaponAmmo/WeaponType")
