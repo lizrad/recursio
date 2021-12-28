@@ -117,17 +117,21 @@ func update_fire_action_ammo(amount: int) -> void:
 		ColorManager.color_object_by_property(color_name, _ammo_type_bg, "modulate")
 
 	# only don't interfere with other animations
-	if not $AnimationPlayer.is_playing() or $AnimationPlayer.current_animation == "sub_ammo":
-		$AnimationPlayer.stop()
-		$AnimationPlayer.play("sub_ammo")
+	if not $AnimationShoot.is_playing() or $AnimationShoot.current_animation == "sub_ammo":
+		$AnimationShoot.stop()
+		$AnimationShoot.play("sub_ammo")
 
 
 func update_special_movement_ammo(amount: int) -> void:
 	Logger.info("Set special movement ammo to: " + str(amount), "HUD")
 	var color_name = "ui_ok" if amount > 0 else "ui_error"
+	var animation = "add_dash" if amount > int(_dash.text) else "sub_dash"
 	ColorManager.color_object_by_property(color_name, _dash, "custom_colors/font_color")
 	ColorManager.color_object_by_property(color_name, _dash_bg, "modulate")
 	_dash.text = str(amount)
+
+	# just override current animation
+	$AnimationDash.play(animation)
 
 
 func update_weapon_type(max_ammo, img_bullet, color_name: String) -> void:
@@ -187,8 +191,8 @@ func get_active_spawn_point() -> SpawnPoint:
 # visual effect for showing insufficient ammo
 # TODO: apply for dash too
 func wobble_ammo() -> void:
-	if not $AnimationPlayer.is_playing():
-		$AnimationPlayer.play("no_ammo")
+	if not $AnimationShoot.is_playing():
+		$AnimationShoot.play("no_ammo")
 
 
 func animate_weapon_selection(pos: Vector2) -> void:
@@ -207,5 +211,5 @@ func animate_weapon_selection(pos: Vector2) -> void:
 
 
 func _on_tween_completed() -> void:
-	if not $AnimationPlayer.is_playing():
-		$AnimationPlayer.play("select_weapon")
+	if not $AnimationShoot.is_playing():
+		$AnimationShoot.play("select_weapon")
