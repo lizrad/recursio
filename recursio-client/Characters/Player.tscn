@@ -201,6 +201,8 @@ margin_top = -143.0
 margin_right = 218.5
 
 [node name="ButtonOverlaySimple" parent="KinematicBody" index="13" instance=ExtResource( 23 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00748944, 0, -5.43075 )
+visible = true
 
 [node name="AimVisuals" type="Spatial" parent="KinematicBody" index="14"]
 visible = false
