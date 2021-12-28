@@ -35,9 +35,6 @@ enum {
 
 var _max_time := -1.0
 
-# joypad name or "keyboard"
-#var _controller := ""
-
 
 func pass_round_manager(round_manager):
 	_round_manager = round_manager
@@ -118,8 +115,9 @@ func update_fire_action_ammo(amount: int) -> void:
 		var color_name = "ui_error"
 		ColorManager.color_object_by_property(color_name, _ammo, "custom_colors/font_color")
 		ColorManager.color_object_by_property(color_name, _ammo_type_bg, "modulate")
+
 	# only don't interfere with other animations
-	elif not $AnimationPlayer.is_playing() or $AnimationPlayer.current_animation == "sub_ammo":
+	if not $AnimationPlayer.is_playing() or $AnimationPlayer.current_animation == "sub_ammo":
 		$AnimationPlayer.stop()
 		$AnimationPlayer.play("sub_ammo")
 

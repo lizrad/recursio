@@ -654,4 +654,4 @@ visible = false
 
 [node name="GameplayMenu" parent="." instance=ExtResource( 14 )]
 
-[connection signal="gui_input" from="StartMenu/Panel" to="StartMenu" method="_on_Panel_gui_input"]
+[connection signal="gui_input" from="StartMenu/Panel" to="StartMenu" method="_on_panel_gui_input"]

@@ -77,8 +77,9 @@ func _update_controller_buttons() -> void:
 		# Xbox Series Controller or XInput Gamepad for older: "xbox"
 		if name.count("Xbox") > 0 or name.begins_with("XInput"):
 			_current_controller = "xbox"
-		# PS???
-		#	"ps"
+		# Playstation
+		elif name.begins_with("PS"):
+			_current_controller = "ps"
 		# switch???
 		# 	"switch"
 		else:

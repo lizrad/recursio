@@ -27,7 +27,6 @@ func _ready() -> void:
 
 
 func _on_controller_changed(controller) -> void:
-	#for sprite in $Schemes.get_children():
 	for sprite in get_tree().get_nodes_in_group("controller"):
 		sprite.hide()
 
@@ -42,7 +41,6 @@ func show_buttons(texts, buttons: int, close_on_activation: int = 0) -> void:
 	var i = 0
 	for button in BUTTONS.values():
 		if buttons & button:
-			#$Buttons.get_node(str(button)).show()
 			_triggers.append(_conf[button])
 			$Labels.get_node("Label" + str(button)).text = texts[i]
 			i += 1

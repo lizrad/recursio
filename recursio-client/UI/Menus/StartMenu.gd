@@ -333,7 +333,7 @@ func _toggle_player_input(disabled: bool) -> void:
 		_tutorial.toggle_player_input(disabled)
 
 
-func _on_Panel_gui_input(event: InputEvent) -> void:
+func _on_panel_gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton \
 	and event.button_index == BUTTON_LEFT \
 	and event.is_pressed():
