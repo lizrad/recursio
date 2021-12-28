@@ -7,7 +7,6 @@ onready var _camera_shake_speed  = Constants.get_value("vfx","shoot_camera_shake
 onready var _camera_shake_duration  = Constants.get_value("vfx","shoot_camera_shake_duration")
 
 var _owning_player
-var _first_frame := true
 
 var _current_animated_range := 0.001
 var _animated_range_increase_velocity := 100.0
@@ -52,9 +51,7 @@ func _physics_process(delta):
 		Logger.info("freeing action..." , "HitscanShot")
 		return
 
-	if  _first_frame:
-		_update_collision()
-		_first_frame = false
+	_update_collision()
 	
 	_current_animated_range += _animated_range_increase_velocity * delta
 	_update_visual_range()
@@ -67,10 +64,9 @@ func handle_hit(collider):
 	var distance = (collision_point- global_transform.origin).length()
 	_current_range = distance
 
-	if _first_frame:
-		$HitPoint.global_transform.origin = collision_point
-		$HitPoint/FrontParticles.emitting = true
-		$HitPoint/BackParticles.emitting = true
+	$HitPoint.global_transform.origin = collision_point
+	$HitPoint/FrontParticles.emitting = true
+	$HitPoint/BackParticles.emitting = true
 	
 	if character is CharacterBase:
 		assert(character.has_method("hit"))
