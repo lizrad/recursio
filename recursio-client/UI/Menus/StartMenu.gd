@@ -25,7 +25,7 @@ onready var _btn_exit = get_node("CenterContainer/MainMenu/Btn_Exit")
 onready var _game_room_search: GameRoomSearch = get_node("CenterContainer/GameRoomSearch")
 onready var _game_room_creation: GameRoomCreation = get_node("CenterContainer/GameRoomCreation")
 onready var _game_room_lobby: GameRoomLobby = get_node("CenterContainer/GameRoomLobby")
-onready var _connection_lost_container = get_node("CenterContainer/ConnectionLostContainer")
+onready var _connection_lost_container: Control = get_node("CenterContainer/ConnectionLostContainer")
 onready var _settings: Control = get_node("CenterContainer/SettingsContainer")
 
 onready var _tutorial: Tutorial = get_node("Tutorial")
@@ -84,7 +84,9 @@ func _ready():
 	_error = _tutorial.connect("scenario_completed", self, "_on_tutorial_scenario_completed")
 	_error = _tutorial.connect("btn_back_pressed", self, "_on_tutorial_back_pressed")
 	
+	# Re-grab button focus
 	_error = _settings.connect("visibility_changed", self, "_on_room_search_visibility_changed")
+	_error = _connection_lost_container.connect("visibility_changed", self, "_on_connection_lost_container_visibility_changed")
 
 	_btn_play_tutorial.grab_focus()
 
@@ -155,8 +157,8 @@ func _on_connection_successful():
 func _on_server_disconnected():
 	if _world:
 		return
-	_connection_lost_container.show()
 	return_to_title()
+	_connection_lost_container.show()
 
 
 
@@ -234,6 +236,11 @@ func _on_join_game_room_pressed() -> void:
 
 func _on_room_search_visibility_changed() -> void:
 	_btn_play_tutorial.grab_focus()
+
+
+func _on_connection_lost_container_visibility_changed() -> void:
+	if not _connection_lost_container.visible:
+		_btn_play_tutorial.grab_focus()
 
 
 func _on_game_room_leave_pressed() -> void:

@@ -9,7 +9,8 @@ func _ready() -> void:
 
 
 func _on_visibility_changed() -> void:
-	_back_button.grab_focus()
+	if self.visible:
+		_back_button.grab_focus()
 
 
 func _on_back_button_pressed() -> void:
