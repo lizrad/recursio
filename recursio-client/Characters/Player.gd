@@ -11,8 +11,7 @@ onready var _lerped_follow: LerpedFollow = get_node("KinematicBody/AsciiViewport
 onready var _view_target = get_node("KinematicBody/ViewTarget")
 onready var _visibility_light = get_node("KinematicBody/VisibilityLight")
 onready var _button_overlay: ButtonOverlay = get_node("KinematicBody/ButtonOverlay")
-#onready var _button_overlay_simple = get_node("KinematicBody/ButtonOverlaySimple")
-onready var _button_overlay_simple = get_node("KinematicBody/Spatial")
+onready var _button_overlay_simple = get_node("KinematicBody/ButtonOverlaySimple")
 onready var _aim_visuals = get_node("KinematicBody/AimVisuals")
 onready var _audio_player: AudioStreamPlayer = get_node("AudioStreamPlayer")
 onready var _camera_shake_amount = Constants.get_value("vfx","camera_shake_amount")
@@ -37,6 +36,8 @@ func player_init(action_manager, round_manager) -> void:
 	.player_base_init(action_manager)
 	_round_manager = round_manager
 	_hud.pass_round_manager(_round_manager)
+	# connect simple overlay with ButtonOverlay because has InputHandling
+	var _error = _button_overlay.connect("visibility_changed", self, "_on_button_overlay_visibility_changed")
 	emit_signal("initialized")
 
 
@@ -161,6 +162,7 @@ func set_spawning(new_spawning_status: bool):
 	else:
 		PostProcess.vignette = false
 
+
 # OVERRIDE #
 func non_vfx_spawn():
 	.non_vfx_spawn()
@@ -169,6 +171,7 @@ func non_vfx_spawn():
 	_visibility_light.toggle(true)
 	_lerped_follow.start()
 	_lerped_follow.stop_shake()
+
 
 func get_visibility_mask():
 	return _light_viewport.get_texture()
@@ -234,7 +237,6 @@ func hide_hud() -> void:
 func show_preparation_hud(round_index) -> void:
 	_hud.prep_phase_start(round_index)
 	_button_overlay.show_buttons(["ready!", "swap"], ButtonOverlay.BUTTONS.DOWN | ButtonOverlay.BUTTONS.RIGHT, ButtonOverlay.BUTTONS.DOWN)
-	_button_overlay_simple.show()
 
 
 func show_countdown_hud() -> void:
@@ -246,7 +248,10 @@ func show_countdown_hud() -> void:
 		_hud.animate_weapon_selection(pos)
 	_hud.countdown_phase_start()
 	_button_overlay.hide_buttons()
-	_button_overlay_simple.hide()
+
+
+func _on_button_overlay_visibility_changed() -> void:
+	_button_overlay_simple.visible = _button_overlay.visible
 
 
 func show_game_hud(round_index) -> void:
