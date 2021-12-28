@@ -54,8 +54,6 @@ func show_buttons(texts, buttons: int, close_on_activation: int = 0) -> void:
 func hide_buttons() -> void:
 	set_process(false)
 	visible = false
-	for button in $Buttons.get_children():
-		button.hide()
 	for label in $Labels.get_children():
 		label.text = ""
 	_triggers.clear()
@@ -67,8 +65,6 @@ func _process(_delta) -> void:
 			for key in _conf:
 				if _conf[key] == trigger:
 					emit_signal("button_pressed", key)
-
 					if _close & key:
 						hide_buttons()
-
 					break

@@ -11,6 +11,8 @@ onready var _lerped_follow: LerpedFollow = get_node("KinematicBody/AsciiViewport
 onready var _view_target = get_node("KinematicBody/ViewTarget")
 onready var _visibility_light = get_node("KinematicBody/VisibilityLight")
 onready var _button_overlay: ButtonOverlay = get_node("KinematicBody/ButtonOverlay")
+#onready var _button_overlay_simple = get_node("KinematicBody/ButtonOverlaySimple")
+onready var _button_overlay_simple = get_node("KinematicBody/Spatial")
 onready var _aim_visuals = get_node("KinematicBody/AimVisuals")
 onready var _audio_player: AudioStreamPlayer = get_node("AudioStreamPlayer")
 onready var _camera_shake_amount = Constants.get_value("vfx","camera_shake_amount")
@@ -232,6 +234,7 @@ func hide_hud() -> void:
 func show_preparation_hud(round_index) -> void:
 	_hud.prep_phase_start(round_index)
 	_button_overlay.show_buttons(["ready!", "swap"], ButtonOverlay.BUTTONS.DOWN | ButtonOverlay.BUTTONS.RIGHT, ButtonOverlay.BUTTONS.DOWN)
+	_button_overlay_simple.show()
 
 
 func show_countdown_hud() -> void:
@@ -243,6 +246,7 @@ func show_countdown_hud() -> void:
 		_hud.animate_weapon_selection(pos)
 	_hud.countdown_phase_start()
 	_button_overlay.hide_buttons()
+	_button_overlay_simple.hide()
 
 
 func show_game_hud(round_index) -> void:
