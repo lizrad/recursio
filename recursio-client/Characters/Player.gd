@@ -12,10 +12,11 @@ onready var _camera: Camera = get_node("KinematicBody/AsciiViewportContainer/Vie
 onready var _view_target = get_node("KinematicBody/ViewTarget")
 onready var _visibility_light = get_node("KinematicBody/VisibilityLight")
 onready var _button_overlay: ButtonOverlay = get_node("KinematicBody/ButtonOverlay")
+onready var _button_overlay_simple = get_node("KinematicBody/ButtonOverlaySimple")
 onready var _aim_visuals = get_node("KinematicBody/AimVisuals")
 onready var _audio_player: AudioStreamPlayer = get_node("AudioStreamPlayer")
-onready var _camera_shake_amount = Constants.get_value("vfx","camera_shake_amount")
-onready var _camera_shake_speed  = Constants.get_value("vfx","camera_shake_speed")
+onready var _camera_shake_amount = Constants.get_value("vfx","death_camera_shake_amount")
+onready var _camera_shake_speed  = Constants.get_value("vfx","death_camera_shake_speed")
 
 
 var block_switching: bool = false
@@ -37,6 +38,8 @@ func player_init(action_manager, round_manager) -> void:
 	.player_base_init(action_manager)
 	_round_manager = round_manager
 	_hud.pass_round_manager(_round_manager)
+	# connect simple overlay with ButtonOverlay because has InputHandling
+	var _error = _button_overlay.connect("visibility_changed", self, "_on_button_overlay_visibility_changed")
 	emit_signal("initialized")
 
 
@@ -94,6 +97,7 @@ func apply_input(movement_vector: Vector3, rotation_vector: Vector3, buttons: in
 		if action.ammunition > 0:
 			_aim_visuals.visible = true
 			_aim_visuals.get_child(timeline_index % 2).visible = aim_mode
+			PostProcess.chromatic_ab_strength = 0.1
 		else:
 			# -> already handles sound effects but fail sound for no ammo is only needed for current player
 			if not _audio_player.playing:
@@ -161,6 +165,7 @@ func set_spawning(new_spawning_status: bool):
 	else:
 		PostProcess.vignette = false
 
+
 # OVERRIDE #
 func non_vfx_spawn():
 	.non_vfx_spawn()
@@ -169,6 +174,7 @@ func non_vfx_spawn():
 	_visibility_light.toggle(true)
 	_lerped_follow.start()
 	_lerped_follow.stop_shake()
+
 
 func get_visibility_mask():
 	return _light_viewport.get_texture()
@@ -202,8 +208,7 @@ func setup_spawn_point_hud(spawn_points) -> void:
 
 
 func update_weapon_type_hud(max_ammo, img_bullet, color_name: String) -> void:
-	_hud.update_weapon_type(img_bullet, color_name)
-	_hud.update_fire_action_ammo(max_ammo)
+	_hud.update_weapon_type(max_ammo, img_bullet, color_name)
 
 
 func activate_spawn_point_hud(timeline_index) -> void:
@@ -251,6 +256,10 @@ func show_countdown_hud() -> void:
 		_hud.animate_weapon_selection(pos)
 	_hud.countdown_phase_start()
 	_button_overlay.hide_buttons()
+
+
+func _on_button_overlay_visibility_changed() -> void:
+	_button_overlay_simple.visible = _button_overlay.visible
 
 
 func show_game_hud(round_index) -> void:

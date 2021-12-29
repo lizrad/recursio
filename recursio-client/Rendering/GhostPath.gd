@@ -20,6 +20,6 @@ func _set_index(new_index:int):
 
 
 func change_color():
-	var color_name = "player_ghost_secondary_accent" if selected else "unselected"
+	var color_name = "selected" if selected else "unselected"
 	transform.origin.y = 0.5 if selected else 0.0 # Make sure this path is on top
 	ColorManager.color_object_by_property(color_name, $Path/PathCSGPolygon, "color")

@@ -7,8 +7,11 @@ onready var _ammo: Label= get_node("WeaponAmmo")
 onready var _ammo_type_bg = get_node("WeaponAmmo/WeaponTypeBG")
 onready var _ammo_type = get_node("WeaponAmmo/WeaponType")
 onready var _dash: Label = get_node("DashAmmo")
+onready var _dash_bg = get_node("DashAmmo/DashTexture")
 onready var _capture_point_hb = get_node("TimerProgressBar/CapturePoints")
 onready var _ammo_type_animation = get_node("TextureRect")
+onready var _controller_shoot = get_node("ControllerButtonShoot")
+onready var _controller_dash = get_node("ControllerButtonDash")
 
 onready var tween_time := 1.5
 
@@ -42,17 +45,27 @@ func pass_round_manager(round_manager):
 
 
 func _ready() -> void:
+
 	if not $Tween.is_connected("tween_all_completed", self, "_on_tween_completed"):
 		var _error = $Tween.connect("tween_all_completed", self, "_on_tween_completed")
 
+	var _error = InputManager.connect("controller_changed", self, "_on_controller_changed")
+	_on_controller_changed(InputManager.get_current_controller())
 	reset()
+
+
+func _on_controller_changed(controller) -> void:
+	_controller_shoot.texture = load("res://Resources/Icons/" + controller + "/shoot.png")
+	_controller_dash.texture = load("res://Resources/Icons/" + controller + "/dash.png")
 
 
 func reset():
 	_phase.text = "Waiting for game to start..."
 	_max_time = -1.0
 	_dash.visible = false
+	_controller_dash.visible = false
 	_ammo.visible = false
+	_controller_shoot.visible = false
 
 
 func _process(_delta):
@@ -83,7 +96,9 @@ func prep_phase_start(round_index) -> void:
 	else:
 		_max_time = Constants.get_value( "gameplay", phase_string)
 	_dash.visible = true
+	_controller_dash.visible = true
 	_ammo.visible = true
+	_controller_shoot.visible = true
 
 	# TODO: this should be set explicit from outside in dash actions
 	update_special_movement_ammo(2)
@@ -110,26 +125,40 @@ func game_phase_start(round_index) -> void:
 func update_fire_action_ammo(amount: int) -> void:
 	Logger.info("Set fire ammo to: " + str(amount), "HUD")
 	_ammo.text = str(amount)
+
 	# mark ammo ui red -> is reset to weapon depending color in update_weapon_type
 	if amount < 1:
 		var color_name = "ui_error"
 		ColorManager.color_object_by_property(color_name, _ammo, "custom_colors/font_color")
 		ColorManager.color_object_by_property(color_name, _ammo_type_bg, "modulate")
 
+	# only don't interfere with other animations
+	if not $AnimationShoot.is_playing() or $AnimationShoot.current_animation == "sub_ammo":
+		$AnimationShoot.stop()
+		$AnimationShoot.play("sub_ammo")
+
 
 func update_special_movement_ammo(amount: int) -> void:
 	Logger.info("Set special movement ammo to: " + str(amount), "HUD")
-	var color_name = "ui_ok" if amount > 0 else "ui_error"
-	ColorManager.color_object_by_property(color_name, _dash, "custom_colors/font_color")
-	ColorManager.color_object_by_property(color_name, _ammo_type_bg, "modulate")
-	_dash.text = str(amount)
+	var cur_amount = int(_dash.text)
+	if cur_amount != amount:
+		var color_name = "ui_ok" if amount > 0 else "ui_error"
+		var animation = "add_dash" if amount > cur_amount else "sub_dash"
+		ColorManager.color_object_by_property(color_name, _dash, "custom_colors/font_color")
+		ColorManager.color_object_by_property(color_name, _dash_bg, "modulate")
+		_dash.text = str(amount)
+
+		# just override current animation
+		$AnimationDash.stop()
+		$AnimationDash.play(animation)
 
 
-func update_weapon_type(img_bullet, color_name: String) -> void:
+func update_weapon_type(max_ammo, img_bullet, color_name: String) -> void:
 	Logger.info("Update ammo type", "HUD")
 	ColorManager.color_object_by_property("ui_ok", _ammo, "custom_colors/font_color")
 	ColorManager.color_object_by_property(color_name, _ammo_type_bg, "modulate")
 	_ammo_type.texture = img_bullet
+	_ammo.text = str(max_ammo)
 
 
 func activate_spawn_point(timeline_index) -> void:
@@ -187,8 +216,8 @@ func get_active_spawn_point() -> SpawnPoint:
 # visual effect for showing insufficient ammo
 # TODO: apply for dash too
 func wobble_ammo() -> void:
-	if not $AnimationPlayer.is_playing():
-		$AnimationPlayer.play("no_ammo")
+	if not $AnimationShoot.is_playing():
+		$AnimationShoot.play("no_ammo")
 
 
 func animate_weapon_selection(pos: Vector2) -> void:
@@ -199,12 +228,13 @@ func animate_weapon_selection(pos: Vector2) -> void:
 	_ammo_type_animation.texture = _ammo_type.texture
 	_ammo_type_animation.visible = true
 	Logger.info("starting tween", "Tween")
-	$Tween.interpolate_property(_ammo_type_animation, "rect_position", pos, _ammo_type.rect_global_position, tween_time, Tween.TRANS_CUBIC, Tween.EASE_IN_OUT)
-	# TODO: is there a opacity for controls?
-	$Tween.interpolate_property(_ammo_type_animation, "visible", true, false, 2*tween_time, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
+	var size = _ammo_type_animation.rect_size/2
+	$Tween.interpolate_property(_ammo_type_animation, "rect_position", pos - size, _ammo_type.rect_global_position - size/2, tween_time, Tween.TRANS_CUBIC, Tween.EASE_IN_OUT)
+	$Tween.interpolate_property(_ammo_type_animation, "rect_scale", Vector2.ONE, Vector2(0.25, 0.25), 2*tween_time, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
+	$Tween.interpolate_property(_ammo_type_animation, "modulate", Color(1, 1, 1, 1), Color(1, 1, 1, 0), 1.5*tween_time, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
 	$Tween.start()
 
 
 func _on_tween_completed() -> void:
-	if not $AnimationPlayer.is_playing():
-		$AnimationPlayer.play("select_weapon")
+	if not $AnimationShoot.is_playing():
+		$AnimationShoot.play("select_weapon")
