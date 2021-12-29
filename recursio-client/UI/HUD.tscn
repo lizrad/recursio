@@ -214,20 +214,21 @@ __meta__ = {
 }
 
 [node name="ControllerButtonShoot" type="TextureRect" parent="."]
-margin_left = 225.318
-margin_top = 29.1591
-margin_right = 275.318
-margin_bottom = 79.1591
+margin_left = 29.3182
+margin_top = 8.1591
+margin_right = 104.318
+margin_bottom = 83.1591
 texture = ExtResource( 9 )
+expand = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="WeaponAmmo" type="Label" parent="."]
-margin_left = 121.318
-margin_top = 38.1591
-margin_right = 159.318
-margin_bottom = 76.1591
+margin_left = 97.3182
+margin_top = 34.1591
+margin_right = 135.318
+margin_bottom = 72.1591
 rect_pivot_offset = Vector2( 45, 19 )
 custom_fonts/font = ExtResource( 2 )
 text = "10"
@@ -275,11 +276,12 @@ __meta__ = {
 }
 
 [node name="ControllerButtonDash" type="TextureRect" parent="."]
-margin_left = 225.318
-margin_top = 84.1591
-margin_right = 265.318
-margin_bottom = 124.159
+margin_left = 29.3182
+margin_top = 80.1591
+margin_right = 104.318
+margin_bottom = 155.159
 texture = ExtResource( 8 )
+expand = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -287,10 +289,10 @@ __meta__ = {
 [node name="DashAmmo" type="Label" parent="."]
 anchor_top = 0.07
 anchor_bottom = 0.07
-margin_left = 136.318
-margin_top = 9.0
-margin_right = 159.318
-margin_bottom = 47.0
+margin_left = 112.318
+margin_top = 25.5591
+margin_right = 135.318
+margin_bottom = 63.5591
 custom_fonts/font = ExtResource( 2 )
 text = "2"
 align = 2

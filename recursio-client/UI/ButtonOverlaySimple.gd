@@ -8,4 +8,4 @@ func _ready() -> void:
 
 func _on_controller_changed(controller) -> void:
 	$Viewport/Swap.texture = load("res://Resources/Icons/" + controller + "/swap.png")
-	$Viewport/Ready.texture = load("res://Resources/Icons/" + controller + "/shoot.png")
+	$Viewport/Ready.texture = load("res://Resources/Icons/" + controller + "/accept.png")
