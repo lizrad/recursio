@@ -331,3 +331,10 @@ func _toggle_player_input(disabled: bool) -> void:
 		_world.toggle_player_input(disabled)
 	else:
 		_tutorial.toggle_player_input(disabled)
+
+
+func _on_panel_gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton \
+	and event.button_index == BUTTON_LEFT \
+	and event.is_pressed():
+		var _ret = OS.shell_open("https://github.com/lizrad/recursio")
