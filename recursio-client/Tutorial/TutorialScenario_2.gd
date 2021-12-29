@@ -22,9 +22,6 @@ func _ready():
 func _started_round_1():
 	_bottom_element.show()
 	_bottom_element.set_content("Welcome to the second tutorial!", TutorialUIBottomElement.Controls.None, true)
-	_player.block_movement = true
-	_player.block_input = true
-	_enemy.block_movement = false
 	
 	var _error = _player.connect("client_hit", self, "_on_player_hit")
 	_error = _enemy.connect("client_hit", self, "_on_enemy_hit")
@@ -90,7 +87,6 @@ func _started_round_2() -> void:
 	_character_manager._round_manager.switch_to_phase(RoundManager.Phases.PREPARATION)
 	_enemy.kb.visible = false
 	_player.kb.visible = false
-	_player.block_movement = true
 	
 	for ghost in _ghost_manager._ghosts:
 		var _error = ghost.connect("client_hit", self, "_on_ghost_hit", [ghost])

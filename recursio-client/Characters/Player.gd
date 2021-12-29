@@ -3,6 +3,7 @@ class_name Player
 
 signal initialized()
 
+onready var _player_input = get_node("KinematicBody/PlayerInput")
 onready var _hud: HUD = get_node("KinematicBody/HUD")
 onready var _light_viewport = get_node("KinematicBody/LightViewport")
 onready var _overview_light = get_node("KinematicBody/TransformReset/OverviewLight")
@@ -19,7 +20,6 @@ onready var _camera_shake_amount = Constants.get_value("vfx","death_camera_shake
 onready var _camera_shake_speed  = Constants.get_value("vfx","death_camera_shake_speed")
 
 
-var block_switching: bool = false
 
 
 var _walls = []
@@ -74,6 +74,23 @@ func clear_walls():
 	_walls.clear()
 
 
+func toggle_swapping(value: bool) -> void:
+	_player_input.block_swapping = !value
+
+func toggle_movement(value: bool) -> void:
+	_player_input.block_movement = !value
+
+func toggle_trigger(trigger, value: bool) -> void:
+	var input_string: String
+	if trigger == ActionManager.Trigger.FIRE_START:
+		input_string ="player_shoot"
+	elif trigger == ActionManager.Trigger.DEFAULT_ATTACK_START:
+		input_string ="player_melee"
+	elif trigger == ActionManager.Trigger.SPECIAL_MOVEMENT_START:
+		input_string ="player_dash"
+	_player_input.disabled_inputs[input_string] = !value
+
+
 # OVERRIDE #
 func apply_input(movement_vector: Vector3, rotation_vector: Vector3, buttons: int) -> void:
 	.apply_input(movement_vector, rotation_vector, buttons)
@@ -85,14 +102,14 @@ func apply_input(movement_vector: Vector3, rotation_vector: Vector3, buttons: in
 		frame.position = self.position
 		_past_frames[Server.get_server_time()] = frame
 
-	# Nothing to do if player can't move
-	if block_movement or currently_dying or currently_spawning:
+	# Nothing to do in those phases
+	if currently_dying or currently_spawning:
 		return
 
 	# visual appearance for aim_mode
 	# TODO: update drag_factor
 	# _drag_factor = 2*Constants.get_value("movement", "drag_factor") -> needs to be updated also on server
-	if aim_mode && !block_input:
+	if aim_mode:
 		var action = _get_action(ActionManager.Trigger.FIRE_START, timeline_index) as Action
 		if action.ammunition > 0:
 			_aim_visuals.visible = true

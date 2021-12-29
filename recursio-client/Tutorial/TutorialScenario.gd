@@ -52,7 +52,7 @@ func _ready():
 	_character_manager.hide_player_button_overlay = true
 	_player = _character_manager.get_player()
 	_player.get_body().hide()
-	_player.block_switching = true
+	_player.toggle_swapping(false)
 	
 	# setup enemy
 	var spawn_point = _game_manager.get_spawn_point(1, 0).global_transform.origin
@@ -111,8 +111,10 @@ func start() -> void:
 func pause() -> void:
 	_pause_post_processing.show()
 	_paused = true
-	_player.block_input = true
-	_player.block_movement = true
+	_player.toggle_trigger(ActionManager.Trigger.FIRE_START, false)
+	_player.toggle_trigger(ActionManager.Trigger.DEFAULT_ATTACK_START, false)
+	_player.toggle_trigger(ActionManager.Trigger.SPECIAL_MOVEMENT_START, false)
+	_player.toggle_movement(false)
 	_round_manager.pause()
 	if _enemyAI:
 		_enemyAI.stop()
@@ -122,8 +124,10 @@ func unpause(enable_player_input: bool) -> void:
 	_paused = false
 	#because otherwise we will fire on unpause sometime
 	yield(get_tree().create_timer(0.1), "timeout")
-	_player.block_input = !enable_player_input
-	_player.block_movement = !enable_player_input
+	_player.toggle_trigger(ActionManager.Trigger.FIRE_START, enable_player_input)
+	_player.toggle_trigger(ActionManager.Trigger.DEFAULT_ATTACK_START, enable_player_input)
+	_player.toggle_trigger(ActionManager.Trigger.SPECIAL_MOVEMENT_START, enable_player_input)
+	_player.toggle_movement(enable_player_input)
 	if _enemyAI:
 		_enemyAI.start()
 	_round_manager.unpause()
