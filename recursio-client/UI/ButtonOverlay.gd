@@ -13,7 +13,7 @@ enum BUTTONS {
 
 var _conf = { 
 				BUTTONS.UP: "ui_select",
-				BUTTONS.DOWN: "player_shoot",
+				BUTTONS.DOWN: "ui_accept",
 				BUTTONS.LEFT: "player_melee",
 				BUTTONS.RIGHT: "player_switch"
 			}

@@ -10,7 +10,6 @@ viewport_path = NodePath("Viewport")
 
 [node name="ButtonOverlaySimple" type="Spatial"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1206, 0, -5.43075 )
-visible = false
 script = ExtResource( 4 )
 
 [node name="Viewport" type="Viewport" parent="."]
@@ -20,13 +19,13 @@ usage = 0
 render_target_v_flip = true
 
 [node name="Swap" type="Sprite" parent="Viewport"]
-position = Vector2( 50, 100 )
+position = Vector2( 50, 80 )
 texture = ExtResource( 3 )
 
 [node name="Label" type="Label" parent="Viewport/Swap"]
-margin_left = 34.5
+margin_left = 54.5
 margin_top = -19.0
-margin_right = 112.5
+margin_right = 132.5
 margin_bottom = 19.0
 custom_fonts/font = ExtResource( 1 )
 text = "swap"
@@ -35,13 +34,13 @@ __meta__ = {
 }
 
 [node name="Ready" type="Sprite" parent="Viewport"]
-position = Vector2( 50, 160 )
+position = Vector2( 50, 180 )
 texture = ExtResource( 2 )
 
 [node name="Label" type="Label" parent="Viewport/Ready"]
-margin_left = 34.5
+margin_left = 54.5
 margin_top = -19.0
-margin_right = 112.5
+margin_right = 172.5
 margin_bottom = 19.0
 custom_fonts/font = ExtResource( 1 )
 text = "ready!"
