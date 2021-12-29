@@ -63,7 +63,7 @@ func _started_round_1():
 	yield(_bottom_element, "continue_pressed")
 	unpause(true)
 	
-	_bottom_element.set_content("Fire!", TutorialUIBottomElement.Controls.Fire)
+	_bottom_element.set_content("Shoot!", TutorialUIBottomElement.Controls.Shoot)
 	
 	yield(_enemy, "client_hit")
 	_bottom_element.set_content("Now capture the point.")
@@ -128,7 +128,7 @@ func _started_round_3() -> void:
 	_enemy.kb.visible = true
 	yield(_round_manager, "game_phase_started")
 	
-	_bottom_element.set_content("Fire!", TutorialUIBottomElement.Controls.Fire)
+	_bottom_element.set_content("Shoot!", TutorialUIBottomElement.Controls.Shoot)
 	_goal_element_1.show()
 	_goal_element_1.set_content("Place Wall",_ghost_manager._enemy_ghosts[0].get_body())
 	yield(_level.get_capture_points()[1], "captured")
