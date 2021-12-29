@@ -42,8 +42,12 @@ func initialize(owning_player) -> void:
 	
 	# Trigger post processing effects if this is an active player
 	if _owning_player is PlayerBase:
-		PostProcess.animate_property("chromatic_ab_strength", 0.5, 0, _max_time)
-		PostProcess.shake_camera(_camera_shake_amount, _camera_shake_speed, _camera_shake_duration)
+		# TODO: Check is necessary because server does not do any postprocessing, we should maybe 
+		# make a client only version for this class
+		if get_node("/root").has_node("PostProcess"):
+			var post_process = get_node("/root/PostProcess")
+			post_process.animate_property("chromatic_ab_strength", 0.5, 0, _max_time)
+			post_process.shake_camera(_camera_shake_amount, _camera_shake_speed, _camera_shake_duration)
 
 
 func _physics_process(delta):
