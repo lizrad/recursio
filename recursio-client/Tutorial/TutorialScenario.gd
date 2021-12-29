@@ -28,6 +28,7 @@ var _sub_conditions_ends := []
 onready var _goal_element_1 = get_node("TutorialUI/GoalElement1")
 onready var _goal_element_2 = get_node("TutorialUI/GoalElement2")
 onready var _bottom_element = get_node("TutorialUI/BottomElement")
+onready var _pause_post_processing = get_node("TutorialUI/PausePostProcessing")
 onready var _character_manager: CharacterManager = get_node("TutorialWorld/CharacterManager")
 onready var _ghost_manager: ClientGhostManager = get_node("TutorialWorld/CharacterManager/GhostManager")
 onready var _game_manager: GameManager = get_node("TutorialWorld/CharacterManager/GameManager")
@@ -107,8 +108,8 @@ func start() -> void:
 	_round_starts[_current_round].call_func()
 
 
-# TODO: add PostProcessing to make clear game is paused
 func pause() -> void:
+	_pause_post_processing.show()
 	_paused = true
 	_player.block_input = true
 	_player.block_movement = true
@@ -116,8 +117,8 @@ func pause() -> void:
 	if _enemyAI:
 		_enemyAI.stop()
 
-# TODO: add PostProcessing to make clear game is paused
 func unpause(enable_player_input: bool) -> void:
+	_pause_post_processing.hide()
 	_paused = false
 	#because otherwise we will fire on unpause sometime
 	yield(get_tree().create_timer(0.1), "timeout")

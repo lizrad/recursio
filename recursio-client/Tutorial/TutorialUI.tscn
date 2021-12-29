@@ -1,24 +1,14 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://UI/Default.tres" type="Theme" id=1]
 [ext_resource path="res://Resources/Fonts/FiraCode-Regular.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://UI/StyleBoxFlat.tres" type="StyleBox" id=3]
+[ext_resource path="res://Tutorial/Pause.png" type="Texture" id=4]
 [ext_resource path="res://icon.png" type="Texture" id=5]
 [ext_resource path="res://Tutorial/Arrow.png" type="Texture" id=6]
 [ext_resource path="res://Tutorial/TutorialUIGoalElement.gd" type="Script" id=7]
 [ext_resource path="res://Tutorial/TutorialUIBottomElement.gd" type="Script" id=8]
-
-[sub_resource type="DynamicFont" id=2]
-size = 40
-use_mipmaps = true
-use_filter = true
-font_data = ExtResource( 2 )
-
-[sub_resource type="Theme" id=1]
-default_font = SubResource( 2 )
-Button/styles/focus = ExtResource( 3 )
-LineEdit/styles/focus = ExtResource( 3 )
-TextEdit/styles/focus = ExtResource( 3 )
+[ext_resource path="res://addons/PostProcessingTool/PostProcessing_tool.tscn" type="PackedScene" id=9]
 
 [sub_resource type="DynamicFont" id=3]
 size = 60
@@ -32,80 +22,22 @@ Button/styles/focus = ExtResource( 3 )
 LineEdit/styles/focus = ExtResource( 3 )
 TextEdit/styles/focus = ExtResource( 3 )
 
+[sub_resource type="DynamicFont" id=2]
+size = 40
+use_mipmaps = true
+use_filter = true
+font_data = ExtResource( 2 )
+
+[sub_resource type="Theme" id=1]
+default_font = SubResource( 2 )
+Button/styles/focus = ExtResource( 3 )
+LineEdit/styles/focus = ExtResource( 3 )
+TextEdit/styles/focus = ExtResource( 3 )
+
 [node name="TutorialUI" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 theme = ExtResource( 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="BottomElement" type="CenterContainer" parent="."]
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_top = -236.0
-margin_bottom = -36.0
-script = ExtResource( 8 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="ElementsList" type="HBoxContainer" parent="BottomElement"]
-margin_left = 496.0
-margin_top = 25.0
-margin_right = 1424.0
-margin_bottom = 175.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="ControlTexture" type="TextureRect" parent="BottomElement/ElementsList"]
-margin_right = 150.0
-margin_bottom = 150.0
-rect_min_size = Vector2( 150, 150 )
-size_flags_horizontal = 3
-size_flags_vertical = 3
-size_flags_stretch_ratio = 2.0
-texture = ExtResource( 5 )
-expand = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Space" type="Control" parent="BottomElement/ElementsList"]
-margin_left = 154.0
-margin_right = 174.0
-margin_bottom = 150.0
-rect_min_size = Vector2( 20, 0 )
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="ControlText" type="Label" parent="BottomElement/ElementsList"]
-margin_left = 178.0
-margin_right = 928.0
-margin_bottom = 150.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-size_flags_stretch_ratio = 10.0
-theme = SubResource( 1 )
-text = "Welcome to the first Tutorial!"
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="ContinueTexture" type="TextureRect" parent="BottomElement/ElementsList"]
-visible = false
-margin_left = 932.0
-margin_right = 1082.0
-margin_bottom = 150.0
-rect_min_size = Vector2( 150, 150 )
-size_flags_horizontal = 3
-size_flags_vertical = 3
-size_flags_stretch_ratio = 2.0
-texture = ExtResource( 5 )
-expand = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -196,6 +128,99 @@ size_flags_stretch_ratio = 10.0
 theme = SubResource( 4 )
 text = "Capture"
 valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PausePostProcessing" parent="." instance=ExtResource( 9 )]
+visible = false
+bloom_show = false
+chromatc_aberration_show = true
+chromatc_aberration_strength = 0.25
+fog_overlay_show = true
+fog_overlay_octaves = 14
+
+[node name="PauseTexture" type="TextureRect" parent="PausePostProcessing"]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -120.0
+margin_top = -120.0
+margin_right = -20.0
+margin_bottom = -20.0
+texture = ExtResource( 4 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="BottomElement" type="CenterContainer" parent="."]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = -236.0
+margin_bottom = -36.0
+script = ExtResource( 8 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ElementsList" type="HBoxContainer" parent="BottomElement"]
+margin_left = 496.0
+margin_top = 25.0
+margin_right = 1424.0
+margin_bottom = 175.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ControlTexture" type="TextureRect" parent="BottomElement/ElementsList"]
+margin_right = 150.0
+margin_bottom = 150.0
+rect_min_size = Vector2( 150, 150 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 2.0
+texture = ExtResource( 5 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Space" type="Control" parent="BottomElement/ElementsList"]
+margin_left = 154.0
+margin_right = 174.0
+margin_bottom = 150.0
+rect_min_size = Vector2( 20, 0 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ControlText" type="Label" parent="BottomElement/ElementsList"]
+margin_left = 178.0
+margin_right = 928.0
+margin_bottom = 150.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 10.0
+theme = SubResource( 1 )
+text = "Welcome to the first Tutorial!"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ContinueTexture" type="TextureRect" parent="BottomElement/ElementsList"]
+visible = false
+margin_left = 932.0
+margin_right = 1082.0
+margin_bottom = 150.0
+rect_min_size = Vector2( 150, 150 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 2.0
+texture = ExtResource( 5 )
+expand = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
