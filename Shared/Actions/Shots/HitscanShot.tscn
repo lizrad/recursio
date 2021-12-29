@@ -4,8 +4,12 @@
 
 [sub_resource type="SpatialMaterial" id=8]
 resource_local_to_scene = true
-flags_unshaded = true
 albedo_color = Color( 1, 0, 0, 1 )
+emission_enabled = true
+emission = Color( 1, 1, 1, 1 )
+emission_energy = 200.0
+emission_operator = 0
+emission_on_uv2 = false
 
 [sub_resource type="CylinderMesh" id=1]
 top_radius = 7.0
@@ -51,7 +55,8 @@ cast_to = Vector3( 0, 0, -1 )
 script = ExtResource( 1 )
 
 [node name="Visualisation" type="MeshInstance" parent="."]
-transform = Transform( 0.025, 0, 0, 0, 0, -0.025, 0, 0, -1.09278e-09, 0, 0, -2.5 )
+transform = Transform( 0.025, 0, 0, 0, -4.37114e-08, -0.025, 0, 1, -1.09278e-09, 0, 0, -2.5 )
+layers = 512
 material_override = SubResource( 8 )
 cast_shadow = 0
 mesh = SubResource( 1 )

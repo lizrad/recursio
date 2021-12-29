@@ -13,8 +13,8 @@ onready var _visibility_light = get_node("KinematicBody/VisibilityLight")
 onready var _button_overlay: ButtonOverlay = get_node("KinematicBody/ButtonOverlay")
 onready var _aim_visuals = get_node("KinematicBody/AimVisuals")
 onready var _audio_player: AudioStreamPlayer = get_node("AudioStreamPlayer")
-onready var _camera_shake_amount = Constants.get_value("vfx","camera_shake_amount")
-onready var _camera_shake_speed  = Constants.get_value("vfx","camera_shake_speed")
+onready var _camera_shake_amount = Constants.get_value("vfx","death_camera_shake_amount")
+onready var _camera_shake_speed  = Constants.get_value("vfx","death_camera_shake_speed")
 
 
 var block_switching: bool = false
@@ -92,6 +92,7 @@ func apply_input(movement_vector: Vector3, rotation_vector: Vector3, buttons: in
 		if action.ammunition > 0:
 			_aim_visuals.visible = true
 			_aim_visuals.get_child(timeline_index % 2).visible = aim_mode
+			PostProcess.chromatic_ab_strength = 0.1
 		else:
 			# -> already handles sound effects but fail sound for no ammo is only needed for current player
 			if not _audio_player.playing:
