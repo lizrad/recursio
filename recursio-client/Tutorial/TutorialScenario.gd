@@ -137,7 +137,7 @@ func stop() -> void:
 	queue_free()
 
 
-func add_post_process_exception(object: Node) -> void:
+func add_post_process_exception(object) -> void:
 	var _global_transform
 	if object is Spatial:
 		_global_transform = object.global_transform
@@ -147,7 +147,7 @@ func add_post_process_exception(object: Node) -> void:
 	if object is Spatial:
 		object.global_transform = _global_transform
 	
-func remove_post_process_exception(object: Node) -> void:
+func remove_post_process_exception(object) -> void:
 	var _global_transform
 	if object is Spatial:
 		_global_transform = object.global_transform

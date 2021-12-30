@@ -6,6 +6,7 @@ signal hit(perpetrator)
 signal client_hit(perpetrator)
 signal dying()
 signal spawning()
+signal moved_to_spawn()
 
 signal non_vfx_spawn()
 signal velocity_changed(velocity, front_vector, right_vector)
@@ -86,6 +87,7 @@ func move_to_spawn_point() -> void:
 	set_position(spawn_point)
 	var val = PI/2 + (team_id * PI)
 	set_rotation_y(val)
+	emit_signal("moved_to_spawn")
 
 
 # Returns the position of the underlying kinematic body

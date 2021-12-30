@@ -142,10 +142,30 @@ func _started_round_3() -> void:
 	_bottom_element.set_content("Spawn Wall!", TutorialUIBottomElement.Controls.Shoot)
 	_goal_element_1.show()
 	_goal_element_1.set_content("Place here",_ghost_manager._enemy_ghosts[0].get_body())
-	yield(_level.get_capture_points()[1], "captured")
 	
-	_bottom_element.set_content("Now get the other point!")
-	_goal_element_1.set_content("Capture",_level.get_capture_points()[0])
+	
+	_goal_element_2.show()
+	_goal_element_2.set_content("Repeats", _ghost_manager._player_ghosts[0].get_body())
+	
+	yield(_ghost_manager._player_ghosts[0], "moved_to_spawn")
+	if not _ghost_manager._player_ghosts[0].currently_dying:
+		_player.set_custom_view_target(_ghost_manager._player_ghosts[0].get_body())
+		add_post_process_exception(_goal_element_2)
+		add_post_process_exception(_ghost_manager._player_ghosts[0])
+		_goal_element_2.set_content("Respawned", _ghost_manager._player_ghosts[0].get_body())
+		_bottom_element.set_content("If the ghost does not get hit, it just gets set back to spawn.", TutorialUIBottomElement.Controls.None, true)
+		pause()
+		yield(_bottom_element, "continue_pressed")
+		unpause()
+		remove_post_process_exception(_goal_element_2)
+		remove_post_process_exception(_ghost_manager._player_ghosts[0])
+		_goal_element_2.set_content("Repeats further", _ghost_manager._player_ghosts[0].get_body())
+		_bottom_element.set_content("Now the ghost can capture the point again.")
+		_player.follow_camera()
+		yield(_level.get_capture_points()[1], "captured")
+	
+		_bottom_element.set_content("You have to get the other point!")
+		_goal_element_1.set_content("Capture",_level.get_capture_points()[0])
 	
 
 
