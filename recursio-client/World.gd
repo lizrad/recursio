@@ -8,5 +8,5 @@ func set_level(level: Level) -> void:
 	$CharacterManager.set_level(level)
 
 
-func toggle_player_input(value: bool) -> void:
-	$CharacterManager.toggle_player_input(value)
+func toggle_player_input_pause(value: bool) -> void:
+	$CharacterManager.toggle_player_input_pause(value)
