@@ -31,6 +31,9 @@ var _move_acceleration = Constants.get_value("movement", "acceleration")
 # RecordManager for recording movement and actions
 var _record_manager: RecordManager = RecordManager.new()
 
+func _ready() -> void:
+	_record_manager.server = get_node("/root/Server")
+
 
 func player_base_init(action_manager) -> void:
 	.character_base_init(action_manager)
