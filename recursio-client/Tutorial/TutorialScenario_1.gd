@@ -122,12 +122,13 @@ func _dash_sub_condition_end() -> void:
 func _enemy_point_captured_condition_start() -> void:
 	_enemy.kb.visible = true
 	var _error = _enemy.connect("client_hit", self, "_on_enemy_hit")
-	_enemy.set_position(Vector3(0,0,-12))
+	_enemy.set_position(Vector3(0,0,-10))
 	_enemyAI = EnemyAI.new(_enemy)
 	_enemyAI.add_waypoint(Vector2(0, -3))
 	_enemyAI.set_character_to_shoot(_player)
 	_enemyAI.peaceful = true
 	add_child(_enemyAI)
+	yield(_round_manager, "game_phase_started")
 	_enemyAI.start()
 func _enemy_point_captured_condition() -> bool:
 	return _level.get_capture_points()[0].get_capture_progress() >= 1.0 \
