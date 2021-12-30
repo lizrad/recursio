@@ -26,7 +26,7 @@ func _started_round_1():
 	
 	pause()
 	yield(_bottom_element, "continue_pressed")
-	unpause(false)
+	unpause()
 	
 	_bottom_element.set_content("Capture both points to win!", TutorialUIBottomElement.Controls.None, true)
 	_goal_element_1.set_content("", _level.get_capture_points()[1])
@@ -36,18 +36,20 @@ func _started_round_1():
 	
 	pause()
 	yield(_bottom_element, "continue_pressed")
-	unpause(true)
-	
+	unpause()
+	_player.toggle_movement(true)
 	_goal_element_2.hide()
 	_bottom_element.set_content("Start with this one!")
 	_player.set_custom_view_target(_level.get_capture_points()[1])
 	_goal_element_1.set_content("Capture!", _level.get_capture_points()[1])
 	_goal_element_1.show()
-
-	
+	pause()
+	yield(_bottom_element, "continue_pressed")
+	unpause()
 	_player.follow_camera()
 	_player.kb.visible = true
 	_character_manager._round_manager._start_game()
+	yield(_round_manager, "game_phase_started")
 	add_sub_condition(funcref(self, "_move_sub_condition_start"), funcref(self, "_move_sub_condition"), funcref(self, "_move_sub_condition_end"))
 	add_sub_condition(funcref(self, "_dash_sub_condition_start"), funcref(self, "_dash_sub_condition"), funcref(self, "_dash_sub_condition_end"))
 
@@ -107,6 +109,7 @@ func _move_sub_condition_end() -> void:
 
 
 func _dash_sub_condition_start() -> void:
+	_player.toggle_trigger(ActionManager.Trigger.SPECIAL_MOVEMENT_START, true)
 	_bottom_element.show()
 	_bottom_element.set_content("Dash!", TutorialUIBottomElement.Controls.Dash)
 func _dash_sub_condition() -> bool:
@@ -136,9 +139,10 @@ func _enemy_point_captured_condition_end() -> void:
 func _enemy_killed_condition_start() -> void:
 	pause()
 	yield(_bottom_element, "continue_pressed")
-	unpause(true)
+	unpause()
 	_goal_element_1.set_content("Kill!", _enemy.get_body())
 	_bottom_element.set_content("Melee!",TutorialUIBottomElement.Controls.Melee)
+	_player.toggle_trigger(ActionManager.Trigger.DEFAULT_ATTACK_START, true)
 func _enemy_killed_condition() -> bool:
 	return _enemy.currently_dying
 func _enemy_killed_condition_end() -> void:

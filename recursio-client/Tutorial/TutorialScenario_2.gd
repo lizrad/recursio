@@ -35,7 +35,10 @@ func _started_round_1():
 	_enemyAI.start()
 	pause()
 	yield(_bottom_element, "continue_pressed")
-	unpause(false)
+	unpause()
+	
+	_player.toggle_trigger(ActionManager.Trigger.SPECIAL_MOVEMENT_START, true)
+	_player.toggle_movement(true)
 	_character_manager._round_manager._start_game()
 	
 	_player.kb.visible = true
@@ -45,6 +48,8 @@ func _started_round_1():
 	_goal_element_1.set_content("Capture!", _level.get_capture_points()[1])
 	
 	_enemy.set_position(Vector3(-12,0, 8))
+	
+	
 	# Wait until player gets hit
 	yield(_player, "client_hit")
 	
@@ -52,14 +57,15 @@ func _started_round_1():
 	
 	pause()
 	yield(_bottom_element, "continue_pressed")
-	unpause(false)
+	unpause()
 	_goal_element_1.set_content("Kill!", _enemy.get_body())
 	_bottom_element.set_content("Kill the enemy before they can kill you!", TutorialUIBottomElement.Controls.None, true)
 	
 	pause()
 	yield(_bottom_element, "continue_pressed")
-	unpause(true)
-	
+	unpause()
+	_player.toggle_trigger(ActionManager.Trigger.DEFAULT_ATTACK_START, true)
+	_player.toggle_trigger(ActionManager.Trigger.FIRE_START, true)
 	_bottom_element.set_content("Shoot!", TutorialUIBottomElement.Controls.Shoot)
 	
 	yield(_enemy, "client_hit")
@@ -81,7 +87,7 @@ func _started_round_2() -> void:
 	_bottom_element.set_content("Good job!", TutorialUIBottomElement.Controls.None, true)
 	pause()
 	yield(_bottom_element, "continue_pressed")
-	unpause(false)
+	unpause()
 	
 	_character_manager._round_manager.round_index += 1
 	_character_manager._round_manager.switch_to_phase(RoundManager.Phases.PREPARATION)
@@ -112,7 +118,7 @@ func _completed_round_2() -> void:
 func _started_round_3() -> void:
 	pause()
 	yield(_bottom_element, "continue_pressed")
-	unpause(true)
+	unpause()
 	_ghost_manager._player_ghosts[0].disconnect("client_hit", self, "_on_ghost_hit")
 	var _error = _ghost_manager._player_ghosts[0].connect("client_hit", self, "_on_ghost_hit_soft_lock", [_ghost_manager._player_ghosts[0]])
 	
@@ -124,9 +130,9 @@ func _started_round_3() -> void:
 	_enemy.kb.visible = true
 	yield(_round_manager, "game_phase_started")
 	
-	_bottom_element.set_content("Shoot!", TutorialUIBottomElement.Controls.Shoot)
+	_bottom_element.set_content("Spawn Wall!", TutorialUIBottomElement.Controls.Shoot)
 	_goal_element_1.show()
-	_goal_element_1.set_content("Place Wall",_ghost_manager._enemy_ghosts[0].get_body())
+	_goal_element_1.set_content("Place here",_ghost_manager._enemy_ghosts[0].get_body())
 	yield(_level.get_capture_points()[1], "captured")
 	
 	_bottom_element.set_content("Now get the other point!")
@@ -168,7 +174,7 @@ func _on_ghost_hit_soft_lock(perpetrator, ghost: PlayerGhost):
 	_goal_element_1.hide()
 	pause()
 	yield(_bottom_element, "continue_pressed")
-	unpause(true)
+	unpause()
 	_character_manager._round_manager.switch_to_phase(RoundManager.Phases.PREPARATION)
 	_goal_element_1.show()
 	if perpetrator is Player:

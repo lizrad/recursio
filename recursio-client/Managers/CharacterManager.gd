@@ -86,11 +86,11 @@ func get_player_id() -> int:
 	return _player_rpc_id
 
 
-func toggle_player_input(disabled: bool) -> void:
-	_player.toggle_trigger(ActionManager.Trigger.FIRE_START, disabled)
-	_player.toggle_trigger(ActionManager.Trigger.DEFAULT_ATTACK_START, disabled)
-	_player.toggle_trigger(ActionManager.Trigger.SPECIAL_MOVEMENT_START, disabled)
-	_player.toggle_movement(disabled)
+func toggle_player_input(value: bool) -> void:
+	_player.toggle_trigger(ActionManager.Trigger.FIRE_START, value)
+	_player.toggle_trigger(ActionManager.Trigger.DEFAULT_ATTACK_START, value)
+	_player.toggle_trigger(ActionManager.Trigger.SPECIAL_MOVEMENT_START, value)
+	_player.toggle_movement(value)
 
 
 func _on_game_start_received(start_time):

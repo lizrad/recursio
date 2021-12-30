@@ -101,7 +101,7 @@ func _process(_delta):
 	
 	if Input.is_action_just_pressed("gameplay_menu"):
 		_gameplay_menu.visible = !_gameplay_menu.visible
-		_toggle_player_input(_gameplay_menu.visible)
+		_toggle_player_input(!_gameplay_menu.visible)
 
 
 func return_to_game_room_lobby():
@@ -307,7 +307,7 @@ func _on_tutorial_back_pressed() -> void:
 
 
 func _on_gameplay_menu_resume_pressed() -> void:
-	_toggle_player_input(false)
+	_toggle_player_input(true)
 
 
 func _on_gameplay_menu_leave_pressed() -> void:
@@ -323,14 +323,14 @@ func _on_gameplay_menu_leave_pressed() -> void:
 	_in_game = false
 
 
-func _toggle_player_input(disabled: bool) -> void:
+func _toggle_player_input(value: bool) -> void:
 	if not _in_game:
 		return
 	
 	if _world != null:
-		_world.toggle_player_input(disabled)
+		_world.toggle_player_input(value)
 	else:
-		_tutorial.toggle_player_input(disabled)
+		_tutorial.toggle_player_input(value)
 
 
 func _on_panel_gui_input(event: InputEvent) -> void:

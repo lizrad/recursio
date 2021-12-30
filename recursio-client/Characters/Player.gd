@@ -77,10 +77,17 @@ func clear_walls():
 func toggle_swapping(value: bool) -> void:
 	_player_input.block_swapping = !value
 
+func get_swapping_toggle_value() -> bool:
+	return !_player_input.block_swapping
+
 func toggle_movement(value: bool) -> void:
 	_player_input.block_movement = !value
 
+func get_movement_toggle_value() -> bool:
+	return !_player_input.block_movement
+
 func toggle_trigger(trigger, value: bool) -> void:
+	_hud.toggle_trigger(trigger, value)
 	var input_string: String
 	if trigger == ActionManager.Trigger.FIRE_START:
 		input_string ="player_shoot"
@@ -89,6 +96,18 @@ func toggle_trigger(trigger, value: bool) -> void:
 	elif trigger == ActionManager.Trigger.SPECIAL_MOVEMENT_START:
 		input_string ="player_dash"
 	_player_input.disabled_inputs[input_string] = !value
+
+func get_trigger_toggle_value(trigger) -> bool:
+	assert(trigger in ActionManager.Trigger.values())
+	var input_string: String
+	if trigger == ActionManager.Trigger.FIRE_START:
+		input_string ="player_shoot"
+	elif trigger == ActionManager.Trigger.DEFAULT_ATTACK_START:
+		input_string ="player_melee"
+	elif trigger == ActionManager.Trigger.SPECIAL_MOVEMENT_START:
+		input_string ="player_dash"
+	return !_player_input.disabled_inputs[input_string]
+
 
 
 # OVERRIDE #

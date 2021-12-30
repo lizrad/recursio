@@ -52,6 +52,12 @@ func _ready():
 	_character_manager.hide_player_button_overlay = true
 	_player = _character_manager.get_player()
 	_player.get_body().hide()
+	
+	_player.toggle_trigger(ActionManager.Trigger.FIRE_START, false)
+	_player.toggle_trigger(ActionManager.Trigger.DEFAULT_ATTACK_START, false)
+	_player.toggle_trigger(ActionManager.Trigger.SPECIAL_MOVEMENT_START, false)
+	
+	_player.toggle_movement(false)
 	_player.toggle_swapping(false)
 	
 	# setup enemy
@@ -107,27 +113,40 @@ func init() -> void:
 func start() -> void:
 	_round_starts[_current_round].call_func()
 
-
+var _pre_pause_trigger_toggle_values: Dictionary = {}
+var _pre_pause_movement_toggle_values: bool = false
+var _pre_pause_swapping_toggle_values: bool = false
 func pause() -> void:
 	_pause_post_processing.show()
 	_paused = true
+	
+	_pre_pause_trigger_toggle_values[ActionManager.Trigger.FIRE_START] = _player.get_trigger_toggle_value(ActionManager.Trigger.FIRE_START)
+	_pre_pause_trigger_toggle_values[ActionManager.Trigger.DEFAULT_ATTACK_START] = _player.get_trigger_toggle_value(ActionManager.Trigger.DEFAULT_ATTACK_START)
+	_pre_pause_trigger_toggle_values[ActionManager.Trigger.SPECIAL_MOVEMENT_START] = _player.get_trigger_toggle_value(ActionManager.Trigger.SPECIAL_MOVEMENT_START)
+	
+	_pre_pause_movement_toggle_values = _player.get_movement_toggle_value()
+	_pre_pause_swapping_toggle_values = _player.get_swapping_toggle_value()
+	
 	_player.toggle_trigger(ActionManager.Trigger.FIRE_START, false)
 	_player.toggle_trigger(ActionManager.Trigger.DEFAULT_ATTACK_START, false)
 	_player.toggle_trigger(ActionManager.Trigger.SPECIAL_MOVEMENT_START, false)
+	
 	_player.toggle_movement(false)
+	_player.toggle_swapping(false)
 	_round_manager.pause()
 	if _enemyAI:
 		_enemyAI.stop()
 
-func unpause(enable_player_input: bool) -> void:
+func unpause() -> void:
 	_pause_post_processing.hide()
 	_paused = false
-	#because otherwise we will fire on unpause sometime
-	yield(get_tree().create_timer(0.1), "timeout")
-	_player.toggle_trigger(ActionManager.Trigger.FIRE_START, enable_player_input)
-	_player.toggle_trigger(ActionManager.Trigger.DEFAULT_ATTACK_START, enable_player_input)
-	_player.toggle_trigger(ActionManager.Trigger.SPECIAL_MOVEMENT_START, enable_player_input)
-	_player.toggle_movement(enable_player_input)
+	
+	_player.toggle_trigger(ActionManager.Trigger.FIRE_START, _pre_pause_trigger_toggle_values[ActionManager.Trigger.FIRE_START])
+	_player.toggle_trigger(ActionManager.Trigger.DEFAULT_ATTACK_START, _pre_pause_trigger_toggle_values[ActionManager.Trigger.DEFAULT_ATTACK_START])
+	_player.toggle_trigger(ActionManager.Trigger.SPECIAL_MOVEMENT_START, _pre_pause_trigger_toggle_values[ActionManager.Trigger.SPECIAL_MOVEMENT_START])
+	
+	_player.toggle_movement(_pre_pause_movement_toggle_values)
+	_player.toggle_swapping(_pre_pause_swapping_toggle_values)
 	if _enemyAI:
 		_enemyAI.start()
 	_round_manager.unpause()
@@ -136,8 +155,8 @@ func stop() -> void:
 	queue_free()
 
 
-func toggle_player_input(disabled: bool) -> void:
-	_character_manager.toggle_player_input(disabled)
+func toggle_player_input(value: bool) -> void:
+	_character_manager.toggle_player_input(value)
 
 
 func add_round_start_function(round_start_function: FuncRef) -> void:
@@ -172,7 +191,7 @@ func _completed() -> void:
 	_bottom_element.set_content("Good job!", TutorialUIBottomElement.Controls.None, true)
 	pause()
 	yield(_bottom_element, "continue_pressed")
-	unpause(false)
+	unpause()
 	# this is needed so we don't instantly start the tutorial again because the accept input is not consumed
 	call_deferred("emit_signal","scenario_completed")
 	call_deferred("queue_free")

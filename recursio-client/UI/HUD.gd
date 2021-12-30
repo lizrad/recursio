@@ -3,15 +3,21 @@ class_name HUD
 
 onready var _timer_pb: TextureProgress = get_node("TimerProgressBar")
 onready var _phase = get_node("Phase")
-onready var _ammo: Label= get_node("WeaponAmmo")
-onready var _ammo_type_bg = get_node("WeaponAmmo/WeaponTypeBG")
-onready var _ammo_type = get_node("WeaponAmmo/WeaponType")
-onready var _dash: Label = get_node("DashAmmo")
-onready var _dash_bg = get_node("DashAmmo/DashTexture")
+onready var _ammo: Label= get_node("AmmoList/Weapon/WeaponAmmo")
+onready var _ammo_type_bg = get_node("AmmoList/Weapon/WeaponAmmo/WeaponTypeBG")
+onready var _ammo_type = get_node("AmmoList/Weapon/WeaponAmmo/WeaponType")
+onready var _dash: Label = get_node("AmmoList/Dash/DashAmmo")
+onready var _dash_bg = get_node("AmmoList/Dash/DashAmmo/DashTexture")
+onready var _melee: Label = get_node("AmmoList/Melee/MeleeAmmo")
 onready var _capture_point_hb = get_node("TimerProgressBar/CapturePoints")
 onready var _ammo_type_animation = get_node("TextureRect")
-onready var _controller_shoot = get_node("ControllerButtonShoot")
-onready var _controller_dash = get_node("ControllerButtonDash")
+onready var _controller_shoot = get_node("AmmoList/Weapon/ControllerButtonShoot")
+onready var _controller_melee = get_node("AmmoList/Melee/ControllerButtonMelee")
+onready var _controller_dash = get_node("AmmoList/Dash/ControllerButtonDash")
+onready var _weapon_parent = get_node("AmmoList/Weapon")
+onready var _melee_parent = get_node("AmmoList/Melee")
+onready var _dash_parent = get_node("AmmoList/Dash")
+
 
 onready var tween_time := 1.5
 
@@ -56,6 +62,7 @@ func _ready() -> void:
 
 func _on_controller_changed(controller) -> void:
 	_controller_shoot.texture = load("res://Resources/Icons/" + controller + "/shoot.png")
+	_controller_melee.texture = load("res://Resources/Icons/" + controller + "/melee.png")
 	_controller_dash.texture = load("res://Resources/Icons/" + controller + "/dash.png")
 
 
@@ -64,6 +71,8 @@ func reset():
 	_max_time = -1.0
 	_dash.visible = false
 	_controller_dash.visible = false
+	_melee.visible = false
+	_controller_melee.visible = false
 	_ammo.visible = false
 	_controller_shoot.visible = false
 
@@ -87,6 +96,13 @@ func _calculate_progress() -> float:
 
 	return _round_manager.get_current_phase_time_left() / 1000.0 / _max_time
 
+func toggle_trigger(trigger, value: bool) -> void:
+	if trigger == ActionManager.Trigger.DEFAULT_ATTACK_START:
+		_melee_parent.visible = value
+	elif trigger == ActionManager.Trigger.FIRE_START:
+		_weapon_parent.visible = value
+	elif trigger == ActionManager.Trigger.SPECIAL_MOVEMENT_START:
+		_dash_parent.visible = value
 
 func prep_phase_start(round_index) -> void:
 	_phase.text = "Preparation Phase " + str(round_index + 1)
@@ -97,6 +113,8 @@ func prep_phase_start(round_index) -> void:
 		_max_time = Constants.get_value( "gameplay", phase_string)
 	_dash.visible = true
 	_controller_dash.visible = true
+	_melee.visible = true
+	_controller_melee.visible = true
 	_ammo.visible = true
 	_controller_shoot.visible = true
 

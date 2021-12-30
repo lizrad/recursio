@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=18 format=2]
 
 [ext_resource path="res://UI/HUD.gd" type="Script" id=1]
 [ext_resource path="res://Resources/Fonts/Large.tres" type="DynamicFont" id=2]
@@ -9,12 +9,23 @@
 [ext_resource path="res://Resources/Icons/bullet.png" type="Texture" id=7]
 [ext_resource path="res://Resources/Icons/ps/dash.png" type="Texture" id=8]
 [ext_resource path="res://Resources/Icons/ps/shoot.png" type="Texture" id=9]
+[ext_resource path="res://Resources/Fonts/FiraCode-Bold.ttf" type="DynamicFontData" id=10]
+[ext_resource path="res://Resources/Icons/xbox/melee.png" type="Texture" id=11]
+
+[sub_resource type="DynamicFont" id=10]
+size = 45
+outline_size = 2
+outline_color = Color( 0, 0, 0, 1 )
+use_mipmaps = true
+use_filter = true
+extra_spacing_char = 2
+font_data = ExtResource( 10 )
 
 [sub_resource type="Animation" id=1]
 resource_name = "no_ammo"
 length = 0.7
 tracks/0/type = "value"
-tracks/0/path = NodePath("WeaponAmmo:rect_rotation")
+tracks/0/path = NodePath("AmmoList/Weapon/WeaponAmmo:rect_rotation")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
@@ -26,7 +37,7 @@ tracks/0/keys = {
 "values": [ 0.0, -15.0, 15.0, 0.0 ]
 }
 tracks/1/type = "value"
-tracks/1/path = NodePath("WeaponAmmo:rect_scale")
+tracks/1/path = NodePath("AmmoList/Weapon/WeaponAmmo:rect_scale")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/imported = false
@@ -42,7 +53,7 @@ tracks/1/keys = {
 resource_name = "select_weapon"
 length = 0.5
 tracks/0/type = "value"
-tracks/0/path = NodePath("WeaponAmmo:rect_scale")
+tracks/0/path = NodePath("AmmoList/Weapon/WeaponAmmo:rect_scale")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
@@ -57,7 +68,7 @@ tracks/0/keys = {
 [sub_resource type="Animation" id=3]
 resource_name = "sub_ammo"
 tracks/0/type = "value"
-tracks/0/path = NodePath("WeaponAmmo/SubAmmo:self_modulate")
+tracks/0/path = NodePath("AmmoList/Weapon/WeaponAmmo/SubAmmo:self_modulate")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
@@ -69,7 +80,7 @@ tracks/0/keys = {
 "values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
 }
 tracks/1/type = "value"
-tracks/1/path = NodePath("WeaponAmmo/SubAmmo:rect_position")
+tracks/1/path = NodePath("AmmoList/Weapon/WeaponAmmo/SubAmmo:rect_position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/imported = false
@@ -84,7 +95,7 @@ tracks/1/keys = {
 [sub_resource type="Animation" id=9]
 resource_name = "add_dash"
 tracks/0/type = "value"
-tracks/0/path = NodePath("DashAmmo/SubAmmo:self_modulate")
+tracks/0/path = NodePath("AmmoList/Dash/DashAmmo/SubAmmo:self_modulate")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
@@ -96,7 +107,7 @@ tracks/0/keys = {
 "values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
 }
 tracks/1/type = "value"
-tracks/1/path = NodePath("DashAmmo/SubAmmo:rect_position")
+tracks/1/path = NodePath("AmmoList/Dash/DashAmmo/SubAmmo:rect_position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/imported = false
@@ -108,7 +119,7 @@ tracks/1/keys = {
 "values": [ Vector2( -10, -10 ), Vector2( -40, -30 ) ]
 }
 tracks/2/type = "value"
-tracks/2/path = NodePath("DashAmmo/SubAmmo:text")
+tracks/2/path = NodePath("AmmoList/Dash/DashAmmo/SubAmmo:text")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/imported = false
@@ -120,7 +131,7 @@ tracks/2/keys = {
 "values": [ "+1" ]
 }
 tracks/3/type = "value"
-tracks/3/path = NodePath("DashAmmo/SubAmmo:custom_colors/font_color")
+tracks/3/path = NodePath("AmmoList/Dash/DashAmmo/SubAmmo:custom_colors/font_color")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/imported = false
@@ -135,7 +146,7 @@ tracks/3/keys = {
 [sub_resource type="Animation" id=8]
 resource_name = "sub_dash"
 tracks/0/type = "value"
-tracks/0/path = NodePath("DashAmmo/SubAmmo:self_modulate")
+tracks/0/path = NodePath("AmmoList/Dash/DashAmmo/SubAmmo:self_modulate")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
@@ -147,7 +158,7 @@ tracks/0/keys = {
 "values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
 }
 tracks/1/type = "value"
-tracks/1/path = NodePath("DashAmmo/SubAmmo:rect_position")
+tracks/1/path = NodePath("AmmoList/Dash/DashAmmo/SubAmmo:rect_position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/imported = false
@@ -159,7 +170,7 @@ tracks/1/keys = {
 "values": [ Vector2( -10, -10 ), Vector2( -40, -30 ) ]
 }
 tracks/2/type = "value"
-tracks/2/path = NodePath("DashAmmo/SubAmmo:text")
+tracks/2/path = NodePath("AmmoList/Dash/DashAmmo/SubAmmo:text")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/imported = false
@@ -171,7 +182,7 @@ tracks/2/keys = {
 "values": [ "-1" ]
 }
 tracks/3/type = "value"
-tracks/3/path = NodePath("DashAmmo/SubAmmo:custom_colors/font_color")
+tracks/3/path = NodePath("AmmoList/Dash/DashAmmo/SubAmmo:custom_colors/font_color")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/imported = false
@@ -213,22 +224,41 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ControllerButtonShoot" type="TextureRect" parent="."]
-margin_left = 29.3182
-margin_top = 8.1591
-margin_right = 104.318
-margin_bottom = 83.1591
+[node name="AmmoList" type="VBoxContainer" parent="."]
+margin_right = 120.0
+margin_bottom = 248.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Weapon" type="Control" parent="AmmoList"]
+margin_right = 120.0
+margin_bottom = 80.0
+rect_min_size = Vector2( 120, 80 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ControllerButtonShoot" type="TextureRect" parent="AmmoList/Weapon"]
+anchor_top = 0.5
+anchor_bottom = 0.5
+margin_top = -37.5
+margin_right = 74.9998
+margin_bottom = 37.5
 texture = ExtResource( 9 )
 expand = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="WeaponAmmo" type="Label" parent="."]
-margin_left = 97.3182
-margin_top = 34.1591
-margin_right = 135.318
-margin_bottom = 72.1591
+[node name="WeaponAmmo" type="Label" parent="AmmoList/Weapon"]
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_left = -38.0
+margin_top = -19.0
+margin_bottom = 19.0
 rect_pivot_offset = Vector2( 45, 19 )
 custom_fonts/font = ExtResource( 2 )
 text = "10"
@@ -238,7 +268,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="SubAmmo" type="Label" parent="WeaponAmmo"]
+[node name="SubAmmo" type="Label" parent="AmmoList/Weapon/WeaponAmmo"]
 self_modulate = Color( 1, 1, 1, 0 )
 margin_left = -40.0
 margin_top = -30.0
@@ -254,7 +284,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="WeaponTypeBG" type="TextureRect" parent="WeaponAmmo"]
+[node name="WeaponTypeBG" type="TextureRect" parent="AmmoList/Weapon/WeaponAmmo"]
 margin_left = 50.0
 margin_top = -5.13712
 margin_right = 90.0
@@ -265,7 +295,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="WeaponType" type="TextureRect" parent="WeaponAmmo"]
+[node name="WeaponType" type="TextureRect" parent="AmmoList/Weapon/WeaponAmmo"]
 margin_left = 50.0
 margin_right = 90.0
 margin_bottom = 34.8629
@@ -275,24 +305,84 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ControllerButtonDash" type="TextureRect" parent="."]
-margin_left = 29.3182
-margin_top = 80.1591
-margin_right = 104.318
-margin_bottom = 155.159
+[node name="Melee" type="Control" parent="AmmoList"]
+margin_top = 84.0
+margin_right = 120.0
+margin_bottom = 164.0
+rect_min_size = Vector2( 120, 80 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ControllerButtonMelee" type="TextureRect" parent="AmmoList/Melee"]
+anchor_top = 0.5
+anchor_bottom = 0.5
+margin_top = -37.4999
+margin_right = 74.9998
+margin_bottom = 37.4999
+texture = ExtResource( 11 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MeleeAmmo" type="Label" parent="AmmoList/Melee"]
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_left = -26.6818
+margin_top = -26.8409
+margin_right = 1.31824
+margin_bottom = 29.1591
+custom_fonts/font = SubResource( 10 )
+text = "∞"
+align = 2
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MeleeTexture" type="TextureRect" parent="AmmoList/Melee/MeleeAmmo"]
+margin_left = 38.6818
+margin_top = 7.40001
+margin_right = 78.6818
+margin_bottom = 47.4001
+texture = ExtResource( 3 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Dash" type="Control" parent="AmmoList"]
+margin_top = 168.0
+margin_right = 120.0
+margin_bottom = 248.0
+rect_min_size = Vector2( 120, 80 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ControllerButtonDash" type="TextureRect" parent="AmmoList/Dash"]
+anchor_top = 0.5
+anchor_bottom = 0.5
+margin_top = -37.4999
+margin_right = 74.9998
+margin_bottom = 37.4999
 texture = ExtResource( 8 )
 expand = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="DashAmmo" type="Label" parent="."]
-anchor_top = 0.07
-anchor_bottom = 0.07
-margin_left = 112.318
-margin_top = 25.5591
-margin_right = 135.318
-margin_bottom = 63.5591
+[node name="DashAmmo" type="Label" parent="AmmoList/Dash"]
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_left = -23.0
+margin_top = -19.0
+margin_bottom = 19.0
 custom_fonts/font = ExtResource( 2 )
 text = "2"
 align = 2
@@ -301,7 +391,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="SubAmmo" type="Label" parent="DashAmmo"]
+[node name="SubAmmo" type="Label" parent="AmmoList/Dash/DashAmmo"]
 self_modulate = Color( 1, 1, 1, 0 )
 margin_left = -40.0
 margin_top = -30.0
@@ -317,7 +407,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="DashTexture" type="TextureRect" parent="DashAmmo"]
+[node name="DashTexture" type="TextureRect" parent="AmmoList/Dash/DashAmmo"]
 margin_left = 35.0
 margin_top = -0.440887
 margin_right = 75.0
