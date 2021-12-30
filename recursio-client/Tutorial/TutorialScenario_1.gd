@@ -20,7 +20,7 @@ func _ready():
 
 
 func _started_round_1():
-	
+	add_post_process_exception(_bottom_element)
 	_bottom_element.show()
 	_bottom_element.set_content("Welcome to the first tutorial!", TutorialUIBottomElement.Controls.None, true)
 	
@@ -29,23 +29,31 @@ func _started_round_1():
 	unpause()
 	
 	_bottom_element.set_content("Capture both points to win!", TutorialUIBottomElement.Controls.None, true)
-	_goal_element_1.set_content("", _level.get_capture_points()[1])
+	add_post_process_exception(_goal_element_1)
+	add_post_process_exception(_goal_element_2)
+	var first_spawn_point = _level.get_capture_points()[1]
+	var second_spawn_point = _level.get_capture_points()[0]
+	_goal_element_1.set_content("", first_spawn_point)
 	_goal_element_1.show()
-	_goal_element_2.set_content("", _level.get_capture_points()[0])
+	_goal_element_2.set_content("", second_spawn_point)
 	_goal_element_2.show()
-	
+	add_post_process_exception(first_spawn_point)
+	add_post_process_exception(second_spawn_point)
 	pause()
 	yield(_bottom_element, "continue_pressed")
 	unpause()
 	_player.toggle_movement(true)
 	_goal_element_2.hide()
 	_bottom_element.set_content("Start with this one!")
-	_player.set_custom_view_target(_level.get_capture_points()[1])
-	_goal_element_1.set_content("Capture!", _level.get_capture_points()[1])
+	_player.set_custom_view_target(first_spawn_point)
+	remove_post_process_exception(_goal_element_2)
+	remove_post_process_exception(second_spawn_point)
+	_goal_element_1.set_content("Capture!", first_spawn_point)
 	_goal_element_1.show()
 	pause()
 	yield(_bottom_element, "continue_pressed")
 	unpause()
+	remove_post_process_exception(first_spawn_point)
 	_player.follow_camera()
 	_player.kb.visible = true
 	_character_manager._round_manager._start_game()
@@ -72,8 +80,6 @@ func _started_round_2() -> void:
 	# setting enemy timeline back to the first one
 	_character_manager._on_timeline_picked(1,0)
 	
-	
-	
 	_bottom_element.set_content("Now get the other one.")
 	_bottom_element.show()
 	
@@ -96,6 +102,7 @@ func _check_completed_round_2() -> bool:
 			and _level.get_capture_points()[1].get_progress_team() == 0 \
 
 func _completed_round_2() -> void:
+	remove_post_process_exception(_goal_element_1)
 	pass
 
 
@@ -138,9 +145,11 @@ func _enemy_point_captured_condition_end() -> void:
 	_goal_element_1.set_content("Enemy", _enemy.get_body())
 
 func _enemy_killed_condition_start() -> void:
+	add_post_process_exception(_enemy)
 	pause()
 	yield(_bottom_element, "continue_pressed")
 	unpause()
+	remove_post_process_exception(_enemy)
 	_goal_element_1.set_content("Kill!", _enemy.get_body())
 	_bottom_element.set_content("Melee!",TutorialUIBottomElement.Controls.Melee)
 	_player.toggle_trigger(ActionManager.Trigger.DEFAULT_ATTACK_START, true)

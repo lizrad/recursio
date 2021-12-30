@@ -20,6 +20,7 @@ func _ready():
 
 
 func _started_round_1():
+	add_post_process_exception(_bottom_element)
 	_bottom_element.show()
 	_bottom_element.set_content("Welcome to the second tutorial!", TutorialUIBottomElement.Controls.None, true)
 	
@@ -58,12 +59,18 @@ func _started_round_1():
 	pause()
 	yield(_bottom_element, "continue_pressed")
 	unpause()
+	
+	add_post_process_exception(_goal_element_1)
+	add_post_process_exception(_enemy)
+	_player.set_custom_view_target(_enemy.get_body())
 	_goal_element_1.set_content("Kill!", _enemy.get_body())
 	_bottom_element.set_content("Kill the enemy before they can kill you!", TutorialUIBottomElement.Controls.None, true)
 	
 	pause()
 	yield(_bottom_element, "continue_pressed")
 	unpause()
+	remove_post_process_exception(_enemy)
+	_player.follow_camera()
 	_player.toggle_trigger(ActionManager.Trigger.DEFAULT_ATTACK_START, true)
 	_player.toggle_trigger(ActionManager.Trigger.FIRE_START, true)
 	_bottom_element.set_content("Shoot!", TutorialUIBottomElement.Controls.Shoot)
@@ -112,6 +119,7 @@ func _check_completed_round_2() -> bool:
 func _completed_round_2() -> void:
 	_goal_element_1.show()
 	_goal_element_1.set_content("Stays dead", _ghost_manager._player_ghosts[0].get_body())
+	add_post_process_exception(_ghost_manager._player_ghosts[0].get_body())
 	_bottom_element.set_content("Killing your past timeline stops it completely.", TutorialUIBottomElement.Controls.None, true)
 	
 
@@ -119,6 +127,7 @@ func _started_round_3() -> void:
 	pause()
 	yield(_bottom_element, "continue_pressed")
 	unpause()
+	remove_post_process_exception(_ghost_manager._player_ghosts[0].get_body())
 	_ghost_manager._player_ghosts[0].disconnect("client_hit", self, "_on_ghost_hit")
 	var _error = _ghost_manager._player_ghosts[0].connect("client_hit", self, "_on_ghost_hit_soft_lock", [_ghost_manager._player_ghosts[0]])
 	
@@ -146,6 +155,7 @@ func _check_completed_round_3() -> bool:
 
 
 func _completed_round_3() -> void:
+	remove_post_process_exception(_goal_element_1)
 	pass
 
 

@@ -42,7 +42,14 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="GoalElement1" type="HBoxContainer" parent="."]
+[node name="PostProcessAffected" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="GoalElement1" type="HBoxContainer" parent="PostProcessAffected"]
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
@@ -57,7 +64,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ArrowTexture" type="TextureRect" parent="GoalElement1"]
+[node name="ArrowTexture" type="TextureRect" parent="PostProcessAffected/GoalElement1"]
 margin_right = 150.0
 margin_bottom = 150.0
 rect_min_size = Vector2( 150, 150 )
@@ -67,13 +74,13 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Space" type="Control" parent="GoalElement1"]
+[node name="Space" type="Control" parent="PostProcessAffected/GoalElement1"]
 margin_left = 154.0
 margin_right = 174.0
 margin_bottom = 150.0
 rect_min_size = Vector2( 20, 0 )
 
-[node name="GoalText" type="Label" parent="GoalElement1"]
+[node name="GoalText" type="Label" parent="PostProcessAffected/GoalElement1"]
 margin_left = 178.0
 margin_right = 437.0
 margin_bottom = 150.0
@@ -87,7 +94,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="GoalElement2" type="HBoxContainer" parent="."]
+[node name="GoalElement2" type="HBoxContainer" parent="PostProcessAffected"]
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
@@ -102,7 +109,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ArrowTexture" type="TextureRect" parent="GoalElement2"]
+[node name="ArrowTexture" type="TextureRect" parent="PostProcessAffected/GoalElement2"]
 margin_right = 150.0
 margin_bottom = 150.0
 rect_min_size = Vector2( 150, 150 )
@@ -112,13 +119,13 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Space" type="Control" parent="GoalElement2"]
+[node name="Space" type="Control" parent="PostProcessAffected/GoalElement2"]
 margin_left = 154.0
 margin_right = 174.0
 margin_bottom = 150.0
 rect_min_size = Vector2( 20, 0 )
 
-[node name="GoalText" type="Label" parent="GoalElement2"]
+[node name="GoalText" type="Label" parent="PostProcessAffected/GoalElement2"]
 margin_left = 178.0
 margin_right = 437.0
 margin_bottom = 150.0
@@ -128,6 +135,75 @@ size_flags_stretch_ratio = 10.0
 theme = SubResource( 4 )
 text = "Capture"
 valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="BottomElement" type="CenterContainer" parent="PostProcessAffected"]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = -203.0
+margin_bottom = -53.0
+script = ExtResource( 8 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ElementsList" type="HBoxContainer" parent="PostProcessAffected/BottomElement"]
+margin_left = 496.0
+margin_right = 1424.0
+margin_bottom = 150.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ControlTexture" type="TextureRect" parent="PostProcessAffected/BottomElement/ElementsList"]
+margin_right = 150.0
+margin_bottom = 150.0
+rect_min_size = Vector2( 150, 150 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 2.0
+texture = ExtResource( 5 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Space" type="Control" parent="PostProcessAffected/BottomElement/ElementsList"]
+margin_left = 154.0
+margin_right = 174.0
+margin_bottom = 150.0
+rect_min_size = Vector2( 20, 0 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ControlText" type="Label" parent="PostProcessAffected/BottomElement/ElementsList"]
+margin_left = 178.0
+margin_right = 928.0
+margin_bottom = 150.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 10.0
+theme = SubResource( 1 )
+text = "Welcome to the first Tutorial!"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ContinueTexture" type="TextureRect" parent="PostProcessAffected/BottomElement/ElementsList"]
+visible = false
+margin_left = 932.0
+margin_right = 1082.0
+margin_bottom = 150.0
+rect_min_size = Vector2( 150, 150 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 2.0
+texture = ExtResource( 5 )
+expand = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -155,72 +231,4 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="BottomElement" type="CenterContainer" parent="."]
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_top = -236.0
-margin_bottom = -36.0
-script = ExtResource( 8 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="ElementsList" type="HBoxContainer" parent="BottomElement"]
-margin_left = 496.0
-margin_top = 25.0
-margin_right = 1424.0
-margin_bottom = 175.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="ControlTexture" type="TextureRect" parent="BottomElement/ElementsList"]
-margin_right = 150.0
-margin_bottom = 150.0
-rect_min_size = Vector2( 150, 150 )
-size_flags_horizontal = 3
-size_flags_vertical = 3
-size_flags_stretch_ratio = 2.0
-texture = ExtResource( 5 )
-expand = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Space" type="Control" parent="BottomElement/ElementsList"]
-margin_left = 154.0
-margin_right = 174.0
-margin_bottom = 150.0
-rect_min_size = Vector2( 20, 0 )
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="ControlText" type="Label" parent="BottomElement/ElementsList"]
-margin_left = 178.0
-margin_right = 928.0
-margin_bottom = 150.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-size_flags_stretch_ratio = 10.0
-theme = SubResource( 1 )
-text = "Welcome to the first Tutorial!"
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="ContinueTexture" type="TextureRect" parent="BottomElement/ElementsList"]
-visible = false
-margin_left = 932.0
-margin_right = 1082.0
-margin_bottom = 150.0
-rect_min_size = Vector2( 150, 150 )
-size_flags_horizontal = 3
-size_flags_vertical = 3
-size_flags_stretch_ratio = 2.0
-texture = ExtResource( 5 )
-expand = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
+[node name="PostProcessExcepted" type="Node" parent="."]

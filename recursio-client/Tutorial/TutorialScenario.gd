@@ -25,9 +25,13 @@ var _sub_conditions_starts := []
 var _sub_conditions := []
 var _sub_conditions_ends := []
 
-onready var _goal_element_1 = get_node("TutorialUI/GoalElement1")
-onready var _goal_element_2 = get_node("TutorialUI/GoalElement2")
-onready var _bottom_element = get_node("TutorialUI/BottomElement")
+var _post_process_excepted_objects: Dictionary = {}
+
+onready var _post_process_tool = get_node("TutorialUI/PausePostProcessing")
+onready var _post_process_excepted = get_node("TutorialUI/PostProcessExcepted")
+onready var _goal_element_1 = get_node("TutorialUI/PostProcessAffected/GoalElement1")
+onready var _goal_element_2 = get_node("TutorialUI/PostProcessAffected/GoalElement2")
+onready var _bottom_element = get_node("TutorialUI/PostProcessAffected/BottomElement")
 onready var _pause_post_processing = get_node("TutorialUI/PausePostProcessing")
 onready var _character_manager: CharacterManager = get_node("TutorialWorld/CharacterManager")
 onready var _ghost_manager: ClientGhostManager = get_node("TutorialWorld/CharacterManager/GhostManager")
@@ -132,6 +136,26 @@ func unpause() -> void:
 func stop() -> void:
 	queue_free()
 
+
+func add_post_process_exception(object: Node) -> void:
+	var _global_transform
+	if object is Spatial:
+		_global_transform = object.global_transform
+	_post_process_excepted_objects[object] = object.get_parent()
+	object.get_parent().remove_child(object)
+	_post_process_excepted.add_child(object)
+	if object is Spatial:
+		object.global_transform = _global_transform
+	
+func remove_post_process_exception(object: Node) -> void:
+	var _global_transform
+	if object is Spatial:
+		_global_transform = object.global_transform
+	_post_process_excepted.remove_child(object)
+	_post_process_excepted_objects[object].add_child(object)
+	var _result = _post_process_excepted_objects.erase(object)
+	if object is Spatial:
+		object.global_transform = _global_transform
 
 func toggle_player_input_pause(value: bool) -> void:
 	_character_manager.toggle_player_input_pause(value)
