@@ -6,7 +6,7 @@ signal hit(perpetrator)
 signal client_hit(perpetrator)
 signal dying()
 signal spawning()
-signal moved_to_spawn()
+signal respawned()
 
 signal non_vfx_spawn()
 signal velocity_changed(velocity, front_vector, right_vector)
@@ -87,7 +87,7 @@ func move_to_spawn_point() -> void:
 	set_position(spawn_point)
 	var val = PI/2 + (team_id * PI)
 	set_rotation_y(val)
-	emit_signal("moved_to_spawn")
+	emit_signal("respawned")
 
 
 # Returns the position of the underlying kinematic body
@@ -121,8 +121,8 @@ func set_timeline_index(new_timeline_index: int):
 		emit_signal("timeline_index_changed", new_timeline_index)
 
 func hit(perpetrator) -> void:
-	emit_signal("hit", perpetrator)
 	set_dying(true)
+	emit_signal("hit", perpetrator)
 
 
 # quiet_hit is used to tell a character it is hit, without it triggering the hit signal

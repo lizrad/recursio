@@ -148,6 +148,8 @@ func add_post_process_exception(object) -> void:
 		object.global_transform = _global_transform
 	
 func remove_post_process_exception(object) -> void:
+	if not object in _post_process_excepted_objects:
+		return 
 	var _global_transform
 	if object is Spatial:
 		_global_transform = object.global_transform

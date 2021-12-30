@@ -3,8 +3,8 @@ class_name TutorialScenario_2
 
 func _ready():
 	# Shorten prep phase
-	_round_manager._preparation_phase_time = 3.0
-	_player._hud.add_custom_max_time("prep_phase_time", 3.0)
+	_round_manager._preparation_phase_time = 0.1
+	_player._hud.add_custom_max_time("prep_phase_time", 0.1)
 	_rounds = 3
 	add_round_start_function(funcref(self, "_started_round_1"))
 	add_round_condition_function(funcref(self, "_check_completed_round_1"))
@@ -110,6 +110,9 @@ func _started_round_2() -> void:
 	_player.move_camera_to_overview()
 	_goal_element_1.show()
 	_goal_element_1.set_content("Repeats", _ghost_manager._player_ghosts[0].get_body())
+	yield (_ghost_manager._player_ghosts[0], "client_hit")
+	_goal_element_1.show()
+	_goal_element_1.set_content("Stays dead", _ghost_manager._player_ghosts[0].get_body())
 
 
 func _check_completed_round_2() -> bool:
@@ -117,12 +120,10 @@ func _check_completed_round_2() -> bool:
 
 
 func _completed_round_2() -> void:
-	_goal_element_1.show()
-	_goal_element_1.set_content("Stays dead", _ghost_manager._player_ghosts[0].get_body())
 	add_post_process_exception(_ghost_manager._player_ghosts[0].get_body())
 	_bottom_element.set_content("Killing your past timeline stops it completely.", TutorialUIBottomElement.Controls.None, true)
 	
-
+var _soft_lock = false
 func _started_round_3() -> void:
 	pause()
 	yield(_bottom_element, "continue_pressed")
@@ -147,27 +148,34 @@ func _started_round_3() -> void:
 	_goal_element_2.show()
 	_goal_element_2.set_content("Repeats", _ghost_manager._player_ghosts[0].get_body())
 	
-	yield(_ghost_manager._player_ghosts[0], "moved_to_spawn")
-	if not _ghost_manager._player_ghosts[0].currently_dying:
-		_player.set_custom_view_target(_ghost_manager._player_ghosts[0].get_body())
-		add_post_process_exception(_goal_element_2)
-		add_post_process_exception(_ghost_manager._player_ghosts[0])
-		_goal_element_2.set_content("Respawned", _ghost_manager._player_ghosts[0].get_body())
-		_bottom_element.set_content("If the ghost does not get hit, it just gets set back to spawn.", TutorialUIBottomElement.Controls.None, true)
-		pause()
-		yield(_bottom_element, "continue_pressed")
-		unpause()
-		remove_post_process_exception(_goal_element_2)
-		remove_post_process_exception(_ghost_manager._player_ghosts[0])
-		_goal_element_2.set_content("Repeats further", _ghost_manager._player_ghosts[0].get_body())
-		_bottom_element.set_content("Now the ghost can capture the point again.")
-		_player.follow_camera()
-		yield(_level.get_capture_points()[1], "captured")
-	
-		_bottom_element.set_content("You have to get the other point!")
-		_goal_element_1.set_content("Capture",_level.get_capture_points()[0])
+	yield(_ghost_manager._player_ghosts[0], "respawned")
+	print("here")
+	# wait if we really aren't soft locked
+	yield(get_tree(),"idle_frame")
+	print(_soft_lock)
+	if not _soft_lock:
+		_start_round_3_end()
 	
 
+func _start_round_3_end():
+	_player.set_custom_view_target(_ghost_manager._player_ghosts[0].get_body())
+	add_post_process_exception(_goal_element_2)
+	add_post_process_exception(_ghost_manager._player_ghosts[0])
+	_goal_element_2.set_content("Respawned", _ghost_manager._player_ghosts[0].get_body())
+	_bottom_element.set_content("If the ghost does not get hit, it just gets set back to spawn.", TutorialUIBottomElement.Controls.None, true)
+	pause()
+	_goal_element_1.hide()
+	yield(_bottom_element, "continue_pressed")
+	unpause()
+	remove_post_process_exception(_goal_element_2)
+	remove_post_process_exception(_ghost_manager._player_ghosts[0])
+	_goal_element_2.set_content("Repeats further", _ghost_manager._player_ghosts[0].get_body())
+	_bottom_element.set_content("Now the ghost can capture the point again.")
+	_player.follow_camera()
+	yield(_level.get_capture_points()[1], "captured")
+	_goal_element_1.show()
+	_bottom_element.set_content("You have to get the other point!")
+	_goal_element_1.set_content("Capture",_level.get_capture_points()[0])
 
 func _check_completed_round_3() -> bool:
 	return _level.get_capture_points()[1].capture_progress == 1.0 \
@@ -194,6 +202,8 @@ func _on_ghost_hit(perpetrator, ghost):
 
 
 func _on_ghost_hit_soft_lock(perpetrator, ghost: PlayerGhost):	
+	print("_on_ghost_hit_soft_lock")
+	_soft_lock = true
 	ghost.toggle_visibility_light(false)
 	ghost.server_hit(perpetrator)
 	
@@ -202,11 +212,23 @@ func _on_ghost_hit_soft_lock(perpetrator, ghost: PlayerGhost):
 	else:
 		_bottom_element.set_content("Oh no, your ghost died! Try again.", TutorialUIBottomElement.Controls.None, true)
 	_goal_element_1.hide()
+	_goal_element_2.hide()
 	pause()
 	yield(_bottom_element, "continue_pressed")
 	unpause()
 	_character_manager._round_manager.switch_to_phase(RoundManager.Phases.PREPARATION)
 	_goal_element_1.show()
+	_goal_element_2.show()
+	_goal_element_2.set_content("Repeats", _ghost_manager._player_ghosts[0].get_body())
 	if perpetrator is Player:
 		_bottom_element.set_content("Melee!", TutorialUIBottomElement.Controls.Melee)
 		_goal_element_1.set_content("Kill", _ghost_manager._enemy_ghosts[0].get_body())
+	else:
+		_bottom_element.set_content("Spawn Wall!", TutorialUIBottomElement.Controls.Melee)
+		_goal_element_1.set_content("Place here", _ghost_manager._enemy_ghosts[0].get_body())
+		
+	
+	yield(_ghost_manager._player_ghosts[0], "respawned")
+	yield(get_tree(), "idle_frame")
+	if  _ghost_manager._player_ghosts[0]._is_playing and not _ghost_manager._player_ghosts[0].currently_dying and not _ghost_manager._player_ghosts[0].currently_spawning: 
+		_start_round_3_end()

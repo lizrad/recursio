@@ -83,9 +83,9 @@ func _apply_record_frame(record_frame: RecordFrame):
 	.set_position(record_frame.position)
 	.set_rotation_y(record_frame.rotation_y)
 	.trigger_actions(record_frame.buttons)
-	if (prev_position-record_frame.position).length() >= 1:
-		if (record_frame.position-spawn_point).length() < 0.1:
-			emit_signal("moved_to_spawn")
+	if (prev_position-record_frame.position).length() >= 1.0:
+		if (record_frame.position-spawn_point).length() < 0.3:
+			emit_signal("respawned")
 
 
 func enable_body():
