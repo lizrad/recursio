@@ -118,20 +118,20 @@ func start() -> void:
 	_round_starts[_current_round].call_func()
 
 func pause() -> void:
+	Server.pause_local_clock()
 	_pause_post_processing.show()
 	_paused = true
 	_character_manager.toggle_player_input_pause(true)
-	_round_manager.pause()
 	if _enemyAI:
 		_enemyAI.stop()
 
 func unpause() -> void:
+	Server.unpause_local_clock()
 	_pause_post_processing.hide()
 	_paused = false
 	_character_manager.toggle_player_input_pause(false)
 	if _enemyAI:
 		_enemyAI.start()
-	_round_manager.unpause()
 
 func stop() -> void:
 	queue_free()

@@ -22,7 +22,6 @@ var round_index: int = 0
 var _phase_order = [Phases.PREPARATION, Phases.COUNTDOWN, Phases.GAME]
 
 var _running = false
-var _paused = false
 
 var _preparation_phase_time: float = Constants.get_value("gameplay", "prep_phase_time")
 var _countdown_phase_time: float = Constants.get_value("gameplay","countdown_phase_seconds")
@@ -35,22 +34,10 @@ var _future_game_imminent = false
 var _future_game_start_time = -1.0
 
 
-func _physics_process(delta):
-	if not _paused:
-		_check_for_game_start()
-		_check_for_phase_switch()
-	else:
-		_phase_deadline += delta * 1000
+func _physics_process(_delta):
+	_check_for_game_start()
+	_check_for_phase_switch()
 
-func is_paused() -> bool:
-	return _paused
-
-func pause() -> void:
-	_paused = true
-
-
-func unpause() -> void:
-	_paused = false
 
 # Called to start the game loop
 func future_start_game(start_time):
@@ -119,6 +106,8 @@ func _start_game():
 
 func _check_for_phase_switch():
 	if _running:
+		print(server.get_server_time())
+		print(_phase_deadline)
 		if server.get_server_time() >= _phase_deadline:
 			Logger.info("Current phase timer run out.","gameplay")
 			var next_phase_index = (_current_phase_index+1)%_phase_order.size()

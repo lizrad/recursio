@@ -78,6 +78,7 @@ func stop_playing() -> void:
 # Applies the given frame
 func _apply_record_frame(record_frame: RecordFrame):
 	# TODO: this is pretty wonky but I don't really know a better way to react to this without rewriting the whole recording system
+	# and it works well enough for the tutorial, which is the only place using this signal for now
 	if (get_position()-record_frame.position).length() >= 1:
 		if (record_frame.position-spawn_point).length() < 0.1:
 			emit_signal("moved_to_spawn")
