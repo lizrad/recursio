@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=2]
+[gd_scene load_steps=19 format=2]
 
 [ext_resource path="res://UI/HUD.gd" type="Script" id=1]
 [ext_resource path="res://Resources/Fonts/Large.tres" type="DynamicFont" id=2]
@@ -11,6 +11,7 @@
 [ext_resource path="res://Resources/Icons/ps/shoot.png" type="Texture" id=9]
 [ext_resource path="res://Resources/Fonts/FiraCode-Bold.ttf" type="DynamicFontData" id=10]
 [ext_resource path="res://Resources/Icons/xbox/melee.png" type="Texture" id=11]
+[ext_resource path="res://Resources/Icons/icon_melee.png" type="Texture" id=12]
 
 [sub_resource type="DynamicFont" id=10]
 size = 45
@@ -197,10 +198,10 @@ tracks/3/keys = {
 [node name="HUD" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 1.68176
-margin_top = 0.840897
-margin_right = 1.68176
-margin_bottom = 0.840881
+margin_left = 541.0
+margin_top = 132.0
+margin_right = 541.0
+margin_bottom = 132.0
 theme = ExtResource( 6 )
 script = ExtResource( 1 )
 __meta__ = {
@@ -348,7 +349,7 @@ margin_left = 38.6818
 margin_top = 7.40001
 margin_right = 78.6818
 margin_bottom = 47.4001
-texture = ExtResource( 3 )
+texture = ExtResource( 12 )
 expand = true
 __meta__ = {
 "_edit_use_anchors_": false
