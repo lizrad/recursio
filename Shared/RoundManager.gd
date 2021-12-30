@@ -106,8 +106,6 @@ func _start_game():
 
 func _check_for_phase_switch():
 	if _running:
-		print(server.get_server_time())
-		print(_phase_deadline)
 		if server.get_server_time() >= _phase_deadline:
 			Logger.info("Current phase timer run out.","gameplay")
 			var next_phase_index = (_current_phase_index+1)%_phase_order.size()
