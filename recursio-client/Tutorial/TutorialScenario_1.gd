@@ -20,41 +20,11 @@ func _ready():
 
 
 func _started_round_1():
-	add_post_process_exception(_bottom_element)
-	_bottom_element.show()
-	_bottom_element.set_content("Welcome to the first tutorial!", TutorialUIBottomElement.Controls.None, true)
-	
-	pause()
-	yield(_bottom_element, "continue_pressed")
-	unpause()
-	
-	_bottom_element.set_content("Capture both points to win!", TutorialUIBottomElement.Controls.None, true)
-	add_post_process_exception(_goal_element_1)
-	add_post_process_exception(_goal_element_2)
 	var first_spawn_point = _level.get_capture_points()[1]
-	var second_spawn_point = _level.get_capture_points()[0]
-	_goal_element_1.set_content("", first_spawn_point)
-	_goal_element_1.show()
-	_goal_element_2.set_content("", second_spawn_point)
-	_goal_element_2.show()
-	add_post_process_exception(first_spawn_point)
-	add_post_process_exception(second_spawn_point)
-	pause()
-	yield(_bottom_element, "continue_pressed")
-	unpause()
 	_player.toggle_movement(true)
-	_goal_element_2.hide()
-	_bottom_element.set_content("Start with this one!")
 	_player.set_custom_view_target(first_spawn_point)
-	remove_post_process_exception(_goal_element_2)
-	remove_post_process_exception(second_spawn_point)
 	_goal_element_1.set_content("Capture!", first_spawn_point)
 	_goal_element_1.show()
-	pause()
-	yield(_bottom_element, "continue_pressed")
-	unpause()
-	remove_post_process_exception(first_spawn_point)
-	_player.follow_camera()
 	_player.kb.visible = true
 	_character_manager._round_manager._start_game()
 	yield(_round_manager, "game_phase_started")
@@ -80,9 +50,6 @@ func _started_round_2() -> void:
 	# setting enemy timeline back to the first one
 	_character_manager._on_timeline_picked(1,0)
 	
-	_bottom_element.set_content("Now get the other one.")
-	_bottom_element.show()
-	
 	_player.set_custom_view_target(_level.get_capture_points()[0])
 	_goal_element_1.set_content("Capture!", _level.get_capture_points()[0])
 	_goal_element_1.show()
@@ -90,6 +57,7 @@ func _started_round_2() -> void:
 	_goal_element_2.set_content("Your past", _ghost_manager._player_ghosts[0].kb)
 	_goal_element_2.show()
 	
+	yield(_round_manager, "game_phase_started")
 	add_sub_condition(funcref(self, "_enemy_point_captured_condition_start"), funcref(self, "_enemy_point_captured_condition"), funcref(self, "_enemy_point_captured_condition_end"))
 	add_sub_condition(funcref(self, "_enemy_killed_condition_start"), funcref(self, "_enemy_killed_condition"), funcref(self, "_enemy_killed_condition_end"))
 	
@@ -135,13 +103,14 @@ func _enemy_point_captured_condition_start() -> void:
 	_enemyAI.set_character_to_shoot(_player)
 	_enemyAI.peaceful = true
 	add_child(_enemyAI)
-	yield(_round_manager, "game_phase_started")
 	_enemyAI.start()
 func _enemy_point_captured_condition() -> bool:
 	return _level.get_capture_points()[0].get_capture_progress() >= 1.0 \
 			and _level.get_capture_points()[0].get_progress_team() == 1 
 func _enemy_point_captured_condition_end() -> void:
-	_bottom_element.set_content("The enemy captured a point!", TutorialUIBottomElement.Controls.None, true)
+	add_post_process_exception(_bottom_element)
+	_bottom_element.show()
+	_bottom_element.set_content("Oh no! The enemy captured a point!", TutorialUIBottomElement.Controls.None, true)
 	_goal_element_1.set_content("Enemy", _enemy.get_body())
 
 func _enemy_killed_condition_start() -> void:
@@ -150,13 +119,15 @@ func _enemy_killed_condition_start() -> void:
 	yield(_bottom_element, "continue_pressed")
 	unpause()
 	remove_post_process_exception(_enemy)
+	remove_post_process_exception(_bottom_element)
 	_goal_element_1.set_content("Kill!", _enemy.get_body())
 	_bottom_element.set_content("Melee!",TutorialUIBottomElement.Controls.Melee)
 	_player.toggle_trigger(ActionManager.Trigger.DEFAULT_ATTACK_START, true)
 func _enemy_killed_condition() -> bool:
 	return _enemy.currently_dying
 func _enemy_killed_condition_end() -> void:
-	_bottom_element.set_content("Capture the point!")
+	_bottom_element.show()
+	_bottom_element.set_content("Now you can capture the point!")
 	_goal_element_1.set_content("Capture!", _level.get_capture_points()[0])
 	_enemyAI.stop()
 	_enemy.kb.visible = false
