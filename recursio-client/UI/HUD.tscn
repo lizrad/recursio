@@ -1,7 +1,6 @@
-[gd_scene load_steps=16 format=2]
+[gd_scene load_steps=20 format=2]
 
 [ext_resource path="res://UI/HUD.gd" type="Script" id=1]
-[ext_resource path="res://Resources/Fonts/Large.tres" type="DynamicFont" id=2]
 [ext_resource path="res://Resources/Icons/icon_dash.png" type="Texture" id=3]
 [ext_resource path="res://Resources/Icons/circle_white_256x256.png" type="Texture" id=4]
 [ext_resource path="res://Resources/Icons/round_timer_1024x256.png" type="Texture" id=5]
@@ -10,6 +9,43 @@
 [ext_resource path="res://Resources/Icons/ps/dash.png" type="Texture" id=8]
 [ext_resource path="res://Resources/Icons/ps/shoot.png" type="Texture" id=9]
 [ext_resource path="res://Util/DynamicLabel.gd" type="Script" id=10]
+[ext_resource path="res://Resources/Fonts/FiraCode-Bold.ttf" type="DynamicFontData" id=11]
+
+[sub_resource type="DynamicFont" id=10]
+size = 32
+outline_size = 2
+outline_color = Color( 0, 0, 0, 1 )
+use_mipmaps = true
+use_filter = true
+extra_spacing_char = 2
+font_data = ExtResource( 11 )
+
+[sub_resource type="DynamicFont" id=11]
+size = 31
+outline_size = 2
+outline_color = Color( 0, 0, 0, 1 )
+use_mipmaps = true
+use_filter = true
+extra_spacing_char = 2
+font_data = ExtResource( 11 )
+
+[sub_resource type="DynamicFont" id=12]
+size = 32
+outline_size = 2
+outline_color = Color( 0, 0, 0, 1 )
+use_mipmaps = true
+use_filter = true
+extra_spacing_char = 2
+font_data = ExtResource( 11 )
+
+[sub_resource type="DynamicFont" id=13]
+size = 37
+outline_size = 2
+outline_color = Color( 0, 0, 0, 1 )
+use_mipmaps = true
+use_filter = true
+extra_spacing_char = 2
+font_data = ExtResource( 11 )
 
 [sub_resource type="Animation" id=1]
 resource_name = "no_ammo"
@@ -79,7 +115,7 @@ tracks/1/keys = {
 "times": PoolRealArray( 0, 1 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
-"values": [ Vector2( -10, -10 ), Vector2( -40, -30 ) ]
+"values": [ Vector2( 0, 0 ), Vector2( -40, -30 ) ]
 }
 
 [sub_resource type="Animation" id=9]
@@ -231,26 +267,30 @@ margin_right = 132.0
 margin_bottom = 68.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-custom_fonts/font = ExtResource( 2 )
+custom_fonts/font = SubResource( 10 )
 text = "10"
+align = 1
+valign = 1
+script = ExtResource( 10 )
+enable_this_after_font_is_unique = true
+font_char_scale = 1.0
+
+[node name="SubAmmo" type="Label" parent="Abilities/Weapon/WeaponAmmo"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = -0.0160027
+margin_bottom = -0.012001
+custom_colors/font_color = Color( 1, 0, 0, 1 )
+custom_fonts/font = SubResource( 11 )
+text = "-1"
 align = 1
 valign = 1
 script = ExtResource( 10 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
-
-[node name="SubAmmo" type="Label" parent="Abilities/Weapon/WeaponAmmo"]
-margin_right = 38.0
-margin_bottom = 38.0
-custom_colors/font_color = Color( 1, 0, 0, 1 )
-custom_fonts/font = ExtResource( 2 )
-text = "-1"
-align = 2
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+enable_this_after_font_is_unique = true
+font_char_scale = 1.0
 
 [node name="WeaponTypeBG" type="TextureRect" parent="Abilities/Weapon"]
 margin_left = 136.0
@@ -302,29 +342,30 @@ margin_right = 132.0
 margin_bottom = 68.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-custom_fonts/font = ExtResource( 2 )
-text = "2"
+custom_fonts/font = SubResource( 12 )
+text = " 2"
 align = 1
 valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+script = ExtResource( 10 )
+enable_this_after_font_is_unique = true
+font_char_scale = 1.0
 
 [node name="SubAmmo" type="Label" parent="Abilities/Dash/DashAmmo"]
-self_modulate = Color( 1, 1, 1, 0 )
-margin_left = -40.0
-margin_top = -30.0
-margin_right = -2.0
-margin_bottom = 8.0
+margin_left = -10.0
+margin_top = -10.0
+margin_right = 28.0
+margin_bottom = 28.0
 rect_pivot_offset = Vector2( 45, 19 )
-custom_colors/font_color = Color( 0, 1, 0.0627451, 1 )
-custom_fonts/font = ExtResource( 2 )
-text = "+1"
+custom_colors/font_color = Color( 1, 0, 0, 1 )
+custom_fonts/font = SubResource( 12 )
+text = "-1"
 align = 2
 valign = 1
+script = ExtResource( 10 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+font_char_scale = 1.0
 
 [node name="DashTexture" type="TextureRect" parent="Abilities/Dash"]
 margin_left = 136.0
@@ -375,17 +416,18 @@ __meta__ = {
 }
 
 [node name="Phase" type="Label" parent="Timer/TimerProgressBar"]
+anchor_left = 0.2
 anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 2.0
-custom_fonts/font = ExtResource( 2 )
+anchor_right = 0.8
+anchor_bottom = 1.5
+custom_fonts/font = SubResource( 13 )
 text = "Waiting for Server..."
 align = 1
 valign = 1
 autowrap = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
+script = ExtResource( 10 )
+enable_this_after_font_is_unique = true
+font_char_scale = 1.4
 
 [node name="AspectRatioContainer" type="AspectRatioContainer" parent="."]
 visible = false
