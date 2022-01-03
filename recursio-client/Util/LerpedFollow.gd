@@ -43,7 +43,8 @@ func shake(amount: float, speed: float, duration: float):
 func start_shake(amount: float, speed: float):
 	_current_shake_count += 1
 	
-	var _error = _tween.connect("tween_all_completed", self, "_on_shake_complete")
+	if not _tween.is_connected("tween_all_completed", self, "_on_shake_complete"):
+		var _error = _tween.connect("tween_all_completed", self, "_on_shake_complete")
 	_shake_amount = amount
 	_shake_speed = speed
 	_on_shake_complete()
