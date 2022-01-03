@@ -1,6 +1,8 @@
 extends TutorialScenario
 class_name TutorialScenario_2
 
+var _player_kiled_once : bool = false
+
 func _ready():
 	# Shorten prep phase
 	_round_manager._preparation_phase_time = 0.1
@@ -67,9 +69,8 @@ func _started_round_1():
 	
 	# Wait until player gets hit
 	yield(_player, "client_hit")
-	
 	_bottom_element.set_content("You got hit!", TutorialUIBottomElement.Controls.None, true)
-	
+	_player_kiled_once = true
 	pause()
 	yield(_bottom_element, "continue_pressed")
 	unpause()
@@ -95,7 +96,7 @@ func _started_round_1():
 
 
 func _check_completed_round_1() -> bool:
-	return _level.get_capture_points()[1].capture_progress == 1.0
+	return (_level.get_capture_points()[1].capture_progress == 1.0 and _player_kiled_once)
 
 
 func _completed_round_1() -> void:
