@@ -111,6 +111,7 @@ func _enemy_point_captured_condition_end() -> void:
 	add_post_process_exception(_bottom_element)
 	_bottom_element.show()
 	_bottom_element.set_content("Oh no! The enemy captured a point!", TutorialUIBottomElement.Controls.None, true)
+	add_post_process_exception(_goal_element_1)
 	_goal_element_1.set_content("Enemy", _enemy.get_body())
 
 func _enemy_killed_condition_start() -> void:
