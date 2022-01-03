@@ -21,7 +21,6 @@ func _ready():
 
 func _started_round_1():
 	var first_spawn_point = _level.get_capture_points()[1]
-	_player.toggle_movement(true)
 	_player.set_custom_view_target(first_spawn_point)
 	_goal_element_1.set_content("Capture!", first_spawn_point)
 	_goal_element_1.show()
