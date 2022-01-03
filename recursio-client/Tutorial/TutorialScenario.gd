@@ -193,7 +193,7 @@ func clear_sub_conditions():
 func _completed() -> void:
 	_bottom_element.show()
 	add_post_process_exception(_bottom_element)
-	_bottom_element.set_content("Good job!", TutorialUIBottomElement.Controls.None, true)
+	_bottom_element.set_content("Good job, you won!", TutorialUIBottomElement.Controls.None, true)
 	pause()
 	yield(_bottom_element, "continue_pressed")
 	unpause()

@@ -70,7 +70,6 @@ func _check_completed_round_2() -> bool:
 			and _level.get_capture_points()[1].get_progress_team() == 0 \
 
 func _completed_round_2() -> void:
-	remove_post_process_exception(_goal_element_1)
 	pass
 
 
@@ -108,10 +107,10 @@ func _enemy_point_captured_condition() -> bool:
 	return _level.get_capture_points()[0].get_capture_progress() >= 1.0 \
 			and _level.get_capture_points()[0].get_progress_team() == 1 
 func _enemy_point_captured_condition_end() -> void:
+	add_post_process_exception(_goal_element_1)
 	add_post_process_exception(_bottom_element)
 	_bottom_element.show()
 	_bottom_element.set_content("Oh no! The enemy captured a point!", TutorialUIBottomElement.Controls.None, true)
-	add_post_process_exception(_goal_element_1)
 	_goal_element_1.set_content("Enemy", _enemy.get_body())
 
 func _enemy_killed_condition_start() -> void:
@@ -119,16 +118,16 @@ func _enemy_killed_condition_start() -> void:
 	pause()
 	yield(_bottom_element, "continue_pressed")
 	unpause()
-	remove_post_process_exception(_enemy)
+	remove_post_process_exception(_goal_element_1)
 	remove_post_process_exception(_bottom_element)
+	remove_post_process_exception(_enemy)
 	_goal_element_1.set_content("Kill!", _enemy.get_body())
 	_bottom_element.set_content("Melee!",TutorialUIBottomElement.Controls.Melee)
 	_player.toggle_trigger(ActionManager.Trigger.DEFAULT_ATTACK_START, true)
 func _enemy_killed_condition() -> bool:
 	return _enemy.currently_dying
 func _enemy_killed_condition_end() -> void:
-	_bottom_element.show()
-	_bottom_element.set_content("Now you can capture the point!")
+	_bottom_element.hide()
 	_goal_element_1.set_content("Capture!", _level.get_capture_points()[0])
 	_enemyAI.stop()
 	_enemy.kb.visible = false
