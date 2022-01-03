@@ -224,7 +224,7 @@ func _on_ghost_hit_soft_lock(perpetrator, ghost: PlayerGhost):
 		_bottom_element.set_content("Melee!", TutorialUIBottomElement.Controls.Melee)
 		_goal_element_1.set_content("Kill", _ghost_manager._enemy_ghosts[0].get_body())
 	else:
-		_bottom_element.set_content("Spawn Wall!", TutorialUIBottomElement.Controls.Melee)
+		_bottom_element.set_content("Spawn Wall!", TutorialUIBottomElement.Controls.Shoot)
 		_goal_element_1.set_content("Place here", _ghost_manager._enemy_ghosts[0].get_body())
 		
 	
