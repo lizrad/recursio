@@ -1,18 +1,18 @@
 [gd_scene load_steps=20 format=2]
 
 [ext_resource path="res://UI/HUD.gd" type="Script" id=1]
+[ext_resource path="res://Resources/Icons/keyboard/shoot.png" type="Texture" id=2]
 [ext_resource path="res://Resources/Icons/icon_dash.png" type="Texture" id=3]
 [ext_resource path="res://Resources/Icons/circle_white_256x256.png" type="Texture" id=4]
 [ext_resource path="res://Resources/Icons/round_timer_1024x256.png" type="Texture" id=5]
 [ext_resource path="res://UI/Default.tres" type="Theme" id=6]
 [ext_resource path="res://Resources/Icons/bullet.png" type="Texture" id=7]
 [ext_resource path="res://Resources/Icons/ps/dash.png" type="Texture" id=8]
-[ext_resource path="res://Resources/Icons/ps/shoot.png" type="Texture" id=9]
 [ext_resource path="res://Util/DynamicLabel.gd" type="Script" id=10]
 [ext_resource path="res://Resources/Fonts/FiraCode-Bold.ttf" type="DynamicFontData" id=11]
 
 [sub_resource type="DynamicFont" id=10]
-size = 32
+size = 44
 outline_size = 2
 outline_color = Color( 0, 0, 0, 1 )
 use_mipmaps = true
@@ -21,7 +21,7 @@ extra_spacing_char = 2
 font_data = ExtResource( 11 )
 
 [sub_resource type="DynamicFont" id=11]
-size = 31
+size = 44
 outline_size = 2
 outline_color = Color( 0, 0, 0, 1 )
 use_mipmaps = true
@@ -30,7 +30,7 @@ extra_spacing_char = 2
 font_data = ExtResource( 11 )
 
 [sub_resource type="DynamicFont" id=12]
-size = 32
+size = 44
 outline_size = 2
 outline_color = Color( 0, 0, 0, 1 )
 use_mipmaps = true
@@ -142,7 +142,7 @@ tracks/1/keys = {
 "times": PoolRealArray( 0, 1 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
-"values": [ Vector2( -10, -10 ), Vector2( -40, -30 ) ]
+"values": [ Vector2( 0, 0 ), Vector2( -40, -30 ) ]
 }
 tracks/2/type = "value"
 tracks/2/path = NodePath("Abilities/Dash/DashAmmo/SubAmmo:text")
@@ -254,7 +254,7 @@ margin_right = 64.0
 margin_bottom = 68.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-texture = ExtResource( 9 )
+texture = ExtResource( 2 )
 expand = true
 stretch_mode = 6
 __meta__ = {
@@ -269,11 +269,10 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_fonts/font = SubResource( 10 )
 text = "10"
-align = 1
+align = 2
 valign = 1
 script = ExtResource( 10 )
 enable_this_after_font_is_unique = true
-font_char_scale = 1.0
 
 [node name="SubAmmo" type="Label" parent="Abilities/Weapon/WeaponAmmo"]
 anchor_right = 1.0
@@ -285,12 +284,12 @@ custom_fonts/font = SubResource( 11 )
 text = "-1"
 align = 1
 valign = 1
+percent_visible = 0.0
 script = ExtResource( 10 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 enable_this_after_font_is_unique = true
-font_char_scale = 1.0
 
 [node name="WeaponTypeBG" type="TextureRect" parent="Abilities/Weapon"]
 margin_left = 136.0
@@ -344,28 +343,25 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_fonts/font = SubResource( 12 )
 text = " 2"
-align = 1
+align = 2
 valign = 1
 script = ExtResource( 10 )
 enable_this_after_font_is_unique = true
-font_char_scale = 1.0
 
 [node name="SubAmmo" type="Label" parent="Abilities/Dash/DashAmmo"]
-margin_left = -10.0
-margin_top = -10.0
-margin_right = 28.0
-margin_bottom = 28.0
+anchor_right = 1.0
+anchor_bottom = 1.0
 rect_pivot_offset = Vector2( 45, 19 )
-custom_colors/font_color = Color( 1, 0, 0, 1 )
+custom_colors/font_color = Color( 0, 1, 0.0627451, 1 )
 custom_fonts/font = SubResource( 12 )
-text = "-1"
-align = 2
+text = "+1"
+align = 1
 valign = 1
+percent_visible = 0.0
 script = ExtResource( 10 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
-font_char_scale = 1.0
 
 [node name="DashTexture" type="TextureRect" parent="Abilities/Dash"]
 margin_left = 136.0
@@ -426,6 +422,9 @@ align = 1
 valign = 1
 autowrap = true
 script = ExtResource( 10 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 enable_this_after_font_is_unique = true
 font_char_scale = 1.4
 
