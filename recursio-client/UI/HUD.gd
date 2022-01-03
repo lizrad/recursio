@@ -1,17 +1,17 @@
 extends Control
 class_name HUD
 
-onready var _timer_pb: TextureProgress = get_node("TimerProgressBar")
-onready var _phase = get_node("TimerProgressBar/Phase")
-onready var _ammo: Label= get_node("WeaponAmmo")
-onready var _ammo_type_bg = get_node("WeaponAmmo/WeaponTypeBG")
-onready var _ammo_type = get_node("WeaponAmmo/WeaponType")
-onready var _dash: Label = get_node("DashAmmo")
-onready var _dash_bg = get_node("DashAmmo/DashTexture")
-onready var _capture_point_hb = get_node("TimerProgressBar/CapturePoints")
+onready var _timer_pb: TextureProgress = get_node("Timer/TimerProgressBar")
+onready var _phase = get_node("Timer/TimerProgressBar/Phase")
+onready var _ammo: Label= get_node("Abilities/Weapon/WeaponAmmo")
+onready var _ammo_type_bg = get_node("Abilities/Weapon/WeaponTypeBG")
+onready var _ammo_type = get_node("Abilities/Weapon/WeaponTypeBG/WeaponType")
+onready var _dash: Label = get_node("Abilities/Dash/DashAmmo")
+onready var _dash_bg = get_node("Abilities/Dash/DashTexture")
+onready var _capture_point_hb = get_node("Timer/TimerProgressBar/CapturePoints")
 onready var _ammo_type_animation = get_node("TextureRect")
-onready var _controller_shoot = get_node("ControllerButtonShoot")
-onready var _controller_dash = get_node("ControllerButtonDash")
+onready var _controller_shoot = get_node("Abilities/Weapon/ControllerButtonShoot")
+onready var _controller_dash = get_node("Abilities/Dash/ControllerButtonDash")
 
 onready var tween_time := 1.5
 
