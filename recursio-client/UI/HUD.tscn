@@ -39,7 +39,7 @@ extra_spacing_char = 2
 font_data = ExtResource( 11 )
 
 [sub_resource type="DynamicFont" id=13]
-size = 37
+size = 3
 outline_size = 2
 outline_color = Color( 0, 0, 0, 1 )
 use_mipmaps = true
@@ -272,24 +272,21 @@ text = "10"
 align = 2
 valign = 1
 script = ExtResource( 10 )
-enable_this_after_font_is_unique = true
 
 [node name="SubAmmo" type="Label" parent="Abilities/Weapon/WeaponAmmo"]
+self_modulate = Color( 1, 1, 1, 0 )
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_right = -0.0160027
-margin_bottom = -0.012001
+margin_left = -40.0
+margin_top = -30.0
+margin_right = -40.016
+margin_bottom = -30.012
 custom_colors/font_color = Color( 1, 0, 0, 1 )
 custom_fonts/font = SubResource( 11 )
 text = "-1"
 align = 1
 valign = 1
-percent_visible = 0.0
 script = ExtResource( 10 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-enable_this_after_font_is_unique = true
 
 [node name="WeaponTypeBG" type="TextureRect" parent="Abilities/Weapon"]
 margin_left = 136.0
@@ -346,22 +343,22 @@ text = " 2"
 align = 2
 valign = 1
 script = ExtResource( 10 )
-enable_this_after_font_is_unique = true
 
 [node name="SubAmmo" type="Label" parent="Abilities/Dash/DashAmmo"]
+self_modulate = Color( 1, 1, 1, 0 )
 anchor_right = 1.0
 anchor_bottom = 1.0
+margin_left = -40.0
+margin_top = -30.0
+margin_right = -40.0
+margin_bottom = -30.0
 rect_pivot_offset = Vector2( 45, 19 )
 custom_colors/font_color = Color( 0, 1, 0.0627451, 1 )
 custom_fonts/font = SubResource( 12 )
 text = "+1"
 align = 1
 valign = 1
-percent_visible = 0.0
 script = ExtResource( 10 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="DashTexture" type="TextureRect" parent="Abilities/Dash"]
 margin_left = 136.0
@@ -420,13 +417,8 @@ custom_fonts/font = SubResource( 13 )
 text = "Waiting for Server..."
 align = 1
 valign = 1
-autowrap = true
 script = ExtResource( 10 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 enable_this_after_font_is_unique = true
-font_char_scale = 1.4
 
 [node name="AspectRatioContainer" type="AspectRatioContainer" parent="."]
 visible = false
