@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://UI/HUD.gd" type="Script" id=1]
 [ext_resource path="res://Resources/Fonts/Large.tres" type="DynamicFont" id=2]
@@ -9,6 +9,8 @@
 [ext_resource path="res://Resources/Icons/bullet.png" type="Texture" id=7]
 [ext_resource path="res://Resources/Icons/ps/dash.png" type="Texture" id=8]
 [ext_resource path="res://Resources/Icons/ps/shoot.png" type="Texture" id=9]
+[ext_resource path="res://Resources/Audio/Effects/DashReload.ogg" type="AudioStream" id=10]
+[ext_resource path="res://Resources/Icons/icon_dash_inactive.png" type="Texture" id=11]
 
 [sub_resource type="Animation" id=1]
 resource_name = "no_ammo"
@@ -131,6 +133,32 @@ tracks/3/keys = {
 "update": 0,
 "values": [ Color( 0, 1, 0.0627451, 1 ) ]
 }
+tracks/4/type = "audio"
+tracks/4/path = NodePath("AnimationDash/AudioStreamPlayer")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"clips": [ {
+"end_offset": 0.0,
+"start_offset": 0.0,
+"stream": ExtResource( 10 )
+} ],
+"times": PoolRealArray( 0 )
+}
+tracks/5/type = "value"
+tracks/5/path = NodePath("DashAmmo/DashTextureProgress:rect_scale")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/keys = {
+"times": PoolRealArray( 0.3, 0.5, 0.9 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0.1, 0.1 ), Vector2( 0.15, 0.15 ), Vector2( 0.1, 0.1 ) ]
+}
 
 [sub_resource type="Animation" id=8]
 resource_name = "sub_dash"
@@ -244,6 +272,7 @@ margin_left = -40.0
 margin_top = -30.0
 margin_right = -1.99993
 margin_bottom = 8.00001
+rect_scale = Vector2( 2, 2 )
 rect_pivot_offset = Vector2( 45, 19 )
 custom_colors/font_color = Color( 1, 0, 0, 1 )
 custom_fonts/font = ExtResource( 2 )
@@ -317,16 +346,21 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="DashTexture" type="TextureRect" parent="DashAmmo"]
-margin_left = 35.0
-margin_top = -0.440887
-margin_right = 75.0
-margin_bottom = 39.5592
-texture = ExtResource( 3 )
-expand = true
+[node name="DashTextureProgress" type="TextureProgress" parent="DashAmmo"]
+margin_left = -198.0
+margin_top = -238.0
+margin_right = 314.0
+margin_bottom = 274.0
+rect_scale = Vector2( 0.1, 0.1 )
+rect_pivot_offset = Vector2( 256, 256 )
+value = 100.0
+texture_under = ExtResource( 11 )
+texture_progress = ExtResource( 3 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="Tween" type="Tween" parent="DashAmmo"]
 
 [node name="TimerProgressBar" type="TextureProgress" parent="."]
 anchor_left = 0.35
@@ -403,3 +437,5 @@ anims/sub_ammo = SubResource( 3 )
 [node name="AnimationDash" type="AnimationPlayer" parent="."]
 anims/add_dash = SubResource( 9 )
 anims/sub_dash = SubResource( 8 )
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="AnimationDash"]
