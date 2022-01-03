@@ -38,17 +38,31 @@ func _started_round_1():
 	yield(_bottom_element, "continue_pressed")
 	unpause()
 	
-	_player.toggle_trigger(ActionManager.Trigger.SPECIAL_MOVEMENT_START, true)
-	_player.toggle_movement(true)
 	_character_manager._round_manager._start_game()
+	_bottom_element.set_content("")
 	
 	_player.kb.visible = true
 	_enemy.kb.visible = true
+	
+	yield(_round_manager, "game_phase_started")
+	
+	_enemy.set_position(Vector3(-12,0, 8))
+	_player.toggle_movement(false)
+	_bottom_element.set_content("Wait 3s")
+	yield(get_tree().create_timer(1), "timeout")
+	_bottom_element.set_content("Wait 2s")
+	yield(get_tree().create_timer(1), "timeout")
+	_bottom_element.set_content("Wait 1s")
+	yield(get_tree().create_timer(1), "timeout")
+	_bottom_element.set_content("Wait 0s")
+
+	_player.toggle_trigger(ActionManager.Trigger.SPECIAL_MOVEMENT_START, true)
+	_player.toggle_movement(true)
+	
 	_bottom_element.set_content("Capture this point!")
 	_goal_element_1.show()
 	_goal_element_1.set_content("Capture!", _level.get_capture_points()[1])
 	
-	_enemy.set_position(Vector3(-12,0, 8))
 	
 	
 	# Wait until player gets hit
