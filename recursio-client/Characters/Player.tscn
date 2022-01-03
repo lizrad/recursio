@@ -12,7 +12,6 @@
 [ext_resource path="res://Characters/Visuals/CharacterModel.tscn" type="PackedScene" id=10]
 [ext_resource path="res://Rendering/OverviewLight.gd" type="Script" id=11]
 [ext_resource path="res://Resources/Icons/icon_player_minimap.png" type="Texture" id=12]
-[ext_resource path="res://UI/ButtonOverlay.tscn" type="PackedScene" id=13]
 [ext_resource path="res://addons/ascii-shader/AsciiRenderer.tscn" type="PackedScene" id=14]
 [ext_resource path="res://Characters/PlayerInput.gd" type="Script" id=15]
 [ext_resource path="res://Resources/Meshes/wall_outline.obj" type="ArrayMesh" id=16]
@@ -22,6 +21,7 @@
 [ext_resource path="res://Characters/SettingAsciiRenderer.gd" type="Script" id=20]
 [ext_resource path="res://Resources/Meshes/torus.obj" type="ArrayMesh" id=21]
 [ext_resource path="res://Characters/Visuals/VisibilityVisualization.tres" type="Material" id=22]
+[ext_resource path="res://UI/ButtonOverlaySimple.tscn" type="PackedScene" id=23]
 
 [sub_resource type="CapsuleShape" id=2]
 height = 0.4
@@ -190,16 +190,9 @@ margin_top = 0.0
 margin_right = 0.0
 margin_bottom = 0.0
 
-[node name="ButtonOverlay" parent="KinematicBody" index="12" instance=ExtResource( 13 )]
+[node name="ButtonOverlaySimple" parent="KinematicBody" index="12" instance=ExtResource( 23 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00748944, 0, -5.43075 )
 visible = false
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-margin_left = -218.5
-margin_top = -143.0
-margin_right = 218.5
-margin_bottom = 0.0
 
 [node name="AimVisuals" type="Spatial" parent="KinematicBody" index="13"]
 visible = false

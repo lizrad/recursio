@@ -13,12 +13,26 @@ enum BUTTONS {
 
 var _conf = { 
 				BUTTONS.UP: "ui_select",
-				BUTTONS.DOWN: "player_shoot",
+				BUTTONS.DOWN: "ui_accept",
 				BUTTONS.LEFT: "player_melee",
 				BUTTONS.RIGHT: "player_switch"
 			}
 var _triggers := []
 var _close := 0
+
+
+func _ready() -> void:
+	var _error = InputManager.connect("controller_changed", self, "_on_controller_changed")
+	_on_controller_changed(InputManager.get_current_controller())
+
+
+func _on_controller_changed(controller) -> void:
+	for sprite in get_tree().get_nodes_in_group("controller"):
+		sprite.hide()
+
+	if has_node(controller):
+		get_node(controller).visible = true
+
 
 # displays a dialog with given marked buttons as bitmask
 # supports array for text: are added in enum order
@@ -27,7 +41,6 @@ func show_buttons(texts, buttons: int, close_on_activation: int = 0) -> void:
 	var i = 0
 	for button in BUTTONS.values():
 		if buttons & button:
-			$Buttons.get_node(str(button)).show()
 			_triggers.append(_conf[button])
 			$Labels.get_node("Label" + str(button)).text = texts[i]
 			i += 1
@@ -41,8 +54,6 @@ func show_buttons(texts, buttons: int, close_on_activation: int = 0) -> void:
 func hide_buttons() -> void:
 	set_process(false)
 	visible = false
-	for button in $Buttons.get_children():
-		button.hide()
 	for label in $Labels.get_children():
 		label.text = ""
 	_triggers.clear()
@@ -54,8 +65,6 @@ func _process(_delta) -> void:
 			for key in _conf:
 				if _conf[key] == trigger:
 					emit_signal("button_pressed", key)
-
 					if _close & key:
 						hide_buttons()
-
 					break

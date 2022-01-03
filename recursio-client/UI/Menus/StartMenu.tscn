@@ -1,4 +1,4 @@
-[gd_scene load_steps=32 format=2]
+[gd_scene load_steps=33 format=2]
 
 [ext_resource path="res://UI/Menus/StartMenu.gd" type="Script" id=1]
 [ext_resource path="res://UI/Menus/GameRooms/GameRoomCreation.gd" type="Script" id=2]
@@ -15,6 +15,7 @@
 [ext_resource path="res://Resources/Fonts/FiraCode-Regular.ttf" type="DynamicFontData" id=13]
 [ext_resource path="res://UI/Menus/GameplayMenu.tscn" type="PackedScene" id=14]
 [ext_resource path="res://Util/StatsHUD.tscn" type="PackedScene" id=15]
+[ext_resource path="res://lizrad.png" type="Texture" id=16]
 [ext_resource path="res://UI/Menus/AsciiBackground.gd" type="Script" id=18]
 [ext_resource path="res://Tutorial/Tutorial.gd" type="Script" id=19]
 [ext_resource path="res://Global/SoundManager.tscn" type="PackedScene" id=20]
@@ -633,7 +634,26 @@ text = "Back"
 script = ExtResource( 27 )
 sound_type = 1
 
+[node name="Panel" type="Panel" parent="StartMenu"]
+self_modulate = Color( 1, 1, 1, 0 )
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -200.0
+margin_top = -100.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Sprite" type="Sprite" parent="StartMenu/Panel"]
+scale = Vector2( 0.1, 0.1 )
+texture = ExtResource( 16 )
+centered = false
+
 [node name="StatsHUD" parent="." instance=ExtResource( 15 )]
 visible = false
 
 [node name="GameplayMenu" parent="." instance=ExtResource( 14 )]
+
+[connection signal="gui_input" from="StartMenu/Panel" to="StartMenu" method="_on_panel_gui_input"]

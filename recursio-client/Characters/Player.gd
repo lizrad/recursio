@@ -10,11 +10,11 @@ onready var _overview_target = get_node("KinematicBody/TransformReset/OverviewTa
 onready var _lerped_follow: LerpedFollow = get_node("KinematicBody/AsciiViewportContainer/Viewport/LerpedFollow")
 onready var _view_target = get_node("KinematicBody/ViewTarget")
 onready var _visibility_light = get_node("KinematicBody/VisibilityLight")
-onready var _button_overlay: ButtonOverlay = get_node("KinematicBody/ButtonOverlay")
+onready var _button_overlay_simple = get_node("KinematicBody/ButtonOverlaySimple")
 onready var _aim_visuals = get_node("KinematicBody/AimVisuals")
 onready var _audio_player: AudioStreamPlayer = get_node("AudioStreamPlayer")
-onready var _camera_shake_amount = Constants.get_value("vfx","camera_shake_amount")
-onready var _camera_shake_speed  = Constants.get_value("vfx","camera_shake_speed")
+onready var _camera_shake_amount = Constants.get_value("vfx","death_camera_shake_amount")
+onready var _camera_shake_speed  = Constants.get_value("vfx","death_camera_shake_speed")
 
 
 var block_switching: bool = false
@@ -92,6 +92,7 @@ func apply_input(movement_vector: Vector3, rotation_vector: Vector3, buttons: in
 		if action.ammunition > 0:
 			_aim_visuals.visible = true
 			_aim_visuals.get_child(timeline_index % 2).visible = aim_mode
+			PostProcess.chromatic_ab_strength = 0.1
 		else:
 			# -> already handles sound effects but fail sound for no ammo is only needed for current player
 			if not _audio_player.playing:
@@ -159,6 +160,7 @@ func set_spawning(new_spawning_status: bool):
 	else:
 		PostProcess.vignette = false
 
+
 # OVERRIDE #
 func non_vfx_spawn():
 	.non_vfx_spawn()
@@ -167,6 +169,7 @@ func non_vfx_spawn():
 	_visibility_light.toggle(true)
 	_lerped_follow.start()
 	_lerped_follow.stop_shake()
+
 
 func get_visibility_mask():
 	return _light_viewport.get_texture()
@@ -199,8 +202,7 @@ func setup_spawn_point_hud(spawn_points) -> void:
 
 
 func update_weapon_type_hud(max_ammo, img_bullet, color_name: String) -> void:
-	_hud.update_weapon_type(img_bullet, color_name)
-	_hud.update_fire_action_ammo(max_ammo)
+	_hud.update_weapon_type(max_ammo, img_bullet, color_name)
 
 
 func activate_spawn_point_hud(timeline_index) -> void:
@@ -232,7 +234,7 @@ func hide_hud() -> void:
 
 func show_preparation_hud(round_index) -> void:
 	_hud.prep_phase_start(round_index)
-	_button_overlay.show_buttons(["ready!", "swap"], ButtonOverlay.BUTTONS.DOWN | ButtonOverlay.BUTTONS.RIGHT, ButtonOverlay.BUTTONS.DOWN)
+	_button_overlay_simple.set_active(true)
 
 
 func show_countdown_hud() -> void:
@@ -243,15 +245,11 @@ func show_countdown_hud() -> void:
 		var pos = camera.unproject_position(active_spawn.global_transform.origin)
 		_hud.animate_weapon_selection(pos)
 	_hud.countdown_phase_start()
-	_button_overlay.hide_buttons()
+	_button_overlay_simple.set_active(false)
 
 
 func show_game_hud(round_index) -> void:
 	_hud.game_phase_start(round_index)
-
-
-func get_button_overlay() -> ButtonOverlay:
-	return _button_overlay
 
 
 func handle_server_update(position, time):
