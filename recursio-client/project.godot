@@ -400,7 +400,6 @@ window/size/height=1080
 window/size/test_width=960
 window/size/test_height=540
 window/vsync/use_vsync=false
-window/stretch/aspect="expand"
 
 [editor_plugins]
 
