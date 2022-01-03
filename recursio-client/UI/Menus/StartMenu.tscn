@@ -1,4 +1,4 @@
-[gd_scene load_steps=33 format=2]
+[gd_scene load_steps=34 format=2]
 
 [ext_resource path="res://UI/Menus/StartMenu.gd" type="Script" id=1]
 [ext_resource path="res://UI/Menus/GameRooms/GameRoomCreation.gd" type="Script" id=2]
@@ -24,6 +24,7 @@
 [ext_resource path="res://Tutorial/TutorialScenario_2.tscn" type="PackedScene" id=24]
 [ext_resource path="res://Tutorial/TutorialScenario_1.tscn" type="PackedScene" id=25]
 [ext_resource path="res://UI/SoundButton.gd" type="Script" id=27]
+[ext_resource path="res://Resources/Audio/Music/menu.ogg" type="AudioStream" id=28]
 
 [sub_resource type="Shader" id=1]
 code = "shader_type canvas_item;
@@ -573,6 +574,11 @@ __meta__ = {
 scale = Vector2( 0.1, 0.1 )
 texture = ExtResource( 16 )
 centered = false
+
+[node name="MenuMusic" type="AudioStreamPlayer" parent="StartMenu"]
+stream = ExtResource( 28 )
+autoplay = true
+bus = "Music"
 
 [node name="StatsHUD" parent="." instance=ExtResource( 15 )]
 visible = false
