@@ -49,11 +49,14 @@ func _physics_process(_delta):
 		InputManager.set_triggers_in_input_frame(buttons_pressed)
 		InputManager.close_current_input_frame()
 		InputManager.send_player_input_data_to_server()
-	elif cur_phase == RoundManager.Phases.PREPARATION && not _player.block_switching:
+	elif cur_phase == RoundManager.Phases.PREPARATION and not _player.block_switching:
 		if Input.is_action_just_pressed("player_switch"):
 			_select_timeline(true)
 		elif Input.is_action_just_pressed("player_switch_prev"):
 			_select_timeline(false)
+		elif Input.is_action_pressed("ui_accept"):
+			_player._button_overlay_simple.set_active(false)
+			Server.send_player_ready()
 
 
 func _select_timeline(mode: bool):

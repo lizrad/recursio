@@ -10,7 +10,6 @@ onready var _overview_target = get_node("KinematicBody/TransformReset/OverviewTa
 onready var _lerped_follow: LerpedFollow = get_node("KinematicBody/AsciiViewportContainer/Viewport/LerpedFollow")
 onready var _view_target = get_node("KinematicBody/ViewTarget")
 onready var _visibility_light = get_node("KinematicBody/VisibilityLight")
-onready var _button_overlay: ButtonOverlay = get_node("KinematicBody/ButtonOverlay")
 onready var _button_overlay_simple = get_node("KinematicBody/ButtonOverlaySimple")
 onready var _aim_visuals = get_node("KinematicBody/AimVisuals")
 onready var _audio_player: AudioStreamPlayer = get_node("AudioStreamPlayer")
@@ -36,8 +35,6 @@ func player_init(action_manager, round_manager) -> void:
 	.player_base_init(action_manager)
 	_round_manager = round_manager
 	_hud.pass_round_manager(_round_manager)
-	# connect simple overlay with ButtonOverlay because has InputHandling
-	var _error = _button_overlay.connect("visibility_changed", self, "_on_button_overlay_visibility_changed")
 	emit_signal("initialized")
 
 
@@ -237,7 +234,7 @@ func hide_hud() -> void:
 
 func show_preparation_hud(round_index) -> void:
 	_hud.prep_phase_start(round_index)
-	_button_overlay.show_buttons(["ready!", "swap"], ButtonOverlay.BUTTONS.DOWN | ButtonOverlay.BUTTONS.RIGHT, ButtonOverlay.BUTTONS.DOWN)
+	_button_overlay_simple.set_active(true)
 
 
 func show_countdown_hud() -> void:
@@ -248,19 +245,11 @@ func show_countdown_hud() -> void:
 		var pos = camera.unproject_position(active_spawn.global_transform.origin)
 		_hud.animate_weapon_selection(pos)
 	_hud.countdown_phase_start()
-	_button_overlay.hide_buttons()
-
-
-func _on_button_overlay_visibility_changed() -> void:
-	_button_overlay_simple.visible = _button_overlay.visible
+	_button_overlay_simple.set_active(false)
 
 
 func show_game_hud(round_index) -> void:
 	_hud.game_phase_start(round_index)
-
-
-func get_button_overlay() -> ButtonOverlay:
-	return _button_overlay
 
 
 func handle_server_update(position, time):

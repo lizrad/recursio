@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=2]
+[gd_scene load_steps=28 format=2]
 
 [ext_resource path="res://Shared/Characters/PlayerBase.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Characters/Player.gd" type="Script" id=2]
@@ -12,7 +12,6 @@
 [ext_resource path="res://Characters/Visuals/CharacterModel.tscn" type="PackedScene" id=10]
 [ext_resource path="res://Rendering/OverviewLight.gd" type="Script" id=11]
 [ext_resource path="res://Resources/Icons/icon_player_minimap.png" type="Texture" id=12]
-[ext_resource path="res://UI/ButtonOverlay.tscn" type="PackedScene" id=13]
 [ext_resource path="res://addons/ascii-shader/AsciiRenderer.tscn" type="PackedScene" id=14]
 [ext_resource path="res://Characters/PlayerInput.gd" type="Script" id=15]
 [ext_resource path="res://Resources/Meshes/wall_outline.obj" type="ArrayMesh" id=16]
@@ -191,19 +190,11 @@ margin_top = 0.0
 margin_right = 0.0
 margin_bottom = 0.0
 
-[node name="ButtonOverlay" parent="KinematicBody" index="12" instance=ExtResource( 13 )]
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-margin_left = -218.5
-margin_top = -143.0
-margin_right = 218.5
-
-[node name="ButtonOverlaySimple" parent="KinematicBody" index="13" instance=ExtResource( 23 )]
+[node name="ButtonOverlaySimple" parent="KinematicBody" index="12" instance=ExtResource( 23 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00748944, 0, -5.43075 )
+visible = false
 
-[node name="AimVisuals" type="Spatial" parent="KinematicBody" index="14"]
+[node name="AimVisuals" type="Spatial" parent="KinematicBody" index="13"]
 visible = false
 
 [node name="Hitscan" type="MeshInstance" parent="KinematicBody/AimVisuals" index="0"]
@@ -222,11 +213,11 @@ cast_shadow = 0
 mesh = ExtResource( 16 )
 material/0 = null
 
-[node name="Listener" type="Listener" parent="KinematicBody" index="15"]
+[node name="Listener" type="Listener" parent="KinematicBody" index="14"]
 
-[node name="CharacterAudioPlayer2" parent="KinematicBody" index="16" instance=ExtResource( 19 )]
+[node name="CharacterAudioPlayer2" parent="KinematicBody" index="15" instance=ExtResource( 19 )]
 
-[node name="VisibilityVisualization" type="MeshInstance" parent="KinematicBody" index="17"]
+[node name="VisibilityVisualization" type="MeshInstance" parent="KinematicBody" index="16"]
 transform = Transform( 0.01, 0, 0, 0, 0.01, 0, 0, 0, 0.01, 0, 0, 0 )
 material_override = ExtResource( 22 )
 cast_shadow = 0
