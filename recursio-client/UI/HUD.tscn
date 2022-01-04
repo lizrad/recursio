@@ -23,7 +23,7 @@ extra_spacing_char = 2
 font_data = ExtResource( 11 )
 
 [sub_resource type="DynamicFont" id=11]
-size = 54
+size = 35
 outline_size = 2
 outline_color = Color( 0, 0, 0, 1 )
 use_mipmaps = true
@@ -41,7 +41,7 @@ extra_spacing_char = 2
 font_data = ExtResource( 11 )
 
 [sub_resource type="DynamicFont" id=12]
-size = 54
+size = 35
 outline_size = 2
 outline_color = Color( 0, 0, 0, 1 )
 use_mipmaps = true
@@ -50,7 +50,7 @@ extra_spacing_char = 2
 font_data = ExtResource( 11 )
 
 [sub_resource type="DynamicFont" id=13]
-size = 40
+size = 35
 outline_size = 2
 outline_color = Color( 0, 0, 0, 1 )
 use_mipmaps = true
@@ -250,8 +250,9 @@ anchor_left = 0.02
 anchor_top = 0.02
 anchor_right = 0.125
 anchor_bottom = 0.15
-size_flags_horizontal = 3
-size_flags_vertical = 3
+rect_min_size = Vector2( 100, 70 )
+size_flags_horizontal = 7
+size_flags_vertical = 7
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -268,8 +269,8 @@ __meta__ = {
 [node name="ControllerButtonShoot" type="TextureRect" parent="Abilities/Weapon"]
 margin_right = 64.0
 margin_bottom = 68.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
+size_flags_horizontal = 7
+size_flags_vertical = 7
 texture = ExtResource( 2 )
 expand = true
 stretch_mode = 6
@@ -281,8 +282,8 @@ __meta__ = {
 margin_left = 68.0
 margin_right = 132.0
 margin_bottom = 68.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
+size_flags_horizontal = 7
+size_flags_vertical = 7
 custom_fonts/font = SubResource( 14 )
 text = "1"
 align = 2
@@ -299,8 +300,8 @@ margin_left = -14.0
 margin_top = -30.0
 margin_right = -14.016
 margin_bottom = -30.012
-size_flags_horizontal = 3
-size_flags_vertical = 3
+size_flags_horizontal = 7
+size_flags_vertical = 7
 custom_colors/font_color = Color( 1, 0, 0, 1 )
 custom_fonts/font = SubResource( 11 )
 text = "-1"
@@ -311,14 +312,14 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 enable_this_after_font_is_unique = true
-font_size = 54
+font_size = 35
 
 [node name="WeaponTypeBG" type="TextureRect" parent="Abilities/Weapon"]
 margin_left = 136.0
 margin_right = 201.0
 margin_bottom = 68.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
+size_flags_horizontal = 7
+size_flags_vertical = 7
 texture = ExtResource( 4 )
 expand = true
 stretch_mode = 6
@@ -329,6 +330,8 @@ __meta__ = {
 [node name="WeaponType" type="TextureRect" parent="Abilities/Weapon/WeaponTypeBG"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+size_flags_horizontal = 7
+size_flags_vertical = 7
 expand = true
 stretch_mode = 6
 __meta__ = {
@@ -348,8 +351,8 @@ __meta__ = {
 [node name="ControllerButtonDash" type="TextureRect" parent="Abilities/Dash"]
 margin_right = 64.0
 margin_bottom = 68.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
+size_flags_horizontal = 7
+size_flags_vertical = 7
 texture = ExtResource( 8 )
 expand = true
 stretch_mode = 6
@@ -361,8 +364,8 @@ __meta__ = {
 margin_left = 68.0
 margin_right = 132.0
 margin_bottom = 68.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
+size_flags_horizontal = 7
+size_flags_vertical = 7
 custom_fonts/font = SubResource( 15 )
 text = "2"
 align = 2
@@ -380,8 +383,8 @@ margin_top = -30.0
 margin_right = -24.0
 margin_bottom = -30.0
 rect_pivot_offset = Vector2( 45, 19 )
-size_flags_horizontal = 3
-size_flags_vertical = 3
+size_flags_horizontal = 7
+size_flags_vertical = 7
 custom_colors/font_color = Color( 0, 1, 0.0627451, 1 )
 custom_fonts/font = SubResource( 12 )
 text = "+1"
@@ -392,7 +395,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 enable_this_after_font_is_unique = true
-font_size = 54
+font_size = 35
 
 [node name="AspectRatioContainer" type="AspectRatioContainer" parent="Abilities/Dash"]
 margin_left = 136.0
@@ -405,8 +408,8 @@ size_flags_vertical = 3
 margin_top = 1.5
 margin_right = 65.0
 margin_bottom = 66.5
-size_flags_horizontal = 3
-size_flags_vertical = 3
+size_flags_horizontal = 7
+size_flags_vertical = 7
 value = 100.0
 texture_under = ExtResource( 12 )
 texture_progress = ExtResource( 3 )
@@ -417,7 +420,8 @@ nine_patch_stretch = true
 [node name="Timer" type="AspectRatioContainer" parent="."]
 anchor_left = 0.5
 anchor_right = 0.5
-anchor_bottom = 0.175
+anchor_bottom = 0.125
+rect_min_size = Vector2( 0, 67.5 )
 ratio = 5.0
 stretch_mode = 3
 __meta__ = {
@@ -425,9 +429,11 @@ __meta__ = {
 }
 
 [node name="TimerProgressBar" type="TextureProgress" parent="Timer"]
-margin_left = -472.5
-margin_right = 472.5
-margin_bottom = 189.0
+margin_left = -337.5
+margin_right = 337.5
+margin_bottom = 135.0
+size_flags_horizontal = 7
+size_flags_vertical = 7
 max_value = 1.0
 step = 0.001
 value = 0.27
@@ -450,10 +456,12 @@ __meta__ = {
 }
 
 [node name="Phase" type="Label" parent="Timer/TimerProgressBar"]
-anchor_left = 0.2
+anchor_left = 0.1
 anchor_top = 1.0
-anchor_right = 0.8
+anchor_right = 0.9
 anchor_bottom = 1.5
+size_flags_horizontal = 7
+size_flags_vertical = 7
 custom_fonts/font = SubResource( 13 )
 text = "Waiting for Server..."
 align = 1
@@ -464,7 +472,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 enable_this_after_font_is_unique = true
-font_size = 40
+font_size = 35
 
 [node name="AspectRatioContainer" type="AspectRatioContainer" parent="."]
 visible = false
