@@ -14,16 +14,16 @@ var _current_round: int = 0
 
 var _paused: bool = false
 
-var _round_starts := []
-var _round_conditions := []
-var _round_ends := []
+var _round_starts: Array = []
+var _round_conditions: Array = []
+var _round_ends: Array = []
 
 # Currently active sub condition
 var _current_sub_condition: int = 0
 
-var _sub_conditions_starts := []
-var _sub_conditions := []
-var _sub_conditions_ends := []
+var _sub_conditions_starts: Array = []
+var _sub_conditions: Array = []
+var _sub_conditions_ends: Array = []
 
 var _post_process_excepted_objects: Dictionary = {}
 
@@ -31,7 +31,7 @@ onready var _post_process_tool = get_node("TutorialUI/PausePostProcessing")
 onready var _post_process_excepted = get_node("TutorialUI/PostProcessExcepted")
 onready var _goal_element_1 = get_node("TutorialUI/PostProcessAffected/GoalElement1")
 onready var _goal_element_2 = get_node("TutorialUI/PostProcessAffected/GoalElement2")
-onready var _bottom_element = get_node("TutorialUI/PostProcessAffected/BottomElement")
+onready var _bottom_element: TutorialUIBottomElement = get_node("TutorialUI/PostProcessAffected/BottomElement")
 onready var _pause_post_processing = get_node("TutorialUI/PausePostProcessing")
 onready var _character_manager: CharacterManager = get_node("TutorialWorld/CharacterManager")
 onready var _ghost_manager: ClientGhostManager = get_node("TutorialWorld/CharacterManager/GhostManager")
@@ -44,7 +44,7 @@ var _player: Player
 var _enemy: Enemy
 var _enemyAI: EnemyAI
 
-func _ready():
+func _ready() -> void:
 	# setup level
 	_level = get_node("TutorialWorld/LevelH")
 	for capture_point in _level.get_capture_points():
@@ -57,12 +57,12 @@ func _ready():
 	_player = _character_manager.get_player()
 	_player.get_body().hide()
 	
-	_player.toggle_trigger(ActionManager.Trigger.FIRE_START, false)
-	_player.toggle_trigger(ActionManager.Trigger.DEFAULT_ATTACK_START, false)
-	_player.toggle_trigger(ActionManager.Trigger.SPECIAL_MOVEMENT_START, false)
+	_character_manager.toggle_trigger(ActionManager.Trigger.FIRE_START, false)
+	_character_manager.toggle_trigger(ActionManager.Trigger.DEFAULT_ATTACK_START, false)
+	_character_manager.toggle_trigger(ActionManager.Trigger.SPECIAL_MOVEMENT_START, false)
 	
-	_player.toggle_movement(false)
-	_player.toggle_swapping(false)
+	_character_manager.toggle_movement(false)
+	_character_manager.toggle_swapping(false)
 	
 	# setup enemy
 	var spawn_point = _game_manager.get_spawn_point(1, 0).global_transform.origin
@@ -79,7 +79,7 @@ func _ready():
 	_bottom_element.hide()
 
 
-func _process(delta):
+func _process(delta: float) -> void:
 	if _paused:
 		return
 	# stop the timer from moving
@@ -137,6 +137,7 @@ func stop() -> void:
 	queue_free()
 
 
+# TODO: this does not seem to work correctly with non Control elements (but it is not really necessary for now)
 func add_post_process_exception(object) -> void:
 	var _global_transform
 	if object is Spatial:
@@ -197,6 +198,5 @@ func _completed() -> void:
 	pause()
 	yield(_bottom_element, "continue_pressed")
 	unpause()
-	# this is needed so we don't instantly start the tutorial again because the accept input is not consumed
-	call_deferred("emit_signal","scenario_completed")
-	call_deferred("queue_free")
+	emit_signal("scenario_completed")
+	queue_free()

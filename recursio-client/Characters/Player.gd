@@ -28,7 +28,7 @@ var _just_corrected = false
 var _last_server_position
 var _last_server_time
 var _round_manager
-var _dash_ammunition := 2
+var _dash_ammunition: int = 2
 
 class MovementFrame:
 	var position: Vector3 = Vector3.ZERO
@@ -74,18 +74,23 @@ func clear_walls():
 	_walls.clear()
 
 
+# should not be called directly (use CharacterManager for this)
 func toggle_swapping(value: bool) -> void:
 	_player_input.block_swapping = !value
 
+# should not be called directly (use CharacterManager for this)
 func get_swapping_toggle_value() -> bool:
 	return !_player_input.block_swapping
 
+# should not be called directly (use CharacterManager for this)
 func toggle_movement(value: bool) -> void:
 	_player_input.block_movement = !value
 
+# should not be called directly (use CharacterManager for this)
 func get_movement_toggle_value() -> bool:
 	return !_player_input.block_movement
 
+# should not be called directly (use CharacterManager for this)
 func toggle_trigger(trigger, value: bool) -> void:
 	_hud.toggle_trigger(trigger, value)
 	var input_string: String
@@ -97,6 +102,7 @@ func toggle_trigger(trigger, value: bool) -> void:
 		input_string ="player_dash"
 	_player_input.disabled_inputs[input_string] = !value
 
+# should not be called directly (use CharacterManager for this)
 func get_trigger_toggle_value(trigger) -> bool:
 	assert(trigger in ActionManager.Trigger.values())
 	var input_string: String

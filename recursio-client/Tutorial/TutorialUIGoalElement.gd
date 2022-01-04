@@ -3,6 +3,8 @@ extends HBoxContainer
 onready var _goal_text: Label = get_node("GoalText")
 var _camera: Camera
 var _goal: Spatial
+
+
 func init(camera: Camera) -> void:
 	_camera = camera
 

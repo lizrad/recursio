@@ -62,7 +62,7 @@ func get_spawn_points(team_id):
 		return null
 
 
-func get_spawn_point_node(team_id, timeline_index) -> SpawnPoint:
+func get_spawn_point_node(team_id: int, timeline_index: int ) -> SpawnPoint:
 	var node_name = "Player" + str(team_id + 1) + "Spawns"
 	if has_node(node_name):
 		return get_node(node_name).get_children()[timeline_index].get_children()[0]
@@ -96,7 +96,8 @@ func toggle_capture_points(toggle: bool) -> void:
 	for capture_point in _capture_points:
 		capture_point.active = toggle
 
-func set_team_id(team_id):
+
+func set_team_id(team_id: int) -> void:
 	for capture_point in _capture_points:
 		if "player_team_id" in capture_point:
 			capture_point.player_team_id = team_id

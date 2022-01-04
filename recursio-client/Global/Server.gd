@@ -53,11 +53,11 @@ signal load_level_received()
 
 
 
-func _ready():
+func _ready() -> void:
 	_local_time = OS.get_system_time_msecs()
 
 
-func _physics_process(delta):
+func _physics_process(delta: float) -> void:
 	if _local_clock_running:
 		_local_time += delta * 1000
 	if _server_clock_running:

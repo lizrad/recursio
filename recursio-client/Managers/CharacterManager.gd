@@ -30,10 +30,11 @@ var _time_since_last_world_state_update = 0.0
 
 var _max_timelines = Constants.get_value("ghosts", "max_amount")
 
+var _input_paused: bool = false
 # Stores active inputs before pausing
 var _pre_pause_trigger_toggle_values: Dictionary = {}
-var _pre_pause_movement_toggle_values: bool = false
-var _pre_pause_swapping_toggle_values: bool = false
+var _pre_pause_movement_toggle_value: bool = false
+var _pre_pause_swapping_toggle_value: bool = false
 
 func _ready():
 	var _error = Server.connect("phase_switch_received", self, "_on_phase_switch_received") 
@@ -91,15 +92,42 @@ func get_player_id() -> int:
 	return _player_rpc_id
 
 
+func toggle_swapping(value: bool) -> void:
+	_pre_pause_swapping_toggle_value = value
+	if not _input_paused:
+		_player.toggle_swapping(value)
+
+
+func get_swapping_toggle_value() -> bool:
+	return _player.get_swapping_toggle_value()
+
+func toggle_movement(value: bool) -> void:
+	_pre_pause_movement_toggle_value = value
+	if not _input_paused:
+		_player.toggle_movement(value)
+
+func get_movement_toggle_value() -> bool:
+	return _player.get_movement_toggle_value()
+
+func toggle_trigger(trigger, value: bool) -> void:
+	_pre_pause_trigger_toggle_values[trigger] = value
+	if not _input_paused:
+		_player.toggle_trigger(trigger, value)
+	
+
+func get_trigger_toggle_value(trigger) -> bool:
+	return _player.get_trigger_toggle_value(trigger)
+
 
 func toggle_player_input_pause(value: bool) -> void:
+	_input_paused = value;
 	if value:
 		_pre_pause_trigger_toggle_values[ActionManager.Trigger.FIRE_START] = _player.get_trigger_toggle_value(ActionManager.Trigger.FIRE_START)
 		_pre_pause_trigger_toggle_values[ActionManager.Trigger.DEFAULT_ATTACK_START] = _player.get_trigger_toggle_value(ActionManager.Trigger.DEFAULT_ATTACK_START)
 		_pre_pause_trigger_toggle_values[ActionManager.Trigger.SPECIAL_MOVEMENT_START] = _player.get_trigger_toggle_value(ActionManager.Trigger.SPECIAL_MOVEMENT_START)
 	
-		_pre_pause_movement_toggle_values = _player.get_movement_toggle_value()
-		_pre_pause_swapping_toggle_values = _player.get_swapping_toggle_value()
+		_pre_pause_movement_toggle_value = _player.get_movement_toggle_value()
+		_pre_pause_swapping_toggle_value = _player.get_swapping_toggle_value()
 		_player.toggle_trigger(ActionManager.Trigger.FIRE_START, false)
 		_player.toggle_trigger(ActionManager.Trigger.DEFAULT_ATTACK_START, false)
 		_player.toggle_trigger(ActionManager.Trigger.SPECIAL_MOVEMENT_START, false)
@@ -110,8 +138,8 @@ func toggle_player_input_pause(value: bool) -> void:
 		_player.toggle_trigger(ActionManager.Trigger.DEFAULT_ATTACK_START, _pre_pause_trigger_toggle_values[ActionManager.Trigger.DEFAULT_ATTACK_START])
 		_player.toggle_trigger(ActionManager.Trigger.SPECIAL_MOVEMENT_START, _pre_pause_trigger_toggle_values[ActionManager.Trigger.SPECIAL_MOVEMENT_START])
 	
-		_player.toggle_movement(_pre_pause_movement_toggle_values)
-		_player.toggle_swapping(_pre_pause_swapping_toggle_values)
+		_player.toggle_movement(_pre_pause_movement_toggle_value)
+		_player.toggle_swapping(_pre_pause_swapping_toggle_value)
 
 
 func _on_game_start_received(start_time):

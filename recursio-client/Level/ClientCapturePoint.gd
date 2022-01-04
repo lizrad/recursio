@@ -1,7 +1,8 @@
 extends BaseCapturePoint
 class_name ClientCapturePoint
 
-#TODO: this is duplicated on the server capture point, maybe just implement this in the base class
+# TODO: this is duplicated on the server capture point, maybe implement this in the base class
+# but we only need this for the tutorial for now so I'm not sure if it should be in the base class just for that
 signal captured(team_id)
 onready var _progress = $Viewport/TextureProgress
 
