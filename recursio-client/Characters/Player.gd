@@ -232,9 +232,9 @@ func hide_hud() -> void:
 	_hud.hide()
 
 
-func show_preparation_hud(round_index) -> void:
+func show_preparation_hud(round_index, show_button_overlay: bool) -> void:
 	_hud.prep_phase_start(round_index)
-	_button_overlay_simple.set_active(true)
+	_button_overlay_simple.set_active(show_button_overlay)
 
 
 func show_countdown_hud() -> void:
