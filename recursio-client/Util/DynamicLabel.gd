@@ -3,12 +3,8 @@ extends Label
 class_name DynamicLabel
 
 export(bool) var enable_this_after_font_is_unique: bool = false
-export(int) var font_size_min: int = 2
-export(int) var font_size_max: int = 72
-# The font gives chars a different width, 
-# therefore setting the pixel size of the font does not match the actual size
-# TODO: Actual size of the font should be used
-export(float) var font_char_scale: float = 1.4
+export(Vector2) var resolution: Vector2 = Vector2(1920, 1080)
+export(int) var font_size: int = 20
 
 
 func _process(_delta):
@@ -20,5 +16,11 @@ func _process(_delta):
 
 func _update_font_size():
 	var font = self.get("custom_fonts/font")
-	var new_font_size = (self.rect_size.x / self.text.length()) * font_char_scale
-	font.size = min(max(new_font_size, font_size_min), font_size_max)
+	
+	var viewport_size = get_viewport_rect().size
+	# Use average of vertical and horizontal difference
+	var diff = viewport_size.x / resolution.x + viewport_size.y / resolution.y
+	diff /= 2
+	
+	var new_font_size = font_size * diff
+	font.size = new_font_size
