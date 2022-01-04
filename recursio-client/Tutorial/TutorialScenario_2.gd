@@ -89,7 +89,7 @@ func _started_round_2() -> void:
 		var _error = ghost.connect("client_hit", self, "_on_ghost_hit", [ghost])
 	
 	_bottom_element.show()
-	_bottom_element.set_content("Now watch what happens with your ghost.")
+	_bottom_element.set_content("Now watch what happens with your previous timeline.")
 	_character_manager.toggle_player_input_pause(true)
 	yield(_round_manager, "game_phase_started")
 	_player.move_camera_to_overview()
@@ -156,7 +156,7 @@ func _round_3_end_sequence():
 	add_post_process_exception(_ghost_manager._player_ghosts[0])
 	_goal_element_1.set_content("Respawned", _ghost_manager._player_ghosts[0].get_body())
 	_bottom_element.show()
-	_bottom_element.set_content("If the ghost does not get hit, it just gets set back to spawn.", TutorialUIBottomElement.Controls.None, true)
+	_bottom_element.set_content("If the previous timeline does not get hit, it just gets set back to spawn.", TutorialUIBottomElement.Controls.None, true)
 	pause()
 	yield(_bottom_element, "continue_pressed")
 	unpause()
@@ -193,18 +193,21 @@ func _on_ghost_hit(perpetrator, ghost):
 
 
 func _on_ghost_hit_soft_lock(perpetrator, ghost: PlayerGhost):	
-	print("a;skldfja;lsdjf;")
 	_soft_lock = true
 	ghost.toggle_visibility_light(false)
 	ghost.server_hit(perpetrator)
 	_bottom_element.show()
 	add_post_process_exception(_bottom_element)
 	if perpetrator is Player:
-		_bottom_element.set_content("Oh no, you killed your ghost! Try using a melee attack.", TutorialUIBottomElement.Controls.None, true)
+		_bottom_element.set_content("Oh no, you killed your previous timeline! Try using a melee attack next time.", TutorialUIBottomElement.Controls.None, true)
 	else:
-		_bottom_element.set_content("Oh no, your ghost died! Try again.", TutorialUIBottomElement.Controls.None, true)
+		_bottom_element.set_content("Oh no, you did not prevent the death of your previous timeline!", TutorialUIBottomElement.Controls.None, true)
 	_goal_element_1.hide()
 	_goal_element_2.hide()
+	pause()
+	yield(_bottom_element, "continue_pressed")
+	unpause()
+	_bottom_element.set_content("Try again by playing the second timeline again!", TutorialUIBottomElement.Controls.None, true)
 	pause()
 	yield(_bottom_element, "continue_pressed")
 	unpause()
