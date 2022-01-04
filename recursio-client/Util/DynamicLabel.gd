@@ -17,9 +17,7 @@ func _process(_delta):
 func _update_font_size():
 	var font = self.get("custom_fonts/font")
 	
-	var viewport_size = get_viewport_rect().size
-	# Use average of vertical and horizontal difference
-	var diff = viewport_size.x / resolution.x + viewport_size.y / resolution.y
+	var diff = self.owner.rect_size.x / resolution.x + self.owner.rect_size.y / resolution.y
 	diff /= 2
 	
 	var new_font_size = font_size * diff
