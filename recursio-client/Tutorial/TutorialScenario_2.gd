@@ -82,6 +82,7 @@ func _started_round_2() -> void:
 	_goal_element_1.hide()
 	_character_manager._round_manager.round_index += 1
 	_character_manager._round_manager.switch_to_phase(RoundManager.Phases.PREPARATION)
+	_level.get_spawn_point_node(0,1).set_active(false)
 	_enemy.kb.visible = false
 	_player.kb.visible = false
 	
@@ -92,9 +93,10 @@ func _started_round_2() -> void:
 	_bottom_element.set_content("Now watch what happens with your previous timeline.")
 	_character_manager.toggle_player_input_pause(true)
 	yield(_round_manager, "game_phase_started")
-	_player.move_camera_to_overview()
 	_goal_element_1.show()
 	_goal_element_1.set_content("Repeats", _ghost_manager._player_ghosts[0].get_body())
+	yield(get_tree().create_timer(3), "timeout")
+	_player.move_camera_to_overview()
 	yield (_ghost_manager._player_ghosts[0], "client_hit")
 	_goal_element_1.show()
 	_goal_element_1.set_content("Stays dead", _ghost_manager._player_ghosts[0].get_body())
@@ -129,8 +131,9 @@ func _started_round_3() -> void:
 	_player.toggle_trigger(ActionManager.Trigger.DEFAULT_ATTACK_START, true)
 	_player.toggle_trigger(ActionManager.Trigger.SPECIAL_MOVEMENT_START, true)
 	_character_manager._round_manager.switch_to_phase(RoundManager.Phases.PREPARATION)
+	_level.get_spawn_point_node(0,1).set_active(true)
 	_player.kb.visible = true
-	_enemy.kb.visible = true
+	_enemy.kb.visible = false
 	yield(_round_manager, "game_phase_started")
 	
 	_bottom_element.show()
@@ -156,7 +159,7 @@ func _round_3_end_sequence():
 	add_post_process_exception(_ghost_manager._player_ghosts[0])
 	_goal_element_1.set_content("Respawned", _ghost_manager._player_ghosts[0].get_body())
 	_bottom_element.show()
-	_bottom_element.set_content("If the previous timeline does not get hit, it just gets set back to spawn.", TutorialUIBottomElement.Controls.None, true)
+	_bottom_element.set_content("If the previous timeline does not get hit,\nit just gets set back to spawn.", TutorialUIBottomElement.Controls.None, true)
 	pause()
 	yield(_bottom_element, "continue_pressed")
 	unpause()
@@ -199,7 +202,7 @@ func _on_ghost_hit_soft_lock(perpetrator, ghost: PlayerGhost):
 	_bottom_element.show()
 	add_post_process_exception(_bottom_element)
 	if perpetrator is Player:
-		_bottom_element.set_content("Oh no, you killed your previous timeline! Try using a melee attack next time.", TutorialUIBottomElement.Controls.None, true)
+		_bottom_element.set_content("Oh no, you killed your previous timeline!\nTry using a melee attack next time.", TutorialUIBottomElement.Controls.None, true)
 	else:
 		_bottom_element.set_content("Oh no, you did not prevent the death of your previous timeline!", TutorialUIBottomElement.Controls.None, true)
 	_goal_element_1.hide()
@@ -207,12 +210,15 @@ func _on_ghost_hit_soft_lock(perpetrator, ghost: PlayerGhost):
 	pause()
 	yield(_bottom_element, "continue_pressed")
 	unpause()
-	_bottom_element.set_content("Try again by playing the second timeline again!", TutorialUIBottomElement.Controls.None, true)
+	_bottom_element.set_content("Try again by playing as the second timeline another time!", TutorialUIBottomElement.Controls.None, true)
 	pause()
 	yield(_bottom_element, "continue_pressed")
 	unpause()
 	remove_post_process_exception(_bottom_element)
+	_character_manager._round_manager.round_index += 1
 	_character_manager._round_manager.switch_to_phase(RoundManager.Phases.PREPARATION)
+	_character_manager._on_timeline_picked(0,1)
+	_character_manager._on_timeline_picked(1,1)
 	_goal_element_1.show()
 	_goal_element_2.show()
 	_goal_element_2.set_content("Repeats", _ghost_manager._player_ghosts[0].get_body())

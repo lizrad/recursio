@@ -62,6 +62,14 @@ func get_spawn_points(team_id):
 		return null
 
 
+func get_spawn_point_node(team_id, timeline_index) -> SpawnPoint:
+	var node_name = "Player" + str(team_id + 1) + "Spawns"
+	if has_node(node_name):
+		return get_node(node_name).get_children()[timeline_index].get_children()[0]
+	else:
+		Logger.error("Spawn point does not exist." + node_name)
+		return null
+
 func get_capture_points():
 	return _capture_points
 
