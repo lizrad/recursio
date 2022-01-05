@@ -39,7 +39,7 @@ var _clock_update_timer
 
 
 #########################
-#### Room Management ####
+#### Game Room Management ####
 #########################
 signal game_room_created(room_id, game_room_name)
 signal game_rooms_received(game_room_dic)
@@ -48,6 +48,10 @@ signal game_room_ready_received(player_id)
 signal game_room_not_ready_received(player_id)
 signal load_level_received()
 
+#######################
+#### Gameplay Menu ####
+#######################
+signal player_left_game_received(player_id)
 
 
 
@@ -347,3 +351,16 @@ remote func receive_load_level():
 func send_level_loaded():
 	Logger.info("Send level loaded", "room_management")
 	rpc_id(1, "receive_level_loaded")
+
+
+#######################
+#### Gameplay Menu ####
+#######################
+
+func send_leave_game():
+	rpc_id(1, "receive_leave_game")
+
+
+remote func receive_player_left_game(player_id):
+	Logger.info("Receive player left game", "gameplay_menu")
+	emit_signal("player_left_game_received", player_id)

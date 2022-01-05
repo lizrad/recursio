@@ -24,6 +24,11 @@ signal game_room_ready_received(player_id, game_room_id)
 signal game_room_not_ready_received(player_id, game_room_id)
 signal level_loaded_received(player_id, game_room_id)
 
+#######################
+#### Gameplay Menu ####
+#######################
+signal leave_game_received(player_id)
+
 
 func _ready():
 	start_server()
@@ -228,3 +233,19 @@ remote func receive_level_loaded():
 	var client_id = get_tree().get_rpc_sender_id()
 	Logger.info("Receive level loaded", "room_management")
 	emit_signal("level_loaded_received", client_id)
+
+
+
+#######################
+#### Gameplay Menu ####
+#######################
+
+remote func receive_leave_game():
+	var client_id = get_tree().get_rpc_sender_id()
+	Logger.info("Receive level loaded", "gameplay_menu")
+	emit_signal("leave_game_received", client_id)
+
+
+func send_player_left_game(client_id, player_id):
+	Logger.info("Send player left game", "gameplay_menu")
+	rpc_id(client_id, "receive_player_left_game", player_id)
