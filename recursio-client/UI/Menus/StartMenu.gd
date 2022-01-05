@@ -25,7 +25,7 @@ onready var _btn_exit = get_node("CenterContainer/MainMenu/Btn_Exit")
 onready var _game_room_search: GameRoomSearch = get_node("CenterContainer/GameRoomSearch")
 onready var _game_room_creation: GameRoomCreation = get_node("CenterContainer/GameRoomCreation")
 onready var _game_room_lobby: GameRoomLobby = get_node("CenterContainer/GameRoomLobby")
-onready var _connection_lost_container = get_node("CenterContainer/ConnectionLostContainer")
+onready var _error_window: ErrorWindow = get_node("CenterContainer/ErrorWindow")
 onready var _settings: Control = get_node("CenterContainer/SettingsContainer")
 
 onready var _tutorial: Tutorial = get_node("Tutorial")
@@ -79,6 +79,8 @@ func _ready():
 	_error = Server.connect("game_room_ready_received" , self, "_on_game_room_ready_received")
 	_error = Server.connect("game_room_not_ready_received" , self, "_on_game_room_not_ready_received")
 	_error = Server.connect("load_level_received", self, "_on_load_level_received")
+	
+	_error = Server.connect("player_left_game_received", self, "_on_player_left_game")
 	
 	_error = _tutorial.connect("scenario_started", self, "_on_tutorial_scenario_started")
 	_error = _tutorial.connect("scenario_completed", self, "_on_tutorial_scenario_completed")
@@ -153,10 +155,13 @@ func _on_connection_successful():
 
 
 func _on_server_disconnected():
+	Logger.info("Server disconnected!", "connection")
 	if _world:
 		return
-	_connection_lost_container.show()
+	
 	return_to_title()
+	_error_window.set_content("Connection to server lost! The server might be down, please try again.")
+	_error_window.show()
 
 
 
@@ -315,7 +320,7 @@ func _on_gameplay_menu_leave_pressed() -> void:
 		return
 	
 	if _world != null:
-		return_to_game_room_lobby()
+		Server.send_leave_game()
 	else:
 		assert(_tutorial._scenario != null)
 		_tutorial.stop_scenario()
@@ -338,3 +343,13 @@ func _on_panel_gui_input(event: InputEvent) -> void:
 	and event.button_index == BUTTON_LEFT \
 	and event.is_pressed():
 		var _ret = OS.shell_open("https://github.com/lizrad/recursio")
+
+
+func _on_player_left_game(player_id) -> void:
+	Logger.info("Opponent disconnected!", "connection")
+	return_to_game_room_lobby()
+	# Other player left
+	if player_id != _player_rpc_id:
+		return_to_game_room_lobby()
+		_error_window.set_content("Opponent disconnected! The game will automatically be exited if one player leaves the game.")
+		_error_window.show()
