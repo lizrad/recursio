@@ -1,65 +1,75 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=24 format=2]
 
 [ext_resource path="res://UI/HUD.gd" type="Script" id=1]
-[ext_resource path="res://Resources/Fonts/Large.tres" type="DynamicFont" id=2]
+[ext_resource path="res://Resources/Icons/keyboard/shoot.png" type="Texture" id=2]
 [ext_resource path="res://Resources/Icons/icon_dash.png" type="Texture" id=3]
 [ext_resource path="res://Resources/Icons/circle_white_256x256.png" type="Texture" id=4]
 [ext_resource path="res://Resources/Icons/round_timer_1024x256.png" type="Texture" id=5]
 [ext_resource path="res://UI/Default.tres" type="Theme" id=6]
 [ext_resource path="res://Resources/Icons/bullet.png" type="Texture" id=7]
 [ext_resource path="res://Resources/Icons/ps/dash.png" type="Texture" id=8]
-[ext_resource path="res://Resources/Icons/ps/shoot.png" type="Texture" id=9]
-[ext_resource path="res://Resources/Audio/Effects/DashReload.ogg" type="AudioStream" id=10]
-[ext_resource path="res://Resources/Icons/icon_dash_inactive.png" type="Texture" id=11]
+[ext_resource path="res://Resources/Audio/Effects/DashReload.ogg" type="AudioStream" id=9]
+[ext_resource path="res://Util/DynamicLabel.gd" type="Script" id=10]
+[ext_resource path="res://Resources/Fonts/FiraCode-Bold.ttf" type="DynamicFontData" id=11]
+[ext_resource path="res://Resources/Icons/icon_dash_inactive.png" type="Texture" id=12]
+
+[sub_resource type="DynamicFont" id=14]
+size = 54
+outline_size = 2
+outline_color = Color( 0, 0, 0, 1 )
+use_mipmaps = true
+use_filter = true
+extra_spacing_char = 2
+font_data = ExtResource( 11 )
+
+[sub_resource type="DynamicFont" id=11]
+size = 35
+outline_size = 2
+outline_color = Color( 0, 0, 0, 1 )
+use_mipmaps = true
+use_filter = true
+extra_spacing_char = 2
+font_data = ExtResource( 11 )
+
+[sub_resource type="DynamicFont" id=15]
+size = 54
+outline_size = 2
+outline_color = Color( 0, 0, 0, 1 )
+use_mipmaps = true
+use_filter = true
+extra_spacing_char = 2
+font_data = ExtResource( 11 )
+
+[sub_resource type="DynamicFont" id=12]
+size = 35
+outline_size = 2
+outline_color = Color( 0, 0, 0, 1 )
+use_mipmaps = true
+use_filter = true
+extra_spacing_char = 2
+font_data = ExtResource( 11 )
+
+[sub_resource type="DynamicFont" id=13]
+size = 35
+outline_size = 2
+outline_color = Color( 0, 0, 0, 1 )
+use_mipmaps = true
+use_filter = true
+extra_spacing_char = 2
+font_data = ExtResource( 11 )
 
 [sub_resource type="Animation" id=1]
 resource_name = "no_ammo"
 length = 0.7
-tracks/0/type = "value"
-tracks/0/path = NodePath("WeaponAmmo:rect_rotation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/keys = {
-"times": PoolRealArray( 0, 0.2, 0.4, 0.7 ),
-"transitions": PoolRealArray( 1, 1, 1, 1 ),
-"update": 0,
-"values": [ 0.0, -15.0, 15.0, 0.0 ]
-}
-tracks/1/type = "value"
-tracks/1/path = NodePath("WeaponAmmo:rect_scale")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/keys = {
-"times": PoolRealArray( 0, 0.3, 0.7 ),
-"transitions": PoolRealArray( 1, 1, 1 ),
-"update": 0,
-"values": [ Vector2( 1, 1 ), Vector2( 2, 2 ), Vector2( 1, 1 ) ]
-}
 
 [sub_resource type="Animation" id=2]
 resource_name = "select_weapon"
 length = 0.5
-tracks/0/type = "value"
-tracks/0/path = NodePath("WeaponAmmo:rect_scale")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/keys = {
-"times": PoolRealArray( 0, 0.2, 0.5 ),
-"transitions": PoolRealArray( 1, 1, 1 ),
-"update": 0,
-"values": [ Vector2( 1, 1 ), Vector2( 2, 2 ), Vector2( 1, 1 ) ]
-}
 
 [sub_resource type="Animation" id=3]
 resource_name = "sub_ammo"
 tracks/0/type = "value"
-tracks/0/path = NodePath("WeaponAmmo/SubAmmo:self_modulate")
+tracks/0/path = NodePath("Abilities/Weapon/WeaponAmmo/SubAmmo:self_modulate")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
@@ -71,7 +81,7 @@ tracks/0/keys = {
 "values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
 }
 tracks/1/type = "value"
-tracks/1/path = NodePath("WeaponAmmo/SubAmmo:rect_position")
+tracks/1/path = NodePath("Abilities/Weapon/WeaponAmmo/SubAmmo:rect_position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/imported = false
@@ -80,13 +90,28 @@ tracks/1/keys = {
 "times": PoolRealArray( 0, 1 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
-"values": [ Vector2( -10, -10 ), Vector2( -40, -30 ) ]
+"values": [ Vector2( 0, 0 ), Vector2( -40, -30 ) ]
+}
+
+[sub_resource type="Animation" id=16]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("Abilities/Dash/AspectRatioContainer/DashTextureProgress:rect_scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 1, 1 ) ]
 }
 
 [sub_resource type="Animation" id=9]
 resource_name = "add_dash"
 tracks/0/type = "value"
-tracks/0/path = NodePath("DashAmmo/SubAmmo:self_modulate")
+tracks/0/path = NodePath("Abilities/Dash/DashAmmo/SubAmmo:self_modulate")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
@@ -98,7 +123,7 @@ tracks/0/keys = {
 "values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
 }
 tracks/1/type = "value"
-tracks/1/path = NodePath("DashAmmo/SubAmmo:rect_position")
+tracks/1/path = NodePath("Abilities/Dash/DashAmmo/SubAmmo:rect_position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/imported = false
@@ -107,10 +132,10 @@ tracks/1/keys = {
 "times": PoolRealArray( 0, 1 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
-"values": [ Vector2( -10, -10 ), Vector2( -40, -30 ) ]
+"values": [ Vector2( 0, 0 ), Vector2( -40, -30 ) ]
 }
 tracks/2/type = "value"
-tracks/2/path = NodePath("DashAmmo/SubAmmo:text")
+tracks/2/path = NodePath("Abilities/Dash/DashAmmo/SubAmmo:text")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/imported = false
@@ -122,7 +147,7 @@ tracks/2/keys = {
 "values": [ "+1" ]
 }
 tracks/3/type = "value"
-tracks/3/path = NodePath("DashAmmo/SubAmmo:custom_colors/font_color")
+tracks/3/path = NodePath("Abilities/Dash/DashAmmo/SubAmmo:custom_colors/font_color")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/imported = false
@@ -143,12 +168,12 @@ tracks/4/keys = {
 "clips": [ {
 "end_offset": 0.0,
 "start_offset": 0.0,
-"stream": ExtResource( 10 )
+"stream": ExtResource( 9 )
 } ],
 "times": PoolRealArray( 0 )
 }
 tracks/5/type = "value"
-tracks/5/path = NodePath("DashAmmo/DashTextureProgress:rect_scale")
+tracks/5/path = NodePath("Abilities/Dash/AspectRatioContainer/DashTextureProgress:rect_scale")
 tracks/5/interp = 1
 tracks/5/loop_wrap = true
 tracks/5/imported = false
@@ -157,13 +182,13 @@ tracks/5/keys = {
 "times": PoolRealArray( 0.3, 0.5, 0.9 ),
 "transitions": PoolRealArray( 1, 1, 1 ),
 "update": 0,
-"values": [ Vector2( 0.1, 0.1 ), Vector2( 0.15, 0.15 ), Vector2( 0.1, 0.1 ) ]
+"values": [ Vector2( 1, 1 ), Vector2( 1.5, 1.5 ), Vector2( 1, 1 ) ]
 }
 
 [sub_resource type="Animation" id=8]
 resource_name = "sub_dash"
 tracks/0/type = "value"
-tracks/0/path = NodePath("DashAmmo/SubAmmo:self_modulate")
+tracks/0/path = NodePath("Abilities/Dash/DashAmmo/SubAmmo:self_modulate")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
@@ -175,7 +200,7 @@ tracks/0/keys = {
 "values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
 }
 tracks/1/type = "value"
-tracks/1/path = NodePath("DashAmmo/SubAmmo:rect_position")
+tracks/1/path = NodePath("Abilities/Dash/DashAmmo/SubAmmo:rect_position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/imported = false
@@ -187,7 +212,7 @@ tracks/1/keys = {
 "values": [ Vector2( -10, -10 ), Vector2( -40, -30 ) ]
 }
 tracks/2/type = "value"
-tracks/2/path = NodePath("DashAmmo/SubAmmo:text")
+tracks/2/path = NodePath("Abilities/Dash/DashAmmo/SubAmmo:text")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/imported = false
@@ -199,7 +224,7 @@ tracks/2/keys = {
 "values": [ "-1" ]
 }
 tracks/3/type = "value"
-tracks/3/path = NodePath("DashAmmo/SubAmmo:custom_colors/font_color")
+tracks/3/path = NodePath("Abilities/Dash/DashAmmo/SubAmmo:custom_colors/font_color")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/imported = false
@@ -214,158 +239,201 @@ tracks/3/keys = {
 [node name="HUD" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 1.68176
-margin_top = 0.840897
-margin_right = 1.68176
-margin_bottom = 0.840881
 theme = ExtResource( 6 )
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Phase" type="Label" parent="."]
-anchor_left = 0.3
-anchor_top = 0.97
-anchor_right = 0.7
-anchor_bottom = 1.0
-margin_left = 2.77301
-margin_top = -927.6
-margin_right = 3.17297
-margin_bottom = -914.6
-custom_fonts/font = ExtResource( 2 )
-text = "Waiting for Server..."
-align = 1
-valign = 1
+[node name="Abilities" type="VBoxContainer" parent="."]
+anchor_left = 0.02
+anchor_top = 0.02
+anchor_right = 0.125
+anchor_bottom = 0.15
+rect_min_size = Vector2( 100, 70 )
+size_flags_horizontal = 7
+size_flags_vertical = 7
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ControllerButtonShoot" type="TextureRect" parent="."]
-margin_left = 29.3182
-margin_top = 8.1591
-margin_right = 104.318
-margin_bottom = 83.1591
-texture = ExtResource( 9 )
-expand = true
+[node name="Weapon" type="HBoxContainer" parent="Abilities"]
+margin_right = 201.0
+margin_bottom = 68.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="WeaponAmmo" type="Label" parent="."]
-margin_left = 97.3182
-margin_top = 34.1591
-margin_right = 135.318
-margin_bottom = 72.1591
-rect_pivot_offset = Vector2( 45, 19 )
-custom_fonts/font = ExtResource( 2 )
-text = "10"
-align = 2
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="SubAmmo" type="Label" parent="WeaponAmmo"]
-self_modulate = Color( 1, 1, 1, 0 )
-margin_left = -40.0
-margin_top = -30.0
-margin_right = -1.99993
-margin_bottom = 8.00001
-rect_scale = Vector2( 2, 2 )
-rect_pivot_offset = Vector2( 45, 19 )
-custom_colors/font_color = Color( 1, 0, 0, 1 )
-custom_fonts/font = ExtResource( 2 )
-text = "-1"
-align = 2
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="WeaponTypeBG" type="TextureRect" parent="WeaponAmmo"]
-margin_left = 50.0
-margin_top = -5.13712
-margin_right = 90.0
-margin_bottom = 34.8629
-texture = ExtResource( 4 )
-expand = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="WeaponType" type="TextureRect" parent="WeaponAmmo"]
-margin_left = 50.0
-margin_right = 90.0
-margin_bottom = 34.8629
+[node name="ControllerButtonShoot" type="TextureRect" parent="Abilities/Weapon"]
+margin_right = 64.0
+margin_bottom = 68.0
+size_flags_horizontal = 7
+size_flags_vertical = 7
+texture = ExtResource( 2 )
 expand = true
 stretch_mode = 6
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ControllerButtonDash" type="TextureRect" parent="."]
-margin_left = 29.3182
-margin_top = 80.1591
-margin_right = 104.318
-margin_bottom = 155.159
-texture = ExtResource( 8 )
+[node name="WeaponAmmo" type="Label" parent="Abilities/Weapon"]
+margin_left = 68.0
+margin_right = 132.0
+margin_bottom = 68.0
+size_flags_horizontal = 7
+size_flags_vertical = 7
+custom_fonts/font = SubResource( 14 )
+text = "1"
+align = 2
+valign = 1
+script = ExtResource( 10 )
+enable_this_after_font_is_unique = true
+font_size = 54
+
+[node name="SubAmmo" type="Label" parent="Abilities/Weapon/WeaponAmmo"]
+self_modulate = Color( 1, 1, 1, 0 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -14.0
+margin_top = -30.0
+margin_right = -14.016
+margin_bottom = -30.012
+size_flags_horizontal = 7
+size_flags_vertical = 7
+custom_colors/font_color = Color( 1, 0, 0, 1 )
+custom_fonts/font = SubResource( 11 )
+text = "-1"
+align = 1
+valign = 1
+script = ExtResource( 10 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+enable_this_after_font_is_unique = true
+font_size = 35
+
+[node name="WeaponTypeBG" type="TextureRect" parent="Abilities/Weapon"]
+margin_left = 136.0
+margin_right = 201.0
+margin_bottom = 68.0
+size_flags_horizontal = 7
+size_flags_vertical = 7
+texture = ExtResource( 4 )
 expand = true
+stretch_mode = 6
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="DashAmmo" type="Label" parent="."]
-anchor_top = 0.07
-anchor_bottom = 0.07
-margin_left = 112.318
-margin_top = 25.5591
-margin_right = 135.318
-margin_bottom = 63.5591
-custom_fonts/font = ExtResource( 2 )
+[node name="WeaponType" type="TextureRect" parent="Abilities/Weapon/WeaponTypeBG"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_horizontal = 7
+size_flags_vertical = 7
+expand = true
+stretch_mode = 6
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Dash" type="HBoxContainer" parent="Abilities"]
+margin_top = 72.0
+margin_right = 201.0
+margin_bottom = 140.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ControllerButtonDash" type="TextureRect" parent="Abilities/Dash"]
+margin_right = 64.0
+margin_bottom = 68.0
+size_flags_horizontal = 7
+size_flags_vertical = 7
+texture = ExtResource( 8 )
+expand = true
+stretch_mode = 6
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DashAmmo" type="Label" parent="Abilities/Dash"]
+margin_left = 68.0
+margin_right = 132.0
+margin_bottom = 68.0
+size_flags_horizontal = 7
+size_flags_vertical = 7
+custom_fonts/font = SubResource( 15 )
 text = "2"
 align = 2
 valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+script = ExtResource( 10 )
+enable_this_after_font_is_unique = true
+font_size = 54
 
-[node name="SubAmmo" type="Label" parent="DashAmmo"]
+[node name="SubAmmo" type="Label" parent="Abilities/Dash/DashAmmo"]
 self_modulate = Color( 1, 1, 1, 0 )
+anchor_right = 1.0
+anchor_bottom = 1.0
 margin_left = -40.0
 margin_top = -30.0
-margin_right = -2.0
-margin_bottom = 8.0
+margin_right = -24.0
+margin_bottom = -30.0
 rect_pivot_offset = Vector2( 45, 19 )
+size_flags_horizontal = 7
+size_flags_vertical = 7
 custom_colors/font_color = Color( 0, 1, 0.0627451, 1 )
-custom_fonts/font = ExtResource( 2 )
+custom_fonts/font = SubResource( 12 )
 text = "+1"
-align = 2
+align = 1
 valign = 1
+script = ExtResource( 10 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+enable_this_after_font_is_unique = true
+font_size = 35
 
-[node name="DashTextureProgress" type="TextureProgress" parent="DashAmmo"]
-margin_left = -198.0
-margin_top = -238.0
-margin_right = 314.0
-margin_bottom = 274.0
-rect_scale = Vector2( 0.1, 0.1 )
-rect_pivot_offset = Vector2( 256, 256 )
+[node name="AspectRatioContainer" type="AspectRatioContainer" parent="Abilities/Dash"]
+margin_left = 136.0
+margin_right = 201.0
+margin_bottom = 68.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="DashTextureProgress" type="TextureProgress" parent="Abilities/Dash/AspectRatioContainer"]
+margin_top = 1.5
+margin_right = 65.0
+margin_bottom = 66.5
+size_flags_horizontal = 7
+size_flags_vertical = 7
 value = 100.0
-texture_under = ExtResource( 11 )
+texture_under = ExtResource( 12 )
 texture_progress = ExtResource( 3 )
+nine_patch_stretch = true
+
+[node name="Tween" type="Tween" parent="Abilities/Dash/AspectRatioContainer/DashTextureProgress"]
+
+[node name="Timer" type="AspectRatioContainer" parent="."]
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.125
+rect_min_size = Vector2( 0, 67.5 )
+ratio = 5.0
+stretch_mode = 3
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Tween" type="Tween" parent="DashAmmo"]
-
-[node name="TimerProgressBar" type="TextureProgress" parent="."]
-anchor_left = 0.35
-anchor_right = 0.65
-anchor_bottom = 0.1
+[node name="TimerProgressBar" type="TextureProgress" parent="Timer"]
+margin_left = -337.5
+margin_right = 337.5
+margin_bottom = 135.0
+size_flags_horizontal = 7
+size_flags_vertical = 7
 max_value = 1.0
 step = 0.001
 value = 0.27
@@ -377,7 +445,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="CapturePoints" type="HBoxContainer" parent="TimerProgressBar"]
+[node name="CapturePoints" type="HBoxContainer" parent="Timer/TimerProgressBar"]
 anchor_left = 0.15
 anchor_top = 0.1
 anchor_right = 0.85
@@ -386,6 +454,25 @@ alignment = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="Phase" type="Label" parent="Timer/TimerProgressBar"]
+anchor_left = 0.1
+anchor_top = 1.0
+anchor_right = 0.9
+anchor_bottom = 1.5
+size_flags_horizontal = 7
+size_flags_vertical = 7
+custom_fonts/font = SubResource( 13 )
+text = "Waiting for Server..."
+align = 1
+valign = 1
+autowrap = true
+script = ExtResource( 10 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+enable_this_after_font_is_unique = true
+font_size = 35
 
 [node name="AspectRatioContainer" type="AspectRatioContainer" parent="."]
 visible = false
@@ -435,7 +522,9 @@ anims/select_weapon = SubResource( 2 )
 anims/sub_ammo = SubResource( 3 )
 
 [node name="AnimationDash" type="AnimationPlayer" parent="."]
+anims/RESET = SubResource( 16 )
 anims/add_dash = SubResource( 9 )
 anims/sub_dash = SubResource( 8 )
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="AnimationDash"]
+stream = ExtResource( 9 )

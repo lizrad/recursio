@@ -65,6 +65,7 @@ func show_stats() -> void:
 	_player_death_stats.show()
 	_ghost_kill_stats.show()
 	_ghost_death_stats.show()
+	_grab_button_focus()
 
 
 func hide_stats() -> void:
@@ -76,10 +77,18 @@ func hide_stats() -> void:
 
 func show_connection_lost_text() -> void:
 	connection_lost_container.show()
+	_grab_button_focus()
 
 
 func hide_connection_lost_text() -> void:
 	connection_lost_container.hide()
+
+
+func _grab_button_focus() -> void:
+	if _back_to_room_button.disabled:
+		_back_to_title_button.grab_focus()
+	else:
+		_back_to_room_button.grab_focus()
 
 
 func _on_back_to_title_button_pressed() -> void:

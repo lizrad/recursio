@@ -505,6 +505,8 @@ margin_left = 635.0
 margin_top = 340.0
 margin_right = 1285.0
 margin_bottom = 740.0
+grow_horizontal = 2
+grow_vertical = 2
 rect_min_size = Vector2( 650, 400 )
 script = ExtResource( 23 )
 
@@ -518,14 +520,14 @@ size_flags_vertical = 3
 
 [node name="Header" type="Label" parent="StartMenu/CenterContainer/ConnectionLostContainer/ConnectionLostList"]
 margin_right = 636.0
-margin_bottom = 34.0
+margin_bottom = 26.0
 text = "Connection Lost"
 align = 1
 
 [node name="Space" type="Control" parent="StartMenu/CenterContainer/ConnectionLostContainer/ConnectionLostList"]
-margin_top = 38.0
+margin_top = 30.0
 margin_right = 636.0
-margin_bottom = 87.0
+margin_bottom = 82.0
 rect_min_size = Vector2( 0, 20 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -534,9 +536,9 @@ __meta__ = {
 }
 
 [node name="LabelSpacePlaceholder" type="Control" parent="StartMenu/CenterContainer/ConnectionLostContainer/ConnectionLostList"]
-margin_top = 91.0
+margin_top = 86.0
 margin_right = 636.0
-margin_bottom = 288.0
+margin_bottom = 294.0
 rect_min_size = Vector2( 0, 20 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -558,9 +560,9 @@ __meta__ = {
 }
 
 [node name="Space2" type="Control" parent="StartMenu/CenterContainer/ConnectionLostContainer/ConnectionLostList"]
-margin_top = 292.0
+margin_top = 298.0
 margin_right = 636.0
-margin_bottom = 341.0
+margin_bottom = 350.0
 rect_min_size = Vector2( 0, 20 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -569,9 +571,9 @@ __meta__ = {
 }
 
 [node name="BackButton" type="Button" parent="StartMenu/CenterContainer/ConnectionLostContainer/ConnectionLostList"]
-margin_top = 345.0
+margin_top = 354.0
 margin_right = 636.0
-margin_bottom = 385.0
+margin_bottom = 386.0
 text = "Back"
 script = ExtResource( 27 )
 sound_type = 1
