@@ -179,6 +179,10 @@ func _round_3_end_sequence():
 	yield(_level.get_capture_points()[1], "captured")
 	_goal_element_2.show()
 	_goal_element_2.set_content("Capture",_level.get_capture_points()[0])
+	_player.set_custom_view_target(_level.get_capture_points()[0])
+	# wait and show the point a bit before we go back to the player
+	yield(get_tree().create_timer(2), "timeout")
+	_player.follow_camera()
 
 func _check_completed_round_3() -> bool:
 	return _level.get_capture_points()[1].capture_progress == 1.0 \

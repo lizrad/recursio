@@ -11,6 +11,7 @@ onready var _visibility_checker: VisibilityChecker = get_node("VisibilityChecker
 
 
 var enemy_is_server_driven: bool = true
+var hide_player_button_overlay: bool = false
 
 
 # Scenes for instanciating 

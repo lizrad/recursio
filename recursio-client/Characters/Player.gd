@@ -283,7 +283,7 @@ func show_preparation_hud(round_index) -> void:
 
 
 func show_button_overlay() -> void:
-	_button_overlay_simple.set_active(show_button_overlay)
+	_button_overlay_simple.set_active(true)
 
 
 func show_countdown_hud() -> void:
