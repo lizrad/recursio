@@ -62,7 +62,7 @@ func get_spawn_points(team_id):
 		return null
 
 
-func get_spawn_point_node(team_id: int, timeline_index: int ) -> SpawnPoint:
+func get_spawn_point_node(team_id: int, timeline_index: int ):
 	var node_name = "Player" + str(team_id + 1) + "Spawns"
 	if has_node(node_name):
 		return get_node(node_name).get_children()[timeline_index].get_children()[0]
