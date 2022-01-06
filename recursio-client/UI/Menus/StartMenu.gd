@@ -87,7 +87,9 @@ func _ready():
 	_error = _tutorial.connect("scenario_completed", self, "_on_tutorial_scenario_completed")
 	_error = _tutorial.connect("btn_back_pressed", self, "_on_tutorial_back_pressed")
 	
+	# Re-grab button focus
 	_error = _settings.connect("visibility_changed", self, "_on_room_search_visibility_changed")
+	_error = _connection_lost_container.connect("visibility_changed", self, "_on_connection_lost_container_visibility_changed")
 
 	_btn_play_tutorial.grab_focus()
 
@@ -211,7 +213,7 @@ func _on_exit() -> void:
 	get_tree().quit()
 
 
-func _on_search_create_game_room_pressed() -> void:	
+func _on_search_create_game_room_pressed() -> void:
 	# just create room with default naming
 	# 	otherwise would need virtual keyboard vor controller support
 	#_game_room_creation.show()
@@ -240,6 +242,11 @@ func _on_join_game_room_pressed() -> void:
 
 func _on_room_search_visibility_changed() -> void:
 	_btn_play_tutorial.grab_focus()
+
+
+func _on_connection_lost_container_visibility_changed() -> void:
+	if not _connection_lost_container.visible:
+		_btn_play_tutorial.grab_focus()
 
 
 func _on_game_room_leave_pressed() -> void:

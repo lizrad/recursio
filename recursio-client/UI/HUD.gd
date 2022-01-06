@@ -1,17 +1,22 @@
 extends Control
 class_name HUD
 
-onready var _timer_pb: TextureProgress = get_node("TimerProgressBar")
-onready var _phase = get_node("Phase")
-onready var _ammo: Label= get_node("WeaponAmmo")
-onready var _ammo_type_bg = get_node("WeaponAmmo/WeaponTypeBG")
-onready var _ammo_type = get_node("WeaponAmmo/WeaponType")
-onready var _dash: Label = get_node("DashAmmo")
-onready var _dash_bg = get_node("DashAmmo/DashTextureProgress")
-onready var _capture_point_hb = get_node("TimerProgressBar/CapturePoints")
+onready var _timer_pb: TextureProgress = get_node("Timer/TimerProgressBar")
+onready var _phase = get_node("Timer/TimerProgressBar/Phase")
+onready var _ammo_group: Control = get_node("Abilities/Weapon")
+onready var _ammo: Label= get_node("Abilities/Weapon/WeaponAmmo")
+onready var _ammo_type_bg = get_node("Abilities/Weapon/WeaponTypeBG")
+onready var _ammo_type = get_node("Abilities/Weapon/WeaponTypeBG/WeaponType")
+onready var _dash_group: Control = get_node("Abilities/Dash")
+onready var _dash: Label = get_node("Abilities/Dash/DashAmmo")
+onready var _dash_bg = get_node("Abilities/Dash/AspectRatioContainer/DashTextureProgress")
+onready var _capture_point_hb = get_node("Timer/TimerProgressBar/CapturePoints")
 onready var _ammo_type_animation = get_node("TextureRect")
-onready var _controller_shoot = get_node("ControllerButtonShoot")
-onready var _controller_dash = get_node("ControllerButtonDash")
+onready var _controller_shoot = get_node("Abilities/Weapon/ControllerButtonShoot")
+onready var _controller_dash = get_node("Abilities/Dash/ControllerButtonDash")
+
+onready var _tween = get_node("Tween")
+onready var _dash_tween = get_node("Abilities/Dash/AspectRatioContainer/DashTextureProgress/Tween")
 
 onready var tween_time := 1.5
 
@@ -46,11 +51,11 @@ func pass_round_manager(round_manager):
 func _ready() -> void:
 
 	var _error = 0
-	if not $Tween.is_connected("tween_all_completed", self, "_on_tween_completed"):
-		_error = $Tween.connect("tween_all_completed", self, "_on_tween_completed")
+	if not _tween.is_connected("tween_all_completed", self, "_on_tween_completed"):
+		_error = _tween.connect("tween_all_completed", self, "_on_tween_completed")
 
-	if not $DashAmmo/Tween.is_connected("tween_completed", self, "_on_dash_tween_completed"):
-		_error = $DashAmmo/Tween.connect("tween_completed", self, "_on_dash_tween_completed")
+	if not _dash_tween.is_connected("tween_completed", self, "_on_dash_tween_completed"):
+		_error = _dash_tween.connect("tween_completed", self, "_on_dash_tween_completed")
 
 	_error = InputManager.connect("controller_changed", self, "_on_controller_changed")
 	_on_controller_changed(InputManager.get_current_controller())
@@ -65,10 +70,8 @@ func _on_controller_changed(controller) -> void:
 func reset():
 	_phase.text = "Waiting for game to start..."
 	_max_time = -1.0
-	_dash.visible = false
-	_controller_dash.visible = false
-	_ammo.visible = false
-	_controller_shoot.visible = false
+	_dash_group.visible = false
+	_ammo_group.visible = false
 
 
 func _process(_delta):
@@ -95,10 +98,8 @@ func _calculate_progress() -> float:
 func prep_phase_start(round_index) -> void:
 	_phase.text = "Preparation Phase " + str(round_index + 1)
 	_max_time = Constants.get_value("gameplay", "prep_phase_time")
-	_dash.visible = true
-	_controller_dash.visible = true
-	_ammo.visible = true
-	_controller_shoot.visible = true
+	_dash_group.visible = true
+	_ammo_group.visible = true
 
 	# TODO: this should be set explicit from outside in dash actions
 	update_special_movement_ammo(2)
@@ -149,21 +150,21 @@ func update_special_movement_ammo(amount: int) -> void:
 		#	0		red		gray
 		#	1		gray	white
 		color_name = "ui_error" if amount < 1 else "ui_ok" if amount > 1 else "unselected"
-		$DashAmmo/DashTextureProgress.tint_under = Color(UserSettings.get_setting("colors", color_name))
+		_dash_bg.tint_under = Color(UserSettings.get_setting("colors", color_name))
 		color_name = "unselected" if amount < 1 else "ui_ok"
-		$DashAmmo/DashTextureProgress.tint_progress = Color(UserSettings.get_setting("colors", color_name))
+		_dash_bg.tint_progress = Color(UserSettings.get_setting("colors", color_name))
 
 		if amount < 2:
 			# only trigger for consuming dash
 			if amount < cur_amount:
-				if not $DashAmmo/Tween.is_active():
-					$DashAmmo/Tween.interpolate_property($DashAmmo/DashTextureProgress, "value", 0, 100, 5, Tween.TRANS_LINEAR)
-					$DashAmmo/Tween.start()
+				if not _dash_tween.is_active():
+					_dash_tween.interpolate_property(_dash_bg, "value", 0, 100, 5, Tween.TRANS_LINEAR)
+					_dash_tween.start()
 				else:
-					_dashTweenTime = $DashAmmo/Tween.tell()
+					_dashTweenTime = _dash_tween.tell()
 		else:
-			$DashAmmo/Tween.stop_all()
-			$DashAmmo/DashTextureProgress.value = 100
+			_dash_tween.stop_all()
+			_dash_bg.value = 100
 
 
 func update_weapon_type(max_ammo, img_bullet, color_name: String) -> void:
@@ -228,7 +229,7 @@ func wobble_ammo() -> void:
 
 
 func animate_weapon_selection(pos: Vector2) -> void:
-	if $Tween.is_active():
+	if _tween.is_active():
 		Logger.info("not restarting tween", "Tween")
 		return
 
@@ -236,10 +237,10 @@ func animate_weapon_selection(pos: Vector2) -> void:
 	_ammo_type_animation.visible = true
 	Logger.info("starting tween", "Tween")
 	var size = _ammo_type_animation.rect_size/2
-	$Tween.interpolate_property(_ammo_type_animation, "rect_position", pos - size, _ammo_type.rect_global_position - size/2, tween_time, Tween.TRANS_CUBIC, Tween.EASE_IN_OUT)
-	$Tween.interpolate_property(_ammo_type_animation, "rect_scale", Vector2.ONE, Vector2(0.25, 0.25), 2*tween_time, Tween.TRANS_LINEAR)
-	$Tween.interpolate_property(_ammo_type_animation, "modulate", Color(1, 1, 1, 1), Color(1, 1, 1, 0), 1.5*tween_time, Tween.TRANS_LINEAR)
-	$Tween.start()
+	_tween.interpolate_property(_ammo_type_animation, "rect_position", pos - size, _ammo_type.rect_global_position - size/2, tween_time, Tween.TRANS_CUBIC, Tween.EASE_IN_OUT)
+	_tween.interpolate_property(_ammo_type_animation, "rect_scale", Vector2.ONE, Vector2(0.25, 0.25), 2*tween_time, Tween.TRANS_LINEAR)
+	_tween.interpolate_property(_ammo_type_animation, "modulate", Color(1, 1, 1, 1), Color(1, 1, 1, 0), 1.5*tween_time, Tween.TRANS_LINEAR)
+	_tween.start()
 
 
 func _on_tween_completed() -> void:
@@ -249,15 +250,15 @@ func _on_tween_completed() -> void:
 
 func _on_dash_tween_completed(_object: Object, _key: NodePath) -> void:
 	if _dashTweenTime > 0:
-		var dashTweenTime = 5 + _dashTweenTime - $DashAmmo/Tween.get_runtime()
+		var dashTweenTime = 5 + _dashTweenTime - _dash_tween.get_runtime()
 		_dashTweenTime = 0
 
 		# something is wrong here...
 		# maybe remove/stop_all() to get rid of existing tweens?
-		$DashAmmo/Tween.stop_all()
-		$DashAmmo/Tween.remove_all()
+		_dash_tween.stop_all()
+		_dash_tween.remove_all()
 
 		var dashProgress = int((5 - dashTweenTime) / 5 * 100)
-		$DashAmmo/Tween.interpolate_property($DashAmmo/DashTextureProgress, "value", dashProgress, 100, dashTweenTime, Tween.TRANS_LINEAR)
-		$DashAmmo/Tween.start()
+		_dash_tween.interpolate_property(_dash_bg, "value", dashProgress, 100, dashTweenTime, Tween.TRANS_LINEAR)
+		_dash_tween.start()
 
