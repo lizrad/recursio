@@ -12,6 +12,8 @@ const DEFAULT_SETTINGS_PATH = "res://default-settings.ini"
 
 
 func _ready():
+	# TODO: allow resizing of the window through settings to have more control over edgecases maybe
+	OS.min_window_size = Vector2(960, 540)
 	# Load previous settings
 	var err = settings_config.load(SETTINGS_PATH)
 	var _err = default_settings_config.load(DEFAULT_SETTINGS_PATH) # this should never fail
