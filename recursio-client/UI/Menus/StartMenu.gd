@@ -89,7 +89,7 @@ func _ready():
 	
 	# Re-grab button focus
 	_error = _settings.connect("visibility_changed", self, "_on_room_search_visibility_changed")
-	_error = _connection_lost_container.connect("visibility_changed", self, "_on_connection_lost_container_visibility_changed")
+	_error = _error_window.connect("visibility_changed", self, "_on_error_window_visibility_changed")
 
 	_btn_play_tutorial.grab_focus()
 
@@ -244,8 +244,8 @@ func _on_room_search_visibility_changed() -> void:
 	_btn_play_tutorial.grab_focus()
 
 
-func _on_connection_lost_container_visibility_changed() -> void:
-	if not _connection_lost_container.visible:
+func _on_error_window_visibility_changed() -> void:
+	if not _error_window.visible:
 		_btn_play_tutorial.grab_focus()
 
 
