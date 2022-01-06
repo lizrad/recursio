@@ -11,7 +11,6 @@ onready var _player_kill_stats: StatsUI = get_node("GameEndScreenContainer/Eleme
 onready var _player_death_stats: StatsUI = get_node("GameEndScreenContainer/ElementsList/PlayerDeathStats")
 onready var _ghost_kill_stats: StatsUI = get_node("GameEndScreenContainer/ElementsList/GhostKillStats")
 onready var _ghost_death_stats: StatsUI = get_node("GameEndScreenContainer/ElementsList/GhostDeathStats")
-onready var connection_lost_container: Control = get_node("GameEndScreenContainer/ElementsList/ConnectionLostContainer")
 
 
 func _ready() -> void:
@@ -73,15 +72,6 @@ func hide_stats() -> void:
 	_player_death_stats.hide()
 	_ghost_kill_stats.hide()
 	_ghost_death_stats.hide()
-
-
-func show_connection_lost_text() -> void:
-	connection_lost_container.show()
-	_grab_button_focus()
-
-
-func hide_connection_lost_text() -> void:
-	connection_lost_container.hide()
 
 
 func _grab_button_focus() -> void:

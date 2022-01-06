@@ -16,11 +16,11 @@
 [ext_resource path="res://UI/Menus/GameplayMenu.tscn" type="PackedScene" id=14]
 [ext_resource path="res://Util/StatsHUD.tscn" type="PackedScene" id=15]
 [ext_resource path="res://lizrad.png" type="Texture" id=16]
+[ext_resource path="res://UI/Menus/ErrorWindow.tscn" type="PackedScene" id=17]
 [ext_resource path="res://UI/Menus/AsciiBackground.gd" type="Script" id=18]
 [ext_resource path="res://Tutorial/Tutorial.gd" type="Script" id=19]
 [ext_resource path="res://Global/SoundManager.tscn" type="PackedScene" id=20]
 [ext_resource path="res://Level/SpawnPoint.tscn" type="PackedScene" id=21]
-[ext_resource path="res://UI/Menus/ConnectionLostContainer.gd" type="Script" id=23]
 [ext_resource path="res://Tutorial/TutorialScenario_2.tscn" type="PackedScene" id=24]
 [ext_resource path="res://Tutorial/TutorialScenario_1.tscn" type="PackedScene" id=25]
 [ext_resource path="res://UI/SoundButton.gd" type="Script" id=27]
@@ -499,84 +499,7 @@ sound_type = 1
 
 [node name="SettingsContainer" parent="StartMenu/CenterContainer" instance=ExtResource( 8 )]
 
-[node name="ConnectionLostContainer" type="PanelContainer" parent="StartMenu/CenterContainer"]
-visible = false
-margin_left = 635.0
-margin_top = 340.0
-margin_right = 1285.0
-margin_bottom = 740.0
-grow_horizontal = 2
-grow_vertical = 2
-rect_min_size = Vector2( 650, 400 )
-script = ExtResource( 23 )
-
-[node name="ConnectionLostList" type="VBoxContainer" parent="StartMenu/CenterContainer/ConnectionLostContainer"]
-margin_left = 7.0
-margin_top = 7.0
-margin_right = 643.0
-margin_bottom = 393.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="Header" type="Label" parent="StartMenu/CenterContainer/ConnectionLostContainer/ConnectionLostList"]
-margin_right = 636.0
-margin_bottom = 26.0
-text = "Connection Lost"
-align = 1
-
-[node name="Space" type="Control" parent="StartMenu/CenterContainer/ConnectionLostContainer/ConnectionLostList"]
-margin_top = 30.0
-margin_right = 636.0
-margin_bottom = 82.0
-rect_min_size = Vector2( 0, 20 )
-size_flags_horizontal = 3
-size_flags_vertical = 3
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="LabelSpacePlaceholder" type="Control" parent="StartMenu/CenterContainer/ConnectionLostContainer/ConnectionLostList"]
-margin_top = 86.0
-margin_right = 636.0
-margin_bottom = 294.0
-rect_min_size = Vector2( 0, 20 )
-size_flags_horizontal = 3
-size_flags_vertical = 3
-size_flags_stretch_ratio = 4.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label" type="Label" parent="StartMenu/CenterContainer/ConnectionLostContainer/ConnectionLostList/LabelSpacePlaceholder"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = 20.0
-margin_right = -20.0
-text = "OOPSIE WOOPSIE!! Uwu We made a fucky wucky!! A wittle fucko boingo! The code monkeys at our headquarters are working VEWY HAWD to fix this!"
-valign = 1
-autowrap = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Space2" type="Control" parent="StartMenu/CenterContainer/ConnectionLostContainer/ConnectionLostList"]
-margin_top = 298.0
-margin_right = 636.0
-margin_bottom = 350.0
-rect_min_size = Vector2( 0, 20 )
-size_flags_horizontal = 3
-size_flags_vertical = 3
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="BackButton" type="Button" parent="StartMenu/CenterContainer/ConnectionLostContainer/ConnectionLostList"]
-margin_top = 354.0
-margin_right = 636.0
-margin_bottom = 386.0
-text = "Back"
-script = ExtResource( 27 )
-sound_type = 1
+[node name="ErrorWindow" parent="StartMenu/CenterContainer" instance=ExtResource( 17 )]
 
 [node name="Tutorial" type="Control" parent="StartMenu"]
 visible = false

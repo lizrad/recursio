@@ -84,6 +84,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://Tutorial/EnemyAI.gd"
 }, {
+"base": "PanelContainer",
+"class": "ErrorWindow",
+"language": "GDScript",
+"path": "res://UI/Menus/ErrorWindow.gd"
+}, {
 "base": "Panel",
 "class": "GameEndScreen",
 "language": "GDScript",
@@ -315,6 +320,7 @@ _global_script_class_icons={
 "DynamicLabel": "",
 "Enemy": "",
 "EnemyAI": "",
+"ErrorWindow": "",
 "GameEndScreen": "",
 "GameManager": "",
 "GameRoomCreation": "",

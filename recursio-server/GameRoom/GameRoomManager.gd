@@ -32,6 +32,8 @@ func _ready():
 	_server.connect("game_room_not_ready_received", self, "_on_game_room_not_ready_received")
 	_server.connect("level_loaded_received", self, "_on_level_loaded_received")
 	
+	_server.connect("leave_game_received", self, "_on_leave_game_received")
+	
 	if _debug_room:
 		var _game_room_id = _create_game_room("GameRoom")
 
@@ -107,6 +109,12 @@ func _is_current_game_room_full() -> bool:
 
 func _on_peer_disconnected(player_id):
 	if _player_game_room_dic.has(player_id):
+		if _game_room_dic.has(_player_game_room_dic[player_id]):
+			var game_room: GameRoom = _get_game_room(_player_game_room_dic[player_id])
+			# If there is a player remaining in game, notify him
+			if game_room.get_game_room_world_exists():
+				for client_id in game_room.get_game_room_players():
+					_server.send_player_disconnected(client_id, player_id)
 		_leave_game_room(player_id, _player_game_room_dic[player_id])
 		var _succes = _player_game_room_dic.erase(player_id)
 
@@ -185,3 +193,13 @@ func _update_game_room_on_client(game_room):
 
 		for other_player_id in players_ready_dic:
 			_server.send_game_room_ready(player_id, other_player_id)
+
+
+func _on_leave_game_received(player_left_id):
+	var game_room: GameRoom = _get_game_room(_player_game_room_dic[player_left_id])
+	var player_dic = game_room.get_game_room_players()
+	if game_room.get_game_room_world_exists():
+		game_room.despawn_world()
+		_update_game_room_on_client(game_room)
+		for player_id in player_dic:
+			_server.send_player_left_game(player_id, player_left_id)

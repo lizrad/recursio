@@ -62,6 +62,10 @@ func toggle_ready_button(player_is_ready: bool) -> void:
 	_player_is_ready = player_is_ready
 
 
+func grab_ready_button_focus() -> void:
+	_btn_ready.grab_focus()
+
+
 func _on_btn_ready_pressed() -> void:
 	_btn_ready.disabled = true
 	if(_player_is_ready):
