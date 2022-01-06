@@ -29,10 +29,6 @@ func _ready() -> void:
 	var _error = _round_manager.connect("game_phase_started", self, "_on_game_phase_started") 
 	_error = _round_manager.connect("countdown_phase_started", self, "_on_countdown_phase_started")
 	
-	# TODO: this connection is messy af and the server should probably send a specific message when an opponent disconnect happens, 
-	# but I don't know enough about the whole room management thing to play around with that signal flow
-	_error = Server.connect("game_room_joined", self, "_on_opponent_disconnected")
-	_error = Server.connect("server_disconnected", self, "_on_server_disconnected")
 	_error = Server.connect("game_result", self, "_on_game_result")
 	
 	_error = Server.connect("ghost_hit", self, "_on_ghost_hit") 
@@ -94,32 +90,6 @@ func _on_game_phase_started() -> void:
 func _on_countdown_phase_started() -> void:
 	if _countdown_screen:
 		_countdown_screen.activate()
-
-
-func _on_opponent_disconnected(_player_id_name_dic, _game_room_id) -> void:
-	Logger.info("Opponent disconnected!", "connection")
-	_player.hide_hud()
-	if _game_end_screen:
-		_game_end_screen.set_panel_color("ui_error")
-		_game_end_screen.enable_room_button()
-		_game_end_screen.enable_title_button()
-		_game_end_screen.set_title("Opponent disconnected!")
-		_game_end_screen.hide_stats()
-		_game_end_screen.show_connection_lost_text()
-		_game_end_screen.show()
-
-
-func _on_server_disconnected() -> void:
-	Logger.info("Server disconnected!", "connection")
-	_player.hide_hud()
-	if _game_end_screen:
-		_game_end_screen.set_panel_color("ui_error")
-		_game_end_screen.disable_room_button()
-		_game_end_screen.enable_title_button()
-		_game_end_screen.set_title("Server disconnected!")
-		_game_end_screen.hide_stats()
-		_game_end_screen.show_connection_lost_text()
-		_game_end_screen.show()
 
 
 func _on_game_result(winning_player_index) -> void:

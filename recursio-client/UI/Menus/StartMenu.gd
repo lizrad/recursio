@@ -25,7 +25,7 @@ onready var _btn_exit = get_node("CenterContainer/MainMenu/Btn_Exit")
 onready var _game_room_search: GameRoomSearch = get_node("CenterContainer/GameRoomSearch")
 onready var _game_room_creation: GameRoomCreation = get_node("CenterContainer/GameRoomCreation")
 onready var _game_room_lobby: GameRoomLobby = get_node("CenterContainer/GameRoomLobby")
-onready var _connection_lost_container = get_node("CenterContainer/ConnectionLostContainer")
+onready var _error_window: ErrorWindow = get_node("CenterContainer/ErrorWindow")
 onready var _settings: Control = get_node("CenterContainer/SettingsContainer")
 
 onready var _tutorial: Tutorial = get_node("Tutorial")
@@ -80,11 +80,16 @@ func _ready():
 	_error = Server.connect("game_room_not_ready_received" , self, "_on_game_room_not_ready_received")
 	_error = Server.connect("load_level_received", self, "_on_load_level_received")
 	
+	_error = Server.connect("player_disconnected_received", self, "_on_player_disconnected")
+	_error = Server.connect("player_left_game_received", self, "_on_player_left_game")
+	
 	_error = _tutorial.connect("scenario_started", self, "_on_tutorial_scenario_started")
 	_error = _tutorial.connect("scenario_completed", self, "_on_tutorial_scenario_completed")
 	_error = _tutorial.connect("btn_back_pressed", self, "_on_tutorial_back_pressed")
 	
+	# Re-grab button focus
 	_error = _settings.connect("visibility_changed", self, "_on_room_search_visibility_changed")
+	_error = _error_window.connect("visibility_changed", self, "_on_error_window_visibility_changed")
 
 	_btn_play_tutorial.grab_focus()
 
@@ -116,6 +121,7 @@ func return_to_title():
 	if _world != null:
 		_world.queue_free()
 		_world = null
+		_in_game = false
 	# Reset all sub screens
 	_game_room_creation.hide()
 	_game_room_lobby.hide()
@@ -153,10 +159,11 @@ func _on_connection_successful():
 
 
 func _on_server_disconnected():
-	if _world:
-		return
-	_connection_lost_container.show()
+	Logger.info("Server disconnected!", "connection")
+	
 	return_to_title()
+	_error_window.set_content("Connection to server lost! The server might be down, please try again.")
+	_error_window.show()
 
 
 
@@ -205,7 +212,7 @@ func _on_exit() -> void:
 	get_tree().quit()
 
 
-func _on_search_create_game_room_pressed() -> void:	
+func _on_search_create_game_room_pressed() -> void:
 	# just create room with default naming
 	# 	otherwise would need virtual keyboard vor controller support
 	#_game_room_creation.show()
@@ -234,6 +241,14 @@ func _on_join_game_room_pressed() -> void:
 
 func _on_room_search_visibility_changed() -> void:
 	_btn_play_tutorial.grab_focus()
+
+
+func _on_error_window_visibility_changed() -> void:
+	if not _error_window.visible:
+		if _game_room_lobby.visible:
+			_game_room_lobby.grab_ready_button_focus()
+		else:
+			_btn_play_tutorial.grab_focus()
 
 
 func _on_game_room_leave_pressed() -> void:
@@ -315,7 +330,7 @@ func _on_gameplay_menu_leave_pressed() -> void:
 		return
 	
 	if _world != null:
-		return_to_game_room_lobby()
+		Server.send_leave_game()
 	else:
 		assert(_tutorial._scenario != null)
 		_tutorial.stop_scenario()
@@ -338,3 +353,19 @@ func _on_panel_gui_input(event: InputEvent) -> void:
 	and event.button_index == BUTTON_LEFT \
 	and event.is_pressed():
 		var _ret = OS.shell_open("https://github.com/lizrad/recursio")
+
+
+func _on_player_left_game(player_id) -> void:
+	return_to_game_room_lobby()
+	# Other player left
+	if player_id != _player_rpc_id:
+		_error_window.set_content("Opponent left the game! The game will automatically be exited if one player leaves the game.")
+		_error_window.show()
+
+
+func _on_player_disconnected(player_id) -> void:
+	return_to_game_room_lobby()
+	# Other player left
+	if player_id != _player_rpc_id:
+		_error_window.set_content("Opponent disconnected! The game will be terminated.")
+		_error_window.show()

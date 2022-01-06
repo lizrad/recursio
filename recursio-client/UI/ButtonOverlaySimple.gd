@@ -9,3 +9,8 @@ func _ready() -> void:
 func _on_controller_changed(controller) -> void:
 	$Viewport/Swap.texture = load("res://Resources/Icons/" + controller + "/swap.png")
 	$Viewport/Ready.texture = load("res://Resources/Icons/" + controller + "/accept.png")
+
+
+func set_active(val: bool) -> void:
+	set_process(val)
+	visible = val

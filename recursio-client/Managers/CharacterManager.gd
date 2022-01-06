@@ -11,7 +11,6 @@ onready var _visibility_checker: VisibilityChecker = get_node("VisibilityChecker
 
 
 var enemy_is_server_driven: bool = true
-var hide_player_button_overlay: bool = false
 
 
 # Scenes for instanciating 
@@ -241,18 +240,12 @@ func _on_timeline_picked(picking_player_id, timeline_index):
 	_visibility_checker.set_player(_player)
 	_visibility_checker.set_enemies(_enemy, _ghost_manager._enemy_ghosts)
 
-func _on_player_ready(button) -> void:
-	if button == ButtonOverlay.BUTTONS.DOWN:
-		Server.send_player_ready()
-
 
 func _on_spawn_player(player_id, spawn_point, team_id):
 	set_physics_process(true)
 	_player = _spawn_character(_player_scene, spawn_point, team_id)
 	_player.player_init(_action_manager, _round_manager)
 	_player.set_overview_light_enabled(false)
-	# TODO: Tunnel signal instead of accessing button overlay here
-	var _error = _player.get_button_overlay().connect("button_pressed", self, "_on_player_ready") 
 	_player_rpc_id = player_id
 	_player.player_id = player_id
 	_player.set_name(str(player_id))
@@ -270,7 +263,7 @@ func _on_spawn_player(player_id, spawn_point, team_id):
 	_player.setup_spawn_point_hud(_game_manager.get_spawn_points(team_id))
 	
 	_game_manager.set_player(_player)
-	_error = _player.connect("timeline_index_changed", self, "_on_player_timeline_changed") 
+	var _error = _player.connect("timeline_index_changed", self, "_on_player_timeline_changed") 
 
 	_error = Server.connect("wall_spawn", _player, "_on_wall_spawn_received") 
 	
