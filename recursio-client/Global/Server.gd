@@ -13,9 +13,17 @@ var delta_latency: int = 0
 var decimal_collector: float = 0.0
 var latency_array = []
 
+####################
+#### Connection ####
+####################
 signal connection_successful()
 signal connection_failed()
 signal server_disconnected()
+signal player_disconnected_received(player_id)
+
+###############
+#### World ####
+###############
 signal spawning_enemy(enemy_id, spawn_point, team_id)
 signal spawning_player(player_id, spawn_point)
 signal world_state_received(world_state)
@@ -38,9 +46,9 @@ signal game_start_received(start_time)
 var _clock_update_timer
 
 
-#########################
+##############################
 #### Game Room Management ####
-#########################
+##############################
 signal game_room_created(room_id, game_room_name)
 signal game_rooms_received(game_room_dic)
 signal game_room_joined(player_id_name_dic, game_room_id)
@@ -55,6 +63,9 @@ signal player_left_game_received(player_id)
 
 
 
+#######################
+#######################
+
 func _ready():
 	set_physics_process(false)
 
@@ -63,6 +74,16 @@ func _physics_process(delta):
 	_run_server_clock(delta)
 
 
+func _notification(what):
+	if what == MainLoop.NOTIFICATION_WM_QUIT_REQUEST:
+		Logger.info("Disconnecting from server...", "connection")
+		network.close_connection()
+		get_tree().quit() # default behavior
+
+
+####################
+#### Connection ####
+####################
 func connect_to_server(server_ip):
 	Logger.info("Connecting to server...", "connection")
 	var ip = server_ip
@@ -98,11 +119,9 @@ func disconnect_from_server(quiet: bool = false):
 		emit_signal("server_disconnected")
 
 
-func _notification(what):
-	if what == MainLoop.NOTIFICATION_WM_QUIT_REQUEST:
-		Logger.info("Disconnecting from server...", "connection")
-		network.close_connection()
-		get_tree().quit() # default behavior
+remote func receive_player_disconnected(player_id) -> void:
+	Logger.info("Receive player disconnected", "connection")
+	emit_signal("player_disconnected_received", player_id)
 
 
 func _on_connection_failed():
@@ -152,6 +171,9 @@ func get_server_time():
 	return server_clock if server_clock > 0 else OS.get_system_time_msecs()
 
 
+###############
+#### World ####
+###############
 func send_player_input_data(input_data: InputData):
 	Logger.debug("Send player input data", "server")
 	rpc_unreliable_id(1, "receive_player_input_data", input_data.to_array())
@@ -287,7 +309,6 @@ remote func receive_wall_spawn(position, rotation, wall_index):
 ##############################
 #### Game Room Management ####
 ##############################
-
 func send_create_game_room(game_room_name) -> void:
 	Logger.info("Send create room", "room_management")
 	rpc_id(1, "receive_create_game_room", game_room_name)
@@ -356,7 +377,6 @@ func send_level_loaded():
 #######################
 #### Gameplay Menu ####
 #######################
-
 func send_leave_game():
 	rpc_id(1, "receive_leave_game")
 

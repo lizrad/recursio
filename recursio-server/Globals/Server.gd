@@ -6,9 +6,15 @@ var port = 1909
 var max_players = 100
 var player_amount = 0
 
-
+####################
+#### Connection ####
+####################
 signal peer_connected(player_id)
 signal peer_disconnected(player_id)
+
+#########################
+#### Game Room World ####
+#########################
 signal player_input_data_received(player_id, input_data)
 signal player_ready(player_id)
 signal player_timeline_pick_received(player_id, timeline_index)
@@ -30,6 +36,10 @@ signal level_loaded_received(player_id, game_room_id)
 signal leave_game_received(player_id)
 
 
+
+#######################
+#######################
+
 func _ready():
 	start_server()
 
@@ -44,6 +54,23 @@ func start_server():
 	network.connect("peer_disconnected", self, "_peer_disconnected")
 
 
+func get_server_time():
+	return OS.get_system_time_msecs()
+
+
+remote func determine_latency(player_time):
+	var player_id = get_tree().get_rpc_sender_id()
+	rpc_id(player_id, "receive_latency", player_time)
+
+
+remote func fetch_server_time(player_time):
+	var player_id = get_tree().get_rpc_sender_id()
+	rpc_id(player_id, "receive_server_time", OS.get_system_time_msecs(), player_time)
+
+
+####################
+#### Connection ####
+####################
 func _peer_connected(player_id):
 	Logger.info("Player with id: " + str(player_id) + " connected.", "connection")
 	emit_signal("peer_connected", player_id)
@@ -53,6 +80,15 @@ func _peer_disconnected(player_id):
 	Logger.info("Player with id: " + str(player_id) + " disconnected.", "connection")
 	emit_signal("peer_disconnected", player_id)
 
+
+func send_player_disconnected(client_id, player_id) -> void:
+	Logger.info("Send player disconnected", "connection")
+	rpc_id(client_id, "receive_player_disconnected", player_id)
+
+
+#########################
+#### Game Room World ####
+#########################
 
 func spawn_player_on_client(player_id, spawn_point, team_id):
 	rpc_id(player_id, "spawn_player", player_id, spawn_point, team_id)
@@ -68,10 +104,6 @@ func send_player_ghost_record_to_client(player_id, timeline_index, round_index, 
 
 func send_enemy_ghost_record_to_client(player_id, timeline_index,round_index,  record_data: RecordData):
 	rpc_id(player_id, "receive_enemy_ghost_record", timeline_index,round_index,  record_data.to_array())
-
-
-func get_server_time():
-	return OS.get_system_time_msecs()
 
 
 func send_capture_point_captured(player_id, capturing_player_id, capture_point):
@@ -137,15 +169,6 @@ func send_timeline_pick(player_id, picking_player_id, timeline_index):
 func send_wall_spawn(position, rotation, wall_index, player_id):
 	Logger.info("Sending wall spawn", "connection")
 	rpc_id(player_id, "receive_wall_spawn", position, rotation, wall_index)
-	
-remote func determine_latency(player_time):
-	var player_id = get_tree().get_rpc_sender_id()
-	rpc_id(player_id, "receive_latency", player_time)
-
-
-remote func fetch_server_time(player_time):
-	var player_id = get_tree().get_rpc_sender_id()
-	rpc_id(player_id, "receive_server_time", OS.get_system_time_msecs(), player_time)
 
 
 remote func receive_player_input_data(input_data):
@@ -249,3 +272,4 @@ remote func receive_leave_game():
 func send_player_left_game(client_id, player_id):
 	Logger.info("Send player left game", "gameplay_menu")
 	rpc_id(client_id, "receive_player_left_game", player_id)
+

@@ -109,6 +109,12 @@ func _is_current_game_room_full() -> bool:
 
 func _on_peer_disconnected(player_id):
 	if _player_game_room_dic.has(player_id):
+		if _game_room_dic.has(_player_game_room_dic[player_id]):
+			var game_room: GameRoom = _get_game_room(_player_game_room_dic[player_id])
+			# If there is a player remaining in game, notify him
+			if game_room.get_game_room_world_exists():
+				for client_id in game_room.get_game_room_players():
+					_server.send_player_disconnected(client_id, player_id)
 		_leave_game_room(player_id, _player_game_room_dic[player_id])
 		var _succes = _player_game_room_dic.erase(player_id)
 

@@ -80,6 +80,7 @@ func _ready():
 	_error = Server.connect("game_room_not_ready_received" , self, "_on_game_room_not_ready_received")
 	_error = Server.connect("load_level_received", self, "_on_load_level_received")
 	
+	_error = Server.connect("player_disconnected_received", self, "_on_player_disconnected")
 	_error = Server.connect("player_left_game_received", self, "_on_player_left_game")
 	
 	_error = _tutorial.connect("scenario_started", self, "_on_tutorial_scenario_started")
@@ -346,10 +347,16 @@ func _on_panel_gui_input(event: InputEvent) -> void:
 
 
 func _on_player_left_game(player_id) -> void:
-	Logger.info("Opponent disconnected!", "connection")
 	return_to_game_room_lobby()
 	# Other player left
 	if player_id != _player_rpc_id:
-		return_to_game_room_lobby()
-		_error_window.set_content("Opponent disconnected! The game will automatically be exited if one player leaves the game.")
+		_error_window.set_content("Opponent left the game! The game will automatically be exited if one player leaves the game.")
+		_error_window.show()
+
+
+func _on_player_disconnected(player_id) -> void:
+	return_to_game_room_lobby()
+	# Other player left
+	if player_id != _player_rpc_id:
+		_error_window.set_content("Opponent disconnected! The game will be terminated.")
 		_error_window.show()
