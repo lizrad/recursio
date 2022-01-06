@@ -121,6 +121,7 @@ func return_to_title():
 	if _world != null:
 		_world.queue_free()
 		_world = null
+		_in_game = false
 	# Reset all sub screens
 	_game_room_creation.hide()
 	_game_room_lobby.hide()
@@ -159,8 +160,6 @@ func _on_connection_successful():
 
 func _on_server_disconnected():
 	Logger.info("Server disconnected!", "connection")
-	if _world:
-		return
 	
 	return_to_title()
 	_error_window.set_content("Connection to server lost! The server might be down, please try again.")
@@ -246,7 +245,10 @@ func _on_room_search_visibility_changed() -> void:
 
 func _on_error_window_visibility_changed() -> void:
 	if not _error_window.visible:
-		_btn_play_tutorial.grab_focus()
+		if _game_room_lobby.visible:
+			_game_room_lobby.grab_ready_button_focus()
+		else:
+			_btn_play_tutorial.grab_focus()
 
 
 func _on_game_room_leave_pressed() -> void:
