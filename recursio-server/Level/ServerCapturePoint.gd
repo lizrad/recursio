@@ -25,8 +25,8 @@ func _change_capture_progress(progress: float) -> void:
 
 # OVERRIDE #
 func _lose_capture() -> void:
-	._lose_capture()
 	emit_signal("capture_lost", current_owning_team)
+	._lose_capture()
 
 
 # OVERRIDE #
