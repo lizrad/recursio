@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=2]
+[gd_scene load_steps=23 format=2]
 
 [ext_resource path="res://Managers/CharacterManager.gd" type="Script" id=1]
 [ext_resource path="res://UI/Menus/GameEndScreen.gd" type="Script" id=2]
@@ -14,7 +14,9 @@
 [ext_resource path="res://Resources/Fonts/FiraCode-Regular.ttf" type="DynamicFontData" id=12]
 [ext_resource path="res://UI/StyleBoxFlat.tres" type="StyleBox" id=13]
 [ext_resource path="res://Managers/GameMusicHandler.gd" type="Script" id=14]
-[ext_resource path="res://Resources/Audio/Music/ingame.ogg" type="AudioStream" id=15]
+[ext_resource path="res://Resources/Audio/Music/base-music.ogg" type="AudioStream" id=15]
+[ext_resource path="res://Resources/Audio/Music/ingame-addition.ogg" type="AudioStream" id=16]
+[ext_resource path="res://Resources/Audio/Music/endgame-addition.ogg" type="AudioStream" id=17]
 
 [sub_resource type="StyleBoxFlat" id=5]
 bg_color = Color( 0, 0, 0, 0.54902 )
@@ -52,10 +54,21 @@ script = ExtResource( 10 )
 script = ExtResource( 14 )
 round_manager_path = NodePath("../CharacterManager/RoundManager")
 
-[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="GameMusicHandler"]
+[node name="BaseMusic" type="AudioStreamPlayer" parent="GameMusicHandler"]
 stream = ExtResource( 15 )
-volume_db = -10.0
 bus = "Music"
+
+[node name="EarlyGame" type="AudioStreamPlayer" parent="GameMusicHandler"]
+stream = ExtResource( 16 )
+volume_db = -80.0
+bus = "Music"
+
+[node name="EndGame" type="AudioStreamPlayer" parent="GameMusicHandler"]
+stream = ExtResource( 17 )
+volume_db = -80.0
+bus = "Music"
+
+[node name="Tween" type="Tween" parent="GameMusicHandler"]
 
 [node name="CharacterManager" type="Node" parent="."]
 script = ExtResource( 1 )
