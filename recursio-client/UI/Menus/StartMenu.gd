@@ -106,14 +106,13 @@ func _process(_delta):
 	
 	if Input.is_action_just_pressed("gameplay_menu"):
 		_gameplay_menu.visible = !_gameplay_menu.visible
-		_toggle_player_input(_gameplay_menu.visible)
+		_toggle_player_input_pause(_gameplay_menu.visible)
 
 
 func return_to_game_room_lobby():
 	_exit_game()
 	_world.queue_free()
 	_world = null
-	_game_room_lobby.reset_players()
 	$CenterContainer.show()
 
 
@@ -314,6 +313,7 @@ func _on_load_level_received():
 	_world.set_level(level)
 	_world.add_child(level)
 	_world.level_set_up_done()
+	_game_room_lobby.reset_players()
 
 
 func _on_tutorial_scenario_started() -> void:
@@ -332,7 +332,7 @@ func _on_tutorial_back_pressed() -> void:
 
 
 func _on_gameplay_menu_resume_pressed() -> void:
-	_toggle_player_input(false)
+	_toggle_player_input_pause(false)
 
 
 func _on_gameplay_menu_leave_pressed() -> void:
@@ -348,14 +348,14 @@ func _on_gameplay_menu_leave_pressed() -> void:
 	_exit_game()
 
 
-func _toggle_player_input(disabled: bool) -> void:
+func _toggle_player_input_pause(value: bool) -> void:
 	if not _in_game:
 		return
 	
 	if _world != null:
-		_world.toggle_player_input(disabled)
+		_world.toggle_player_input_pause(value)
 	else:
-		_tutorial.toggle_player_input(disabled)
+		_tutorial.toggle_player_input_pause(value)
 
 
 func _on_panel_gui_input(event: InputEvent) -> void:

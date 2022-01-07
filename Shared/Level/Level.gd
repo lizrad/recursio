@@ -46,7 +46,6 @@ func _ready():
 func reset():
 	for capture_point in _capture_points:
 		capture_point.reset()
-
 	toggle_capture_points(false)
 	toggle_spawn_points(true)
 
@@ -62,6 +61,14 @@ func get_spawn_points(team_id):
 		Logger.error("Tried to get spawn positions for invalid node " + node_name)
 		return null
 
+
+func get_spawn_point_node(team_id: int, timeline_index: int ):
+	var node_name = "Player" + str(team_id + 1) + "Spawns"
+	if has_node(node_name):
+		return get_node(node_name).get_children()[timeline_index].get_children()[0]
+	else:
+		Logger.error("Spawn point does not exist." + node_name)
+		return null
 
 func get_capture_points():
 	return _capture_points
@@ -88,3 +95,9 @@ func toggle_capture_points(toggle: bool) -> void:
 	Logger.info("Toggling capture points " + ("on" if toggle else "off") + ".", "capture_point")
 	for capture_point in _capture_points:
 		capture_point.active = toggle
+
+
+func set_team_id(team_id: int) -> void:
+	for capture_point in _capture_points:
+		if "player_team_id" in capture_point:
+			capture_point.player_team_id = team_id

@@ -1,0 +1,283 @@
+[gd_scene load_steps=15 format=2]
+
+[ext_resource path="res://UI/Default.tres" type="Theme" id=1]
+[ext_resource path="res://Resources/Fonts/FiraCode-Regular.ttf" type="DynamicFontData" id=2]
+[ext_resource path="res://UI/StyleBoxFlat.tres" type="StyleBox" id=3]
+[ext_resource path="res://Tutorial/Pause.png" type="Texture" id=4]
+[ext_resource path="res://icon.png" type="Texture" id=5]
+[ext_resource path="res://Tutorial/Arrow.png" type="Texture" id=6]
+[ext_resource path="res://Tutorial/TutorialUIGoalElement.gd" type="Script" id=7]
+[ext_resource path="res://Tutorial/TutorialUIBottomElement.gd" type="Script" id=8]
+[ext_resource path="res://addons/PostProcessingTool/PostProcessing_tool.tscn" type="PackedScene" id=9]
+
+[sub_resource type="DynamicFont" id=3]
+size = 60
+use_mipmaps = true
+use_filter = true
+font_data = ExtResource( 2 )
+
+[sub_resource type="Theme" id=4]
+default_font = SubResource( 3 )
+Button/styles/focus = ExtResource( 3 )
+LineEdit/styles/focus = ExtResource( 3 )
+TextEdit/styles/focus = ExtResource( 3 )
+
+[sub_resource type="StyleBoxFlat" id=5]
+bg_color = Color( 0, 0, 0, 0.470588 )
+
+[sub_resource type="DynamicFont" id=2]
+size = 40
+use_mipmaps = true
+use_filter = true
+font_data = ExtResource( 2 )
+
+[sub_resource type="Theme" id=1]
+default_font = SubResource( 2 )
+Button/styles/focus = ExtResource( 3 )
+LineEdit/styles/focus = ExtResource( 3 )
+TextEdit/styles/focus = ExtResource( 3 )
+
+[node name="TutorialUI" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PostProcessAffected" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="GoalElement1" type="HBoxContainer" parent="PostProcessAffected"]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -1920.0
+margin_top = -1080.0
+margin_right = -1483.0
+margin_bottom = -930.0
+rect_scale = Vector2( 0.5, 0.5 )
+rect_pivot_offset = Vector2( 0, 75 )
+script = ExtResource( 7 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ArrowTexture" type="TextureRect" parent="PostProcessAffected/GoalElement1"]
+margin_right = 150.0
+margin_bottom = 150.0
+rect_min_size = Vector2( 150, 150 )
+texture = ExtResource( 6 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Space" type="Control" parent="PostProcessAffected/GoalElement1"]
+margin_left = 154.0
+margin_right = 174.0
+margin_bottom = 150.0
+rect_min_size = Vector2( 20, 0 )
+
+[node name="GoalText" type="Label" parent="PostProcessAffected/GoalElement1"]
+margin_left = 178.0
+margin_right = 437.0
+margin_bottom = 150.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 10.0
+theme = SubResource( 4 )
+text = "Capture"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Panel" type="Panel" parent="PostProcessAffected/GoalElement1/GoalText"]
+show_behind_parent = true
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_styles/panel = SubResource( 5 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="GoalElement2" type="HBoxContainer" parent="PostProcessAffected"]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -1387.0
+margin_top = -1080.0
+margin_right = -950.0
+margin_bottom = -930.0
+rect_scale = Vector2( 0.5, 0.5 )
+rect_pivot_offset = Vector2( 0, 75 )
+script = ExtResource( 7 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ArrowTexture" type="TextureRect" parent="PostProcessAffected/GoalElement2"]
+margin_right = 150.0
+margin_bottom = 150.0
+rect_min_size = Vector2( 150, 150 )
+texture = ExtResource( 6 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Space" type="Control" parent="PostProcessAffected/GoalElement2"]
+margin_left = 154.0
+margin_right = 174.0
+margin_bottom = 150.0
+rect_min_size = Vector2( 20, 0 )
+
+[node name="GoalText" type="Label" parent="PostProcessAffected/GoalElement2"]
+margin_left = 178.0
+margin_right = 437.0
+margin_bottom = 150.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 10.0
+theme = SubResource( 4 )
+text = "Capture"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Panel" type="Panel" parent="PostProcessAffected/GoalElement2/GoalText"]
+show_behind_parent = true
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_styles/panel = SubResource( 5 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="BottomElement" type="CenterContainer" parent="PostProcessAffected"]
+anchor_left = 0.5
+anchor_top = 0.896
+anchor_right = 0.5
+anchor_bottom = 0.896
+margin_left = -480.0
+margin_top = -37.6801
+margin_right = 1440.0
+margin_bottom = 112.32
+rect_scale = Vector2( 0.5, 0.5 )
+script = ExtResource( 8 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ElementsList" type="HBoxContainer" parent="PostProcessAffected/BottomElement"]
+margin_left = 496.0
+margin_right = 1424.0
+margin_bottom = 150.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ControlTexture" type="TextureRect" parent="PostProcessAffected/BottomElement/ElementsList"]
+margin_right = 150.0
+margin_bottom = 150.0
+rect_min_size = Vector2( 150, 150 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 2.0
+texture = ExtResource( 5 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Space1" type="Control" parent="PostProcessAffected/BottomElement/ElementsList"]
+margin_left = 154.0
+margin_right = 174.0
+margin_bottom = 150.0
+rect_min_size = Vector2( 20, 0 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ControlText" type="Label" parent="PostProcessAffected/BottomElement/ElementsList"]
+margin_left = 178.0
+margin_right = 928.0
+margin_bottom = 150.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 10.0
+theme = SubResource( 1 )
+text = "Welcome to the first Tutorial!"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Panel" type="Panel" parent="PostProcessAffected/BottomElement/ElementsList/ControlText"]
+show_behind_parent = true
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -20.0
+margin_right = 20.0
+custom_styles/panel = SubResource( 5 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Space2" type="Control" parent="PostProcessAffected/BottomElement/ElementsList"]
+visible = false
+margin_left = 932.0
+margin_right = 952.0
+margin_bottom = 150.0
+rect_min_size = Vector2( 20, 0 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ContinueTexture" type="TextureRect" parent="PostProcessAffected/BottomElement/ElementsList"]
+visible = false
+margin_left = 956.0
+margin_right = 1106.0
+margin_bottom = 150.0
+rect_min_size = Vector2( 150, 150 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 2.0
+texture = ExtResource( 5 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PausePostProcessing" parent="." instance=ExtResource( 9 )]
+visible = false
+bloom_show = false
+chromatc_aberration_show = true
+chromatc_aberration_strength = 0.1
+fog_overlay_show = true
+fog_overlay_octaves = 14
+fog_overlay_color = Color( 0, 0, 0, 0.639216 )
+
+[node name="PauseTexture" type="TextureRect" parent="PausePostProcessing"]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -74.0
+margin_top = -70.0
+margin_right = 26.0
+margin_bottom = 30.0
+rect_scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 4 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PostProcessExcepted" type="Node" parent="."]

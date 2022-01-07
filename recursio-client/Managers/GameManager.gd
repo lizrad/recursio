@@ -44,6 +44,7 @@ func _ready() -> void:
 func set_player(player: Player)  -> void:
 	_player = player
 	_level.show_spawn_point_weapon_type(_player.team_id)
+	_level.set_team_id(_player.team_id)
 
 
 func set_enemy(enemy: Enemy)  -> void:
@@ -140,18 +141,18 @@ func _check_for_perpetrator(perpetrator_player_id, perpetrator_timeline_index) -
 			_ghost_kills[_enemy.team_id] += 1
 
 
-func _on_capture_point_captured(capturing_player_id: int, capture_point) -> void:
-	_level.get_capture_points()[capture_point].capture(capturing_player_id)
+func _on_capture_point_captured(capturing_player_team_id: int, capture_point) -> void:
+	_level.get_capture_points()[capture_point].apply_server_capture_gained(capturing_player_team_id)
 
 
-func _on_capture_point_team_changed(capturing_player_id: int, capture_point) -> void:
-	_level.get_capture_points()[capture_point].set_capturing_player(capturing_player_id)
+func _on_capture_point_team_changed(capturing_player_team_id: int, capture_point) -> void:
+	_level.get_capture_points()[capture_point].apply_server_capturer_switched(capturing_player_team_id)
 
 
-func _on_capture_point_status_changed(capturing_player_id: int, capture_point: int, capture_progress: float) -> void:
-	_level.get_capture_points()[capture_point].set_capture_status(capturing_player_id, capture_progress)
+func _on_capture_point_status_changed(capturing_player_team_id: int, capture_point: int, capture_progress: float) -> void:
+	_level.get_capture_points()[capture_point].apply_server_capture_progress_changed(capturing_player_team_id, capture_progress)
 
 
-func _on_capture_point_capture_lost(capturing_player_id: int, capture_point: int) -> void:
-	_level.get_capture_points()[capture_point].capture_lost(capturing_player_id)
+func _on_capture_point_capture_lost(_capturing_player_team_id: int, capture_point: int) -> void:
+	_level.get_capture_points()[capture_point].apply_server_capture_lost()
 

@@ -1,24 +1,21 @@
-class_name CapturePoint
+class_name BaseCapturePoint
 extends Spatial
 
-signal capture_team_changed(team_id)
-signal captured(team_id)
-signal capture_status_changed(capture_progress, team_id)
-signal capture_lost(team_id)
 
 var active = true
 var capture_progress: float = 0
-var _just_reset := false
+var _just_reset: bool = false
 
-var _current_progress_team = -1
-var current_owning_team = -1
+var _current_progress_team: int = -1
+var current_owning_team: int = -1
+
 
 onready var _capture_speed: float = Constants.get_value("capture","capture_speed")
 onready var _recapture_speed: float = Constants.get_value("capture","recapture_speed")
 onready var _release_speed: float = Constants.get_value("capture","release_speed")
 
 
-func _physics_process(delta):
+func _physics_process(delta: float) -> void:
 	if not active:
 		return
 	
@@ -49,16 +46,14 @@ func _physics_process(delta):
 		if current_capture_team == _current_progress_team:
 			# The capturing player is equal to the progressing team
 			if capture_progress < 1:
-				capture_progress = min(1, capture_progress + delta * _capture_speed)
-				emit_signal("capture_status_changed", capture_progress, _current_progress_team)
+				_change_capture_progress(min(1, capture_progress + delta * _capture_speed))
 				
 				if capture_progress >= 1:
 					# The team has finished capturing the point
 					_gain_capture(current_capture_team)
 		else:
 			# The capturing team differs from the previous owner
-			capture_progress = max(0, capture_progress - delta * _recapture_speed)
-			emit_signal("capture_status_changed", capture_progress, _current_progress_team)
+			_change_capture_progress(max(0, capture_progress - delta * _recapture_speed))
 			
 			if capture_progress <= 0:
 				# The capturing team becomes the progressing team
@@ -69,36 +64,30 @@ func _physics_process(delta):
 			_lose_capture()
 		
 		if capture_progress > 0:
-			capture_progress = max(0, capture_progress - delta * _release_speed)
-			emit_signal("capture_status_changed", capture_progress, _current_progress_team)
+			_change_capture_progress(max(0, capture_progress - delta * _release_speed))
 			
 			if capture_progress <= 0:
 				_switch_capturer(-1)
 
 
-func _lose_capture():
-	emit_signal("capture_lost", current_owning_team)
-	current_owning_team = -1
-
-
-func _gain_capture(new_owning_team):
-	current_owning_team = new_owning_team
-	emit_signal("captured", current_owning_team)
-
-
-func _switch_capturer(new_progress_team):
-	emit_signal("capture_status_changed", capture_progress, new_progress_team)
-	emit_signal("capture_team_changed", new_progress_team)
-	_current_progress_team = new_progress_team
-
-
-func reset():
-	if current_owning_team >= 0:
-		emit_signal("capture_lost", current_owning_team)
-	
+func reset() -> void:
+	_current_progress_team = -1
 	current_owning_team = -1
 	capture_progress = 0
 	_just_reset = true
-	
-	emit_signal("capture_team_changed", -1)
-	emit_signal("capture_status_changed", 0, -1)
+
+
+func _change_capture_progress(progress: float) -> void:
+	capture_progress = progress
+
+
+func _lose_capture()  -> void:
+	current_owning_team = -1
+
+
+func _gain_capture(new_owning_team: int) -> void:
+	current_owning_team = new_owning_team
+
+
+func _switch_capturer(new_progress_team: int) -> void:
+	_current_progress_team = new_progress_team

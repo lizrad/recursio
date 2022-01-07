@@ -3,11 +3,13 @@ class_name Player
 
 signal initialized()
 
+onready var _player_input = get_node("KinematicBody/PlayerInput")
 onready var _hud: HUD = get_node("KinematicBody/HUD")
 onready var _light_viewport = get_node("KinematicBody/LightViewport")
 onready var _overview_light = get_node("KinematicBody/TransformReset/OverviewLight")
 onready var _overview_target = get_node("KinematicBody/TransformReset/OverviewTarget")
 onready var _lerped_follow: LerpedFollow = get_node("KinematicBody/AsciiViewportContainer/Viewport/LerpedFollow")
+onready var _camera: Camera = get_node("KinematicBody/AsciiViewportContainer/Viewport/LerpedFollow/Camera")
 onready var _view_target = get_node("KinematicBody/ViewTarget")
 onready var _visibility_light = get_node("KinematicBody/VisibilityLight")
 onready var _button_overlay_simple = get_node("KinematicBody/ButtonOverlaySimple")
@@ -17,7 +19,6 @@ onready var _camera_shake_amount = Constants.get_value("vfx","death_camera_shake
 onready var _camera_shake_speed  = Constants.get_value("vfx","death_camera_shake_speed")
 
 
-var block_switching: bool = false
 
 
 var _walls = []
@@ -26,6 +27,7 @@ var _just_corrected = false
 var _last_server_position
 var _last_server_time
 var _round_manager
+var _dash_ammunition: int = 2
 
 class MovementFrame:
 	var position: Vector3 = Vector3.ZERO
@@ -69,6 +71,48 @@ func clear_walls():
 	_walls.clear()
 
 
+# should not be called directly (use CharacterManager for this)
+func toggle_swapping(value: bool) -> void:
+	_player_input.block_swapping = !value
+
+# should not be called directly (use CharacterManager for this)
+func get_swapping_toggle_value() -> bool:
+	return !_player_input.block_swapping
+
+# should not be called directly (use CharacterManager for this)
+func toggle_movement(value: bool) -> void:
+	_player_input.block_movement = !value
+
+# should not be called directly (use CharacterManager for this)
+func get_movement_toggle_value() -> bool:
+	return !_player_input.block_movement
+
+# should not be called directly (use CharacterManager for this)
+func toggle_trigger(trigger, value: bool) -> void:
+	_hud.toggle_trigger(trigger, value)
+	var input_string: String
+	if trigger == ActionManager.Trigger.FIRE_START:
+		input_string ="player_shoot"
+	elif trigger == ActionManager.Trigger.DEFAULT_ATTACK_START:
+		input_string ="player_melee"
+	elif trigger == ActionManager.Trigger.SPECIAL_MOVEMENT_START:
+		input_string ="player_dash"
+	_player_input.disabled_inputs[input_string] = !value
+
+# should not be called directly (use CharacterManager for this)
+func get_trigger_toggle_value(trigger) -> bool:
+	assert(trigger in ActionManager.Trigger.values())
+	var input_string: String
+	if trigger == ActionManager.Trigger.FIRE_START:
+		input_string ="player_shoot"
+	elif trigger == ActionManager.Trigger.DEFAULT_ATTACK_START:
+		input_string ="player_melee"
+	elif trigger == ActionManager.Trigger.SPECIAL_MOVEMENT_START:
+		input_string ="player_dash"
+	return !_player_input.disabled_inputs[input_string]
+
+
+
 # OVERRIDE #
 func apply_input(movement_vector: Vector3, rotation_vector: Vector3, buttons: int) -> void:
 	.apply_input(movement_vector, rotation_vector, buttons)
@@ -80,14 +124,14 @@ func apply_input(movement_vector: Vector3, rotation_vector: Vector3, buttons: in
 		frame.position = self.position
 		_past_frames[Server.get_server_time()] = frame
 
-	# Nothing to do if player can't move
-	if block_movement or currently_dying or currently_spawning:
+	# Nothing to do in those phases
+	if currently_dying or currently_spawning:
 		return
 
 	# visual appearance for aim_mode
 	# TODO: update drag_factor
 	# _drag_factor = 2*Constants.get_value("movement", "drag_factor") -> needs to be updated also on server
-	if aim_mode && !block_input:
+	if aim_mode:
 		var action = _get_action(ActionManager.Trigger.FIRE_START, timeline_index) as Action
 		if action.ammunition > 0:
 			_aim_visuals.visible = true
@@ -195,6 +239,7 @@ func setup_capture_point_hud(number_of_capture_points) -> void:
 	for i in number_of_capture_points:
 		_hud.add_capture_point()
 	_hud.set_player_id(self.player_id)
+	_hud.set_player_team_id(self.team_id)
 
 
 func setup_spawn_point_hud(spawn_points) -> void:
@@ -214,13 +259,14 @@ func update_fire_action_ammo_hud(amount: int) -> void:
 
 
 func update_special_movement_ammo_hud(amount: int) -> void:
+	_dash_ammunition = amount
 	_hud.update_special_movement_ammo(amount)
 
 
 func update_capture_point_hud(capture_points: Array) -> void:
 	var index: int = 0
 	for capture_point in capture_points:
-		_hud.update_capture_point(index, capture_point.get_capture_progress(), capture_point.get_capture_team())
+		_hud.update_capture_point(index, capture_point.get_capture_progress(), capture_point.get_progress_team())
 		index += 1
 
 
@@ -232,9 +278,12 @@ func hide_hud() -> void:
 	_hud.hide()
 
 
-func show_preparation_hud(round_index, show_button_overlay: bool) -> void:
+func show_preparation_hud(round_index) -> void:
 	_hud.prep_phase_start(round_index)
-	_button_overlay_simple.set_active(show_button_overlay)
+
+
+func show_button_overlay() -> void:
+	_button_overlay_simple.set_active(true)
 
 
 func show_countdown_hud() -> void:
@@ -308,3 +357,11 @@ func hit(perpetrator):
 # call hit of baseclass triggered by server
 func server_hit(perpetrator):
 	.hit(perpetrator)
+
+# TODO: this should probably not be in player.gd, but I don't really know where else to put it
+func get_camera():
+	return _camera
+
+
+func get_dash_ammunition():
+	return _dash_ammunition

@@ -96,10 +96,6 @@ func reset_wall_indices():
 	for player_id in player_dic:
 		player_dic[player_id].reset_wall_indices()
 
-func set_block_player_input(blocked: bool) -> void:
-	for player_id in player_dic:
-		player_dic[player_id].block_movement = blocked
-
 # propagate_to_picking_player is necessary because there are some moments where picking is 
 # server driven and some where it is client driven, to avoid endless loops of switching 
 # timelines because server and client are out of face because of a big latency we use this 

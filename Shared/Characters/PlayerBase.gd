@@ -11,9 +11,6 @@ var acceleration: Vector3 = Vector3.ZERO
 # only trigger shoot actions in aim_mode
 var aim_mode: bool = false
 
-# Blocks any movement applied to it (includes rotation-movement)
-var block_movement: bool = true
-var block_input: bool = false
 
 var input_movement_direction: Vector3 = Vector3.ZERO
 
@@ -34,6 +31,9 @@ var _move_acceleration = Constants.get_value("movement", "acceleration")
 # RecordManager for recording movement and actions
 var _record_manager: RecordManager = RecordManager.new()
 
+func _ready() -> void:
+	_record_manager.server = get_node("/root/Server")
+
 
 func player_base_init(action_manager) -> void:
 	.character_base_init(action_manager)
@@ -44,7 +44,6 @@ func player_base_init(action_manager) -> void:
 func reset() -> void:
 	.reset()
 	_record_manager.reset()
-	block_movement = true
 	acceleration = Vector3.ZERO
 	_target_velocity = Vector3.ZERO
 
@@ -52,8 +51,8 @@ func reset() -> void:
 # Should only be called in "physics_update()"
 func apply_input(movement_vector: Vector3, rotation_vector: Vector3, buttons: int) -> void:
 
-	# Nothing to do if player can't move
-	if block_movement or currently_dying or currently_spawning:
+	# Nothing to do during those events
+	if currently_dying or currently_spawning:
 		return
 
 	var delta = get_physics_process_delta_time()
@@ -74,11 +73,11 @@ func apply_input(movement_vector: Vector3, rotation_vector: Vector3, buttons: in
 	var _collision_velocity = kb.move_and_slide(velocity)
 	
 	# Trigger all actions with base
-	if aim_mode == false && not block_input:
+	if aim_mode == false:
 		.trigger_actions(buttons)
 
 	# Add everything to the recording
-	_record_manager.add_record_frame(.get_position(), .get_rotation_y(), 0 if block_input else buttons)
+	_record_manager.add_record_frame(.get_position(), .get_rotation_y(), buttons)
 
 func reset_record_data():
 	_record_manager.reset()

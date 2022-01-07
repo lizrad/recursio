@@ -29,10 +29,10 @@ signal spawning_player(player_id, spawn_point)
 signal world_state_received(world_state)
 signal player_ghost_record_received(timeline_index,round_index,  gameplay_record)
 signal enemy_ghost_record_received(timeline_index,round_index,  gameplay_record)
-signal capture_point_captured(capturing_player_id, capture_point)
-signal capture_point_team_changed(capturing_player_id, capture_point)
-signal capture_point_status_changed(capturing_player_id, capture_point, capture_progress)
-signal capture_point_capture_lost(capturing_player_id, capture_point)
+signal capture_point_captured(capturing_player_team_id, capture_point)
+signal capture_point_team_changed(capturing_player_team_id, capture_point)
+signal capture_point_status_changed(capturing_player_team_id, capture_point, capture_progress)
+signal capture_point_capture_lost(capturing_player_team_id, capture_point)
 signal game_result(winning_player_id)
 signal player_hit(hit_player_id, perpetrator_player_id, perpetrator_timeline_index)
 signal ghost_hit(hit_ghost_player_owner, hit_ghost_id, perpetrator_player_id, perpetrator_timeline_index)
@@ -44,7 +44,9 @@ signal phase_switch_received(round_index,next_phase, switch_time)
 signal game_start_received(start_time)
 
 var _clock_update_timer
-
+var _local_time = -1
+var _local_clock_running = true
+var _server_clock_running = false
 
 ##############################
 #### Game Room Management ####
@@ -66,12 +68,23 @@ signal player_left_game_received(player_id)
 #######################
 #######################
 
-func _ready():
-	set_physics_process(false)
+func _ready() -> void:
+	_local_time = OS.get_system_time_msecs()
 
 
-func _physics_process(delta):
-	_run_server_clock(delta)
+func _physics_process(delta: float) -> void:
+	if _local_clock_running:
+		_local_time += delta * 1000
+	if _server_clock_running:
+			_run_server_clock(delta)
+
+
+func pause_local_clock() -> void:
+	_local_clock_running = false
+
+
+func unpause_local_clock() -> void:
+	_local_clock_running = true
 
 
 func _notification(what):
@@ -96,7 +109,7 @@ func connect_to_server(server_ip):
 
 func disconnect_from_server(quiet: bool = false):
 	Logger.info("Disconnecting from server", "connection")
-	set_physics_process(false)
+	_server_clock_running = false
 	network.close_connection()
 	get_tree().network_peer = null
 	get_tree().disconnect("connection_failed", self, "_on_connection_failed")
@@ -168,7 +181,7 @@ func _determine_latency():
 
 func get_server_time():
 	# Return the local time if there's no server time to allow local play
-	return server_clock if server_clock > 0 else OS.get_system_time_msecs()
+	return server_clock if server_clock > 0 else _local_time
 
 
 ###############
@@ -203,7 +216,7 @@ remote func receive_server_time(server_time, player_time):
 	Logger.debug("Receive server time", "server")
 	latency = (OS.get_system_time_msecs() - player_time) / 2
 	server_clock = server_time + latency
-	set_physics_process(true)
+	_server_clock_running = true
 
 
 remote func receive_latency(player_time):
@@ -252,24 +265,24 @@ remote func receive_phase_switch(round_index, next_phase, switch_time):
 	emit_signal("phase_switch_received", round_index, next_phase, switch_time)
 
 
-remote func receive_capture_point_captured(capturing_player_id, capture_point):
+remote func receive_capture_point_captured(capturing_player_team_id, capture_point):
 	Logger.debug("Capture point captured received", "server")
-	emit_signal("capture_point_captured", capturing_player_id, capture_point)
+	emit_signal("capture_point_captured", capturing_player_team_id, capture_point)
 
 
-remote func receive_capture_point_team_changed( capturing_player_id, capture_point ):
+remote func receive_capture_point_team_changed( capturing_player_team_id, capture_point ):
 	Logger.debug("Capture point team changed received", "server")
-	emit_signal("capture_point_team_changed", capturing_player_id, capture_point)
+	emit_signal("capture_point_team_changed", capturing_player_team_id, capture_point)
 
 
-remote func receive_capture_point_status_changed( capturing_player_id, capture_point, capture_progress ):
+remote func receive_capture_point_status_changed( capturing_player_team_id, capture_point, capture_progress ):
 	Logger.debug("Capture point status changed received", "server")
-	emit_signal("capture_point_status_changed", capturing_player_id, capture_point, capture_progress)
+	emit_signal("capture_point_status_changed", capturing_player_team_id, capture_point, capture_progress)
 
 
-remote func receive_capture_point_capture_lost( capturing_player_id, capture_point ):
+remote func receive_capture_point_capture_lost( capturing_player_team_id, capture_point ):
 	Logger.debug("Capture point capture lost received", "server")
-	emit_signal("capture_point_capture_lost", capturing_player_id, capture_point)
+	emit_signal("capture_point_capture_lost", capturing_player_team_id, capture_point)
 
 
 remote func receive_game_result(winning_player_id):
