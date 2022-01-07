@@ -110,7 +110,7 @@ func _process(_delta):
 
 
 func return_to_game_room_lobby():
-	_in_game = false
+	_exit_game()
 	_world.queue_free()
 	_world = null
 	_game_room_lobby.reset_players()
@@ -293,8 +293,18 @@ func _on_game_room_not_ready_received(player_id):
 	_game_room_lobby.set_player_ready(player_id, false)
 
 
-func _on_load_level_received():
+func _enter_game():
 	_in_game = true
+	$MenuMusic.stop()
+
+
+func _exit_game():
+	_in_game = false
+	$MenuMusic.play()
+
+
+func _on_load_level_received():
+	_enter_game()
 	$CenterContainer.hide()
 	_world = world_scene.instance()
 	var level = level_scene.instance()
@@ -307,11 +317,11 @@ func _on_load_level_received():
 
 
 func _on_tutorial_scenario_started() -> void:
-	_in_game = true
+	_enter_game()
 
 
 func _on_tutorial_scenario_completed() -> void:
-	_in_game = false
+	_exit_game()
 	_tutorial.show()
 
 
@@ -335,7 +345,7 @@ func _on_gameplay_menu_leave_pressed() -> void:
 		assert(_tutorial._scenario != null)
 		_tutorial.stop_scenario()
 	
-	_in_game = false
+	_exit_game()
 
 
 func _toggle_player_input_pause(value: bool) -> void:

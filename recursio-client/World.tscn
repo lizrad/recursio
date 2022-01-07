@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=2]
+[gd_scene load_steps=21 format=2]
 
 [ext_resource path="res://Managers/CharacterManager.gd" type="Script" id=1]
 [ext_resource path="res://UI/Menus/GameEndScreen.gd" type="Script" id=2]
@@ -13,6 +13,8 @@
 [ext_resource path="res://UI/Menus/StatsUI.tscn" type="PackedScene" id=11]
 [ext_resource path="res://Resources/Fonts/FiraCode-Regular.ttf" type="DynamicFontData" id=12]
 [ext_resource path="res://UI/StyleBoxFlat.tres" type="StyleBox" id=13]
+[ext_resource path="res://Managers/GameMusicHandler.gd" type="Script" id=14]
+[ext_resource path="res://Resources/Audio/Music/ingame.ogg" type="AudioStream" id=15]
 
 [sub_resource type="StyleBoxFlat" id=5]
 bg_color = Color( 0, 0, 0, 0.54902 )
@@ -45,6 +47,15 @@ TextEdit/styles/focus = ExtResource( 13 )
 
 [node name="World" type="Spatial"]
 script = ExtResource( 10 )
+
+[node name="GameMusicHandler" type="Node" parent="."]
+script = ExtResource( 14 )
+round_manager_path = NodePath("../CharacterManager/RoundManager")
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="GameMusicHandler"]
+stream = ExtResource( 15 )
+volume_db = -10.0
+bus = "Music"
 
 [node name="CharacterManager" type="Node" parent="."]
 script = ExtResource( 1 )
