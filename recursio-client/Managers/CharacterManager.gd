@@ -344,6 +344,7 @@ func _apply_visibility_mask(character) -> void:
 	if not _player:
 		return
 	if Constants.get_value("visibility","use_visibility"):
+		character.get_node("KinematicBody/CharacterModel").set_shader_param("always_draw", false)
 		character.get_node("KinematicBody/CharacterModel").set_shader_param("visibility_mask", _player.get_visibility_mask())
 		if character.has_node("KinematicBody/MiniMapIcon"):
 			character.get_node("KinematicBody/MiniMapIcon").visibility_mask = _player.get_visibility_mask()

@@ -123,6 +123,8 @@ func _enemy_point_captured_condition() -> bool:
 func _enemy_point_captured_condition_end() -> void:
 	add_post_process_exception(_goal_element_1)
 	add_post_process_exception(_bottom_element)
+	_character_manager._apply_visibility_always(_enemy)
+	_player.set_custom_view_target(_enemy.get_body())
 	_bottom_element.show()
 	_bottom_element.set_content("Oh no! The enemy captured a point!", TutorialUIBottomElement.Controls.None, true)
 	_goal_element_1.set_content("Enemy", _enemy.get_body())
@@ -133,6 +135,8 @@ func _enemy_killed_condition_start() -> void:
 	pause()
 	yield(_bottom_element, "continue_pressed")
 	unpause()
+	_character_manager._apply_visibility_mask(_enemy)
+	_player.follow_camera()
 	remove_post_process_exception(_goal_element_1)
 	remove_post_process_exception(_bottom_element)
 	remove_post_process_exception(_enemy)

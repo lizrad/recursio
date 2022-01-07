@@ -2,7 +2,8 @@ extends TutorialScenario
 class_name TutorialScenario_2
 
 
-var _player_kiled_once : bool = false
+var _player_killed_once : bool = false
+var _enemy_killed_once : bool = false
 var _soft_locked = false
 
 func _ready():
@@ -58,7 +59,7 @@ func _started_round_1():
 	
 	# Wait until player gets hit
 	yield(_player, "client_hit")
-	_player_kiled_once = true
+	_player_killed_once = true
 	_goal_element_1.set_content("Kill!", _enemy.get_body())
 	_character_manager.toggle_trigger(ActionManager.Trigger.DEFAULT_ATTACK_START, true)
 	_character_manager.toggle_trigger(ActionManager.Trigger.FIRE_START, true)
@@ -67,12 +68,13 @@ func _started_round_1():
 	
 	# Wait until the enemy is killed
 	yield(_enemy, "client_hit")
+	_enemy_killed_once = true
 	_bottom_element.hide()
 	_goal_element_1.set_content("Capture!", _level.get_capture_points()[1])
 
 
 func _check_completed_round_1() -> bool:
-	return (_level.get_capture_points()[1].capture_progress == 1.0 and _player_kiled_once)
+	return (_level.get_capture_points()[1].capture_progress == 1.0 and _player_killed_once and _enemy_killed_once)
 
 
 func _completed_round_1() -> void:

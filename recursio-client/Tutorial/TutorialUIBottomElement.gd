@@ -8,7 +8,9 @@ var _continue_texture_scale_phase: float = 0.0
 var _current_control = Controls.None
 
 onready var _control_text: Label = get_node("ElementsList/ControlText")
+onready var _space_1: Control = get_node("ElementsList/Space1")
 onready var _control_texture: TextureRect = get_node("ElementsList/ControlTexture")
+onready var _space_2: Control = get_node("ElementsList/Space2")
 onready var _continue_texture: TextureRect = get_node("ElementsList/ContinueTexture")
 
 
@@ -85,12 +87,15 @@ func set_content(text: String, control = Controls.None, show_continue_texture: b
 	_current_control = control
 	_control_texture.texture = _control_textures_dictionary[control]
 	if control == Controls.None:
+		_space_1.hide()
 		_control_texture.hide()
 	else:
+		_space_1.show()
 		_control_texture.show()
 	_control_text.text = text
 	_continue_texture.texture = _continue_control_texture
 	_continue_texture.visible = show_continue_texture
+	_space_2.visible = show_continue_texture
 
 
 func _on_controller_changed(controller: String) -> void:

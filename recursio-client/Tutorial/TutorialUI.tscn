@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://UI/Default.tres" type="Theme" id=1]
 [ext_resource path="res://Resources/Fonts/FiraCode-Regular.ttf" type="DynamicFontData" id=2]
@@ -21,6 +21,9 @@ default_font = SubResource( 3 )
 Button/styles/focus = ExtResource( 3 )
 LineEdit/styles/focus = ExtResource( 3 )
 TextEdit/styles/focus = ExtResource( 3 )
+
+[sub_resource type="StyleBoxFlat" id=5]
+bg_color = Color( 0, 0, 0, 0.470588 )
 
 [sub_resource type="DynamicFont" id=2]
 size = 40
@@ -95,6 +98,15 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="Panel" type="Panel" parent="PostProcessAffected/GoalElement1/GoalText"]
+show_behind_parent = true
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_styles/panel = SubResource( 5 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="GoalElement2" type="HBoxContainer" parent="PostProcessAffected"]
 anchor_left = 1.0
 anchor_top = 1.0
@@ -141,6 +153,15 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="Panel" type="Panel" parent="PostProcessAffected/GoalElement2/GoalText"]
+show_behind_parent = true
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_styles/panel = SubResource( 5 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="BottomElement" type="CenterContainer" parent="PostProcessAffected"]
 anchor_left = 0.5
 anchor_top = 0.896
@@ -177,7 +198,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Space" type="Control" parent="PostProcessAffected/BottomElement/ElementsList"]
+[node name="Space1" type="Control" parent="PostProcessAffected/BottomElement/ElementsList"]
 margin_left = 154.0
 margin_right = 174.0
 margin_bottom = 150.0
@@ -199,10 +220,30 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ContinueTexture" type="TextureRect" parent="PostProcessAffected/BottomElement/ElementsList"]
+[node name="Panel" type="Panel" parent="PostProcessAffected/BottomElement/ElementsList/ControlText"]
+show_behind_parent = true
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -20.0
+margin_right = 20.0
+custom_styles/panel = SubResource( 5 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Space2" type="Control" parent="PostProcessAffected/BottomElement/ElementsList"]
 visible = false
 margin_left = 932.0
-margin_right = 1082.0
+margin_right = 952.0
+margin_bottom = 150.0
+rect_min_size = Vector2( 20, 0 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ContinueTexture" type="TextureRect" parent="PostProcessAffected/BottomElement/ElementsList"]
+visible = false
+margin_left = 956.0
+margin_right = 1106.0
 margin_bottom = 150.0
 rect_min_size = Vector2( 150, 150 )
 size_flags_horizontal = 3
@@ -218,9 +259,10 @@ __meta__ = {
 visible = false
 bloom_show = false
 chromatc_aberration_show = true
-chromatc_aberration_strength = 0.25
+chromatc_aberration_strength = 0.1
 fog_overlay_show = true
 fog_overlay_octaves = 14
+fog_overlay_color = Color( 0, 0, 0, 0.639216 )
 
 [node name="PauseTexture" type="TextureRect" parent="PausePostProcessing"]
 anchor_left = 1.0
