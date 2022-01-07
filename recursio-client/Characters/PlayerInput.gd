@@ -7,6 +7,14 @@ export(float) var rotate_threshold := 0.0
 onready var _player: Player = get_parent().get_parent()
 
 
+var block_movement: bool = false
+var block_swapping: bool = false
+var disabled_inputs: Dictionary = {
+	"player_shoot": false,
+	"player_melee": false,
+	"player_dash": false
+}
+
 # Maps the actual button to the internal enums
 var _trigger_dic : Dictionary = {
 	"player_shoot": ActionManager.Trigger.FIRE_START,
@@ -27,12 +35,16 @@ func _physics_process(_delta):
 
 	var cur_phase = _player.get_round_manager().get_current_phase()
 	if cur_phase == RoundManager.Phases.GAME:
-		var input = DeadZones.apply_2D(_get_input("player_move"), inner_deadzone, outer_deadzone)
-		var movement_vector = Vector3(input.y, 0.0, -input.x)
+		var movement_vector = Vector3.ZERO
+		if not block_movement:
+			var input = DeadZones.apply_2D(_get_input("player_move"), inner_deadzone, outer_deadzone)
+			movement_vector = Vector3(input.y, 0.0, -input.x)
 		InputManager.add_movement_to_input_frame(movement_vector)
-
-		var rotate_input = DeadZones.apply_2D(_get_input("player_look"), 0.1, 1)
-		var rotate_vector = Vector3(rotate_input.y, 0.0, -rotate_input.x)
+		
+		var rotate_vector = Vector3.ZERO
+		if not block_movement:
+			var rotate_input = DeadZones.apply_2D(_get_input("player_look"), 0.1, 1)
+			rotate_vector = Vector3(rotate_input.y, 0.0, -rotate_input.x)
 		InputManager.add_rotation_to_input_frame(rotate_vector)
 
 		var buttons_pressed: int = _get_buttons_pressed()
@@ -49,7 +61,7 @@ func _physics_process(_delta):
 		InputManager.set_triggers_in_input_frame(buttons_pressed)
 		InputManager.close_current_input_frame()
 		InputManager.send_player_input_data_to_server()
-	elif cur_phase == RoundManager.Phases.PREPARATION and not _player.block_switching:
+	elif cur_phase == RoundManager.Phases.PREPARATION && not block_swapping:
 		if Input.is_action_just_pressed("player_switch"):
 			_select_timeline(true)
 		elif Input.is_action_just_pressed("player_switch_prev"):
@@ -94,7 +106,8 @@ func _get_input(type) -> Vector2:
 func _get_buttons_pressed() -> int:
 	var buttons := 0
 	for trigger in _trigger_dic:
-		if Input.is_action_pressed(trigger):
-			buttons |= _trigger_dic[trigger]
+		if not disabled_inputs[trigger]:
+			if Input.is_action_pressed(trigger):
+				buttons |= _trigger_dic[trigger]
 
 	return buttons

@@ -2,6 +2,7 @@ extends Node
 class_name EnemyAI
 
 var waypoint_reach_distance: float = 0.1
+var peaceful := false
 
 # Enemy instance to control
 var _enemy: Enemy
@@ -47,7 +48,8 @@ func _physics_process(delta):
 		_shoot_timer += delta
 		if _shoot_timer  >= _shoot_cooldown:
 			_shoot_timer = 0
-			buttons = 2
+			if not peaceful:
+				buttons = 2
 	
 	_enemy.apply_input(movement.normalized(), rotation.normalized(), buttons)
 

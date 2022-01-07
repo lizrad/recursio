@@ -106,24 +106,24 @@ func send_enemy_ghost_record_to_client(player_id, timeline_index,round_index,  r
 	rpc_id(player_id, "receive_enemy_ghost_record", timeline_index,round_index,  record_data.to_array())
 
 
-func send_capture_point_captured(player_id, capturing_player_id, capture_point):
+func send_capture_point_captured(player_id, capturing_player_team_id, capture_point):
 	Logger.info("Sending capture point captured to client", "connection")
-	rpc_id(player_id, "receive_capture_point_captured", capturing_player_id, capture_point )
+	rpc_id(player_id, "receive_capture_point_captured", capturing_player_team_id, capture_point )
 
 
-func send_capture_point_team_changed(player_id, capturing_player_id, capture_point):
+func send_capture_point_team_changed(player_id, capturing_player_team_id, capture_point):
 	Logger.info("Sending capture point team changed to client", "connection")
-	rpc_id(player_id, "receive_capture_point_team_changed", capturing_player_id, capture_point )
+	rpc_id(player_id, "receive_capture_point_team_changed", capturing_player_team_id, capture_point )
 
 
-func send_capture_point_status_changed(player_id, capturing_player_id, capture_point, capture_progress):
+func send_capture_point_status_changed(player_id, capturing_player_team_id, capture_point, capture_progress):
 	Logger.info("Sending capture point status changed to client", "connection")
-	rpc_id(player_id, "receive_capture_point_status_changed", capturing_player_id, capture_point, capture_progress )
+	rpc_id(player_id, "receive_capture_point_status_changed", capturing_player_team_id, capture_point, capture_progress )
 
 
-func send_capture_point_capture_lost(player_id, capturing_player_id, capture_point):
+func send_capture_point_capture_lost(player_id, capturing_player_team_id, capture_point):
 	Logger.info("Sending capture point capture lost to client", "connection")
-	rpc_id(player_id, "receive_capture_point_capture_lost", capturing_player_id, capture_point )
+	rpc_id(player_id, "receive_capture_point_capture_lost", capturing_player_team_id, capture_point )
 
 
 # Sends the current world state (of the players game_room) to the player

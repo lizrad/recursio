@@ -4,17 +4,20 @@ class_name HUD
 onready var _timer_pb: TextureProgress = get_node("Timer/TimerProgressBar")
 onready var _phase = get_node("Timer/TimerProgressBar/Phase")
 onready var _ammo_group: Control = get_node("Abilities/Weapon")
+onready var _controller_shoot = get_node("Abilities/Weapon/ControllerButtonShoot")
 onready var _ammo: Label= get_node("Abilities/Weapon/WeaponAmmo")
 onready var _ammo_type_bg = get_node("Abilities/Weapon/WeaponTypeBG")
 onready var _ammo_type = get_node("Abilities/Weapon/WeaponTypeBG/WeaponType")
+onready var _melee_group: Control = get_node("Abilities/Melee")
+onready var _controller_melee = get_node("Abilities/Melee/ControllerButtonMelee")
+onready var _melee = get_node("Abilities/Melee/MeleeAmmo")
+onready var _melee_bg = get_node("Abilities/Melee/AspectRatioContainer/MeleeTexture")
 onready var _dash_group: Control = get_node("Abilities/Dash")
+onready var _controller_dash = get_node("Abilities/Dash/ControllerButtonDash")
 onready var _dash: Label = get_node("Abilities/Dash/DashAmmo")
 onready var _dash_bg = get_node("Abilities/Dash/AspectRatioContainer/DashTextureProgress")
 onready var _capture_point_hb = get_node("Timer/TimerProgressBar/CapturePoints")
 onready var _ammo_type_animation = get_node("TextureRect")
-onready var _controller_shoot = get_node("Abilities/Weapon/ControllerButtonShoot")
-onready var _controller_dash = get_node("Abilities/Dash/ControllerButtonDash")
-
 onready var _tween = get_node("Tween")
 onready var _dash_tween = get_node("Abilities/Dash/AspectRatioContainer/DashTextureProgress/Tween")
 
@@ -41,8 +44,12 @@ enum {
 	Game_Phase
 }
 
+var _custom_max_time: Dictionary = {}
 var _max_time := -1.0
 
+
+func add_custom_max_time(phase: String, time: float):
+	_custom_max_time[phase] = time
 
 func pass_round_manager(round_manager):
 	_round_manager = round_manager
@@ -64,14 +71,23 @@ func _ready() -> void:
 
 func _on_controller_changed(controller) -> void:
 	_controller_shoot.texture = load("res://Resources/Icons/" + controller + "/shoot.png")
+	_controller_melee.texture = load("res://Resources/Icons/" + controller + "/melee.png")
 	_controller_dash.texture = load("res://Resources/Icons/" + controller + "/dash.png")
+	pass
 
 
 func reset():
 	_phase.text = "Waiting for game to start..."
 	_max_time = -1.0
-	_dash_group.visible = false
-	_ammo_group.visible = false
+	_controller_shoot.hide()
+	_ammo.hide()
+	_ammo_type_bg.hide()
+	_controller_melee.hide()
+	_melee.hide()
+	_melee_bg.hide()
+	_controller_dash.hide()
+	_dash.hide()
+	_dash_bg.hide()
 
 
 func _process(_delta):
@@ -94,12 +110,33 @@ func _calculate_progress() -> float:
 
 	return _round_manager.get_current_phase_time_left() / 1000.0 / _max_time
 
+func toggle_trigger(trigger, value: bool) -> void:
+	if trigger == ActionManager.Trigger.DEFAULT_ATTACK_START:
+		_melee_group.visible = value
+		pass
+	elif trigger == ActionManager.Trigger.FIRE_START:
+		_ammo_group.visible = value
+		pass
+	elif trigger == ActionManager.Trigger.SPECIAL_MOVEMENT_START:
+		_dash_group.visible = value
+		pass
 
 func prep_phase_start(round_index) -> void:
 	_phase.text = "Preparation Phase " + str(round_index + 1)
-	_max_time = Constants.get_value("gameplay", "prep_phase_time")
-	_dash_group.visible = true
-	_ammo_group.visible = true
+	var phase_string = "prep_phase_time"
+	if _custom_max_time.has(phase_string):
+		_max_time = _custom_max_time[phase_string]
+	else:
+		_max_time = Constants.get_value( "gameplay", phase_string)
+	_controller_shoot.show()
+	_ammo.show()
+	_ammo_type_bg.show()
+	_controller_melee.show()
+	_melee.show()
+	_melee_bg.show()
+	_controller_dash.show()
+	_dash.show()
+	_dash_bg.show()
 
 	# TODO: this should be set explicit from outside in dash actions
 	update_special_movement_ammo(2)
@@ -107,12 +144,19 @@ func prep_phase_start(round_index) -> void:
 
 func countdown_phase_start() -> void:
 	_phase.text = "Get ready!"
-	_max_time = Constants.get_value("gameplay", "countdown_phase_seconds")
-
+	var phase_string = "countdown_phase_seconds"
+	if _custom_max_time.has(phase_string):
+		_max_time = _custom_max_time[phase_string]
+	else:
+		_max_time = Constants.get_value("gameplay", phase_string)
 
 func game_phase_start(round_index) -> void:
 	_phase.text = "Game Phase " + str(round_index + 1)
-	_max_time = Constants.get_value("gameplay", "game_phase_time")
+	var phase_string = "game_phase_time"
+	if _custom_max_time.has(phase_string):
+		_max_time = _custom_max_time[phase_string]
+	else:
+		_max_time = Constants.get_value("gameplay", phase_string)
 
 
 func update_fire_action_ammo(amount: int) -> void:
@@ -188,6 +232,12 @@ func set_player_id(player_id) -> void:
 		capture_point.set_player_id(player_id)
 
 
+# Sets the internal player teamid for the capture points
+func set_player_team_id(team_id) -> void:
+	for capture_point in _capture_points:
+		capture_point.set_player_team_id(team_id)
+
+
 # Adds a new capture point HUD item to the HUD
 func add_capture_point() -> void:
 	var capture_point: CapturePointHUD = _capture_point_scene.instance()
@@ -229,6 +279,9 @@ func wobble_ammo() -> void:
 
 
 func animate_weapon_selection(pos: Vector2) -> void:
+	# if the weapon is currently toggled off do nothing
+	if not _ammo_group.visible: 
+		return
 	if _tween.is_active():
 		Logger.info("not restarting tween", "Tween")
 		return

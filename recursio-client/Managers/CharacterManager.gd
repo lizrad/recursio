@@ -11,7 +11,7 @@ onready var _visibility_checker: VisibilityChecker = get_node("VisibilityChecker
 
 
 var enemy_is_server_driven: bool = true
-var show_player_button_overlay: bool = true
+var hide_player_button_overlay: bool = false
 
 
 # Scenes for instanciating 
@@ -29,6 +29,12 @@ var _time_since_last_server_update = 0.0
 var _time_since_last_world_state_update = 0.0
 
 var _max_timelines = Constants.get_value("ghosts", "max_amount")
+
+var _input_paused: bool = false
+# Stores active inputs before pausing
+var _pre_pause_trigger_toggle_values: Dictionary = {}
+var _pre_pause_movement_toggle_value: bool = false
+var _pre_pause_swapping_toggle_value: bool = false
 
 func _ready():
 	var _error = Server.connect("phase_switch_received", self, "_on_phase_switch_received") 
@@ -69,14 +75,15 @@ func _ready():
 	set_physics_process(false)
 
 func _physics_process(delta):
+	# Update CapturePoints in player HUD
+	_player.update_capture_point_hud(_game_manager.get_capture_points())
+	
 	if _round_manager.get_current_phase() != RoundManager.Phases.GAME:
 		return
 
 	if enemy_is_server_driven and _enemy:
 		_update_enemy(delta)
 
-	# Update CapturePoints in player HUD
-	_player.update_capture_point_hud(_game_manager.get_capture_points())
 
 func set_level(level: Level):
 	_game_manager.set_level(level)
@@ -85,9 +92,54 @@ func get_player_id() -> int:
 	return _player_rpc_id
 
 
-func toggle_player_input(disabled: bool) -> void:
-	_player.block_input = disabled
-	_player.block_movement = disabled
+func toggle_swapping(value: bool) -> void:
+	_pre_pause_swapping_toggle_value = value
+	if not _input_paused:
+		_player.toggle_swapping(value)
+
+
+func get_swapping_toggle_value() -> bool:
+	return _player.get_swapping_toggle_value()
+
+func toggle_movement(value: bool) -> void:
+	_pre_pause_movement_toggle_value = value
+	if not _input_paused:
+		_player.toggle_movement(value)
+
+func get_movement_toggle_value() -> bool:
+	return _player.get_movement_toggle_value()
+
+func toggle_trigger(trigger, value: bool) -> void:
+	_pre_pause_trigger_toggle_values[trigger] = value
+	if not _input_paused:
+		_player.toggle_trigger(trigger, value)
+	
+
+func get_trigger_toggle_value(trigger) -> bool:
+	return _player.get_trigger_toggle_value(trigger)
+
+
+func toggle_player_input_pause(value: bool) -> void:
+	_input_paused = value;
+	if value:
+		_pre_pause_trigger_toggle_values[ActionManager.Trigger.FIRE_START] = _player.get_trigger_toggle_value(ActionManager.Trigger.FIRE_START)
+		_pre_pause_trigger_toggle_values[ActionManager.Trigger.DEFAULT_ATTACK_START] = _player.get_trigger_toggle_value(ActionManager.Trigger.DEFAULT_ATTACK_START)
+		_pre_pause_trigger_toggle_values[ActionManager.Trigger.SPECIAL_MOVEMENT_START] = _player.get_trigger_toggle_value(ActionManager.Trigger.SPECIAL_MOVEMENT_START)
+	
+		_pre_pause_movement_toggle_value = _player.get_movement_toggle_value()
+		_pre_pause_swapping_toggle_value = _player.get_swapping_toggle_value()
+		_player.toggle_trigger(ActionManager.Trigger.FIRE_START, false)
+		_player.toggle_trigger(ActionManager.Trigger.DEFAULT_ATTACK_START, false)
+		_player.toggle_trigger(ActionManager.Trigger.SPECIAL_MOVEMENT_START, false)
+		_player.toggle_movement(false)
+		_player.toggle_swapping(false)
+	else:
+		_player.toggle_trigger(ActionManager.Trigger.FIRE_START, _pre_pause_trigger_toggle_values[ActionManager.Trigger.FIRE_START])
+		_player.toggle_trigger(ActionManager.Trigger.DEFAULT_ATTACK_START, _pre_pause_trigger_toggle_values[ActionManager.Trigger.DEFAULT_ATTACK_START])
+		_player.toggle_trigger(ActionManager.Trigger.SPECIAL_MOVEMENT_START, _pre_pause_trigger_toggle_values[ActionManager.Trigger.SPECIAL_MOVEMENT_START])
+	
+		_player.toggle_movement(_pre_pause_movement_toggle_value)
+		_player.toggle_swapping(_pre_pause_swapping_toggle_value)
 
 
 func _on_game_start_received(start_time):
@@ -105,8 +157,7 @@ func _on_phase_switch_received(round_index, next_phase, switch_time):
 	_round_manager.future_switch_to_phase(next_phase, switch_time)
 
 func _on_preparation_phase_started() -> void:
-	_player.block_movement = true
-	_enemy.block_movement = true
+	_player.toggle_movement(false)
 	_player.reset_aim_mode()
 	_player.clear_walls()
 	_player.clear_past_frames()
@@ -117,7 +168,10 @@ func _on_preparation_phase_started() -> void:
 
 	_toggle_visbility_lights(false)
 	_action_manager.clear_action_instances()
-	_player.show_preparation_hud(_round_manager.round_index, show_player_button_overlay)
+	if not hide_player_button_overlay:
+		_player.show_button_overlay()
+	
+	_player.show_preparation_hud(_round_manager.round_index)
 	
 	# Show player whole level
 	_player.move_camera_to_overview()
@@ -144,8 +198,7 @@ func _on_countdown_phase_started() -> void:
 func _on_game_phase_started() -> void:
 	_player.set_record_data_timestamp(Server.get_server_time())
 	_enemy.set_record_data_timestamp(Server.get_server_time())
-	_player.block_movement = false
-	_enemy.block_movement = false
+	_player.toggle_movement(true)
 	_player.set_overview_light_enabled(false)
 	_toggle_visbility_lights(true)
 	_player.show_game_hud(_round_manager.round_index)
@@ -265,13 +318,13 @@ func _on_player_hit(hit_player_id, perpetrator_player_id, perpetrator_timeline_i
 	else:
 		 _enemy.server_hit(perpetrator)
 
-func _on_capture_point_captured(capturing_player_id, _capture_point):
-	if capturing_player_id == _player_rpc_id:
+func _on_capture_point_captured(capturing_player_team_id, _capture_point):
+	if capturing_player_team_id == _player.team_id:
 		_player.move_camera_to_overview()
 		_player.set_overview_light_enabled(true)
 
-func _on_capture_point_capture_lost(capturing_player_id, _capture_point):
-	if capturing_player_id == _player_rpc_id:
+func _on_capture_point_capture_lost(capturing_player_team_id, _capture_point):
+	if capturing_player_team_id == _player.team_id:
 		if _round_manager.get_current_phase() == RoundManager.Phases.GAME:
 			_player.follow_camera()
 		_player.set_overview_light_enabled(false)
@@ -291,6 +344,7 @@ func _apply_visibility_mask(character) -> void:
 	if not _player:
 		return
 	if Constants.get_value("visibility","use_visibility"):
+		character.get_node("KinematicBody/CharacterModel").set_shader_param("always_draw", false)
 		character.get_node("KinematicBody/CharacterModel").set_shader_param("visibility_mask", _player.get_visibility_mask())
 		if character.has_node("KinematicBody/MiniMapIcon"):
 			character.get_node("KinematicBody/MiniMapIcon").visibility_mask = _player.get_visibility_mask()

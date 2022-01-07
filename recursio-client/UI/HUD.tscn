@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=2]
+[gd_scene load_steps=26 format=2]
 
 [ext_resource path="res://UI/HUD.gd" type="Script" id=1]
 [ext_resource path="res://Resources/Icons/keyboard/shoot.png" type="Texture" id=2]
@@ -12,6 +12,8 @@
 [ext_resource path="res://Util/DynamicLabel.gd" type="Script" id=10]
 [ext_resource path="res://Resources/Fonts/FiraCode-Bold.ttf" type="DynamicFontData" id=11]
 [ext_resource path="res://Resources/Icons/icon_dash_inactive.png" type="Texture" id=12]
+[ext_resource path="res://Resources/Icons/icon_melee.png" type="Texture" id=13]
+[ext_resource path="res://Resources/Icons/ps/melee.png" type="Texture" id=14]
 
 [sub_resource type="DynamicFont" id=14]
 size = 54
@@ -259,7 +261,7 @@ __meta__ = {
 
 [node name="Weapon" type="HBoxContainer" parent="Abilities"]
 margin_right = 201.0
-margin_bottom = 68.0
+margin_bottom = 67.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 __meta__ = {
@@ -268,7 +270,7 @@ __meta__ = {
 
 [node name="ControllerButtonShoot" type="TextureRect" parent="Abilities/Weapon"]
 margin_right = 64.0
-margin_bottom = 68.0
+margin_bottom = 67.0
 size_flags_horizontal = 7
 size_flags_vertical = 7
 texture = ExtResource( 2 )
@@ -281,7 +283,7 @@ __meta__ = {
 [node name="WeaponAmmo" type="Label" parent="Abilities/Weapon"]
 margin_left = 68.0
 margin_right = 132.0
-margin_bottom = 68.0
+margin_bottom = 67.0
 size_flags_horizontal = 7
 size_flags_vertical = 7
 custom_fonts/font = SubResource( 14 )
@@ -317,7 +319,7 @@ font_size = 35
 [node name="WeaponTypeBG" type="TextureRect" parent="Abilities/Weapon"]
 margin_left = 136.0
 margin_right = 201.0
-margin_bottom = 68.0
+margin_bottom = 67.0
 size_flags_horizontal = 7
 size_flags_vertical = 7
 texture = ExtResource( 4 )
@@ -338,10 +340,63 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Dash" type="HBoxContainer" parent="Abilities"]
-margin_top = 72.0
+[node name="Melee" type="HBoxContainer" parent="Abilities"]
+margin_top = 71.0
 margin_right = 201.0
-margin_bottom = 140.0
+margin_bottom = 138.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ControllerButtonMelee" type="TextureRect" parent="Abilities/Melee"]
+margin_right = 64.0
+margin_bottom = 67.0
+size_flags_horizontal = 7
+size_flags_vertical = 7
+texture = ExtResource( 14 )
+expand = true
+stretch_mode = 6
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MeleeAmmo" type="Label" parent="Abilities/Melee"]
+margin_left = 68.0
+margin_right = 132.0
+margin_bottom = 67.0
+size_flags_horizontal = 7
+size_flags_vertical = 7
+custom_fonts/font = SubResource( 15 )
+text = "∞"
+align = 2
+valign = 1
+script = ExtResource( 10 )
+enable_this_after_font_is_unique = true
+font_size = 54
+
+[node name="AspectRatioContainer" type="AspectRatioContainer" parent="Abilities/Melee"]
+margin_left = 136.0
+margin_right = 201.0
+margin_bottom = 67.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="MeleeTexture" type="TextureRect" parent="Abilities/Melee/AspectRatioContainer"]
+margin_top = 1.0
+margin_right = 65.0
+margin_bottom = 66.0
+texture = ExtResource( 13 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Dash" type="HBoxContainer" parent="Abilities"]
+margin_top = 142.0
+margin_right = 201.0
+margin_bottom = 209.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 __meta__ = {
@@ -350,7 +405,7 @@ __meta__ = {
 
 [node name="ControllerButtonDash" type="TextureRect" parent="Abilities/Dash"]
 margin_right = 64.0
-margin_bottom = 68.0
+margin_bottom = 67.0
 size_flags_horizontal = 7
 size_flags_vertical = 7
 texture = ExtResource( 8 )
@@ -363,7 +418,7 @@ __meta__ = {
 [node name="DashAmmo" type="Label" parent="Abilities/Dash"]
 margin_left = 68.0
 margin_right = 132.0
-margin_bottom = 68.0
+margin_bottom = 67.0
 size_flags_horizontal = 7
 size_flags_vertical = 7
 custom_fonts/font = SubResource( 15 )
@@ -400,14 +455,14 @@ font_size = 35
 [node name="AspectRatioContainer" type="AspectRatioContainer" parent="Abilities/Dash"]
 margin_left = 136.0
 margin_right = 201.0
-margin_bottom = 68.0
+margin_bottom = 67.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="DashTextureProgress" type="TextureProgress" parent="Abilities/Dash/AspectRatioContainer"]
-margin_top = 1.5
+margin_top = 1.0
 margin_right = 65.0
-margin_bottom = 66.5
+margin_bottom = 66.0
 size_flags_horizontal = 7
 size_flags_vertical = 7
 value = 100.0

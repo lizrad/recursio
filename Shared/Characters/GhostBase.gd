@@ -77,9 +77,15 @@ func stop_playing() -> void:
 
 # Applies the given frame
 func _apply_record_frame(record_frame: RecordFrame):
+	var prev_position = get_position()
 	.set_position(record_frame.position)
 	.set_rotation_y(record_frame.rotation_y)
 	.trigger_actions(record_frame.buttons)
+	# TODO: this is pretty wonky but I don't really know a better way to react to this without rewriting the whole recording system
+	# and it works well enough for the tutorial, which is the only place using this signal for now
+	if (prev_position-record_frame.position).length() >= 1.0:
+		if (record_frame.position-spawn_point).length() < 0.3:
+			emit_signal("respawned")
 
 
 func enable_body():
