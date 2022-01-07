@@ -73,16 +73,19 @@ func _enable_active_ghosts() -> void:
 
 # OVERRIDE ABSTRACT #
 func _use_new_record_data():
-	var current_round_index = _round_manager.round_index-1
-	var record_data = _character_manager._player.get_record_data()
-	if current_round_index > _player_ghosts[record_data.timeline_index].round_index:
-		_update_ghost_record(_player_ghosts, record_data.timeline_index, record_data, current_round_index)
-		_player_ghosts[record_data.timeline_index].player_id = _character_manager._player.player_id
-	
-	record_data = _character_manager._enemy.get_record_data()
-	if current_round_index > _enemy_ghosts[record_data.timeline_index].round_index:
-		_update_ghost_record(_enemy_ghosts, record_data.timeline_index, record_data, current_round_index)
-		_enemy_ghosts[record_data.timeline_index].player_id = _character_manager._enemy.player_id
+	# FIXME: This seems to cause wrong ghosts and paths to show up. It's not strictly necessary,
+	# just makes things show up faster on the client
+	pass
+#	var current_round_index = _round_manager.round_index-1
+#	var record_data = _character_manager._player.get_record_data()
+#	if current_round_index > _player_ghosts[record_data.timeline_index].round_index:
+#		_update_ghost_record(_player_ghosts, record_data.timeline_index, record_data, current_round_index)
+#		_player_ghosts[record_data.timeline_index].player_id = _character_manager._player.player_id
+#
+#	record_data = _character_manager._enemy.get_record_data()
+#	if current_round_index > _enemy_ghosts[record_data.timeline_index].round_index:
+#		_update_ghost_record(_enemy_ghosts, record_data.timeline_index, record_data, current_round_index)
+#		_enemy_ghosts[record_data.timeline_index].player_id = _character_manager._enemy.player_id
 
 
 # OVERRIDE ABSTRACT #
