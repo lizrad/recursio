@@ -113,7 +113,6 @@ func return_to_game_room_lobby():
 	_exit_game()
 	_world.queue_free()
 	_world = null
-	_game_room_lobby.reset_players()
 	$CenterContainer.show()
 
 
@@ -314,6 +313,7 @@ func _on_load_level_received():
 	_world.set_level(level)
 	_world.add_child(level)
 	_world.level_set_up_done()
+	_game_room_lobby.reset_players()
 
 
 func _on_tutorial_scenario_started() -> void:
