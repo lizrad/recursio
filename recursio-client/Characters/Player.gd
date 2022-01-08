@@ -165,8 +165,16 @@ func _get_action(trigger, timeline_index):
 
 # OVERRIDE #
 func wall_spawned(wall):
+	wall.needs_server_confirmation = true
 	_walls.append(wall)
 
+# OVERRIDE #
+func wall_despawned(wall):
+	_walls.erase(wall)
+	var wall_action_index = Constants.get_value("ghosts", "wall_placing_timeline_index")
+	var wall_action = _get_action(ActionManager.Trigger.FIRE_START, wall_action_index)
+	wall_action.ammunition += 1
+	wall_action.emit_signal("ammunition_changed", wall_action.ammunition)
 
 func _on_wall_spawn_received(position, rotation, wall_index):
 	if _walls.size()>wall_index:
@@ -175,6 +183,7 @@ func _on_wall_spawn_received(position, rotation, wall_index):
 			_walls[wall_index].global_transform.origin = position
 			#TODO: is rotation global here, could be dangerous if it isn't
 			_walls[wall_index].rotation.y = rotation
+			_walls[wall_index].confirmed = true
 	else:
 		var wall_action_index = Constants.get_value("ghosts", "wall_placing_timeline_index")
 		_action_manager.set_active(_get_action(ActionManager.Trigger.FIRE_START, wall_action_index) as Action, self, kb, get_parent())

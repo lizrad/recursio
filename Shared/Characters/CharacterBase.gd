@@ -212,6 +212,9 @@ func wall_spawned(_wall):
 	pass
 
 
+func wall_despawned(_wall):
+	pass
+
 func visual_delayed_spawn(delay: float):
 	_spawn_imminent = true
 	_spawn_deadline = delay
