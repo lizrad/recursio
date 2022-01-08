@@ -1,5 +1,6 @@
 extends Object
-class_name GhostDeathData
+class_name DeathData
+
 
 # in msecs passed since gamephase start
 var time

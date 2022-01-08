@@ -102,12 +102,12 @@ func _look_for_previous_death():
 			break
 
 
-func _apply_previous_death(ghost_death_data):
-	var victim_active = _is_ghost_active(ghost_death_data.victim_team_id,ghost_death_data.victim_round_index,ghost_death_data.victim_timeline_index)
-	var perpetrator_active = _is_ghost_active(ghost_death_data.perpetrator_team_id,ghost_death_data.perpetrator_round_index,ghost_death_data.perpetrator_timeline_index)
+func _apply_previous_death(death_data):
+	var victim_active = _is_ghost_active(death_data.victim_team_id,death_data.victim_round_index,death_data.victim_timeline_index)
+	var perpetrator_active = _is_ghost_active(death_data.perpetrator_team_id,death_data.perpetrator_round_index,death_data.perpetrator_timeline_index)
 	if victim_active and perpetrator_active:
-		var victim = _seperated_ghosts[ghost_death_data.victim_team_id][ghost_death_data.victim_timeline_index]
-		var perpetrator = _seperated_ghosts[ghost_death_data.perpetrator_team_id][ghost_death_data.perpetrator_timeline_index]
+		var victim = _seperated_ghosts[death_data.victim_team_id][death_data.victim_timeline_index]
+		var perpetrator = _seperated_ghosts[death_data.perpetrator_team_id][death_data.perpetrator_timeline_index]
 		emit_signal("quiet_ghost_hit", victim.player_id, victim.timeline_index, perpetrator.player_id, perpetrator.timeline_index)
 		victim.quiet_hit(perpetrator)
 
@@ -123,7 +123,7 @@ func _clear_old_ghost_death_data(perpetrator_team_id, perpetrator_timeline_index
 
 
 func _create_new_ghost_death_data(victim, perpetrator):
-	var ghost_data = GhostDeathData.new()
+	var ghost_data = DeathData.new()
 	
 	ghost_data.time = _server.get_server_time()-_game_phase_start_time
 
