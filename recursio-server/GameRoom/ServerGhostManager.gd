@@ -36,7 +36,7 @@ func _spawn_all_ghosts():
 			var spawn_point = _game_manager.get_spawn_point(team_id, timeline_index)
 			var player_id = _character_manager.team_id_to_player_id(team_id)
 			var ghost = _create_ghost(player_id, team_id, timeline_index, spawn_point, _ghost_scene)
-			ghost.connect("hit", self, "_on_ghost_hit", [ghost])
+			ghost.connect("hit", self, "_on_ghost_hit")
 			_seperated_ghosts[team_id].append(ghost)
 			_ghosts.append(ghost)
 
@@ -62,14 +62,15 @@ func _use_new_record_data():
 
 
 # OVERRIDE ABSTRACT #
-func _on_ghost_hit(perpetrator, victim):
-	_new_previous_ghost_death.append(_create_new_ghost_death_data(victim, perpetrator))
-	emit_signal("ghost_hit",victim.player_id, victim.timeline_index, perpetrator.player_id, perpetrator.timeline_index)
+func _on_ghost_hit(hit_data: HitData):
+	_new_previous_ghost_death.append(_create_new_ghost_death_data(hit_data))
+	# TODONOW: follow this thread
+	emit_signal("ghost_hit", hit_data)
 
 
-func _on_player_killed(victim, perpetrator):
+func _on_player_killed(hit_data):
 	#when an active player is killed we also have to create a ghost death so the death is fixed for the following rounds
-	_new_previous_ghost_death.append(_create_new_ghost_death_data(victim, perpetrator))
+	_new_previous_ghost_death.append(_create_new_ghost_death_data(hit_data))
 
 
 func _is_ghost_active(team_id, round_index, timeline_index):
@@ -103,38 +104,31 @@ func _look_for_previous_death():
 
 
 func _apply_previous_death(death_data):
-	var victim_active = _is_ghost_active(death_data.victim_team_id,death_data.victim_round_index,death_data.victim_timeline_index)
-	var perpetrator_active = _is_ghost_active(death_data.perpetrator_team_id,death_data.perpetrator_round_index,death_data.perpetrator_timeline_index)
+	var hit_data = death_data.hit_data
+	var victim_active = _is_ghost_active(hit_data.victim_team_id,hit_data.victim_round_index,hit_data.victim_timeline_index)
+	var perpetrator_active = _is_ghost_active(hit_data.perpetrator_team_id,hit_data.perpetrator_round_index,hit_data.perpetrator_timeline_index)
 	if victim_active and perpetrator_active:
-		var victim = _seperated_ghosts[death_data.victim_team_id][death_data.victim_timeline_index]
-		var perpetrator = _seperated_ghosts[death_data.perpetrator_team_id][death_data.perpetrator_timeline_index]
-		emit_signal("quiet_ghost_hit", victim.player_id, victim.timeline_index, perpetrator.player_id, perpetrator.timeline_index)
-		victim.quiet_hit(perpetrator)
+		var victim = _seperated_ghosts[hit_data.victim_team_id][hit_data.victim_timeline_index]
+		emit_signal("quiet_ghost_hit", hit_data)
+		victim.quiet_hit(hit_data)
 
 
 func _clear_old_ghost_death_data(perpetrator_team_id, perpetrator_timeline_index, perpetrator_round_index):
 	var to_remove = []
-	for data in _previous_ghost_deaths:
-		if data.perpetrator_team_id == perpetrator_team_id and data.perpetrator_timeline_index == perpetrator_timeline_index:
-			if data.perpetrator_round_index < perpetrator_round_index:
-				to_remove.append(data)
-	for data in to_remove:
-		_previous_ghost_deaths.erase(data)
+	for death_data in _previous_ghost_deaths:
+		var hit_data = death_data.hit_data
+		if hit_data.perpetrator_team_id == perpetrator_team_id and hit_data.perpetrator_timeline_index == perpetrator_timeline_index:
+			if hit_data.perpetrator_round_index < perpetrator_round_index:
+				to_remove.append(death_data)
+	for death_data in to_remove:
+		_previous_ghost_deaths.erase(death_data)
 
 
-func _create_new_ghost_death_data(victim, perpetrator):
+func _create_new_ghost_death_data(hit_data: HitData):
 	var ghost_data = DeathData.new()
 	
 	ghost_data.time = _server.get_server_time()-_game_phase_start_time
-
-	ghost_data.victim_team_id = victim.team_id
-	ghost_data.victim_round_index = victim.round_index
-	ghost_data.victim_timeline_index = victim.timeline_index
-
-	ghost_data.perpetrator_team_id = perpetrator.team_id
-	ghost_data.perpetrator_round_index = perpetrator.round_index
-	ghost_data.perpetrator_timeline_index = perpetrator.timeline_index
-	
+	ghost_data.hit_data = hit_data
 	return ghost_data
 
 

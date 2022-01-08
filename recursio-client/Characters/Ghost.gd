@@ -31,13 +31,13 @@ func start_playing(start_time: int) -> void:
 
 # OVERRIDE #
 # Only emit signal for client
-func hit(perpetrator):
-	emit_signal("client_hit", perpetrator)
+func hit(hit_data: HitData):
+	emit_signal("client_hit", hit_data)
 
 # Displays ghost as dead
 # calls hit of base function triggered by server
-func server_hit(perpetrator):
+func server_hit(hit_data: HitData):
 	assert(is_record_data_set())
-	.hit(perpetrator)
+	.hit(hit_data)
 	#_minimap_icon.set_texture(_minimap_icon_dead)
 

@@ -156,5 +156,5 @@ func _enemy_killed_condition_end() -> void:
 	_enemy.kb.visible = false
 
 
-func _on_enemy_hit(perpetrator):
-	_enemy.server_hit(perpetrator)
+func _on_enemy_hit(hit_data: HitData):
+	_enemy.server_hit(hit_data)

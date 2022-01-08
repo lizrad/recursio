@@ -54,14 +54,14 @@ func update(_delta):
 
 # Stops the ghost and triggers the base classes hit function
 # OVERRIDE #
-func hit(perpetrator) -> void:
+func hit(hit_data: HitData) -> void:
 	_is_playing = false
-	.hit(perpetrator)
+	.hit(hit_data)
 
 # OVERRIDE #
-func quiet_hit(perpetrator) -> void:
+func quiet_hit(hit_data: HitData) -> void:
 	_is_playing = false
-	.quiet_hit(perpetrator)
+	.quiet_hit(hit_data)
 	
 # Starts moving the ghost and enables collision
 func start_playing(start_time: int) -> void:

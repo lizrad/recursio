@@ -311,12 +311,11 @@ func _on_world_state_received(world_state: WorldState):
 				_enemy.server_acceleration = player_states[id].acceleration
 				_enemy.last_triggers |= player_states[id].buttons
 
-func _on_player_hit(hit_player_id, perpetrator_player_id, perpetrator_timeline_index) -> void:
-	var perpetrator = _ghost_manager._find_perpetrator(perpetrator_player_id, perpetrator_timeline_index)
-	if hit_player_id == _player_rpc_id:
-		_player.server_hit(perpetrator) 
+func _on_player_hit(hit_data: HitData) -> void:
+	if hit_data.victim_team_id == _player.team_id:
+		_player.server_hit(hit_data) 
 	else:
-		 _enemy.server_hit(perpetrator)
+		_enemy.server_hit(hit_data)
 
 func _on_capture_point_captured(capturing_player_team_id, _capture_point):
 	if capturing_player_team_id == _player.team_id:

@@ -76,8 +76,24 @@ func handle_hit(collider):
 	
 	if character is CharacterBase:
 		assert(character.has_method("hit"))
-		character.hit(_owning_player)
+		character.hit(_create_hit_data(character, HitData.HitType.HITSCAN))
 
+func _create_hit_data(victim: CharacterBase, type) -> HitData:
+	var hit_data = HitData.new()
+	
+	hit_data.type = type
+	hit_data.position = global_transform.origin
+	hit_data.rotation = global_transform.basis.get_euler().y
+	
+	hit_data.victim_team_id = victim.team_id
+	hit_data.victim_round_index = victim.round_index
+	hit_data.victim_timeline_index = victim.timeline_index
+	
+	hit_data.perpetrator_team_id = _owning_player.team_id
+	hit_data.perpetrator_round_index = _owning_player.round_index
+	hit_data.perpetrator_timeline_index = _owning_player.timeline_index
+	
+	return hit_data
 
 func _update_collision():
 	var collider = get_collider()

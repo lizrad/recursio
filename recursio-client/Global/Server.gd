@@ -34,9 +34,9 @@ signal capture_point_team_changed(capturing_player_team_id, capture_point)
 signal capture_point_status_changed(capturing_player_team_id, capture_point, capture_progress)
 signal capture_point_capture_lost(capturing_player_team_id, capture_point)
 signal game_result(winning_player_id)
-signal player_hit(hit_player_id, perpetrator_player_id, perpetrator_timeline_index)
-signal ghost_hit(hit_ghost_player_owner, hit_ghost_id, perpetrator_player_id, perpetrator_timeline_index)
-signal quiet_ghost_hit(hit_ghost_player_owner, hit_ghost_id, perpetrator_player_id, perpetrator_timeline_index)
+signal player_hit(hit_data)
+signal ghost_hit(hit_data)
+signal quiet_ghost_hit(hit_data)
 signal timeline_picked(picking_player_id, timeline_index)
 signal wall_spawn (position, rotation, wall_index)
 
@@ -290,18 +290,22 @@ remote func receive_game_result(winning_player_id):
 	emit_signal("game_result", winning_player_id)
 
 
-remote func receive_player_hit(hit_player_id, perpetrator_player_id, perpetrator_timeline_index):
-	Logger.debug("Player hit received: " + str(hit_player_id), "server")
-	emit_signal("player_hit", hit_player_id, perpetrator_player_id, perpetrator_timeline_index)
+remote func receive_player_hit(hit_data_as_array: Array):
+	var hit_data = HitData.new().from_array(hit_data_as_array)
+	Logger.debug("Player hit received: " + str(hit_data.victim_team_id), "server")
+	print(hit_data.to_string())
+	emit_signal("player_hit", hit_data)
 
 
-remote func receive_ghost_hit(victim_player_id, victim_timeline_index, perpetrator_player_id, perpetrator_timeline_index):
-	Logger.debug("Ghost hit received: " + str(victim_timeline_index) + " of player " + str(victim_player_id), "server")
-	emit_signal("ghost_hit", victim_player_id, victim_timeline_index, perpetrator_player_id, perpetrator_timeline_index)
+remote func receive_ghost_hit(hit_data_as_array: Array):
+	var hit_data = HitData.new().from_array(hit_data_as_array)
+	Logger.debug("Hit received of Ghost #" + str(hit_data.victim_timeline_index) + " of Player " + str(hit_data.victim_team_id), "server")
+	emit_signal("ghost_hit", hit_data)
 
-remote func receive_quiet_ghost_hit(victim_player_id, victim_timeline_index, perpetrator_player_id, perpetrator_timeline_index):
-	Logger.debug("Quiet ghost hit received: " + str(victim_timeline_index) + " of player " + str(victim_player_id), "server")
-	emit_signal("quiet_ghost_hit", victim_player_id, victim_timeline_index, perpetrator_player_id, perpetrator_timeline_index)
+remote func receive_quiet_ghost_hit(hit_data_as_array: Array):
+	var hit_data = HitData.new().from_array(hit_data_as_array)
+	Logger.debug("Quiet ghost hit received: " + str(hit_data.victim_timeline_index) + " of player " + str(hit_data.victim_team_id), "server")
+	emit_signal("quiet_ghost_hit", hit_data)
 
 remote func receive_player_action(action_player_id, action_type):
 	Logger.debug("Other player action received: " + str(action_type), "server")
