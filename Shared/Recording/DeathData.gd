@@ -1,6 +1,15 @@
 extends Object
 class_name DeathData
 
+enum HitType {
+	MELEE,
+	HITSCAN,
+	WALL
+}
+
+var hit_type
+var hit_position
+var hit_rotation
 
 # in msecs passed since gamephase start
 var time
