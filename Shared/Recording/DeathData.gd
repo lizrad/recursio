@@ -1,4 +1,4 @@
-extends Object
+extends Reference
 class_name DeathData
 
 # in msecs passed since gamephase start
