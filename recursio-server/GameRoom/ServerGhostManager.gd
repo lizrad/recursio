@@ -72,7 +72,6 @@ func _use_new_record_data():
 # OVERRIDE ABSTRACT #
 func _on_ghost_hit(hit_data: HitData):
 	_new_previous_ghost_death.append(_create_new_ghost_death_data(hit_data))
-	# TODONOW: follow this thread
 	emit_signal("ghost_hit", hit_data)
 
 
