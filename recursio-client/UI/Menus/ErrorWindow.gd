@@ -7,7 +7,11 @@ onready var _content: Label = get_node("VBoxContainer/LabelSpacePlaceholder/Labe
 
 func _ready() -> void:
 	var _error = _back_button.connect("pressed", self, "_on_back_button_pressed")
-	_error = self.connect("visibility_changed", self, "_on_visibility_changed")
+
+# OVERRIDE #
+func show() -> void:
+	_back_button.grab_focus()
+	.show()
 
 
 func set_title(title: String) -> void:
@@ -20,8 +24,3 @@ func set_content(content: String) -> void:
 
 func _on_back_button_pressed() -> void:
 	hide()
-
-
-func _on_visibility_changed() -> void:
-	if self.visible:
-		_back_button.grab_focus()
