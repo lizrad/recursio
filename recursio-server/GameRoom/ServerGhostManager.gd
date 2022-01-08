@@ -10,11 +10,19 @@ var _seperated_ghosts: Array = [[],[]]
 
 # previous deaths that could be relevant for current round
 var _previous_ghost_deaths: Array = []
-# deaths we recorded during the current round (will get added to above array after the round)
+# deaths we recorded during the current round(will get added to above array after the round)
 var _new_previous_ghost_death: Array = []
 # previous deaths are ordered by time so we only ever have to check one index 
 # and only after it's time has been reached, the following ones could be relevant
 var _current_ghost_death_index = 0
+
+var _raycast: RayCast
+
+func _ready() -> void:
+	_raycast = RayCast.new()
+	_raycast.cast_to = Vector3(0,0, -Constants.get_value("hitscan", "range"))
+	_raycast.enabled = false
+	add_child(_raycast)
 
 
 # OVERRIDE #
@@ -103,15 +111,39 @@ func _look_for_previous_death():
 			break
 
 
-func _apply_previous_death(death_data):
+func _apply_previous_death(death_data: DeathData):
 	var hit_data = death_data.hit_data
 	var victim_active = _is_ghost_active(hit_data.victim_team_id,hit_data.victim_round_index,hit_data.victim_timeline_index)
 	var perpetrator_active = _is_ghost_active(hit_data.perpetrator_team_id,hit_data.perpetrator_round_index,hit_data.perpetrator_timeline_index)
 	if victim_active and perpetrator_active:
-		var victim = _seperated_ghosts[hit_data.victim_team_id][hit_data.victim_timeline_index]
-		emit_signal("quiet_ghost_hit", hit_data)
-		victim.quiet_hit(hit_data)
+		if _is_hit_unobstructed(hit_data):
+			var victim = _seperated_ghosts[hit_data.victim_team_id][hit_data.victim_timeline_index]
+			emit_signal("quiet_ghost_hit", hit_data)
+			victim.quiet_hit(hit_data)
 
+func _is_hit_unobstructed(hit_data: HitData):
+	# Everthing except hitscan cannot be obstructred
+	if not hit_data.type == HitData.HitType.HITSCAN:
+		return true
+	var unobstructed = true
+	
+	_raycast.clear_exceptions()
+	_raycast.add_exception(_seperated_ghosts[hit_data.perpetrator_team_id][hit_data.perpetrator_timeline_index])
+	_raycast.global_transform.origin = hit_data.position
+	_raycast.rotation.y = hit_data.rotation
+	_raycast.enabled = true
+	_raycast.force_raycast_update()
+	var collider = _raycast.get_collider()
+	# Check if we hit a wall
+	if collider is Wall:
+		unobstructed = false
+	# Check if we hit another character
+	var character = collider.get_parent()
+	if collider.get_parent() is CharacterBase:
+		# at this point it is enough to just compare timeline index and team_id
+		if character.timeline_index != hit_data.victim_timeline_index or character.team_id != hit_data.victim_team_id:
+			unobstructed = false
+	return unobstructed
 
 func _clear_old_ghost_death_data(perpetrator_team_id, perpetrator_timeline_index, perpetrator_round_index):
 	var to_remove = []

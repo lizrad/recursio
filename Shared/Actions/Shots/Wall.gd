@@ -1,4 +1,5 @@
 extends StaticBody
+class_name Wall
 
 export var animation_time:= 3.0
 
