@@ -23,6 +23,7 @@ func _hit_body(collider):
 		assert(character.has_method("hit"))
 		character.hit(_create_hit_data(character, HitData.HitType.MELEE))
 
+# TODO: this function is duplicate among all damaging actions, a shared interface would be nice maybe
 func _create_hit_data(victim: CharacterBase, type) -> HitData:
 	var hit_data = HitData.new()
 	

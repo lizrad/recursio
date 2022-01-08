@@ -61,7 +61,7 @@ func handle_hit(collider):
 			and character.round_index < round_index:
 		character.hit(_create_hit_data(character, HitData.HitType.HITSCAN))
 
-
+# TODO: this function is duplicate among all damaging actions, a shared interface would be nice maybe
 func _create_hit_data(victim: CharacterBase, type) -> HitData:
 	var hit_data = HitData.new()
 	
