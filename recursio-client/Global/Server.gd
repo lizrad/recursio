@@ -293,7 +293,6 @@ remote func receive_game_result(winning_player_id):
 remote func receive_player_hit(hit_data_as_array: Array):
 	var hit_data = HitData.new().from_array(hit_data_as_array)
 	Logger.debug("Player hit received: " + str(hit_data.victim_team_id), "server")
-	print(hit_data.to_string())
 	emit_signal("player_hit", hit_data)
 
 
