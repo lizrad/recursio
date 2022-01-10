@@ -583,3 +583,5 @@ anims/sub_dash = SubResource( 8 )
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="AnimationDash"]
 stream = ExtResource( 9 )
+volume_db = -10.0
+bus = "Effects"
