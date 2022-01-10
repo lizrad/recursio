@@ -347,27 +347,28 @@ var modules = {}
 
 
 func put(level, message, module = default_module_name, error_code = -1):
-	"""Log a message in the given module with the given logging level."""
-	var module_ref = get_module(module)
-	var output_strategy = module_ref.get_output_strategy(level)
-	if output_strategy == STRATEGY_MUTE or module_ref.get_output_level() > level:
-		return  # Out of scope
+	#"""Log a message in the given module with the given logging level."""
+	#var module_ref = get_module(module)
+	#var output_strategy = module_ref.get_output_strategy(level)
+	#if output_strategy == STRATEGY_MUTE or module_ref.get_output_level() > level:
+	#	return  # Out of scope
 
-	var output = format(output_format, level, module, message, error_code)
+	#var output = format(output_format, level, module, message, error_code)
 
-	if output_strategy & STRATEGY_PRINT:
-		print(output)
+	#if output_strategy & STRATEGY_PRINT:
+	#	print(output)
 
-	if output_strategy & STRATEGY_EXTERNAL_SINK:
-		module_ref.get_external_sink().write(output, level)
+	#if output_strategy & STRATEGY_EXTERNAL_SINK:
+	#	module_ref.get_external_sink().write(output, level)
 
-	if output_strategy & STRATEGY_MEMORY:
-		memory_buffer[memory_idx] = output
-		memory_idx += 1
-		invalid_memory_cache = true
-		if memory_idx >= max_memory_size:
-			memory_idx = 0
-			memory_first_loop = false
+	#if output_strategy & STRATEGY_MEMORY:
+	#	memory_buffer[memory_idx] = output
+	#	memory_idx += 1
+	#	invalid_memory_cache = true
+	#	if memory_idx >= max_memory_size:
+	#		memory_idx = 0
+	#		memory_first_loop = false
+	pass
 
 
 # Helper functions for each level
