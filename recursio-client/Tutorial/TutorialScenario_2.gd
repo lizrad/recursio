@@ -197,29 +197,29 @@ func _completed_round_3() -> void:
 	_bottom_element.hide()
 
 
-func _on_player_hit(perpetrator):
-	_player.server_hit(perpetrator)
+func _on_player_hit(hit_data: HitData):
+	_player.server_hit(hit_data)
 
 
-func _on_enemy_hit(perpetrator):
-	_enemy.server_hit(perpetrator)
+func _on_enemy_hit(hit_data: HitData):
+	_enemy.server_hit(hit_data)
 
 
-func _on_ghost_hit(perpetrator, ghost):
+func _on_ghost_hit(hit_data: HitData, ghost):
 	if ghost is PlayerGhost:
 		ghost.toggle_visibility_light(false)
-	ghost.server_hit(perpetrator)
+	ghost.server_hit(hit_data)
 
 
-func _on_ghost_hit_soft_lock(perpetrator, ghost: PlayerGhost):	
+func _on_ghost_hit_soft_lock(hit_data: HitData, ghost: PlayerGhost):	
 	_soft_locked = true
 	
 	ghost.toggle_visibility_light(false)
-	ghost.server_hit(perpetrator)
+	ghost.server_hit(hit_data)
 	
 	add_post_process_exception(_bottom_element)
 	_bottom_element.show()
-	if perpetrator is Player:
+	if hit_data.perpetrator_team_id == _player.team_id:
 		_bottom_element.set_content("Oh no, you killed your previous timeline!\nTry using a melee attack next time.", TutorialUIBottomElement.Controls.None, true)
 	else:
 		_bottom_element.set_content("Oh no, you did not prevent the death of your previous timeline!", TutorialUIBottomElement.Controls.None, true)
@@ -243,7 +243,7 @@ func _on_ghost_hit_soft_lock(perpetrator, ghost: PlayerGhost):
 	_goal_element_1.show()
 	_goal_element_2.show()
 	_goal_element_2.set_content("Repeats", _ghost_manager._player_ghosts[0].get_body())
-	if perpetrator is Player:
+	if hit_data.perpetrator_team_id == _player.team_id:
 		_bottom_element.set_content("Melee!", TutorialUIBottomElement.Controls.Melee)
 		_goal_element_1.set_content("Kill", _ghost_manager._enemy_ghosts[0].get_body())
 	else:

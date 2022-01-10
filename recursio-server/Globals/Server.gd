@@ -147,19 +147,19 @@ func send_game_result(player_id, winning_player_id):
 	rpc_id(player_id, "receive_game_result", winning_player_id)
 
 
-func send_player_hit(player_id, victim_player_id, perpetrator_player_id, perpetrator_timeline_index):
+func send_player_hit(player_id, hit_data: HitData):
 	Logger.info("Sending player hit to client", "connection")
-	rpc_id(player_id, "receive_player_hit", victim_player_id, perpetrator_player_id, perpetrator_timeline_index)
+	rpc_id(player_id, "receive_player_hit", hit_data.to_array())
 
 
-func send_ghost_hit(player_id, victim_player_id, victim_timeline_index, perpetrator_player_id, perpetrator_timeline_index):
+func send_ghost_hit(player_id, hit_data):
 	Logger.info("Sending ghost hit to client", "connection")
-	rpc_id(player_id, "receive_ghost_hit", victim_player_id, victim_timeline_index, perpetrator_player_id, perpetrator_timeline_index)
+	rpc_id(player_id, "receive_ghost_hit", hit_data.to_array())
 
 
-func send_quiet_ghost_hit(player_id, victim_player_id, victim_timeline_index, perpetrator_player_id, perpetrator_timeline_index):
+func send_quiet_ghost_hit(player_id, hit_data):
 	Logger.info("Sending quiet ghost hit to client", "connection")
-	rpc_id(player_id, "receive_quiet_ghost_hit", victim_player_id, victim_timeline_index, perpetrator_player_id, perpetrator_timeline_index)
+	rpc_id(player_id, "receive_quiet_ghost_hit", hit_data.to_array())
 
 
 func send_timeline_pick(player_id, picking_player_id, timeline_index):

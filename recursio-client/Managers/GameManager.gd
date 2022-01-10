@@ -112,30 +112,30 @@ func _on_game_result(winning_player_index) -> void:
 			_game_end_screen.set_title("You Lost!")
 
 
-func _on_player_hit(hit_player_id, perpetrator_player_id, perpetrator_timeline_index) -> void:
-	if hit_player_id == _player.player_id:
+func _on_player_hit(hit_data: HitData) -> void:
+	if hit_data.victim_team_id == _player.team_id:
 		_player_deaths[_player.team_id] += 1
 	else:
 		_player_deaths[_enemy.team_id] += 1
-	_check_for_perpetrator(perpetrator_player_id, perpetrator_timeline_index)
+	_check_for_perpetrator(hit_data)
 
 
-func _on_ghost_hit(victim_player_id, _victim_timeline_index, perpetrator_player_id, perpetrator_timeline_index) -> void:
-	if victim_player_id == _player.player_id:
+func _on_ghost_hit(hit_data: HitData) -> void:
+	if hit_data.victim_team_id == _player.team_id:
 		_ghost_deaths[_player.team_id] += 1
 	else:
 		_ghost_deaths[_enemy.team_id] += 1
-	_check_for_perpetrator(perpetrator_player_id, perpetrator_timeline_index)
+	_check_for_perpetrator(hit_data)
 
 
-func _check_for_perpetrator(perpetrator_player_id, perpetrator_timeline_index) -> void:
-	if perpetrator_player_id == _player.player_id:
-		if perpetrator_timeline_index == _player.timeline_index:
+func _check_for_perpetrator(hit_data: HitData) -> void:
+	if hit_data.perpetrator_team_id == _player.team_id:
+		if hit_data.perpetrator_timeline_index == _player.timeline_index:
 			_player_kills[_player.team_id] += 1
 		else:
 			_ghost_kills[_player.team_id] += 1
 	else:
-		if perpetrator_timeline_index == _enemy.timeline_index:
+		if hit_data.perpetrator_timeline_index == _enemy.timeline_index:
 			_player_kills[_enemy.team_id] += 1
 		else:
 			_ghost_kills[_enemy.team_id] += 1

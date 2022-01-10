@@ -1,9 +1,9 @@
 extends Node
 class_name CharacterBase
 
-signal hit(perpetrator)
+signal hit(hit_data)
 #warning-ignore:unused_signal
-signal client_hit(perpetrator)
+signal client_hit(hit_data)
 signal dying()
 signal spawning()
 signal respawned()
@@ -120,16 +120,16 @@ func set_timeline_index(new_timeline_index: int):
 		timeline_index = new_timeline_index
 		emit_signal("timeline_index_changed", new_timeline_index)
 
-func hit(perpetrator) -> void:
+func hit(hit_data: HitData) -> void:
 	set_dying(true)
-	emit_signal("hit", perpetrator)
+	emit_signal("hit", hit_data)
 
 
 # quiet_hit is used to tell a character it is hit, without it triggering the hit signal
 # this is necessary because lots of gameplay functionality listens to hit (eg. recording 
 # of the death in the ghostmanager class) we do nott want this during special gameplay 
 # moments (for now only when a death is triggered by a previous death recording from the ghostmanager)
-func quiet_hit(_perpetrator) -> void:
+func quiet_hit(_hit_data: HitData) -> void:
 	set_dying(true)
 
 
