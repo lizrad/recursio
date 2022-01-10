@@ -128,6 +128,7 @@ func disconnect_from_server(quiet: bool = false):
 		# connection to the server before hand and then trying to 
 		# reconnect
 		_clock_update_timer = null
+	is_connection_active = false
 	if not quiet:
 		emit_signal("server_disconnected")
 
