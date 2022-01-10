@@ -2,7 +2,7 @@ extends Node
 class_name CharacterManager
 
 signal world_state_updated(world_state)
-signal player_killed(victim, perpetrator)
+signal player_killed(hit_data)
 
 var _player_scene = preload("res://Shared/Characters/PlayerBase.tscn")
 
@@ -78,7 +78,7 @@ func spawn_player(player_id, team_id, player_user_name) -> void:
 	player.team_id = team_id
 	player.spawn_point = spawn_point
 	add_child(player)
-	var _error = player.connect("hit", self, "_on_player_hit", [player_id])
+	var _error = player.connect("hit", self, "_on_player_hit")
 	_error =player.connect("wall_spawn", self, "_on_wall_spawn", [player_id])
 
 	# Triggering spawns of enemies on all clients
@@ -120,12 +120,11 @@ func _propagate_current_timelines(picking_player_id, propagate_to_picking_player
 			Server.send_timeline_pick(client_id, player_id, player_dic[player_id].timeline_index)
 
 
-func _on_player_hit(perpetrator, victim_player_id):
+func _on_player_hit(hit_data: HitData):
 	Logger.info("Player hit!", "attacking")
-	var victim = player_dic[victim_player_id]
-	emit_signal("player_killed", victim, perpetrator)
+	emit_signal("player_killed", hit_data)
 	for player_id in player_dic:
-		Server.send_player_hit(player_id, victim_player_id, perpetrator.player_id, perpetrator.timeline_index)
+		Server.send_player_hit(player_id, hit_data)
 
 func _on_wall_spawn(position, rotation, wall_index, player_id):
 	Server.send_wall_spawn(position, rotation, wall_index, player_id)

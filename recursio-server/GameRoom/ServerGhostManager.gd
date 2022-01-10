@@ -10,11 +10,19 @@ var _seperated_ghosts: Array = [[],[]]
 
 # previous deaths that could be relevant for current round
 var _previous_ghost_deaths: Array = []
-# deaths we recorded during the current round (will get added to above array after the round)
+# deaths we recorded during the current round(will get added to above array after the round)
 var _new_previous_ghost_death: Array = []
 # previous deaths are ordered by time so we only ever have to check one index 
 # and only after it's time has been reached, the following ones could be relevant
 var _current_ghost_death_index = 0
+
+var _raycast: RayCast
+
+func _ready() -> void:
+	_raycast = RayCast.new()
+	_raycast.cast_to = Vector3(0,0, -Constants.get_value("hitscan", "range"))
+	_raycast.enabled = false
+	add_child(_raycast)
 
 
 # OVERRIDE #
@@ -36,7 +44,7 @@ func _spawn_all_ghosts():
 			var spawn_point = _game_manager.get_spawn_point(team_id, timeline_index)
 			var player_id = _character_manager.team_id_to_player_id(team_id)
 			var ghost = _create_ghost(player_id, team_id, timeline_index, spawn_point, _ghost_scene)
-			ghost.connect("hit", self, "_on_ghost_hit", [ghost])
+			ghost.connect("hit", self, "_on_ghost_hit")
 			_seperated_ghosts[team_id].append(ghost)
 			_ghosts.append(ghost)
 
@@ -62,14 +70,14 @@ func _use_new_record_data():
 
 
 # OVERRIDE ABSTRACT #
-func _on_ghost_hit(perpetrator, victim):
-	_new_previous_ghost_death.append(_create_new_ghost_death_data(victim, perpetrator))
-	emit_signal("ghost_hit",victim.player_id, victim.timeline_index, perpetrator.player_id, perpetrator.timeline_index)
+func _on_ghost_hit(hit_data: HitData):
+	_new_previous_ghost_death.append(_create_new_ghost_death_data(hit_data))
+	emit_signal("ghost_hit", hit_data)
 
 
-func _on_player_killed(victim, perpetrator):
+func _on_player_killed(hit_data):
 	#when an active player is killed we also have to create a ghost death so the death is fixed for the following rounds
-	_new_previous_ghost_death.append(_create_new_ghost_death_data(victim, perpetrator))
+	_new_previous_ghost_death.append(_create_new_ghost_death_data(hit_data))
 
 
 func _is_ghost_active(team_id, round_index, timeline_index):
@@ -102,39 +110,56 @@ func _look_for_previous_death():
 			break
 
 
-func _apply_previous_death(ghost_death_data):
-	var victim_active = _is_ghost_active(ghost_death_data.victim_team_id,ghost_death_data.victim_round_index,ghost_death_data.victim_timeline_index)
-	var perpetrator_active = _is_ghost_active(ghost_death_data.perpetrator_team_id,ghost_death_data.perpetrator_round_index,ghost_death_data.perpetrator_timeline_index)
+func _apply_previous_death(death_data: DeathData):
+	var hit_data = death_data.hit_data
+	var victim_active = _is_ghost_active(hit_data.victim_team_id,hit_data.victim_round_index,hit_data.victim_timeline_index)
+	var perpetrator_active = _is_ghost_active(hit_data.perpetrator_team_id,hit_data.perpetrator_round_index,hit_data.perpetrator_timeline_index)
 	if victim_active and perpetrator_active:
-		var victim = _seperated_ghosts[ghost_death_data.victim_team_id][ghost_death_data.victim_timeline_index]
-		var perpetrator = _seperated_ghosts[ghost_death_data.perpetrator_team_id][ghost_death_data.perpetrator_timeline_index]
-		emit_signal("quiet_ghost_hit", victim.player_id, victim.timeline_index, perpetrator.player_id, perpetrator.timeline_index)
-		victim.quiet_hit(perpetrator)
+		if _is_hit_unobstructed(hit_data):
+			var victim = _seperated_ghosts[hit_data.victim_team_id][hit_data.victim_timeline_index]
+			emit_signal("quiet_ghost_hit", hit_data)
+			victim.quiet_hit(hit_data)
 
+func _is_hit_unobstructed(hit_data: HitData):
+	# Everthing except hitscan cannot be obstructred
+	if not hit_data.type == HitData.HitType.HITSCAN:
+		return true
+	var unobstructed = true
+	
+	_raycast.clear_exceptions()
+	_raycast.add_exception(_seperated_ghosts[hit_data.perpetrator_team_id][hit_data.perpetrator_timeline_index])
+	_raycast.global_transform.origin = hit_data.position
+	_raycast.rotation.y = hit_data.rotation
+	_raycast.enabled = true
+	_raycast.force_raycast_update()
+	var collider = _raycast.get_collider()
+	# Check if we hit a wall
+	if collider is Wall:
+		unobstructed = false
+	# Check if we hit another character
+	var character = collider.get_parent()
+	if collider.get_parent() is CharacterBase:
+		# at this point it is enough to just compare timeline index and team_id
+		if character.timeline_index != hit_data.victim_timeline_index or character.team_id != hit_data.victim_team_id:
+			unobstructed = false
+	return unobstructed
 
 func _clear_old_ghost_death_data(perpetrator_team_id, perpetrator_timeline_index, perpetrator_round_index):
 	var to_remove = []
-	for data in _previous_ghost_deaths:
-		if data.perpetrator_team_id == perpetrator_team_id and data.perpetrator_timeline_index == perpetrator_timeline_index:
-			if data.perpetrator_round_index < perpetrator_round_index:
-				to_remove.append(data)
-	for data in to_remove:
-		_previous_ghost_deaths.erase(data)
+	for death_data in _previous_ghost_deaths:
+		var hit_data = death_data.hit_data
+		if hit_data.perpetrator_team_id == perpetrator_team_id and hit_data.perpetrator_timeline_index == perpetrator_timeline_index:
+			if hit_data.perpetrator_round_index < perpetrator_round_index:
+				to_remove.append(death_data)
+	for death_data in to_remove:
+		_previous_ghost_deaths.erase(death_data)
 
 
-func _create_new_ghost_death_data(victim, perpetrator):
-	var ghost_data = GhostDeathData.new()
+func _create_new_ghost_death_data(hit_data: HitData):
+	var ghost_data = DeathData.new()
 	
 	ghost_data.time = _server.get_server_time()-_game_phase_start_time
-
-	ghost_data.victim_team_id = victim.team_id
-	ghost_data.victim_round_index = victim.round_index
-	ghost_data.victim_timeline_index = victim.timeline_index
-
-	ghost_data.perpetrator_team_id = perpetrator.team_id
-	ghost_data.perpetrator_round_index = perpetrator.round_index
-	ghost_data.perpetrator_timeline_index = perpetrator.timeline_index
-	
+	ghost_data.hit_data = hit_data
 	return ghost_data
 
 

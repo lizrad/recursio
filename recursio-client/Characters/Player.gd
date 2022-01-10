@@ -350,13 +350,13 @@ func toggle_visibility_light(value: bool):
 
 # OVERRIDE #
 # Only emit signal for client
-func hit(perpetrator):
-	emit_signal("client_hit", perpetrator)
+func hit(hit_data: HitData):
+	emit_signal("client_hit", hit_data)
 
 
 # call hit of baseclass triggered by server
-func server_hit(perpetrator):
-	.hit(perpetrator)
+func server_hit(hit_data: HitData):
+	.hit(hit_data)
 
 # TODO: this should probably not be in player.gd, but I don't really know where else to put it
 func get_camera():
