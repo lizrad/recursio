@@ -14,7 +14,7 @@ onready var _btn_leave: Button = get_node("Content/BottomBar/Btn_Leave")
 
 
 onready var _level_names = [
-	"H",
+	"|---|",
 	"|- -|"
 ]
 

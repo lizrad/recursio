@@ -4,6 +4,11 @@ const PLAYER_MAX_COUNT = 2
 
 var fog_of_war_enabled: bool = true
 
+onready var level_scenes = [
+	preload("res://Shared/Level/LevelH.tscn"),
+	preload("res://Shared/Level/LevelHGap.tscn")
+]
+
 var config
 
 func _init():

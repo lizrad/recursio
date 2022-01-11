@@ -37,12 +37,6 @@ onready var _stats_hud = get_node("../StatsHUD")
 onready var _gameplay_menu = get_node("../GameplayMenu")
 
 
-onready var _level_scenes = [
-	preload("res://Shared/Level/LevelH.tscn"),
-	preload("res://Shared/Level/LevelHGap.tscn")
-]
-
-
 var _player_user_name: String
 var _player_rpc_id: int
 
@@ -318,7 +312,7 @@ func _on_load_level_received():
 	_enter_game()
 	$CenterContainer.hide()
 	_world = world_scene.instance()
-	var level = _level_scenes[_game_room_lobby.selected_level_index].instance()
+	var level = Constants.level_scenes[_game_room_lobby.selected_level_index].instance()
 	level.capture_point_scene = capture_point_scene
 	add_child(_world)
 	level.spawn_point_scene = spawn_point_scene

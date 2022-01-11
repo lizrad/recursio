@@ -12,10 +12,6 @@ var id: int
 
 onready var _server = get_node("/root/Server")
 
-onready var level_scenes = [
-	preload("res://Shared/Level/LevelH.tscn"),
-	preload("res://Shared/Level/LevelHGap.tscn")
-]
 
 var _selected_level_index: int = 0
 var _fog_of_war_enabled: bool = true
@@ -74,7 +70,7 @@ func spawn_world():
 	_game_room_world = game_room_world_scene.instance()
 	self.add_child(_game_room_world)
 	_game_room_world_exists = true
-	var level = level_scenes[_selected_level_index].instance()
+	var level = Constants.level_scenes[_selected_level_index].instance()
 	level.capture_point_scene = capture_point_scene
 	_game_room_world.add_child(level)
 	_game_room_world.set_level(level)
