@@ -164,10 +164,13 @@ func update_fire_action_ammo(amount: int) -> void:
 	_ammo.text = str(amount)
 
 	# mark ammo ui red -> is reset to weapon depending color in update_weapon_type
-	if amount < 1:
-		var color_name = "negative"
-		ColorManager.color_object_by_property(color_name, _ammo, "custom_colors/font_color")
-		ColorManager.color_object_by_property(color_name, _ammo_type_bg, "modulate")
+	var color_name = "positive"
+	
+	if amount == 0:
+		color_name = "negative"
+	
+	ColorManager.color_object_by_property(color_name, _ammo, "custom_colors/font_color")
+	ColorManager.color_object_by_property(color_name, _ammo_type_bg, "modulate")
 
 	# only don't interfere with other animations
 	if not $AnimationShoot.is_playing() or $AnimationShoot.current_animation == "sub_ammo":
@@ -214,7 +217,7 @@ func update_special_movement_ammo(amount: int) -> void:
 func update_weapon_type(max_ammo, img_bullet, color_name: String) -> void:
 	Logger.info("Update ammo type", "HUD")
 	ColorManager.color_object_by_property("positive", _ammo, "custom_colors/font_color")
-	ColorManager.color_object_by_property(color_name, _ammo_type_bg, "modulate")
+	ColorManager.color_object_by_property(color_name, _ammo_type_bg, "self_modulate")
 	_ammo_type.texture = img_bullet
 	_ammo.text = str(max_ammo)
 
