@@ -7,7 +7,7 @@ onready var _name: Label = get_node("AspectRatioContainer/Control/TextureRect/Ca
 onready var _progress_bar: TextureProgress = get_node("AspectRatioContainer/TextureProgress")
 onready var _background: TextureRect = get_node("AspectRatioContainer/Control/TextureRect")
 
-onready var neutral_color_name = "neutral"
+onready var neutral_color_name = "default"
 onready var player_color_name = "player_main"
 onready var enemy_color_name = "enemy_main"
 
