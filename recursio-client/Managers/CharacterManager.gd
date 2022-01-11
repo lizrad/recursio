@@ -342,7 +342,7 @@ func _toggle_visbility_lights(value: bool):
 func _apply_visibility_mask(character) -> void:
 	if not _player:
 		return
-	if Constants.get_value("visibility","use_visibility"):
+	if Constants.fog_of_war_enabled:
 		character.get_node("KinematicBody/CharacterModel").set_shader_param("always_draw", false)
 		character.get_node("KinematicBody/CharacterModel").set_shader_param("visibility_mask", _player.get_visibility_mask())
 		if character.has_node("KinematicBody/MiniMapIcon"):

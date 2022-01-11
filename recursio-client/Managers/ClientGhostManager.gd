@@ -166,7 +166,7 @@ func _visual_kill_ghosts() -> void:
 	for ghost in _player_ghosts:
 		ghost.visual_kill()
 	# if ghosts are hidden we dont want to produce visible vfx here
-	if not Constants.get_value("visibility","use_visibility"):
+	if not Constants.fog_of_war_enabled:
 		for ghost in _enemy_ghosts:
 			ghost.visual_kill()
 
@@ -175,7 +175,7 @@ func _visual_delay_spawn_ghosts(delay) -> void:
 	for ghost in _player_ghosts:
 		ghost.visual_delayed_spawn(delay)
 	# if ghosts are hidden we dont want to produce visible vfx here
-	if not Constants.get_value("visibility","use_visibility"):
+	if not Constants.fog_of_war_enabled:
 		for ghost in _enemy_ghosts:
 			ghost.visual_delayed_spawn(delay)
 

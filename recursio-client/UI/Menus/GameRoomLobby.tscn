@@ -1,0 +1,165 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://Resources/Icons/icon_ready.png" type="Texture" id=1]
+[ext_resource path="res://UI/Menus/GameRoomLobby.gd" type="Script" id=2]
+[ext_resource path="res://UI/SoundButton.gd" type="Script" id=3]
+[ext_resource path="res://Resources/Icons/icon_not_ready.png" type="Texture" id=4]
+[ext_resource path="res://icon.png" type="Texture" id=5]
+
+[node name="GameRoomLobby" type="PanelContainer"]
+margin_left = 953.0
+margin_top = 533.0
+margin_right = 967.0
+margin_bottom = 547.0
+rect_min_size = Vector2( 500, 300 )
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+icon_ready = ExtResource( 1 )
+icon_not_ready = ExtResource( 4 )
+
+[node name="Content" type="VBoxContainer" parent="."]
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 559.0
+margin_bottom = 293.0
+
+[node name="TopBar" type="VBoxContainer" parent="Content"]
+margin_right = 552.0
+margin_bottom = 14.0
+
+[node name="GameRoomName" type="Label" parent="Content/TopBar"]
+margin_right = 552.0
+margin_bottom = 14.0
+text = "Room1"
+align = 1
+
+[node name="Space" type="Control" parent="Content"]
+margin_top = 18.0
+margin_right = 552.0
+margin_bottom = 38.0
+rect_min_size = Vector2( 0, 20 )
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Content"]
+margin_top = 42.0
+margin_right = 552.0
+margin_bottom = 238.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="PlayerList" type="ItemList" parent="Content/HBoxContainer"]
+margin_right = 400.0
+margin_bottom = 196.0
+rect_min_size = Vector2( 400, 0 )
+focus_mode = 0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+fixed_icon_size = Vector2( 60, 15 )
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Content/HBoxContainer"]
+margin_left = 404.0
+margin_right = 552.0
+margin_bottom = 196.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="LevelPreview" type="TextureRect" parent="Content/HBoxContainer/VBoxContainer"]
+margin_right = 148.0
+margin_bottom = 128.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture = ExtResource( 5 )
+expand = true
+stretch_mode = 6
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Content/HBoxContainer/VBoxContainer"]
+margin_top = 132.0
+margin_right = 148.0
+margin_bottom = 152.0
+
+[node name="Label" type="Label" parent="Content/HBoxContainer/VBoxContainer/HBoxContainer2"]
+margin_top = 3.0
+margin_right = 72.0
+margin_bottom = 17.0
+size_flags_horizontal = 3
+text = "Level:"
+valign = 1
+
+[node name="LevelList" type="OptionButton" parent="Content/HBoxContainer/VBoxContainer/HBoxContainer2"]
+margin_left = 76.0
+margin_right = 148.0
+margin_bottom = 20.0
+focus_neighbour_bottom = NodePath("../../HBoxContainer/FogOfWarToggle")
+focus_previous = NodePath("../../HBoxContainer/FogOfWarToggle")
+size_flags_horizontal = 3
+size_flags_vertical = 3
+disabled = true
+text = "H"
+align = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Content/HBoxContainer/VBoxContainer"]
+margin_top = 156.0
+margin_right = 148.0
+margin_bottom = 196.0
+
+[node name="Label" type="Label" parent="Content/HBoxContainer/VBoxContainer/HBoxContainer"]
+margin_top = 13.0
+margin_right = 68.0
+margin_bottom = 27.0
+size_flags_horizontal = 3
+text = "Fog of war:"
+
+[node name="FogOfWarToggle" type="CheckButton" parent="Content/HBoxContainer/VBoxContainer/HBoxContainer"]
+margin_left = 72.0
+margin_right = 148.0
+margin_bottom = 40.0
+focus_neighbour_top = NodePath("../../HBoxContainer2/LevelList")
+focus_neighbour_bottom = NodePath("../../../../BottomBar/Btn_Leave")
+focus_next = NodePath("../../HBoxContainer2/LevelList")
+focus_previous = NodePath("../../../../BottomBar/Btn_Leave")
+disabled = true
+pressed = true
+
+[node name="Space2" type="Control" parent="Content"]
+margin_top = 242.0
+margin_right = 552.0
+margin_bottom = 262.0
+rect_min_size = Vector2( 0, 20 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="BottomBar" type="HBoxContainer" parent="Content"]
+margin_top = 266.0
+margin_right = 552.0
+margin_bottom = 286.0
+
+[node name="Btn_Ready" type="Button" parent="Content/BottomBar"]
+margin_right = 50.0
+margin_bottom = 20.0
+focus_neighbour_right = NodePath("../Btn_Leave")
+focus_next = NodePath("../Btn_Leave")
+shortcut_in_tooltip = false
+text = "Ready"
+script = ExtResource( 3 )
+
+[node name="Space" type="Control" parent="Content/BottomBar"]
+margin_left = 54.0
+margin_right = 499.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+
+[node name="Btn_Leave" type="Button" parent="Content/BottomBar"]
+margin_left = 503.0
+margin_right = 552.0
+margin_bottom = 20.0
+focus_neighbour_left = NodePath("../Btn_Ready")
+focus_neighbour_top = NodePath("../../HBoxContainer/VBoxContainer/HBoxContainer/FogOfWarToggle")
+focus_neighbour_right = NodePath("../Btn_Ready")
+focus_next = NodePath("../../HBoxContainer/VBoxContainer/HBoxContainer/FogOfWarToggle")
+focus_previous = NodePath("../Btn_Ready")
+shortcut_in_tooltip = false
+text = "Leave"
+script = ExtResource( 3 )
+sound_type = 1

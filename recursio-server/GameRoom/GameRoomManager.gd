@@ -34,6 +34,10 @@ func _ready():
 	
 	_server.connect("leave_game_received", self, "_on_leave_game_received")
 	
+	_server.connect("get_game_room_owner_received", self, "_on_get_game_room_owner")
+	_server.connect("level_selected_received", self, "_on_level_selected")
+	_server.connect("fog_of_war_toggled_received", self, "_on_fog_of_war_toggled")
+	
 	if _debug_room:
 		var _game_room_id = _create_game_room("GameRoom")
 
@@ -75,6 +79,11 @@ func _join_game_room(player_id: int, game_room_id: int, player_user_name: String
 			return;
 		
 		game_room.add_player(player_id, player_user_name)
+		
+		if player_id != game_room.get_owning_player_id():
+			_server.send_level_selected(player_id, game_room.get_selected_level_index())
+			_server.send_fog_of_war_toggled(player_id, game_room.get_fog_of_war_enabled())
+		
 		_player_game_room_dic[player_id] = game_room_id
 		_update_game_room_on_client(game_room)
 
@@ -89,6 +98,10 @@ func _leave_game_room(player_id: int, game_room_id: int) -> void:
 		else:
 			if game_room.get_game_room_world_exists():
 				game_room.despawn_world()
+			
+			var remaining_player_id = game_room.get_game_room_players().keys().front()
+			game_room.set_owning_player(remaining_player_id)
+			_server.send_game_room_owner(remaining_player_id, remaining_player_id)
 			_update_game_room_on_client(game_room)
 
 
@@ -203,3 +216,25 @@ func _on_leave_game_received(player_left_id):
 		_update_game_room_on_client(game_room)
 		for player_id in player_dic:
 			_server.send_player_left_game(player_id, player_left_id)
+
+
+func _on_get_game_room_owner(client_id) -> void:
+	var game_room: GameRoom = _game_room_dic[_player_game_room_dic[client_id]]
+	_server.send_game_room_owner(client_id, game_room.get_owning_player_id())
+
+
+func _on_level_selected(player_id, level_index) -> void:
+	var game_room: GameRoom = _game_room_dic[_player_game_room_dic[player_id]]
+	game_room.set_selected_level(level_index)
+	for client_id in game_room.get_game_room_players():
+		_server.send_level_selected(client_id, level_index)
+
+
+func _on_fog_of_war_toggled(player_id, is_fog_of_war_enabled) -> void:
+	var game_room: GameRoom = _game_room_dic[_player_game_room_dic[player_id]]
+	game_room.set_fog_of_war_enabled(is_fog_of_war_enabled)
+	for client_id in game_room.get_game_room_players():
+		_server.send_fog_of_war_toggled(client_id, is_fog_of_war_enabled)
+
+
+

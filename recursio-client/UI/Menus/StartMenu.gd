@@ -4,7 +4,6 @@ class_name StartMenu
 const REMOTE_SERVER_IP: String = "37.252.189.118"
 
 export var world_scene: PackedScene
-export var level_scene: PackedScene
 export var capture_point_scene: PackedScene
 export var spawn_point_scene: PackedScene
 
@@ -36,6 +35,7 @@ onready var _random_names = TextFileToArray.load_text_file("res://Resources/Data
 
 onready var _stats_hud = get_node("../StatsHUD")
 onready var _gameplay_menu = get_node("../GameplayMenu")
+
 
 var _player_user_name: String
 var _player_rpc_id: int
@@ -82,6 +82,10 @@ func _ready():
 	
 	_error = Server.connect("player_disconnected_received", self, "_on_player_disconnected")
 	_error = Server.connect("player_left_game_received", self, "_on_player_left_game")
+	
+	_error = Server.connect("game_room_owner_received", self, "_on_game_room_owner_received")
+	_error = Server.connect("level_selected_received", self, "_on_level_selected_received")
+	_error = Server.connect("fog_of_war_toggle_received", self, "_on_fog_of_war_toggled")
 	
 	_error = _tutorial.connect("scenario_started", self, "_on_tutorial_scenario_started")
 	_error = _tutorial.connect("scenario_completed", self, "_on_tutorial_scenario_completed")
@@ -274,6 +278,8 @@ func _on_game_room_joined(player_id_name_dic, game_room_id):
 
 	_in_game_room = true
 	
+	Server.send_get_game_room_owner()
+	
 	_game_room_creation.hide()
 	_game_room_search.hide()
 	_game_room_lobby.show()
@@ -306,7 +312,7 @@ func _on_load_level_received():
 	_enter_game()
 	$CenterContainer.hide()
 	_world = world_scene.instance()
-	var level = level_scene.instance()
+	var level = Constants.level_scenes[_game_room_lobby.selected_level_index].instance()
 	level.capture_point_scene = capture_point_scene
 	add_child(_world)
 	level.spawn_point_scene = spawn_point_scene
@@ -379,3 +385,19 @@ func _on_player_disconnected(player_id) -> void:
 	if player_id != _player_rpc_id:
 		_error_window.set_content("Opponent disconnected! The game will be terminated.")
 		_error_window.show()
+
+
+func _on_game_room_owner_received(player_id) -> void:
+	if _game_room_lobby.visible:
+		_game_room_lobby.set_is_owner(player_id == _player_rpc_id)
+
+
+func _on_level_selected_received(level_index) -> void:
+	_game_room_lobby.set_selected_level(level_index)
+	_game_room_lobby.enable_ready_button()
+
+
+func _on_fog_of_war_toggled(is_fog_of_war_enabled) -> void:
+	_game_room_lobby.set_fog_of_war(is_fog_of_war_enabled)
+	_game_room_lobby.enable_ready_button()
+	
