@@ -98,10 +98,10 @@ func _leave_game_room(player_id: int, game_room_id: int) -> void:
 		else:
 			if game_room.get_game_room_world_exists():
 				game_room.despawn_world()
-			else:
-				var remaining_player_id = game_room.get_game_room_players().keys().front()
-				game_room.set_owning_player(remaining_player_id)
-				_server.send_game_room_owner(remaining_player_id, remaining_player_id)
+			
+			var remaining_player_id = game_room.get_game_room_players().keys().front()
+			game_room.set_owning_player(remaining_player_id)
+			_server.send_game_room_owner(remaining_player_id, remaining_player_id)
 			_update_game_room_on_client(game_room)
 
 
