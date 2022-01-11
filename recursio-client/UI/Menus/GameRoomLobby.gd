@@ -110,6 +110,7 @@ func set_selected_level(level_index: int) -> void:
 
 func set_fog_of_war(is_enabled: bool) -> void:
 	reset_players()
+	Constants.fog_of_war_enabled = is_enabled
 	_fog_of_war.pressed = is_enabled
 	_waiting_for_fog_of_war_select = false
 

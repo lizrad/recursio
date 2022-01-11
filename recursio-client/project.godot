@@ -164,7 +164,7 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://Shared/Input/InputData.gd"
 }, {
-"base": "Reference",
+"base": "Object",
 "class": "InputFrame",
 "language": "GDScript",
 "path": "res://Shared/Input/InputFrame.gd"
@@ -214,17 +214,17 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://Characters/PlayerGhost.gd"
 }, {
-"base": "Reference",
+"base": "Object",
 "class": "PlayerState",
 "language": "GDScript",
 "path": "res://Shared/Player/PlayerState.gd"
 }, {
-"base": "Reference",
+"base": "Object",
 "class": "RecordData",
 "language": "GDScript",
 "path": "res://Shared/Recording/RecordData.gd"
 }, {
-"base": "Reference",
+"base": "Object",
 "class": "RecordFrame",
 "language": "GDScript",
 "path": "res://Shared/Recording/RecordFrame.gd"
@@ -234,7 +234,7 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://Shared/Recording/RecordManager.gd"
 }, {
-"base": "Reference",
+"base": "Object",
 "class": "RingBuffer",
 "language": "GDScript",
 "path": "res://Shared/Input/Ringbuffer.gd"
@@ -319,7 +319,7 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://Shared/Actions/Shots/Wall.gd"
 }, {
-"base": "Reference",
+"base": "Object",
 "class": "WorldState",
 "language": "GDScript",
 "path": "res://Shared/Player/WorldState.gd"
