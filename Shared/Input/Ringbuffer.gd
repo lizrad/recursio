@@ -1,4 +1,4 @@
-extends Object
+extends Reference
 
 # Uses an array internally
 # Removes the first (oldest) element when over max size

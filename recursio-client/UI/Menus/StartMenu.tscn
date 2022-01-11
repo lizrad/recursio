@@ -1,14 +1,11 @@
-[gd_scene load_steps=34 format=2]
+[gd_scene load_steps=31 format=2]
 
 [ext_resource path="res://UI/Menus/StartMenu.gd" type="Script" id=1]
 [ext_resource path="res://UI/Menus/GameRooms/GameRoomCreation.gd" type="Script" id=2]
-[ext_resource path="res://Resources/Icons/icon_ready.png" type="Texture" id=3]
+[ext_resource path="res://UI/Menus/GameRoomLobby.tscn" type="PackedScene" id=3]
 [ext_resource path="res://UI/Menus/GameRooms/GameRoomSearch.gd" type="Script" id=4]
-[ext_resource path="res://UI/Menus/GameRoomLobby.gd" type="Script" id=5]
-[ext_resource path="res://Resources/Icons/icon_not_ready.png" type="Texture" id=6]
 [ext_resource path="res://World.tscn" type="PackedScene" id=7]
 [ext_resource path="res://UI/Menus/SettingsMenu.tscn" type="PackedScene" id=8]
-[ext_resource path="res://Shared/Level/LevelH.tscn" type="PackedScene" id=9]
 [ext_resource path="res://Level/ClientCapturePoint.tscn" type="PackedScene" id=10]
 [ext_resource path="res://addons/ascii-shader/character_map.png" type="Texture" id=11]
 [ext_resource path="res://UI/Default.tres" type="Theme" id=12]
@@ -140,7 +137,6 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 world_scene = ExtResource( 7 )
-level_scene = ExtResource( 9 )
 capture_point_scene = ExtResource( 10 )
 spawn_point_scene = ExtResource( 21 )
 
@@ -410,93 +406,12 @@ text = "Back"
 script = ExtResource( 27 )
 sound_type = 1
 
-[node name="GameRoomLobby" type="PanelContainer" parent="StartMenu/CenterContainer"]
+[node name="GameRoomLobby" parent="StartMenu/CenterContainer" instance=ExtResource( 3 )]
 visible = false
-margin_left = 953.0
-margin_top = 533.0
-margin_right = 967.0
-margin_bottom = 547.0
-script = ExtResource( 5 )
-icon_ready = ExtResource( 3 )
-icon_not_ready = ExtResource( 6 )
-
-[node name="Content" type="VBoxContainer" parent="StartMenu/CenterContainer/GameRoomLobby"]
-margin_left = 7.0
-margin_top = 7.0
-margin_right = 507.0
-margin_bottom = 421.0
-
-[node name="TopBar" type="VBoxContainer" parent="StartMenu/CenterContainer/GameRoomLobby/Content"]
-margin_right = 500.0
-margin_bottom = 26.0
-
-[node name="GameRoomName" type="Label" parent="StartMenu/CenterContainer/GameRoomLobby/Content/TopBar"]
-margin_right = 500.0
-margin_bottom = 26.0
-text = "Room1"
-align = 1
-
-[node name="Space" type="Control" parent="StartMenu/CenterContainer/GameRoomLobby/Content"]
-margin_top = 30.0
-margin_right = 500.0
-margin_bottom = 50.0
-rect_min_size = Vector2( 0, 20 )
-
-[node name="PlayerList" type="ItemList" parent="StartMenu/CenterContainer/GameRoomLobby/Content"]
-margin_top = 54.0
-margin_right = 500.0
-margin_bottom = 354.0
-rect_min_size = Vector2( 500, 300 )
-focus_mode = 0
-fixed_icon_size = Vector2( 60, 15 )
-
-[node name="Space2" type="Control" parent="StartMenu/CenterContainer/GameRoomLobby/Content"]
-margin_top = 358.0
-margin_right = 500.0
-margin_bottom = 378.0
-rect_min_size = Vector2( 0, 20 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="BottomBar" type="HBoxContainer" parent="StartMenu/CenterContainer/GameRoomLobby/Content"]
-margin_top = 382.0
-margin_right = 500.0
-margin_bottom = 414.0
-
-[node name="Btn_Ready" type="Button" parent="StartMenu/CenterContainer/GameRoomLobby/Content/BottomBar"]
-margin_right = 72.0
-margin_bottom = 32.0
-focus_neighbour_left = NodePath("../Btn_Leave")
-focus_neighbour_top = NodePath("../Btn_Leave")
-focus_neighbour_right = NodePath("../Btn_Leave")
-focus_neighbour_bottom = NodePath("../Btn_Leave")
-focus_next = NodePath("../Btn_Leave")
-focus_previous = NodePath("../Btn_Leave")
-shortcut_in_tooltip = false
-text = "Ready"
-script = ExtResource( 27 )
-
-[node name="Space" type="Control" parent="StartMenu/CenterContainer/GameRoomLobby/Content/BottomBar"]
-margin_left = 76.0
-margin_right = 424.0
-margin_bottom = 32.0
-size_flags_horizontal = 3
-
-[node name="Btn_Leave" type="Button" parent="StartMenu/CenterContainer/GameRoomLobby/Content/BottomBar"]
-margin_left = 428.0
-margin_right = 500.0
-margin_bottom = 32.0
-focus_neighbour_left = NodePath("../Btn_Ready")
-focus_neighbour_top = NodePath("../Btn_Ready")
-focus_neighbour_right = NodePath("../Btn_Ready")
-focus_neighbour_bottom = NodePath("../Btn_Ready")
-focus_next = NodePath("../Btn_Ready")
-focus_previous = NodePath("../Btn_Ready")
-shortcut_in_tooltip = false
-text = "Leave"
-script = ExtResource( 27 )
-sound_type = 1
+margin_left = 710.0
+margin_top = 390.0
+margin_right = 1210.0
+margin_bottom = 690.0
 
 [node name="SettingsContainer" parent="StartMenu/CenterContainer" instance=ExtResource( 8 )]
 

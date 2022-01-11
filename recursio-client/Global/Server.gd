@@ -57,6 +57,9 @@ signal game_room_joined(player_id_name_dic, game_room_id)
 signal game_room_ready_received(player_id)
 signal game_room_not_ready_received(player_id)
 signal load_level_received()
+signal level_selected_received(level_index)
+signal game_room_owner_received(player_index)
+signal fog_of_war_toggle_received(is_fog_of_war_enabled)
 
 #######################
 #### Gameplay Menu ####
@@ -389,6 +392,36 @@ remote func receive_load_level():
 func send_level_loaded():
 	Logger.info("Send level loaded", "room_management")
 	rpc_id(1, "receive_level_loaded")
+
+
+func send_get_game_room_owner() -> void:
+	Logger.info("Send get game room owner", "room_management")
+	rpc_id(1, "receive_get_game_room_owner")
+
+
+remote func receive_get_game_room_owner(player_id: int) -> void:
+	Logger.info("Receive game room owner", "room_management")
+	emit_signal("game_room_owner_received", player_id)
+
+
+func send_level_selected(level_index: int) -> void:
+	Logger.info("Send level selected", "room_management")
+	rpc_id(1, "receive_level_selected", level_index)
+
+
+remote func receive_level_selected(level_index: int) -> void:
+	Logger.info("Receive level selected", "room_management")
+	emit_signal("level_selected_received", level_index)
+
+
+func send_fog_of_war_toggled(is_fog_of_war_enabled: bool) -> void:
+	Logger.info("Send toggle fog of war", "room_management")
+	rpc_id(1, "receive_fog_of_war_toggled", is_fog_of_war_enabled)
+
+
+remote func receive_fog_of_war_toggled(is_fog_of_war_enabled: bool) -> void:
+	Logger.info("Receive fog of war toggled", "room_management")
+	emit_signal("fog_of_war_toggle_received", is_fog_of_war_enabled)
 
 
 #######################

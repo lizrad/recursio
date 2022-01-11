@@ -1,7 +1,7 @@
  extends PanelContainer
 class_name ErrorWindow
 
-onready var _back_button: SoundButton = get_node("VBoxContainer/BackButton")
+onready var _back_button = get_node("VBoxContainer/BackButton")
 onready var _title: Label = get_node("VBoxContainer/Header")
 onready var _content: Label = get_node("VBoxContainer/LabelSpacePlaceholder/Label")
 
