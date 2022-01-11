@@ -56,11 +56,24 @@ func get_current_phase_time_left():
 	return (_phase_deadline - server.get_server_time())
 
 
+func get_current_phase_time():
+	match get_current_phase():
+		Phases.PREPARATION:
+			return  _preparation_phase_time * 1000
+		Phases.COUNTDOWN:
+			return _countdown_phase_time * 1000
+		Phases.GAME:
+			return _game_phase_time * 1000
+	return -1
+
+
 func get_deadline():
 	return _phase_deadline
 
 
 func get_current_phase() -> int:
+	if _current_phase_index == -1:
+		return Phases.NONE
 	return _phase_order[_current_phase_index]
 
 

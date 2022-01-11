@@ -58,8 +58,9 @@ func set_level(level: Node):
 func pre_game_setup():
 	_ghost_manager.init(_game_manager,_round_manager,_action_manager, _character_manager)
 
-func start_game():
+func start_game(level: Level):
 	_game_manager.start_game()
+	level.set_round_manager(_round_manager)
 	_round_manager.future_start_game(_server.get_server_time())
 
 

@@ -97,7 +97,7 @@ func spawn_world():
 		
 	yield(get_tree().create_timer(game_warm_up), "timeout")
 	if _game_room_world != null:
-		_game_room_world.start_game()
+		_game_room_world.start_game(level)
 
 
 func despawn_world():

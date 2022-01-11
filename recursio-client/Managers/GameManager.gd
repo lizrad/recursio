@@ -45,6 +45,7 @@ func set_player(player: Player)  -> void:
 	_player = player
 	_level.show_spawn_point_weapon_type(_player.team_id)
 	_level.set_team_id(_player.team_id)
+	_level.set_round_manager(_round_manager)
 
 
 func set_enemy(enemy: Enemy)  -> void:

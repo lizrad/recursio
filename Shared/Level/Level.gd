@@ -2,6 +2,7 @@ extends Spatial
 class_name Level
 
 
+var _round_manager: RoundManager
 # Scene to add to the capture and spawn points for logic
 # defined in UI/Menus/StartMenu for client
 # 		 and GameRoom/GameRoom for server
@@ -101,3 +102,6 @@ func set_team_id(team_id: int) -> void:
 	for capture_point in _capture_points:
 		if "player_team_id" in capture_point:
 			capture_point.player_team_id = team_id
+
+func set_round_manager(round_manager: RoundManager) -> void:
+	_round_manager = round_manager
