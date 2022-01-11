@@ -40,7 +40,7 @@ func initialize(owning_player) -> void:
 
 
 func initialize_visual(owning_player) -> void:
-	var color_name = "neutral"
+	var color_name = "default"
 	if owning_player.has_node("KinematicBody/CharacterModel"):
 		var character_model_controller = owning_player.get_node("KinematicBody/CharacterModel")
 		var color_scheme = character_model_controller.color_scheme
