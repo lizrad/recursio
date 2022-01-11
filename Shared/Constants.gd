@@ -2,6 +2,8 @@ extends Node
 
 const PLAYER_MAX_COUNT = 2
 
+var fog_of_war_enabled: bool = true
+
 var config
 
 func _init():

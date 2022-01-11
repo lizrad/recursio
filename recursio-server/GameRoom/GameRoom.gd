@@ -2,8 +2,8 @@ extends Viewport
 class_name GameRoom
 
 export(PackedScene) var game_room_world_scene
-export(PackedScene) var level_scene
 export(PackedScene) var capture_point_scene
+
 
 signal world_state_updated(world_state, game_room_id)
 
@@ -11,6 +11,14 @@ var game_room_name: String
 var id: int
 
 onready var _server = get_node("/root/Server")
+
+onready var level_scenes = [
+	preload("res://Shared/Level/LevelH.tscn"),
+	preload("res://Shared/Level/LevelHGap.tscn")
+]
+
+var _selected_level_index: int = 0
+var _fog_of_war_enabled: bool = true
 
 var _game_room_players_ready: Dictionary = {}
 var _player_id_user_name_dic: Dictionary = {}
@@ -25,6 +33,12 @@ var _player_levels_loaded := {}
 var _game_room_world: GameRoomWorld
 var _game_room_world_exists = false
 
+var _owning_player: int = -1
+
+
+func get_owning_player_id() -> int:
+	return _owning_player
+
 
 func get_player_count():
 	return _player_count
@@ -34,11 +48,29 @@ func get_game_room_world_exists():
 	return _game_room_world_exists
 
 
+func set_selected_level(level_index) -> void:
+	_selected_level_index = level_index
+	_game_room_players_ready.clear()
+
+
+func get_selected_level_index() -> int:
+	return _selected_level_index
+
+
+func set_fog_of_war_enabled(is_fog_of_war_enabled) -> void:
+	_fog_of_war_enabled = is_fog_of_war_enabled
+	_game_room_players_ready.clear()
+
+
+func get_fog_of_war_enabled() -> bool:
+	return _fog_of_war_enabled
+
+
 func spawn_world():
 	_game_room_world = game_room_world_scene.instance()
 	self.add_child(_game_room_world)
 	_game_room_world_exists = true
-	var level = level_scene.instance()
+	var level = level_scenes[_selected_level_index].instance()
 	level.capture_point_scene = capture_point_scene
 	_game_room_world.add_child(level)
 	_game_room_world.set_level(level)
@@ -87,6 +119,8 @@ func get_game_room_players_ready() -> Dictionary:
 
 
 func add_player(player_id: int, player_user_name: String) -> void:
+	if _player_id_user_name_dic.empty():
+		_owning_player = player_id
 	_player_id_user_name_dic[player_id] = player_user_name
 	# Update id dictionary
 	_player_id_to_team_id[player_id] = _player_count
