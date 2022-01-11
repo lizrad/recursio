@@ -144,9 +144,6 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -3 )
 [node name="CapturePoint2" type="Position3D" parent="CapturePoints"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3 )
 
-[node name="CapturePoint3" type="Position3D" parent="CapturePoints"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 11.8415 )
-
 [node name="Wall1" type="MeshInstance" parent="."]
 transform = Transform( 1.5, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -20 )
 layers = 33
