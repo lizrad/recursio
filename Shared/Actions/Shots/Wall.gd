@@ -10,6 +10,13 @@ var placed_by_body
 var round_index
 var _owning_player
 
+onready var _server: Server = get_node("/root/Server")
+
+var needs_server_confirmation = false
+# TODO: this value is very random, figure out a good one
+var _timer_confirmation_deadline = 2
+var confirmed = false
+
 func _init() -> void:
 	Logger.info("_init action", "Wall")
 
@@ -20,12 +27,19 @@ func ease_out_elastic(x: float, wobble: float) -> float:
 
 func _process(delta):
 	_time_since_spawn += delta
-	var ratio = min(1, _time_since_spawn/animation_time)
-	var remapped_ratio = ease_out_elastic(ratio,15.0)
-	_mesh_pivot.scale = Vector3(1, remapped_ratio, 1)
+	if _time_since_spawn <= animation_time:
+		var ratio = min(1, _time_since_spawn/animation_time)
+		var remapped_ratio = ease_out_elastic(ratio,15.0)
+		_mesh_pivot.scale = Vector3(1, remapped_ratio, 1)
+	else:
+		_mesh_pivot.scale = Vector3(1, 1, 1)
 	
-	if _time_since_spawn >= animation_time:
-		set_physics_process(false)
+	
+	if needs_server_confirmation and _server.is_connection_active:
+		if not confirmed:
+			if _time_since_spawn > _timer_confirmation_deadline:
+				_owning_player.wall_despawned(self)
+				queue_free()
 
 func _ready():
 	var _error = $KillGhostArea.connect("body_entered", self, "handle_hit") 
