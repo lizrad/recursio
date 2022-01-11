@@ -10,7 +10,7 @@ onready var _progress = $Viewport/TextureProgress
 var server_driven: bool = true
 
 var player_team_id :int = -1
-var neutral_color_name = "neutral"
+var neutral_color_name = "default"
 # TODO: better use main schema for all coloring?
 var player_color_name = "player_main"
 var enemy_color_name = "enemy_main"

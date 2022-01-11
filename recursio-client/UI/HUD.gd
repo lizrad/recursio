@@ -95,11 +95,11 @@ func _process(_delta):
 	_timer_pb.value = val
 	var color_name
 	if val < 0.15:
-		color_name = "ui_error"
+		color_name = "negative"
 	elif val < 0.35:
-		color_name = "ui_warning"
+		color_name = "highlight"
 	else:
-		color_name = "ui_ok"
+		color_name = "positive"
 	ColorManager.color_object_by_property(color_name, _timer_pb, "tint_progress")
 
 
@@ -164,10 +164,13 @@ func update_fire_action_ammo(amount: int) -> void:
 	_ammo.text = str(amount)
 
 	# mark ammo ui red -> is reset to weapon depending color in update_weapon_type
-	if amount < 1:
-		var color_name = "ui_error"
-		ColorManager.color_object_by_property(color_name, _ammo, "custom_colors/font_color")
-		ColorManager.color_object_by_property(color_name, _ammo_type_bg, "modulate")
+	var color_name = "positive"
+	
+	if amount == 0:
+		color_name = "negative"
+	
+	ColorManager.color_object_by_property(color_name, _ammo, "custom_colors/font_color")
+	ColorManager.color_object_by_property(color_name, _ammo_type_bg, "modulate")
 
 	# only don't interfere with other animations
 	if not $AnimationShoot.is_playing() or $AnimationShoot.current_animation == "sub_ammo":
@@ -179,7 +182,7 @@ func update_special_movement_ammo(amount: int) -> void:
 	Logger.info("Set special movement ammo to: " + str(amount), "HUD")
 	var cur_amount = int(_dash.text)
 	if cur_amount != amount:
-		var color_name = "ui_ok" if amount > 0 else "ui_error"
+		var color_name = "positive" if amount > 0 else "negative"
 		var animation = "add_dash" if amount > cur_amount else "sub_dash"
 		ColorManager.color_object_by_property(color_name, _dash, "custom_colors/font_color")
 		_dash.text = str(amount)
@@ -193,9 +196,9 @@ func update_special_movement_ammo(amount: int) -> void:
 		# amount 	under 	progress
 		#	0		red		gray
 		#	1		gray	white
-		color_name = "ui_error" if amount < 1 else "ui_ok" if amount > 1 else "unselected"
+		color_name = "negative" if amount < 1 else "positive" if amount > 1 else "default"
 		_dash_bg.tint_under = Color(UserSettings.get_setting("colors", color_name))
-		color_name = "unselected" if amount < 1 else "ui_ok"
+		color_name = "default" if amount < 1 else "positive"
 		_dash_bg.tint_progress = Color(UserSettings.get_setting("colors", color_name))
 
 		if amount < 2:
@@ -213,8 +216,8 @@ func update_special_movement_ammo(amount: int) -> void:
 
 func update_weapon_type(max_ammo, img_bullet, color_name: String) -> void:
 	Logger.info("Update ammo type", "HUD")
-	ColorManager.color_object_by_property("ui_ok", _ammo, "custom_colors/font_color")
-	ColorManager.color_object_by_property(color_name, _ammo_type_bg, "modulate")
+	ColorManager.color_object_by_property("positive", _ammo, "custom_colors/font_color")
+	ColorManager.color_object_by_property(color_name, _ammo_type_bg, "self_modulate")
 	_ammo_type.texture = img_bullet
 	_ammo.text = str(max_ammo)
 

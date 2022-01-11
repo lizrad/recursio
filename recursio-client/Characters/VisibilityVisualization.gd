@@ -9,7 +9,7 @@ onready var tween = get_node("Tween")
 
 
 func _ready():
-	var color_name = "visibility_visualization"
+	var color_name = "negative"
 	ColorManager.color_object_by_property(color_name, material_override, "albedo_color")
 
 
