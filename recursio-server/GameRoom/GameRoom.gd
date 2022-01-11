@@ -40,6 +40,10 @@ func get_owning_player_id() -> int:
 	return _owning_player
 
 
+func set_owning_player(player_id: int) -> void:
+	_owning_player = player_id
+
+
 func get_player_count():
 	return _player_count
 
