@@ -6,7 +6,8 @@ var fog_of_war_enabled: bool = true
 
 onready var level_scenes = [
 	preload("res://Shared/Level/LevelH.tscn"),
-	preload("res://Shared/Level/LevelHGap.tscn")
+	preload("res://Shared/Level/LevelHGap.tscn"),
+	preload("res://Shared/Level/LevelPercent.tscn")
 ]
 
 var config

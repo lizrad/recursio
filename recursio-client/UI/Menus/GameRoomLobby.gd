@@ -15,12 +15,14 @@ onready var _btn_leave: Button = get_node("Content/BottomBar/Btn_Leave")
 
 onready var _level_names = [
 	"|---|",
-	"|- -|"
+	"|- -|",
+	"|%|"
 ]
 
 onready var _level_preview_icons = [
 	preload("res://Resources/Icons/level/LevelH.png"),
-	preload("res://Resources/Icons/level/LevelHGap.png")
+	preload("res://Resources/Icons/level/LevelHGap.png"),
+	preload("res://Resources/Icons/level/LevelPercent.png"),
 ]
 
 onready var _level_preview: TextureRect = get_node("Content/HBoxContainer/VBoxContainer/LevelPreview")
