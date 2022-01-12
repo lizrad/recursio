@@ -170,7 +170,7 @@ func update_fire_action_ammo(amount: int) -> void:
 		color_name = "negative"
 	
 	ColorManager.color_object_by_property(color_name, _ammo, "custom_colors/font_color")
-	ColorManager.color_object_by_property(color_name, _ammo_type_bg, "modulate")
+	ColorManager.color_object_by_property(color_name, _ammo_type_bg, "self_modulate")
 
 	# only don't interfere with other animations
 	if not $AnimationShoot.is_playing() or $AnimationShoot.current_animation == "sub_ammo":
