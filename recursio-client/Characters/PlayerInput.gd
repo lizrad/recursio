@@ -45,6 +45,9 @@ func _physics_process(_delta):
 		if not block_movement:
 			var rotate_input = DeadZones.apply_2D(_get_input("player_look"), 0.1, 1)
 			rotate_vector = Vector3(rotate_input.y, 0.0, -rotate_input.x)
+			if InputManager.get_current_controller() == "keyboard" and rotate_vector == Vector3.ZERO:
+				var mouse_rotation = _get_rotation_from_mouse()
+				rotate_vector = Vector3(mouse_rotation.x, 0.0, mouse_rotation.y)
 		InputManager.add_rotation_to_input_frame(rotate_vector)
 
 		var buttons_pressed: int = _get_buttons_pressed()
@@ -94,6 +97,13 @@ func _swap_weapon_type(timeline_index) -> void:
 	_player.update_weapon_type_hud(max_ammo, img_bullet, color_name)
 
 
+func _get_rotation_from_mouse() -> Vector2:
+	var mouse_pos: Vector2 = get_viewport().get_mouse_position()
+	var player_pos: Vector2 = _player.get_camera().unproject_position(_player.get_body().global_transform.origin)
+	var rotation_vector = (mouse_pos-player_pos).normalized()
+	return rotation_vector
+	
+	
 # Reads the input of the given type e.g. "player_move" or "player_look"
 func _get_input(type) -> Vector2:
 	return Vector2(
