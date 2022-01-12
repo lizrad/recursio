@@ -165,6 +165,7 @@ func _on_preparation_phase_started() -> void:
 	_player.move_to_spawn_point()
 	_player.toggle_animation(false)
 	_enemy.toggle_animation(false)
+	_player.stop_shake()
 
 	_toggle_visbility_lights(false)
 	_action_manager.clear_action_instances()

@@ -76,6 +76,16 @@ func stop_shake():
 		var goal_vector = Vector3.ZERO
 		_start_shake_tween(start_vector, goal_vector)
 
+# stops all shakes
+func hard_stop_shake():
+	_current_shake_count = 0
+	_shake_speed = 1
+	_tween.disconnect("tween_all_completed", self, "_on_shake_complete")
+	_tween.remove_all()
+	var start_vector = Vector3(_shake_vector.x, 0, _shake_vector.z)
+	var goal_vector = Vector3.ZERO
+	_start_shake_tween(start_vector, goal_vector)
+
 
 func _physics_process(_delta):
 	if _following:

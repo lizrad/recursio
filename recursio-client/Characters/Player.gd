@@ -244,6 +244,10 @@ func follow_camera():
 	_lerped_follow.target = _view_target
 
 
+func stop_shake() -> void:
+	_lerped_follow.hard_stop_shake()
+
+
 func setup_capture_point_hud(number_of_capture_points) -> void:
 	for i in number_of_capture_points:
 		_hud.add_capture_point()
