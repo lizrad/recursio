@@ -64,6 +64,11 @@ func _change_capture_progress(progress: float) -> void:
 		._change_capture_progress(progress)
 		_update_media()
 
+		# show Sprite3D progress for Tutorial
+		# TODO: should just call 'apply_server_capture_progress_changed' ?
+		if not server_driven:
+			_progress.value = progress
+
 
 # OVERRIDE #
 func _lose_capture() -> void:
