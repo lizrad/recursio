@@ -55,6 +55,7 @@ func get_progress_team() -> int:
 # OVERRIDE #
 func reset() -> void:
 	.reset()
+	_progress.value = 0
 	_update_media()
 
 

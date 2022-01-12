@@ -137,7 +137,8 @@ func prep_phase_start(round_index) -> void:
 	_controller_dash.show()
 	_dash.show()
 	_dash_bg.show()
-
+	for point in _capture_points:
+		point.reset()
 	# TODO: this should be set explicit from outside in dash actions
 	update_special_movement_ammo(2)
 

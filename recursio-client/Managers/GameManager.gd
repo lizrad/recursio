@@ -142,17 +142,21 @@ func _check_for_perpetrator(hit_data: HitData) -> void:
 
 
 func _on_capture_point_captured(capturing_player_team_id: int, capture_point) -> void:
-	_level.get_capture_points()[capture_point].apply_server_capture_gained(capturing_player_team_id)
+	if _round_manager.get_current_phase() == RoundManager.Phases.GAME:
+		_level.get_capture_points()[capture_point].apply_server_capture_gained(capturing_player_team_id)
 
 
 func _on_capture_point_team_changed(capturing_player_team_id: int, capture_point) -> void:
-	_level.get_capture_points()[capture_point].apply_server_capturer_switched(capturing_player_team_id)
+	if _round_manager.get_current_phase() == RoundManager.Phases.GAME:
+		_level.get_capture_points()[capture_point].apply_server_capturer_switched(capturing_player_team_id)
 
 
 func _on_capture_point_status_changed(capturing_player_team_id: int, capture_point: int, capture_progress: float) -> void:
-	_level.get_capture_points()[capture_point].apply_server_capture_progress_changed(capturing_player_team_id, capture_progress)
+	if _round_manager.get_current_phase() == RoundManager.Phases.GAME:
+		_level.get_capture_points()[capture_point].apply_server_capture_progress_changed(capturing_player_team_id, capture_progress)
 
 
 func _on_capture_point_capture_lost(_capturing_player_team_id: int, capture_point: int) -> void:
-	_level.get_capture_points()[capture_point].apply_server_capture_lost()
+	if _round_manager.get_current_phase() == RoundManager.Phases.GAME:
+		_level.get_capture_points()[capture_point].apply_server_capture_lost()
 

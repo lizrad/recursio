@@ -75,12 +75,12 @@ func _ready():
 	set_physics_process(false)
 
 func _physics_process(delta):
+	if _round_manager.get_current_phase() != RoundManager.Phases.GAME:
+		return
+	
 	# Update CapturePoints in player HUD
 	_player.update_capture_point_hud(_game_manager.get_capture_points())
 	
-	if _round_manager.get_current_phase() != RoundManager.Phases.GAME:
-		return
-
 	if enemy_is_server_driven and _enemy:
 		_update_enemy(delta)
 
@@ -318,11 +318,15 @@ func _on_player_hit(hit_data: HitData) -> void:
 		_enemy.server_hit(hit_data)
 
 func _on_capture_point_captured(capturing_player_team_id, _capture_point):
+	if _round_manager.get_current_phase() != RoundManager.Phases.GAME:
+		return
 	if capturing_player_team_id == _player.team_id:
 		_player.move_camera_to_overview()
 		_player.set_overview_light_enabled(true)
 
 func _on_capture_point_capture_lost(capturing_player_team_id, _capture_point):
+	if _round_manager.get_current_phase() != RoundManager.Phases.GAME:
+		return
 	if capturing_player_team_id == _player.team_id:
 		if _round_manager.get_current_phase() == RoundManager.Phases.GAME:
 			_player.follow_camera()
