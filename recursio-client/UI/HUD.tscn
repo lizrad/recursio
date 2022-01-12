@@ -52,7 +52,7 @@ extra_spacing_char = 2
 font_data = ExtResource( 11 )
 
 [sub_resource type="DynamicFont" id=13]
-size = 35
+size = 31
 outline_size = 2
 outline_color = Color( 0, 0, 0, 1 )
 use_mipmaps = true
@@ -293,6 +293,7 @@ valign = 1
 script = ExtResource( 10 )
 enable_this_after_font_is_unique = true
 font_size = 54
+use_parent_for_scaling = false
 
 [node name="SubAmmo" type="Label" parent="Abilities/Weapon/WeaponAmmo"]
 self_modulate = Color( 1, 1, 1, 0 )
@@ -315,6 +316,7 @@ __meta__ = {
 }
 enable_this_after_font_is_unique = true
 font_size = 35
+use_parent_for_scaling = false
 
 [node name="WeaponTypeBG" type="TextureRect" parent="Abilities/Weapon"]
 margin_left = 136.0
@@ -375,6 +377,7 @@ valign = 1
 script = ExtResource( 10 )
 enable_this_after_font_is_unique = true
 font_size = 54
+use_parent_for_scaling = false
 
 [node name="AspectRatioContainer" type="AspectRatioContainer" parent="Abilities/Melee"]
 margin_left = 136.0
@@ -428,6 +431,7 @@ valign = 1
 script = ExtResource( 10 )
 enable_this_after_font_is_unique = true
 font_size = 54
+use_parent_for_scaling = false
 
 [node name="SubAmmo" type="Label" parent="Abilities/Dash/DashAmmo"]
 self_modulate = Color( 1, 1, 1, 0 )
@@ -451,6 +455,7 @@ __meta__ = {
 }
 enable_this_after_font_is_unique = true
 font_size = 35
+use_parent_for_scaling = false
 
 [node name="AspectRatioContainer" type="AspectRatioContainer" parent="Abilities/Dash"]
 margin_left = 136.0
@@ -527,7 +532,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 enable_this_after_font_is_unique = true
-font_size = 35
+font_size = 133
 
 [node name="AspectRatioContainer" type="AspectRatioContainer" parent="."]
 visible = false

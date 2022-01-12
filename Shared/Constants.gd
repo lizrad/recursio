@@ -10,6 +10,10 @@ onready var level_scenes = [
 	preload("res://Shared/Level/LevelPercent.tscn")
 ]
 
+# Used by DynamicFont.gd for text scaling
+const DEFAULT_WINDOW_WIDTH: int = 1920
+const DEFAULT_WINDOW_HEIGHT: int = 1080
+
 var config
 
 func _init():
