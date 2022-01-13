@@ -21,5 +21,6 @@ func set_content(text: String, goal: Spatial) -> void:
 
 
 func _update_position() -> void:
-	rect_position = _camera.unproject_position(_goal.global_transform.origin + Vector3(1.5, 0.0, 0.0))
+	var offset = Vector3(1.5, 0.0, 0.0)
+	rect_position = _camera.unproject_position(_goal.global_transform.origin + offset)
 	rect_position.y -= rect_size.y * 0.5

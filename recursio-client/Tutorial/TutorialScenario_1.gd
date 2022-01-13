@@ -32,7 +32,7 @@ func _started_round_1():
 
 
 func _check_completed_round_1() -> bool:
-	return _level.get_capture_points()[1].get_capture_progress() >= 1.0 \
+	return _level.get_capture_points()[1].get_capture_progress() >= 1.0
 
 
 func _completed_round_1() -> void:
