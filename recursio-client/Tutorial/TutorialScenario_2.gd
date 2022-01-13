@@ -168,7 +168,7 @@ func _round_3_end_sequence():
 	add_post_process_exception(_ghost_manager._player_ghosts[0])
 	_goal_element_1.set_content("Respawned", _ghost_manager._player_ghosts[0].get_body())
 	_bottom_element.show()
-	_bottom_element.set_content("If the previous timeline does not get hit,\nit just gets set back to spawn.", TutorialUIBottomElement.Controls.None, true)
+	_bottom_element.set_content("If the previous timeline does not get hit,\nit repeats everything, even dying and respawning!", TutorialUIBottomElement.Controls.None, true)
 	pause()
 	yield(_bottom_element, "continue_pressed")
 	unpause()

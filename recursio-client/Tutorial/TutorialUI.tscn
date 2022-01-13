@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://UI/Default.tres" type="Theme" id=1]
 [ext_resource path="res://Resources/Fonts/FiraCode-Regular.ttf" type="DynamicFontData" id=2]
@@ -9,6 +9,8 @@
 [ext_resource path="res://Tutorial/TutorialUIGoalElement.gd" type="Script" id=7]
 [ext_resource path="res://Tutorial/TutorialUIBottomElement.gd" type="Script" id=8]
 [ext_resource path="res://addons/PostProcessingTool/PostProcessing_tool.tscn" type="PackedScene" id=9]
+[ext_resource path="res://Resources/Fonts/FiraCode-Bold.ttf" type="DynamicFontData" id=10]
+[ext_resource path="res://Util/DynamicLabel.gd" type="Script" id=11]
 
 [sub_resource type="DynamicFont" id=3]
 size = 60
@@ -25,17 +27,14 @@ TextEdit/styles/focus = ExtResource( 3 )
 [sub_resource type="StyleBoxFlat" id=5]
 bg_color = Color( 0, 0, 0, 0.470588 )
 
-[sub_resource type="DynamicFont" id=2]
+[sub_resource type="DynamicFont" id=6]
 size = 40
+outline_size = 2
+outline_color = Color( 0, 0, 0, 1 )
 use_mipmaps = true
 use_filter = true
-font_data = ExtResource( 2 )
-
-[sub_resource type="Theme" id=1]
-default_font = SubResource( 2 )
-Button/styles/focus = ExtResource( 3 )
-LineEdit/styles/focus = ExtResource( 3 )
-TextEdit/styles/focus = ExtResource( 3 )
+extra_spacing_char = 2
+font_data = ExtResource( 10 )
 
 [node name="TutorialUI" type="Control"]
 anchor_right = 1.0
@@ -163,69 +162,69 @@ __meta__ = {
 }
 
 [node name="BottomElement" type="CenterContainer" parent="PostProcessAffected"]
-anchor_left = 0.5
-anchor_top = 0.896
-anchor_right = 0.5
-anchor_bottom = 0.896
-margin_left = -480.0
-margin_top = -37.6801
-margin_right = 1440.0
-margin_bottom = 112.32
-rect_scale = Vector2( 0.5, 0.5 )
+anchor_top = 0.86
+anchor_right = 1.0
+anchor_bottom = 0.95
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource( 8 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="ElementsList" type="HBoxContainer" parent="PostProcessAffected/BottomElement"]
-margin_left = 496.0
-margin_right = 1424.0
-margin_bottom = 150.0
+margin_left = 275.0
+margin_top = 11.0
+margin_right = 1645.0
+margin_bottom = 86.0
+grow_horizontal = 2
+grow_vertical = 2
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="ControlTexture" type="TextureRect" parent="PostProcessAffected/BottomElement/ElementsList"]
-margin_right = 150.0
-margin_bottom = 150.0
-rect_min_size = Vector2( 150, 150 )
+margin_right = 75.0
+margin_bottom = 75.0
+rect_min_size = Vector2( 75, 75 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
-size_flags_stretch_ratio = 2.0
 texture = ExtResource( 5 )
 expand = true
+stretch_mode = 6
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Space1" type="Control" parent="PostProcessAffected/BottomElement/ElementsList"]
-margin_left = 154.0
-margin_right = 174.0
-margin_bottom = 150.0
+margin_left = 79.0
+margin_right = 99.0
+margin_bottom = 75.0
 rect_min_size = Vector2( 20, 0 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="ControlText" type="Label" parent="PostProcessAffected/BottomElement/ElementsList"]
-margin_left = 178.0
-margin_right = 928.0
-margin_bottom = 150.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-size_flags_stretch_ratio = 10.0
-theme = SubResource( 1 )
-text = "Welcome to the first Tutorial!"
+margin_left = 103.0
+margin_top = 12.0
+margin_right = 1370.0
+margin_bottom = 62.0
+custom_fonts/font = SubResource( 6 )
+text = "Welcome to the first Tutorial! This is awesome!"
 valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+script = ExtResource( 11 )
+enable_this_after_font_is_unique = true
+font_size = 40
+use_parent_for_scaling = false
 
 [node name="Panel" type="Panel" parent="PostProcessAffected/BottomElement/ElementsList/ControlText"]
 show_behind_parent = true
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = -20.0
+margin_top = -10.0
 margin_right = 20.0
+margin_bottom = 10.0
 custom_styles/panel = SubResource( 5 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -233,8 +232,8 @@ __meta__ = {
 
 [node name="Space2" type="Control" parent="PostProcessAffected/BottomElement/ElementsList"]
 visible = false
-margin_left = 932.0
-margin_right = 952.0
+margin_left = 1449.0
+margin_right = 1469.0
 margin_bottom = 150.0
 rect_min_size = Vector2( 20, 0 )
 size_flags_horizontal = 3
@@ -242,15 +241,15 @@ size_flags_vertical = 3
 
 [node name="ContinueTexture" type="TextureRect" parent="PostProcessAffected/BottomElement/ElementsList"]
 visible = false
-margin_left = 956.0
-margin_right = 1106.0
-margin_bottom = 150.0
-rect_min_size = Vector2( 150, 150 )
+margin_left = 1374.0
+margin_right = 1449.0
+margin_bottom = 75.0
+rect_min_size = Vector2( 75, 75 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
-size_flags_stretch_ratio = 2.0
 texture = ExtResource( 5 )
 expand = true
+stretch_mode = 6
 __meta__ = {
 "_edit_use_anchors_": false
 }
