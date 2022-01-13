@@ -90,5 +90,4 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 enable_this_after_font_is_unique = true
-font_size = 1000
-use_parent_for_scaling = true
+font_size = 650
