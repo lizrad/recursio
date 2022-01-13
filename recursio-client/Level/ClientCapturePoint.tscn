@@ -1,10 +1,10 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://Resources/Audio/Effects/Capture.ogg" type="AudioStream" id=1]
 [ext_resource path="res://Shared/Level/BaseCapturePoint.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Resources/Icons/circle_white_256x256.png" type="Texture" id=3]
 [ext_resource path="res://Level/ClientCapturePoint.gd" type="Script" id=4]
-[ext_resource path="res://Resources/Fonts/Large.tres" type="DynamicFont" id=5]
+[ext_resource path="res://Resources/Fonts/FiraCode-Bold.ttf" type="DynamicFontData" id=5]
 
 [sub_resource type="ViewportTexture" id=5]
 viewport_path = NodePath("Viewport2")
@@ -15,6 +15,15 @@ albedo_color = Color( 0, 1, 0.811765, 1 )
 
 [sub_resource type="CylinderMesh" id=3]
 height = 0.4
+
+[sub_resource type="DynamicFont" id=7]
+size = 90
+outline_size = 2
+outline_color = Color( 0, 0, 0, 1 )
+use_mipmaps = true
+use_filter = true
+extra_spacing_char = 2
+font_data = ExtResource( 5 )
 
 [sub_resource type="ViewportTexture" id=6]
 viewport_path = NodePath("Viewport")
@@ -47,8 +56,7 @@ render_target_v_flip = true
 [node name="Label" type="Label" parent="Viewport2" index="0"]
 margin_right = 256.0
 margin_bottom = 256.0
-custom_fonts/font = ExtResource( 5 )
-text = "III"
+custom_fonts/font = SubResource( 7 )
 align = 1
 valign = 1
 
@@ -64,7 +72,6 @@ margin_bottom = 40.0
 rect_scale = Vector2( 2, 2 )
 max_value = 1.0
 step = 0.05
-value = 0.2
 texture_progress = ExtResource( 3 )
 fill_mode = 5
 
