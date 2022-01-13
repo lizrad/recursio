@@ -135,8 +135,8 @@ func apply_input(movement_vector: Vector3, rotation_vector: Vector3, buttons: in
 		var action = _get_action(ActionManager.Trigger.FIRE_START, timeline_index) as Action
 		if action.ammunition > 0:
 			_aim_visuals.visible = true
-			# crashes in tutorial if no timeline is set yet and player tries to shoot
-			if timeline_index > 0:
+			# sometimes crashes if no timeline is set yet and player tries to shoot
+			if timeline_index >= 0:
 				_aim_visuals.get_child(timeline_index % 2).visible = aim_mode
 				PostProcess.chromatic_ab_strength = 0.1
 		else:
