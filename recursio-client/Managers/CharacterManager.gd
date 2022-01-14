@@ -59,9 +59,9 @@ func _ready():
 	_error = _round_manager.connect("game_phase_started", _ghost_manager, "on_game_phase_started") 
 	_error = _round_manager.connect("game_phase_stopped", _ghost_manager, "on_game_phase_stopped") 
 	####################################################
-	
-	
-	
+
+
+
 	_error = Server.connect("world_state_received", self, "_on_world_state_received") 
 	_error = Server.connect("player_hit", self, "_on_player_hit") 
 
@@ -69,7 +69,7 @@ func _ready():
 
 	_error = Server.connect("capture_point_captured", self, "_on_capture_point_captured") 
 	_error = Server.connect("capture_point_capture_lost", self, "_on_capture_point_capture_lost")
-	
+
 
 	_player_rpc_id = get_tree().get_network_unique_id()
 	set_physics_process(false)
@@ -77,10 +77,10 @@ func _ready():
 func _physics_process(delta):
 	if _round_manager.get_current_phase() != RoundManager.Phases.GAME:
 		return
-	
+
 	# Update CapturePoints in player HUD
 	_player.update_capture_point_hud(_game_manager.get_capture_points())
-	
+
 	if enemy_is_server_driven and _enemy:
 		_update_enemy(delta)
 
