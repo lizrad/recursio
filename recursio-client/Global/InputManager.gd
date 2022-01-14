@@ -6,6 +6,8 @@ signal controller_changed(controller)
 # joypad type or "keyboard"
 var _current_controller := ""
 
+var _crosshair_cursor := preload("res://Resources/Icons/cursor_crosshair.png")
+
 
 func _ready() -> void:
 	if not Input.is_connected("joy_connection_changed", self, "_on_joy_connection_changed"):
@@ -71,6 +73,7 @@ func _update_controller_buttons() -> void:
 	# no controller: "keyboard"
 	if controller.size() < 1:
 		_current_controller = "keyboard"
+		Input.set_custom_mouse_cursor(_crosshair_cursor, Input.CURSOR_ARROW, _crosshair_cursor.get_size()/2)
 	else:
 		# take the first connected controller
 		var name = Input.get_joy_name(controller[0])
@@ -84,5 +87,6 @@ func _update_controller_buttons() -> void:
 		# 	"switch"
 		else:
 			_current_controller = "generic"
+		Input.set_custom_mouse_cursor(null)
 
 	emit_signal("controller_changed", _current_controller)
