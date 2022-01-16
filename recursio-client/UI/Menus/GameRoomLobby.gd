@@ -57,7 +57,7 @@ func _ready():
 
 func init(game_room_id, game_room_name) -> void:
 	_game_room_id = game_room_id
-	_game_room_name.text = game_room_name
+	_game_room_name.text = game_room_name + " (#%s)" % game_room_id
 
 
 func reset():
