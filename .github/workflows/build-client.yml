@@ -1,21 +1,15 @@
-name: Build Client
-
 on: [push]
 
 jobs:
-  export_game:
+  export_client:
     runs-on: ubuntu-latest
+    name: Build Client
     steps:
     - name: checkout
       uses: actions/checkout@v2.3.1
       # Ensure that you get the entire project history
       with:
         fetch-depth: 0
-    - name: install wine
-      id: wine_install
-      run: |
-        sudo apt install wine64
-        echo ::set-output name=WINE_PATH::$(which wine64)
     - name: export game
       # Use latest version (see releases for all versions)
       uses: firebelley/godot-export@v3.0.0
@@ -23,6 +17,23 @@ jobs:
         godot_executable_download_url: https://downloads.tuxfamily.org/godotengine/3.5/beta1/Godot_v3.5-beta1_linux_headless.64.zip
         godot_export_templates_download_url: https://downloads.tuxfamily.org/godotengine/3.5/beta1/Godot_v3.5-beta1_export_templates.tpz
         relative_project_path: ./recursio-client
-        wine_path: ${{ steps.wine_install.outputs.WINE_PATH }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  export_server:
+    runs-on: ubuntu-latest
+    name: Build Server
+    steps:
+    - name: checkout
+      uses: actions/checkout@v2.3.1
+      # Ensure that you get the entire project history
+      with:
+        fetch-depth: 0
+    - name: export game
+      # Use latest version (see releases for all versions)
+      uses: firebelley/godot-export@v3.0.0
+      with:
+        godot_executable_download_url: https://downloads.tuxfamily.org/godotengine/3.5/beta1/Godot_v3.5-beta1_linux_headless.64.zip
+        godot_export_templates_download_url: https://downloads.tuxfamily.org/godotengine/3.5/beta1/Godot_v3.5-beta1_export_templates.tpz
+        relative_project_path: ./recursio-server
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
