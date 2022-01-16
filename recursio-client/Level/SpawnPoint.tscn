@@ -1,18 +1,18 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Level/spawn_border.png" type="Texture" id=1]
-[ext_resource path="res://Resources/Icons/circle_white_256x256.png" type="Texture" id=2]
+[ext_resource path="res://Resources/Icons/bullet.png" type="Texture" id=2]
 [ext_resource path="res://Level/SpawnPoint.gd" type="Script" id=3]
-[ext_resource path="res://Resources/Icons/wall.png" type="Texture" id=4]
 
 [sub_resource type="Shader" id=1]
 code = "shader_type spatial;
 
 uniform sampler2D albedo : hint_albedo;
-uniform bool is_greyscale = true;
+uniform vec4 color: hint_color = vec4(1.0, 0.0, 0.0, 1.0);
+uniform bool is_greyscale = false;
 
 void fragment() {
-	vec4 texture_read = texture(albedo, UV);
+	vec4 texture_read = texture(albedo, UV) * color;
 	ALBEDO = is_greyscale ? vec3(length(texture_read.rgb)) : texture_read.rgb;
 	ALPHA = texture_read.a;
 	ALPHA_SCISSOR = 0.5;
@@ -21,27 +21,21 @@ void fragment() {
 [sub_resource type="ShaderMaterial" id=2]
 resource_local_to_scene = true
 shader = SubResource( 1 )
-shader_param/is_greyscale = true
+shader_param/color = Color( 1, 0, 0, 1 )
+shader_param/is_greyscale = false
 
 [node name="SpawnPoint" type="Spatial"]
 script = ExtResource( 3 )
 
 [node name="SpriteType" type="Sprite3D" parent="."]
-transform = Transform( 2, 0, 0, 0, 1, 0, 0, 0, 2, 3, 0, 0 )
-visible = false
-layers = 513
+transform = Transform( 0.495687, 0, 0, 0, 1, 0, 0, 0, 0.495687, 3, 0, 0 )
+layers = 512
 material_override = SubResource( 2 )
 cast_shadow = 0
+modulate = Color( 1, 0, 0, 1 )
 axis = 1
 transparent = false
 double_sided = false
-texture = ExtResource( 4 )
-
-[node name="SpriteBG" type="Sprite3D" parent="SpriteType"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0 )
-layers = 513
-cast_shadow = 0
-axis = 1
 texture = ExtResource( 2 )
 
 [node name="SpriteArea" type="Sprite3D" parent="."]
