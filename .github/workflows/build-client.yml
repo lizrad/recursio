@@ -1,30 +1,45 @@
-name: Build Client
-
 on:
   push:
     branches:
       - main
 
 jobs:
-  Godot:
+  export_client:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        platform: [linux, windows, mac]
+    name: Build Client
     steps:
-      - uses: actions/checkout@v2
-        with:
-          lfs: true
-      - name: Build
-        id: build
-        uses: josephbmanley/build-godot-action@v1.4.1
-        with:
-          name: recursio
-          preset: ${{ matrix.platform }}
-          debugMode: "false"
-          projectDir: "recursio-client"
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: recursio-client-${{ matrix.platform }}
-          path: ${{ github.workspace }}/${{ steps.build.outputs.build }}
+    - name: checkout
+      uses: actions/checkout@v2.3.1
+      # Ensure that you get the entire project history
+      with:
+        fetch-depth: 0
+    - name: export game
+      # Use latest version (see releases for all versions)
+      uses: firebelley/godot-export@v3.0.0
+      with:
+        godot_executable_download_url: https://downloads.tuxfamily.org/godotengine/3.5/beta1/Godot_v3.5-beta1_linux_headless.64.zip
+        godot_export_templates_download_url: https://downloads.tuxfamily.org/godotengine/3.5/beta1/Godot_v3.5-beta1_export_templates.tpz
+        relative_project_path: ./recursio-client
+        create_release: true
+        base_version: 0.5.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  export_server:
+    runs-on: ubuntu-latest
+    name: Build Server
+    steps:
+    - name: checkout
+      uses: actions/checkout@v2.3.1
+      # Ensure that you get the entire project history
+      with:
+        fetch-depth: 0
+    - name: export game
+      # Use latest version (see releases for all versions)
+      uses: firebelley/godot-export@v3.0.0
+      with:
+        godot_executable_download_url: https://downloads.tuxfamily.org/godotengine/3.5/beta1/Godot_v3.5-beta1_linux_headless.64.zip
+        godot_export_templates_download_url: https://downloads.tuxfamily.org/godotengine/3.5/beta1/Godot_v3.5-beta1_export_templates.tpz
+        relative_project_path: ./recursio-server
+        create_release: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
