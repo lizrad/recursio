@@ -6,8 +6,7 @@ onready var _phase = get_node("Timer/TimerProgressBar/Phase")
 onready var _ammo_group: Control = get_node("Abilities/Weapon")
 onready var _controller_shoot = get_node("Abilities/Weapon/ControllerButtonShoot")
 onready var _ammo: Label= get_node("Abilities/Weapon/WeaponAmmo")
-onready var _ammo_type_bg = get_node("Abilities/Weapon/WeaponTypeBG")
-onready var _ammo_type = get_node("Abilities/Weapon/WeaponTypeBG/WeaponType")
+onready var _ammo_type = get_node("Abilities/Weapon/WeaponType")
 onready var _melee_group: Control = get_node("Abilities/Melee")
 onready var _controller_melee = get_node("Abilities/Melee/ControllerButtonMelee")
 onready var _melee = get_node("Abilities/Melee/MeleeAmmo")
@@ -20,6 +19,8 @@ onready var _capture_point_hb = get_node("Timer/TimerProgressBar/CapturePoints")
 onready var _ammo_type_animation = get_node("TextureRect")
 onready var _tween = get_node("Tween")
 onready var _dash_tween = get_node("Abilities/Dash/AspectRatioContainer/DashTextureProgress/Tween")
+
+var _ammo_type_default_color_name: String
 
 onready var tween_time := 1.5
 
@@ -81,7 +82,7 @@ func reset():
 	_max_time = -1.0
 	_controller_shoot.hide()
 	_ammo.hide()
-	_ammo_type_bg.hide()
+	_ammo_type.hide()
 	_controller_melee.hide()
 	_melee.hide()
 	_melee_bg.hide()
@@ -130,7 +131,7 @@ func prep_phase_start(round_index) -> void:
 		_max_time = Constants.get_value( "gameplay", phase_string)
 	_controller_shoot.show()
 	_ammo.show()
-	_ammo_type_bg.show()
+	_ammo_type.show()
 	_controller_melee.show()
 	_melee.show()
 	_melee_bg.show()
@@ -166,12 +167,13 @@ func update_fire_action_ammo(amount: int) -> void:
 
 	# mark ammo ui red -> is reset to weapon depending color in update_weapon_type
 	var color_name = "positive"
-	
+	var ammo_type_color_name = _ammo_type_default_color_name
 	if amount == 0:
 		color_name = "negative"
+		ammo_type_color_name = "negative"
 	
 	ColorManager.color_object_by_property(color_name, _ammo, "custom_colors/font_color")
-	ColorManager.color_object_by_property(color_name, _ammo_type_bg, "self_modulate")
+	ColorManager.color_object_by_property(ammo_type_color_name, _ammo_type, "self_modulate")
 
 	# only don't interfere with other animations
 	if not $AnimationShoot.is_playing() or $AnimationShoot.current_animation == "sub_ammo":
@@ -217,8 +219,9 @@ func update_special_movement_ammo(amount: int) -> void:
 
 func update_weapon_type(max_ammo, img_bullet, color_name: String) -> void:
 	Logger.info("Update ammo type", "HUD")
+	_ammo_type_default_color_name = color_name
 	ColorManager.color_object_by_property("positive", _ammo, "custom_colors/font_color")
-	ColorManager.color_object_by_property(color_name, _ammo_type_bg, "self_modulate")
+	ColorManager.color_object_by_property(_ammo_type_default_color_name, _ammo_type, "self_modulate")
 	_ammo_type.texture = img_bullet
 	_ammo.text = str(max_ammo)
 

@@ -1,9 +1,8 @@
-[gd_scene load_steps=26 format=2]
+[gd_scene load_steps=25 format=2]
 
 [ext_resource path="res://UI/HUD.gd" type="Script" id=1]
 [ext_resource path="res://Resources/Icons/keyboard/shoot.png" type="Texture" id=2]
 [ext_resource path="res://Resources/Icons/icon_dash.png" type="Texture" id=3]
-[ext_resource path="res://Resources/Icons/circle_white_256x256.png" type="Texture" id=4]
 [ext_resource path="res://Resources/Icons/round_timer_1024x256.png" type="Texture" id=5]
 [ext_resource path="res://UI/Default.tres" type="Theme" id=6]
 [ext_resource path="res://Resources/Icons/bullet.png" type="Texture" id=7]
@@ -318,24 +317,13 @@ enable_this_after_font_is_unique = true
 font_size = 35
 use_parent_for_scaling = false
 
-[node name="WeaponTypeBG" type="TextureRect" parent="Abilities/Weapon"]
+[node name="WeaponType" type="TextureRect" parent="Abilities/Weapon"]
 margin_left = 136.0
 margin_right = 201.0
 margin_bottom = 67.0
 size_flags_horizontal = 7
 size_flags_vertical = 7
-texture = ExtResource( 4 )
-expand = true
-stretch_mode = 6
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="WeaponType" type="TextureRect" parent="Abilities/Weapon/WeaponTypeBG"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-size_flags_horizontal = 7
-size_flags_vertical = 7
+texture = ExtResource( 7 )
 expand = true
 stretch_mode = 6
 __meta__ = {
