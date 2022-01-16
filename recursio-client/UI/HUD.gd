@@ -296,10 +296,12 @@ func animate_weapon_selection(pos: Vector2) -> void:
 	_ammo_type_animation.texture = _ammo_type.texture
 	_ammo_type_animation.visible = true
 	Logger.info("starting tween", "Tween")
-	var size = _ammo_type_animation.rect_size/2
+	var size = _ammo_type_animation.rect_size/5
 	_tween.interpolate_property(_ammo_type_animation, "rect_position", pos - size, _ammo_type.rect_global_position - size/2, tween_time, Tween.TRANS_CUBIC, Tween.EASE_IN_OUT)
-	_tween.interpolate_property(_ammo_type_animation, "rect_scale", Vector2.ONE, Vector2(0.25, 0.25), 2*tween_time, Tween.TRANS_LINEAR)
-	_tween.interpolate_property(_ammo_type_animation, "modulate", Color(1, 1, 1, 1), Color(1, 1, 1, 0), 1.5*tween_time, Tween.TRANS_LINEAR)
+	_tween.interpolate_property(_ammo_type_animation, "rect_scale", Vector2.ONE*0.25, Vector2.ONE*0.1, 2*tween_time, Tween.TRANS_LINEAR)
+	var start_color = ColorManager._get_color(_ammo_type_default_color_name)
+	var end_color = Color(start_color.r, start_color.g, start_color.b, 0)
+	_tween.interpolate_property(_ammo_type_animation, "modulate", start_color, end_color, 1.5*tween_time, Tween.TRANS_LINEAR)
 	_tween.start()
 
 
