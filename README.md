@@ -7,8 +7,7 @@ Download the latest client release [here](https://github.com/lizrad/recursio/rel
 
 ## Play on Hosted Server
 
-`Play Online` takes you to the official development server. Note that it restarts every 15 minutes, so it is unavailable every hour between XX:59 and XX:00, between XX:14 and XX:15, between XX:29 and XX:30, and between XX:44 and XX:45.
-
+`Play Online` takes you to the official development server. Note that it might restart occasionally. If you lose connection to the server just try again after a few moments.
 Alternatively, you can host a server yourself and enter its IP in the `Play Local` option.
 
 ## Controls
