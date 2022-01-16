@@ -35,12 +35,12 @@ Alternatively, you can host a server yourself and enter its IP in the `Play Loca
 ```
 
 Alternatively mouse and keyboard controls are available as well:
-WASD -> Move
-Mouse -> Aim
-LMB -> Fire
-RMB -> Melee
-Space -> Dash
-Tab -> Swap
+- WASD -> Move
+- Mouse -> Aim
+- LMB -> Fire
+- RMB -> Melee
+- Space -> Dash
+- Tab -> Swap
 
 ## Development Setup
 
