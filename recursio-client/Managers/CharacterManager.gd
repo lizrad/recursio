@@ -40,6 +40,7 @@ func _ready():
 	var _error = Server.connect("phase_switch_received", self, "_on_phase_switch_received") 
 	_error = Server.connect("game_start_received", self, "_on_game_start_received") 
 
+	_error = _round_manager.connect("game_started", self, "_on_game_started") 
 	_error = _round_manager.connect("preparation_phase_started", self, "_on_preparation_phase_started") 
 	_error = _round_manager.connect("countdown_phase_started", self, "_on_countdown_phase_started") 
 	_error = _round_manager.connect("game_phase_started", self, "_on_game_phase_started") 
@@ -146,6 +147,14 @@ func _on_game_start_received(start_time):
 	_round_manager.future_start_game(start_time)
 	_ghost_manager.init(_game_manager,_round_manager, _action_manager, self)
 
+
+func _on_game_started():
+	toggle_trigger(ActionManager.Trigger.DEFAULT_ATTACK_START, true)
+	toggle_trigger(ActionManager.Trigger.FIRE_START, true)
+	toggle_trigger(ActionManager.Trigger.SPECIAL_MOVEMENT_START, true)
+	toggle_swapping(true)
+	toggle_movement(true)
+
 func get_player() -> Player:
 	return _player
 
@@ -166,7 +175,6 @@ func _on_preparation_phase_started() -> void:
 	_player.toggle_animation(false)
 	_enemy.toggle_animation(false)
 	_player.stop_shake()
-
 	_toggle_visbility_lights(false)
 	_action_manager.clear_action_instances()
 	if not hide_player_button_overlay:
