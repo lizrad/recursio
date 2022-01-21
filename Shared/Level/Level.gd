@@ -18,6 +18,7 @@ func _ready():
 
 	for point in $CapturePoints.get_children():
 		var new_scene = capture_point_scene.instance()
+		new_scene.set_name("I".repeat(point.get_index() + 1))
 		_capture_points.append(new_scene)
 		point.add_child(new_scene)
 

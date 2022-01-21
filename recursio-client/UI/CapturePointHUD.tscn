@@ -6,7 +6,7 @@
 [ext_resource path="res://Util/DynamicLabel.gd" type="Script" id=4]
 
 [sub_resource type="DynamicFont" id=1]
-size = 547
+size = 450
 outline_size = 2
 outline_color = Color( 0, 0, 0, 1 )
 use_mipmaps = true
@@ -90,5 +90,4 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 enable_this_after_font_is_unique = true
-font_size = 1000
-use_parent_for_scaling = true
+font_size = 650

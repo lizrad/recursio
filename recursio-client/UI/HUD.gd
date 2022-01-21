@@ -249,7 +249,7 @@ func add_capture_point() -> void:
 	_capture_points.append(capture_point)
 
 	# Convert number to letter
-	var capture_point_name = char(65 + _number_of_capture_points)
+	var capture_point_name = "I".repeat(_number_of_capture_points + 1)
 	capture_point.set_name(capture_point_name)
 
 	_number_of_capture_points += 1
