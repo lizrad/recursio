@@ -9,12 +9,57 @@ code = "shader_type spatial;
 
 uniform sampler2D albedo : hint_albedo;
 uniform vec4 color: hint_color = vec4(1.0, 0.0, 0.0, 1.0);
-uniform bool is_greyscale = false;
+uniform float saturation_modifier = 1.0;
+
+vec3 rgb2hsv(vec3 rgb)
+{
+    float maxComponent = max(rgb.r, max(rgb.g, rgb.b));
+    float minComponent = min(rgb.r, min(rgb.g, rgb.b));
+    float diff = maxComponent - minComponent;
+    float hue = 0.0;
+    if(maxComponent == rgb.r) {
+        hue = 0.0+(rgb.g-rgb.b)/diff;
+    } else if(maxComponent == rgb.g) {
+        hue = 2.0+(rgb.b-rgb.r)/diff;
+    } else if(maxComponent == rgb.b) {
+        hue = 4.0+(rgb.r-rgb.g)/diff;
+    }
+    hue = fract(hue / 6.0);
+    float saturation = diff / maxComponent;
+    float value = maxComponent;
+    return vec3(hue, saturation, value);
+}
+
+vec3 hue2rgb(float hue) {
+    hue = fract(hue); //only use fractional part of hue, making it loop
+    float r = abs(hue * 6.0 - 3.0) - 1.0; //red
+    float g = 2.0 - abs(hue * 6.0 - 2.0); //green
+    float b = 2.0 - abs(hue * 6.0 - 4.0); //blue
+	r = clamp(r,0,1);
+	g = clamp(g,0,1);
+	b = clamp(b,0,1);
+    vec3 rgb = vec3(r,g,b); //combine components
+    return rgb;
+}
+
+
+vec3 hsv2rgb(vec3 hsv)
+{
+    vec3 rgb = hue2rgb(hsv.x); //apply hue
+	rgb = (vec3(1.0,1.0,1.0)*(1.0-hsv.y))+(rgb*hsv.y);
+    rgb = rgb * hsv.z; //apply value
+    return rgb;
+}
+
 
 void fragment() {
-	vec4 texture_read = texture(albedo, UV) * color;
-	ALBEDO = is_greyscale ? vec3(length(texture_read.rgb)) : texture_read.rgb;
-	ALPHA = texture_read.a;
+	vec4 rgba = texture(albedo, UV) * color;
+	vec3 rgb = rgba.rgb;
+	vec3 hsv = rgb2hsv(rgb);
+	hsv.y *= saturation_modifier;
+	rgb = hsv2rgb(hsv);
+	ALBEDO = rgb;
+	ALPHA = rgba.a;
 	ALPHA_SCISSOR = 0.5;
 }"
 
@@ -22,7 +67,7 @@ void fragment() {
 resource_local_to_scene = true
 shader = SubResource( 1 )
 shader_param/color = Color( 1, 0, 0, 1 )
-shader_param/is_greyscale = false
+shader_param/saturation_modifier = 1.0
 
 [node name="SpawnPoint" type="Spatial"]
 script = ExtResource( 3 )
