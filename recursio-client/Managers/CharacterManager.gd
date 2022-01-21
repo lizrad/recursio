@@ -157,7 +157,7 @@ func _on_phase_switch_received(round_index, next_phase, switch_time):
 	_round_manager.future_switch_to_phase(next_phase, switch_time)
 
 func _on_preparation_phase_started() -> void:
-	_player.toggle_movement(false)
+	toggle_movement(false)
 	_player.reset_aim_mode()
 	_player.clear_walls()
 	_player.clear_past_frames()
@@ -199,7 +199,7 @@ func _on_countdown_phase_started() -> void:
 func _on_game_phase_started() -> void:
 	_player.set_record_data_timestamp(Server.get_server_time())
 	_enemy.set_record_data_timestamp(Server.get_server_time())
-	_player.toggle_movement(true)
+	toggle_movement(true)
 	_player.set_overview_light_enabled(false)
 	_toggle_visbility_lights(true)
 	_player.show_game_hud(_round_manager.round_index)
