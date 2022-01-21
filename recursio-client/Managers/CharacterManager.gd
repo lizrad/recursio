@@ -166,6 +166,7 @@ func _on_preparation_phase_started() -> void:
 	_player.toggle_animation(false)
 	_enemy.toggle_animation(false)
 	_player.stop_shake()
+	toggle_swapping(true)
 
 	_toggle_visbility_lights(false)
 	_action_manager.clear_action_instances()
@@ -206,7 +207,6 @@ func _on_game_phase_started() -> void:
 	_game_manager.toggle_capture_points(true)
 
 func _on_game_phase_stopped() -> void:
-	toggle_swapping(true)
 	_game_manager.toggle_capture_points(false)
 
 
