@@ -206,6 +206,7 @@ func _on_game_phase_started() -> void:
 	_game_manager.toggle_capture_points(true)
 
 func _on_game_phase_stopped() -> void:
+	toggle_swapping(true)
 	_game_manager.toggle_capture_points(false)
 
 
