@@ -70,7 +70,8 @@ func stop_shake():
 	# where two shakes are triggered shortly after each other, causing one to stop while the other
 	# should still run
 	if _current_shake_count == 0:
-		_tween.disconnect("tween_all_completed", self, "_on_shake_complete")
+		if _tween.is_connected("tween_all_completed", self, "_on_shake_complete"):
+			_tween.disconnect("tween_all_completed", self, "_on_shake_complete")
 		_tween.remove_all()
 		var start_vector = Vector3(_shake_vector.x, 0, _shake_vector.z)
 		var goal_vector = Vector3.ZERO
@@ -80,7 +81,8 @@ func stop_shake():
 func hard_stop_shake():
 	_current_shake_count = 0
 	_shake_speed = 1
-	_tween.disconnect("tween_all_completed", self, "_on_shake_complete")
+	if _tween.is_connected("tween_all_completed", self, "_on_shake_complete"):
+		_tween.disconnect("tween_all_completed", self, "_on_shake_complete")
 	_tween.remove_all()
 	var start_vector = Vector3(_shake_vector.x, 0, _shake_vector.z)
 	var goal_vector = Vector3.ZERO

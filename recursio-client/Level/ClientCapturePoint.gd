@@ -20,6 +20,10 @@ var enemy_in_capture_color_name = "enemy_ghost_primary_accent"
 var enemy_captured_color_name = "enemy_ghost_main"
 
 
+func set_name (name: String) -> void:
+	$Viewport2/Label.text = name
+
+
 func apply_server_capture_gained(capturing_player_team_id: int)  -> void:
 	current_owning_team = capturing_player_team_id
 	capture_progress = 1

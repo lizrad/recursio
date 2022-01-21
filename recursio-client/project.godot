@@ -429,7 +429,6 @@ window/size/width=1920
 window/size/height=1080
 window/size/test_width=960
 window/size/test_height=540
-window/vsync/use_vsync=false
 
 [editor_plugins]
 
@@ -577,6 +576,7 @@ common/enable_pause_aware_picking=true
 
 [rendering]
 
+gles3/shaders/shader_compilation_mode=2
 environment/default_environment="res://default_env.tres"
 quality/dynamic_fonts/use_oversampling=false
 
@@ -586,4 +586,4 @@ main_scene="res://World.tscn"
 
 [}[application]
 
-config]name="recursio"
+"config]name"="recursio"
