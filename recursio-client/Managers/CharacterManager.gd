@@ -32,9 +32,13 @@ var _max_timelines = Constants.get_value("ghosts", "max_amount")
 
 var _input_paused: int = 0
 # Stores active inputs before pausing
-var _pre_pause_trigger_toggle_values: Dictionary = {}
-var _pre_pause_movement_toggle_value: bool = false
-var _pre_pause_swapping_toggle_value: bool = false
+var _pre_pause_trigger_toggle_values: Dictionary = {
+	ActionManager.Trigger.FIRE_START: true,
+	ActionManager.Trigger.DEFAULT_ATTACK_START: true,
+	ActionManager.Trigger.SPECIAL_MOVEMENT_START: true
+}
+var _pre_pause_movement_toggle_value: bool = true
+var _pre_pause_swapping_toggle_value: bool = true
 
 func _ready():
 	var _error = Server.connect("phase_switch_received", self, "_on_phase_switch_received") 
