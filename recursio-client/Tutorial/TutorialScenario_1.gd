@@ -28,6 +28,7 @@ func _started_round_1():
 	_character_manager._round_manager._start_game()
 	yield(_round_manager, "game_phase_started")
 	add_sub_condition(funcref(self, "_move_sub_condition_start"), funcref(self, "_move_sub_condition"), funcref(self, "_move_sub_condition_end"))
+	add_sub_condition(funcref(self, "_aim_sub_condition_start"), funcref(self, "_aim_sub_condition"), funcref(self, "_aim_sub_condition_end"))
 	add_sub_condition(funcref(self, "_dash_sub_condition_start"), funcref(self, "_dash_sub_condition"), funcref(self, "_dash_sub_condition_end"))
 
 
@@ -86,6 +87,29 @@ func _move_sub_condition() -> bool:
 
 func _move_sub_condition_end() -> void:
 	_bottom_element.hide()
+
+
+var _start_rotation: float
+
+func _aim_sub_condition_start() -> void:
+	_start_rotation = _player.get_rotation_y()
+	_bottom_element.show()
+	_bottom_element.set_content("Aim!", TutorialUIBottomElement.Controls.Look)
+
+
+func _aim_sub_condition() -> bool:
+	var diff =  _player.get_rotation_y() - _start_rotation
+	# deals with rotation where we jump over the full circle and keeps degrees between -180 and 180
+	diff = (diff + PI)
+	diff = diff - floor(diff/(2*PI)) * (2*PI)
+	diff -= PI
+	# rotate at least 90 degrees
+	return abs(diff) > PI*0.5
+
+
+func _aim_sub_condition_end() -> void:
+	_bottom_element.hide()
+
 
 
 func _dash_sub_condition_start() -> void:
