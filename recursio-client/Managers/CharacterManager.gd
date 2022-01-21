@@ -206,6 +206,7 @@ func _on_game_phase_started() -> void:
 	_game_manager.toggle_capture_points(true)
 
 func _on_game_phase_stopped() -> void:
+	_player.set_overview_light_enabled(false)
 	_game_manager.toggle_capture_points(false)
 
 
