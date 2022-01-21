@@ -103,13 +103,13 @@ shape = SubResource( 2 )
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 23, 0, 0 )
 
 [node name="Spawn1" type="Position3D" parent="Player1Spawns"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 0, -16 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 0, -10 )
 
 [node name="Spawn2" type="Position3D" parent="Player1Spawns"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 0, -13 )
 
 [node name="Spawn3" type="Position3D" parent="Player1Spawns"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 0, -10 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 0, -16 )
 
 [node name="Player2Spawns" type="Spatial" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -23, 0, 0 )
