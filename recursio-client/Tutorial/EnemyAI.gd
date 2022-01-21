@@ -3,6 +3,7 @@ class_name EnemyAI
 
 var waypoint_reach_distance: float = 0.1
 var peaceful := false
+var infinite_ammo = true
 
 # Enemy instance to control
 var _enemy: Enemy
@@ -12,6 +13,7 @@ var _current_waypoint: int = 0
 var _character_to_shoot: CharacterBase
 var _shoot_timer: float = 1.0
 var _shoot_cooldown: float = 2.0
+var _just_fired = false
 
 var _is_running: bool = false
 
@@ -50,10 +52,13 @@ func _physics_process(delta):
 			_shoot_timer = 0
 			if not peaceful:
 				buttons = 2
+				_just_fired = true
 	
 	_enemy.apply_input(movement.normalized(), rotation.normalized(), buttons)
-
-
+	if _just_fired and infinite_ammo:
+		_enemy._get_action(ActionManager.Trigger.FIRE_START, _enemy.timeline_index).ammunition += 1
+		_just_fired = false
+		
 func start() -> void:
 	_is_running = true
 
