@@ -16,7 +16,11 @@ var chromatic_ab_strength: float = 1.0 setget set_chromatic_ab_strength
 
 signal shaking_camera(amount, speed)
 
-
+func reset_effects():
+	self.glitch = false
+	self.vignette = false
+	self.vignette_softness = 1.0
+	self.chromatic_ab_strength = 0.0
 
 func _ready():
 	_pp = _post_process_tool_scene.instance()

@@ -206,7 +206,7 @@ func _on_game_phase_started() -> void:
 
 func _on_game_phase_stopped() -> void:
 	_game_manager.toggle_capture_points(false)
-
+	PostProcess.reset_effects()
 
 
 

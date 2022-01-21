@@ -199,6 +199,6 @@ func _completed() -> void:
 	pause()
 	yield(_bottom_element, "continue_pressed")
 	unpause()
-	PostProcess.chromatic_ab_strength = 0
+	PostProcess.reset_effects()
 	emit_signal("scenario_completed")
 	queue_free()

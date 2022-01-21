@@ -304,6 +304,7 @@ func _enter_game():
 
 
 func _exit_game():
+	PostProcess.reset_effects()
 	_in_game = false
 	$MenuMusic.play()
 
