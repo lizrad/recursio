@@ -135,24 +135,8 @@ margin_top = 266.0
 margin_right = 552.0
 margin_bottom = 286.0
 
-[node name="Btn_Ready" type="Button" parent="Content/BottomBar"]
-margin_right = 50.0
-margin_bottom = 20.0
-focus_neighbour_right = NodePath("../Btn_Leave")
-focus_next = NodePath("../Btn_Leave")
-shortcut_in_tooltip = false
-text = "Ready"
-script = ExtResource( 3 )
-
-[node name="Space" type="Control" parent="Content/BottomBar"]
-margin_left = 54.0
-margin_right = 499.0
-margin_bottom = 20.0
-size_flags_horizontal = 3
-
 [node name="Btn_Leave" type="Button" parent="Content/BottomBar"]
-margin_left = 503.0
-margin_right = 552.0
+margin_right = 49.0
 margin_bottom = 20.0
 focus_neighbour_left = NodePath("../Btn_Ready")
 focus_neighbour_top = NodePath("../../HBoxContainer/VBoxContainer/HBoxContainer/FogOfWarToggle")
@@ -163,3 +147,19 @@ shortcut_in_tooltip = false
 text = "Leave"
 script = ExtResource( 3 )
 sound_type = 1
+
+[node name="Space" type="Control" parent="Content/BottomBar"]
+margin_left = 53.0
+margin_right = 498.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+
+[node name="Btn_Ready" type="Button" parent="Content/BottomBar"]
+margin_left = 502.0
+margin_right = 552.0
+margin_bottom = 20.0
+focus_neighbour_right = NodePath("../Btn_Leave")
+focus_next = NodePath("../Btn_Leave")
+shortcut_in_tooltip = false
+text = "Ready"
+script = ExtResource( 3 )
