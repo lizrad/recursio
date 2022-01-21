@@ -30,7 +30,7 @@ var _time_since_last_world_state_update = 0.0
 
 var _max_timelines = Constants.get_value("ghosts", "max_amount")
 
-var _input_paused: bool = false
+var _input_paused: int = 0
 # Stores active inputs before pausing
 var _pre_pause_trigger_toggle_values: Dictionary = {}
 var _pre_pause_movement_toggle_value: bool = false
@@ -94,7 +94,7 @@ func get_player_id() -> int:
 
 func toggle_swapping(value: bool) -> void:
 	_pre_pause_swapping_toggle_value = value
-	if not _input_paused:
+	if _input_paused == 0:
 		_player.toggle_swapping(value)
 
 
@@ -103,7 +103,7 @@ func get_swapping_toggle_value() -> bool:
 
 func toggle_movement(value: bool) -> void:
 	_pre_pause_movement_toggle_value = value
-	if not _input_paused:
+	if _input_paused == 0:
 		_player.toggle_movement(value)
 
 func get_movement_toggle_value() -> bool:
@@ -111,7 +111,7 @@ func get_movement_toggle_value() -> bool:
 
 func toggle_trigger(trigger, value: bool) -> void:
 	_pre_pause_trigger_toggle_values[trigger] = value
-	if not _input_paused:
+	if _input_paused == 0:
 		_player.toggle_trigger(trigger, value)
 	
 
@@ -120,14 +120,9 @@ func get_trigger_toggle_value(trigger) -> bool:
 
 
 func toggle_player_input_pause(value: bool) -> void:
-	_input_paused = value;
-	if value:
-		_pre_pause_trigger_toggle_values[ActionManager.Trigger.FIRE_START] = _player.get_trigger_toggle_value(ActionManager.Trigger.FIRE_START)
-		_pre_pause_trigger_toggle_values[ActionManager.Trigger.DEFAULT_ATTACK_START] = _player.get_trigger_toggle_value(ActionManager.Trigger.DEFAULT_ATTACK_START)
-		_pre_pause_trigger_toggle_values[ActionManager.Trigger.SPECIAL_MOVEMENT_START] = _player.get_trigger_toggle_value(ActionManager.Trigger.SPECIAL_MOVEMENT_START)
-	
-		_pre_pause_movement_toggle_value = _player.get_movement_toggle_value()
-		_pre_pause_swapping_toggle_value = _player.get_swapping_toggle_value()
+	_input_paused += 1 if value else -1;
+	_input_paused = int(max(0, _input_paused))
+	if _input_paused > 0:
 		_player.toggle_trigger(ActionManager.Trigger.FIRE_START, false)
 		_player.toggle_trigger(ActionManager.Trigger.DEFAULT_ATTACK_START, false)
 		_player.toggle_trigger(ActionManager.Trigger.SPECIAL_MOVEMENT_START, false)
