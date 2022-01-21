@@ -134,6 +134,7 @@ func unpause() -> void:
 		_enemyAI.start()
 
 func stop() -> void:
+	unpause()
 	queue_free()
 
 
