@@ -31,6 +31,7 @@ onready var _post_process_tool = get_node("TutorialUI/PausePostProcessing")
 onready var _post_process_excepted = get_node("TutorialUI/PostProcessExcepted")
 onready var _goal_element_1 = get_node("TutorialUI/PostProcessAffected/GoalElement1")
 onready var _goal_element_2 = get_node("TutorialUI/PostProcessAffected/GoalElement2")
+onready var _goal_element_3 = get_node("TutorialUI/PostProcessAffected/GoalElement3")
 onready var _bottom_element: TutorialUIBottomElement = get_node("TutorialUI/PostProcessAffected/BottomElement")
 onready var _pause_post_processing = get_node("TutorialUI/PausePostProcessing")
 onready var _character_manager: CharacterManager = get_node("TutorialWorld/CharacterManager")
@@ -74,8 +75,10 @@ func _ready() -> void:
 	# setup ui
 	_goal_element_1.init(_player.get_camera())
 	_goal_element_2.init(_player.get_camera())
+	_goal_element_3.init(_player.get_camera())
 	_goal_element_1.hide()
 	_goal_element_2.hide()
+	_goal_element_3.hide()
 	_bottom_element.hide()
 
 

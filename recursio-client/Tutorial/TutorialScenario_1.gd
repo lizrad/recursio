@@ -56,6 +56,9 @@ func _started_round_2() -> void:
 	_goal_element_2.set_content("Your past", _ghost_manager._player_ghosts[0].kb)
 	_goal_element_2.show()
 	
+	_goal_element_3.set_content("You control", _player.get_body())
+	_goal_element_3.show()
+	
 	yield(_round_manager, "game_phase_started")
 	add_sub_condition(funcref(self, "_enemy_point_captured_condition_start"), funcref(self, "_enemy_point_captured_condition"), funcref(self, "_enemy_point_captured_condition_end"))
 	add_sub_condition(funcref(self, "_enemy_killed_condition_start"), funcref(self, "_enemy_killed_condition"), funcref(self, "_enemy_killed_condition_end"))

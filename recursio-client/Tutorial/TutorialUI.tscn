@@ -161,6 +161,61 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="GoalElement3" type="HBoxContainer" parent="PostProcessAffected"]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -1330.0
+margin_top = -969.5
+margin_right = -893.0
+margin_bottom = -819.5
+rect_scale = Vector2( 0.5, 0.5 )
+rect_pivot_offset = Vector2( 0, 75 )
+script = ExtResource( 7 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ArrowTexture" type="TextureRect" parent="PostProcessAffected/GoalElement3"]
+margin_right = 150.0
+margin_bottom = 150.0
+rect_min_size = Vector2( 150, 150 )
+texture = ExtResource( 6 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Space" type="Control" parent="PostProcessAffected/GoalElement3"]
+margin_left = 154.0
+margin_right = 174.0
+margin_bottom = 150.0
+rect_min_size = Vector2( 20, 0 )
+
+[node name="GoalText" type="Label" parent="PostProcessAffected/GoalElement3"]
+margin_left = 178.0
+margin_right = 437.0
+margin_bottom = 150.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 10.0
+theme = SubResource( 4 )
+text = "Capture"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Panel" type="Panel" parent="PostProcessAffected/GoalElement3/GoalText"]
+show_behind_parent = true
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_styles/panel = SubResource( 5 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="BottomElement" type="CenterContainer" parent="PostProcessAffected"]
 anchor_top = 0.86
 anchor_right = 1.0
