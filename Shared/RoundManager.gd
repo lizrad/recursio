@@ -1,6 +1,7 @@
 extends Node
 class_name RoundManager
 
+signal game_started()
 signal preparation_phase_started()
 signal countdown_phase_started()
 signal game_phase_started()
@@ -94,13 +95,15 @@ func _check_for_game_start():
 	if _future_game_imminent:
 		if server.get_server_time() >= _future_game_start_time:
 			_future_game_imminent = false
-			_start_game()
+			_start_game(false)
 
 
-func _start_game():
+func _start_game(quiet: bool):
 	_current_phase_index = 0
 	round_index = 0
 	_running = true
+	if not quiet:
+		emit_signal("game_started")
 	_start_phase(Phases.PREPARATION)
 
 

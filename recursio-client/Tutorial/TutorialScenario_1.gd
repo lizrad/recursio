@@ -25,7 +25,7 @@ func _started_round_1():
 	_goal_element_1.set_content("Capture!", first_spawn_point)
 	_goal_element_1.show()
 	_player.kb.visible = true
-	_character_manager._round_manager._start_game()
+	_character_manager._round_manager._start_game(true)
 	yield(_round_manager, "game_phase_started")
 	add_sub_condition(funcref(self, "_move_sub_condition_start"), funcref(self, "_move_sub_condition"), funcref(self, "_move_sub_condition_end"))
 	add_sub_condition(funcref(self, "_aim_sub_condition_start"), funcref(self, "_aim_sub_condition"), funcref(self, "_aim_sub_condition_end"))
