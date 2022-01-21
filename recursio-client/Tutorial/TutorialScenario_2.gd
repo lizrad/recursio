@@ -37,7 +37,7 @@ func _started_round_1():
 	_player.set_custom_view_target(_level.get_capture_points()[1])
 	_player.kb.visible = true
 	_enemy.kb.visible = true
-	_character_manager._round_manager._start_game()
+	_character_manager._round_manager._start_game(true)
 	yield(_round_manager, "game_phase_started")
 	_enemy.set_position(Vector3(-12,0, 8))
 	_enemyAI.start()

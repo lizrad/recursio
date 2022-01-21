@@ -7,12 +7,12 @@ export(float) var rotate_threshold := 0.0
 onready var _player: Player = get_parent().get_parent()
 
 
-var block_movement: bool = false
-var block_swapping: bool = false
+var block_movement: bool = true
+var block_swapping: bool = true
 var disabled_inputs: Dictionary = {
-	"player_shoot": false,
-	"player_melee": false,
-	"player_dash": false
+	"player_shoot": true,
+	"player_melee": true,
+	"player_dash": true
 }
 
 # Maps the actual button to the internal enums
