@@ -40,10 +40,10 @@ func _started_round_1():
 	add_sub_condition(funcref(self, "_dash_sub_condition_start"), funcref(self, "_dash_sub_condition"), funcref(self, "_dash_sub_condition_end"))
 	yield (_round_manager, "preparation_phase_started")
 	_goal_element_1.hide()
-	add_post_process_exception(_bottom_element)
 	if captured_once:
 		_switch_to_next_round()
 	else:
+		add_post_process_exception(_bottom_element)
 		_bottom_element.show()
 		_bottom_element.set_content("Oh no the timer ran out and you failed\nto capture the point once.", TutorialUIBottomElement.Controls.None, true)
 		pause()
