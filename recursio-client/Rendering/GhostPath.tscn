@@ -76,3 +76,5 @@ path_continuous_u = true
 path_u_distance = 0.0
 path_joined = false
 script = ExtResource( 3 )
+
+[node name="PathMiddle" type="Spatial" parent="."]

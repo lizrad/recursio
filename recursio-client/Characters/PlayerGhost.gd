@@ -28,4 +28,4 @@ func toggle_path_select(value):
 		$GhostPath.selected = value
 
 func delete_path():
-	$GhostPath.set_curve(Curve.new())
+	$GhostPath.delete_curve()

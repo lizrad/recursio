@@ -21,7 +21,8 @@ enum Controls {
 	Melee,
 	Shoot,
 	Dash,
-	Swap
+	Swap,
+	Ready
 	}
 
 
@@ -42,6 +43,7 @@ var _keyboard_textures_dictionary: Dictionary = {
 	Controls.Shoot : preload("res://Resources/Icons/keyboard/shoot.png"),
 	Controls.Dash : preload("res://Resources/Icons/keyboard/dash.png"),
 	Controls.Swap : preload("res://Resources/Icons/keyboard/swap.png"),
+	Controls.Ready : preload("res://Resources/Icons/keyboard/accept.png"),
 }
 var _ps_textures_dictionary: Dictionary = {
 	Controls.None : null,
@@ -51,6 +53,7 @@ var _ps_textures_dictionary: Dictionary = {
 	Controls.Shoot : preload("res://Resources/Icons/ps/shoot.png"),
 	Controls.Dash : preload("res://Resources/Icons/ps/dash.png"),
 	Controls.Swap : preload("res://Resources/Icons/ps/swap.png"),
+	Controls.Ready : preload("res://Resources/Icons/ps/accept.png"),
 }
 var _xbox_textures_dictionary: Dictionary = {
 	Controls.None : null,
@@ -60,6 +63,7 @@ var _xbox_textures_dictionary: Dictionary = {
 	Controls.Shoot : preload("res://Resources/Icons/xbox/shoot.png"),
 	Controls.Dash : preload("res://Resources/Icons/xbox/dash.png"),
 	Controls.Swap : preload("res://Resources/Icons/xbox/swap.png"),
+	Controls.Ready : preload("res://Resources/Icons/xbox/accept.png"),
 }
 
 func _ready() -> void:

@@ -17,13 +17,19 @@ func _ready():
 
 
 func _started_round_1():
+	_player.kb.visible = true
+	_character_manager._round_manager._start_game(true)
+	_bottom_element.set_content("Start Round", TutorialUIBottomElement.Controls.Ready)
+	_bottom_element.show()
+	yield(_round_manager, "countdown_phase_started")
+	_bottom_element.hide()
 	var first_spawn_point = _level.get_capture_points()[1]
 	_player.set_custom_view_target(first_spawn_point)
 	_goal_element_1.set_content("Capture!", first_spawn_point)
 	_goal_element_1.show()
-	_player.kb.visible = true
-	_character_manager._round_manager._start_game(true)
+	
 	yield(_round_manager, "game_phase_started")
+	_player.follow_camera()
 	add_sub_condition(funcref(self, "_move_sub_condition_start"), funcref(self, "_move_sub_condition"), funcref(self, "_move_sub_condition_end"))
 	add_sub_condition(funcref(self, "_aim_sub_condition_start"), funcref(self, "_aim_sub_condition"), funcref(self, "_aim_sub_condition_end"))
 	add_sub_condition(funcref(self, "_dash_sub_condition_start"), funcref(self, "_dash_sub_condition"), funcref(self, "_dash_sub_condition_end"))
@@ -46,6 +52,46 @@ func _started_round_2() -> void:
 	# setting enemy timeline back to the first one
 	_character_manager._on_timeline_picked(1,0)
 	
+	add_post_process_exception(_bottom_element)
+	_bottom_element.set_content("After each round the preparation phase begins.", TutorialUIBottomElement.Controls.None, true)
+	_bottom_element.show()
+	pause()
+	yield(_bottom_element, "continue_pressed")
+	unpause()
+	
+	add_post_process_exception(_goal_element_1)
+	add_post_process_exception(_goal_element_2)
+	add_post_process_exception(_goal_element_3)
+	_goal_element_1.set_content("Timeline 1", _level.get_spawn_points(0)[0])
+	_goal_element_2.set_content("Timeline 2", _level.get_spawn_points(0)[1])
+	_goal_element_3.set_content("Timeline 3", _level.get_spawn_points(0)[2])
+	_goal_element_1.show()
+	_goal_element_2.show()
+	_goal_element_3.show()
+	_bottom_element.set_content("In the real game you could swap between the timelines.", TutorialUIBottomElement.Controls.None, true)
+	pause()
+	yield(_bottom_element, "continue_pressed")
+	unpause()
+	
+	remove_post_process_exception(_goal_element_1)
+	remove_post_process_exception(_goal_element_2)
+	remove_post_process_exception(_goal_element_3)
+	_goal_element_1.hide()
+	_goal_element_2.hide()
+	_goal_element_3.hide()
+	_bottom_element.set_content("You can also see the paths you took in the other timelines.", TutorialUIBottomElement.Controls.None, true)
+	pause()
+	yield(_bottom_element, "continue_pressed")
+	unpause()
+	
+	remove_post_process_exception(_bottom_element)
+	_bottom_element.hide()
+	
+	_goal_element_1.set_content("How you moved", _ghost_manager._player_ghosts[0].get_node("GhostPath/PathMiddle"))
+	_goal_element_1.show()
+	
+	
+	yield(_round_manager, "countdown_phase_started")
 	_player.set_custom_view_target(_level.get_capture_points()[0])
 	_goal_element_1.set_content("Capture!", _level.get_capture_points()[0])
 	_goal_element_1.show()
@@ -57,6 +103,7 @@ func _started_round_2() -> void:
 	_goal_element_3.show()
 	
 	yield(_round_manager, "game_phase_started")
+	_player.follow_camera()
 	add_sub_condition(funcref(self, "_enemy_point_captured_condition_start"), funcref(self, "_enemy_point_captured_condition"), funcref(self, "_enemy_point_captured_condition_end"))
 	add_sub_condition(funcref(self, "_enemy_killed_condition_start"), funcref(self, "_enemy_killed_condition"), funcref(self, "_enemy_killed_condition_end"))
 	
