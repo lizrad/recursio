@@ -106,6 +106,21 @@ func _ready():
 
 func _process(_delta):
 	if not _in_game:
+		# handling back facebutton in ui
+		if Input.is_action_just_pressed("ui_cancel"):
+			if _game_room_search.visible:
+				_on_search_back_pressed()
+			elif _game_room_lobby.visible:
+				# calling internal method because sending info to server
+				# that game room is to be deleted if empty
+				_game_room_lobby._on_leave_pressed()
+			elif _tutorial.visible:
+				_tutorial.hide()
+				_start_menu_buttons.show()
+				_btn_play_tutorial.grab_focus()
+			elif _settings.visible:
+				_settings.hide()
+				_start_menu_buttons.show()
 		return
 	
 	if Input.is_action_just_pressed("gameplay_menu"):
@@ -400,4 +415,3 @@ func _on_level_selected_received(level_index) -> void:
 func _on_fog_of_war_toggled(is_fog_of_war_enabled) -> void:
 	_game_room_lobby.set_fog_of_war(is_fog_of_war_enabled)
 	_game_room_lobby.enable_ready_button()
-	

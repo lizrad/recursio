@@ -21,6 +21,14 @@ func _ready():
 	_err = _settings.connect("visibility_changed", self, "_on_settings_visibility_changed")
 
 
+func _process(_delta: float) -> void:
+	if Input.is_action_just_pressed("ui_cancel"):
+		if _settings.visible:
+			_settings.hide()
+		else:
+			_on_resume_pressed()
+
+
 func _on_visibility_changed() -> void:
 	if visible:
 		_btn_resume.grab_focus()
