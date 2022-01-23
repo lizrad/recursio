@@ -5,6 +5,9 @@ class_name TutorialScenario_1
 
 
 func _ready():
+	# Shorten game phase
+	_round_manager._game_phase_time = 10.0
+	_player._hud.add_custom_max_time("game_phase_time", 10.0)
 	_rounds = 2
 	add_round_start_function(funcref(self, "_started_round_1"))
 	add_round_condition_function(funcref(self, "_check_completed_round_1"))
@@ -17,15 +20,17 @@ func _ready():
 
 
 func _started_round_1():
+	_character_manager._on_timeline_picked(0,0)
+	_character_manager._on_timeline_picked(1,0)
 	_player.kb.visible = true
 	_character_manager._round_manager._start_game(true)
 	_bottom_element.set_content("Start Round", TutorialUIBottomElement.Controls.Ready)
 	_bottom_element.show()
 	yield(_round_manager, "countdown_phase_started")
 	_bottom_element.hide()
-	var first_spawn_point = _level.get_capture_points()[1]
-	_player.set_custom_view_target(first_spawn_point)
-	_goal_element_1.set_content("Capture!", first_spawn_point)
+	var first_point = _level.get_capture_points()[1]
+	_player.set_custom_view_target(first_point)
+	_goal_element_1.set_content("Capture!", first_point)
 	_goal_element_1.show()
 	
 	yield(_round_manager, "game_phase_started")
@@ -33,10 +38,45 @@ func _started_round_1():
 	add_sub_condition(funcref(self, "_move_sub_condition_start"), funcref(self, "_move_sub_condition"), funcref(self, "_move_sub_condition_end"))
 	add_sub_condition(funcref(self, "_aim_sub_condition_start"), funcref(self, "_aim_sub_condition"), funcref(self, "_aim_sub_condition_end"))
 	add_sub_condition(funcref(self, "_dash_sub_condition_start"), funcref(self, "_dash_sub_condition"), funcref(self, "_dash_sub_condition_end"))
-
-
+	yield (_round_manager, "preparation_phase_started")
+	_goal_element_1.hide()
+	add_post_process_exception(_bottom_element)
+	if captured_once:
+		_switch_to_next_round()
+	else:
+		_bottom_element.show()
+		_bottom_element.set_content("Oh no the timer ran out and you failed\nto capture the point once.", TutorialUIBottomElement.Controls.None, true)
+		pause()
+		yield(_bottom_element, "continue_pressed")
+		unpause()
+		var round_timer = _player.get_node("KinematicBody/HUD/Timer/TimerProgressBar")
+		_goal_element_1.show()
+		add_post_process_exception(_goal_element_1)
+		_goal_element_1.set_content("Round Timer", round_timer)
+		_bottom_element.set_content("Try the first round again and watch the timer", TutorialUIBottomElement.Controls.None, true)
+		pause()
+		yield(_bottom_element, "continue_pressed")
+		unpause()
+		#remove_post_process_exception(round_timer_element)
+		#round_timer_element.hide()
+		_bottom_element.hide()
+		_goal_element_1.hide()
+		remove_post_process_exception(_goal_element_1)
+		remove_post_process_exception(_bottom_element)
+		clear_sub_conditions()
+		_started_round_1()
+	
+	
+var captured_once = false
 func _check_completed_round_1() -> bool:
-	return _level.get_capture_points()[1].get_capture_progress() >= 1.0
+	if _level.get_capture_points()[1].get_capture_progress() >= 1.0 and not captured_once:
+		captured_once = true
+		_bottom_element.show()
+		_bottom_element.set_content("Now wait for the round to end.")
+		var round_timer = _player.get_node("KinematicBody/HUD/Timer/TimerProgressBar")
+		_goal_element_1.set_content("Round Timer", round_timer)
+		_goal_element_1.show()
+	return false
 
 
 func _completed_round_1() -> void:
@@ -46,11 +86,13 @@ func _completed_round_1() -> void:
 	clear_sub_conditions()
 
 
+
 func _started_round_2() -> void:	
 	_character_manager._round_manager.round_index += 1
 	_character_manager._round_manager.switch_to_phase(RoundManager.Phases.PREPARATION)
 	# setting enemy timeline back to the first one
 	_character_manager._on_timeline_picked(1,0)
+	_character_manager._on_timeline_picked(0,1)
 	
 	add_post_process_exception(_bottom_element)
 	_bottom_element.set_content("After each round the preparation phase begins.", TutorialUIBottomElement.Controls.None, true)
@@ -90,10 +132,15 @@ func _started_round_2() -> void:
 	_goal_element_1.set_content("How you moved", _ghost_manager._player_ghosts[0].get_node("GhostPath/PathMiddle"))
 	_goal_element_1.show()
 	
+	_bottom_element.set_content("Start Round", TutorialUIBottomElement.Controls.Ready)
+	_bottom_element.show()
+	
 	
 	yield(_round_manager, "countdown_phase_started")
+	
+	_bottom_element.hide()
 	_player.set_custom_view_target(_level.get_capture_points()[0])
-	_goal_element_1.set_content("Capture!", _level.get_capture_points()[0])
+	_goal_element_1.set_content("Capture simultaneously!", _level.get_capture_points()[0])
 	_goal_element_1.show()
 	
 	_goal_element_2.set_content("Your past", _ghost_manager._player_ghosts[0].kb)
@@ -107,6 +154,30 @@ func _started_round_2() -> void:
 	add_sub_condition(funcref(self, "_enemy_point_captured_condition_start"), funcref(self, "_enemy_point_captured_condition"), funcref(self, "_enemy_point_captured_condition_end"))
 	add_sub_condition(funcref(self, "_enemy_killed_condition_start"), funcref(self, "_enemy_killed_condition"), funcref(self, "_enemy_killed_condition_end"))
 	
+	yield (_round_manager, "preparation_phase_started")
+	_goal_element_1.hide()
+	_goal_element_2.hide()
+	_goal_element_3.hide()
+	_bottom_element.show()
+	add_post_process_exception(_bottom_element)
+	_bottom_element.set_content("Oh no the timer ran out and you failed\nto capture the second point", TutorialUIBottomElement.Controls.None, true)
+	pause()
+	yield(_bottom_element, "continue_pressed")
+	unpause()
+	var round_timer = _player.get_node("KinematicBody/HUD/Timer/TimerProgressBar")
+	_goal_element_1.show()
+	add_post_process_exception(_goal_element_1)
+	_goal_element_1.set_content("Round Timer", round_timer)
+	_bottom_element.set_content("Try the second round again and watch the timer", TutorialUIBottomElement.Controls.None, true)
+	pause()
+	yield(_bottom_element, "continue_pressed")
+	unpause()
+	_bottom_element.hide()
+	_goal_element_1.hide()
+	remove_post_process_exception(_goal_element_1)
+	remove_post_process_exception(_bottom_element)
+	clear_sub_conditions()
+	_started_round_2()
 
 
 func _check_completed_round_2() -> bool:
@@ -221,7 +292,7 @@ func _enemy_killed_condition() -> bool:
 
 func _enemy_killed_condition_end() -> void:
 	_bottom_element.hide()
-	_goal_element_1.set_content("Capture!", _level.get_capture_points()[0])
+	_goal_element_1.set_content("Capture simultaneously!", _level.get_capture_points()[0])
 	_enemyAI.stop()
 	_enemy.kb.visible = false
 

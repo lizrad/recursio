@@ -79,12 +79,14 @@ func _use_new_record_data():
 	if not Server.is_connection_active:
 		var current_round_index = _round_manager.round_index-1
 		var record_data = _character_manager._player.get_record_data()
-		if current_round_index > _player_ghosts[record_data.timeline_index].round_index:
+		# FIXME: using >= here is wrong if we would use this for server stuff as well, but is necessary for the tutorial to work
+		if current_round_index >= _player_ghosts[record_data.timeline_index].round_index:
 			_update_ghost_record(_player_ghosts, record_data.timeline_index, record_data, current_round_index)
 			_player_ghosts[record_data.timeline_index].player_id = _character_manager._player.player_id
 
 		record_data = _character_manager._enemy.get_record_data()
-		if current_round_index > _enemy_ghosts[record_data.timeline_index].round_index:
+		# FIXME: using >= here is wrong if we would use this for server stuff as well, but is necessary for the tutorial to work
+		if current_round_index >= _enemy_ghosts[record_data.timeline_index].round_index:
 			_update_ghost_record(_enemy_ghosts, record_data.timeline_index, record_data, current_round_index)
 			_enemy_ghosts[record_data.timeline_index].player_id = _character_manager._enemy.player_id
 

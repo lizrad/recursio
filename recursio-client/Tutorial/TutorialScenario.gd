@@ -82,7 +82,7 @@ func _ready() -> void:
 	_bottom_element.hide()
 
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	if _paused:
 		return
 	
@@ -92,10 +92,6 @@ func _process(delta: float) -> void:
 		if _round_manager.get_current_phase_time_left()>time_until_switch:
 			var countdown_start_time = Server.get_server_time()+time_until_switch
 			_round_manager.future_switch_to_phase(RoundManager.Phases.COUNTDOWN,countdown_start_time)
-	
-	# stop the timer from moving
-	if _character_manager._round_manager.get_current_phase() == RoundManager.Phases.GAME:
-		_character_manager._round_manager._phase_deadline += delta * 1000
 	
 	# check subconditions:
 	if _sub_conditions.size() > _current_sub_condition:
@@ -108,6 +104,11 @@ func _process(delta: float) -> void:
 	if not _round_conditions[_current_round].call_func():
 		return
 	
+	_switch_to_next_round()
+	
+
+
+func _switch_to_next_round():
 	_round_ends[_current_round].call_func()
 	_current_round += 1
 	
@@ -119,7 +120,6 @@ func _process(delta: float) -> void:
 	
 	# Call round start for new round
 	_round_starts[_current_round].call_func()
-
 
 func init() -> void:
 	_ghost_manager.init(_game_manager, _round_manager, _action_manager, _character_manager)
