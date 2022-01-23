@@ -57,8 +57,6 @@ func _started_round_1():
 		pause()
 		yield(_bottom_element, "continue_pressed")
 		unpause()
-		#remove_post_process_exception(round_timer_element)
-		#round_timer_element.hide()
 		_bottom_element.hide()
 		_goal_element_1.hide()
 		remove_post_process_exception(_goal_element_1)
