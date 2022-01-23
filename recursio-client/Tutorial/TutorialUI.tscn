@@ -12,14 +12,14 @@
 [ext_resource path="res://Resources/Fonts/FiraCode-Bold.ttf" type="DynamicFontData" id=10]
 [ext_resource path="res://Util/DynamicLabel.gd" type="Script" id=11]
 
-[sub_resource type="DynamicFont" id=3]
+[sub_resource type="DynamicFont" id=7]
 size = 60
 use_mipmaps = true
 use_filter = true
 font_data = ExtResource( 2 )
 
 [sub_resource type="Theme" id=4]
-default_font = SubResource( 3 )
+default_font = SubResource( 7 )
 Button/styles/focus = ExtResource( 3 )
 LineEdit/styles/focus = ExtResource( 3 )
 TextEdit/styles/focus = ExtResource( 3 )
@@ -216,29 +216,38 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="BottomElement" type="CenterContainer" parent="PostProcessAffected"]
-anchor_top = 0.86
+[node name="BottomElementHandle" type="Control" parent="PostProcessAffected"]
 anchor_right = 1.0
-anchor_bottom = 0.95
-grow_horizontal = 2
-grow_vertical = 2
+anchor_bottom = 1.0
 script = ExtResource( 8 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ElementsList" type="HBoxContainer" parent="PostProcessAffected/BottomElement"]
-margin_left = 275.0
-margin_top = 11.0
-margin_right = 1645.0
-margin_bottom = 86.0
+[node name="BottomElement" type="CenterContainer" parent="PostProcessAffected/BottomElementHandle"]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = -75.0
 grow_horizontal = 2
 grow_vertical = 2
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ControlTexture" type="TextureRect" parent="PostProcessAffected/BottomElement/ElementsList"]
+[node name="Tween" type="Tween" parent="PostProcessAffected/BottomElementHandle/BottomElement"]
+
+[node name="ElementsList" type="HBoxContainer" parent="PostProcessAffected/BottomElementHandle/BottomElement"]
+margin_left = 223.0
+margin_right = 1696.0
+margin_bottom = 75.0
+grow_horizontal = 2
+grow_vertical = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ControlTexture" type="TextureRect" parent="PostProcessAffected/BottomElementHandle/BottomElement/ElementsList"]
 margin_right = 75.0
 margin_bottom = 75.0
 rect_min_size = Vector2( 75, 75 )
@@ -251,7 +260,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Space1" type="Control" parent="PostProcessAffected/BottomElement/ElementsList"]
+[node name="Space1" type="Control" parent="PostProcessAffected/BottomElementHandle/BottomElement/ElementsList"]
 margin_left = 79.0
 margin_right = 99.0
 margin_bottom = 75.0
@@ -259,7 +268,7 @@ rect_min_size = Vector2( 20, 0 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="ControlText" type="Label" parent="PostProcessAffected/BottomElement/ElementsList"]
+[node name="ControlText" type="Label" parent="PostProcessAffected/BottomElementHandle/BottomElement/ElementsList"]
 margin_left = 103.0
 margin_top = 12.0
 margin_right = 1370.0
@@ -272,7 +281,7 @@ enable_this_after_font_is_unique = true
 font_size = 40
 use_parent_for_scaling = false
 
-[node name="Panel" type="Panel" parent="PostProcessAffected/BottomElement/ElementsList/ControlText"]
+[node name="Panel" type="Panel" parent="PostProcessAffected/BottomElementHandle/BottomElement/ElementsList/ControlText"]
 show_behind_parent = true
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -285,19 +294,17 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Space2" type="Control" parent="PostProcessAffected/BottomElement/ElementsList"]
-visible = false
-margin_left = 1449.0
-margin_right = 1469.0
-margin_bottom = 150.0
+[node name="Space2" type="Control" parent="PostProcessAffected/BottomElementHandle/BottomElement/ElementsList"]
+margin_left = 1374.0
+margin_right = 1394.0
+margin_bottom = 75.0
 rect_min_size = Vector2( 20, 0 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="ContinueTexture" type="TextureRect" parent="PostProcessAffected/BottomElement/ElementsList"]
-visible = false
-margin_left = 1374.0
-margin_right = 1449.0
+[node name="ContinueTexture" type="TextureRect" parent="PostProcessAffected/BottomElementHandle/BottomElement/ElementsList"]
+margin_left = 1398.0
+margin_right = 1473.0
 margin_bottom = 75.0
 rect_min_size = Vector2( 75, 75 )
 size_flags_horizontal = 3
