@@ -7,9 +7,6 @@ var _enemy_killed_once : bool = false
 var _soft_locked = false
 
 func _ready():
-	# Shorten prep phase
-	_round_manager._preparation_phase_time = 3.0
-	_player._hud.add_custom_max_time("prep_phase_time", 3.0)
 	_rounds = 3
 	add_round_start_function(funcref(self, "_started_round_1"))
 	add_round_condition_function(funcref(self, "_check_completed_round_1"))
@@ -81,6 +78,7 @@ func _completed_round_1() -> void:
 	_enemyAI.stop()
 	_enemyAI.queue_free()
 	_enemyAI = null
+	_auto_skip_next_prep = true
 
 
 func _started_round_2() -> void:

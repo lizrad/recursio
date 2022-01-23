@@ -5,7 +5,7 @@ class_name TutorialScenario
 signal scenario_completed()
 
 var show_ui: bool = true
-
+var _auto_skip_next_prep: bool = false
 # Number of rounds in this scenario
 var _rounds: int = 0
 # Currently active round in this scenario
@@ -54,7 +54,7 @@ func _ready() -> void:
 	
 	# setup player
 	_character_manager._on_spawn_player(0, Vector3.ZERO, 0)
-	_character_manager.hide_player_button_overlay = true
+	_character_manager.hide_swap_button_overlay = true
 	_player = _character_manager.get_player()
 	_player.get_body().hide()
 	
@@ -85,6 +85,14 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	if _paused:
 		return
+	
+	if _auto_skip_next_prep or (_character_manager._round_manager.get_current_phase() == RoundManager.Phases.PREPARATION and Input.is_action_pressed("ui_accept")):
+		_auto_skip_next_prep = false
+		var time_until_switch = 0.5
+		if _round_manager.get_current_phase_time_left()>time_until_switch:
+			var countdown_start_time = Server.get_server_time()+time_until_switch
+			_round_manager.future_switch_to_phase(RoundManager.Phases.COUNTDOWN,countdown_start_time)
+	
 	# stop the timer from moving
 	if _character_manager._round_manager.get_current_phase() == RoundManager.Phases.GAME:
 		_character_manager._round_manager._phase_deadline += delta * 1000
