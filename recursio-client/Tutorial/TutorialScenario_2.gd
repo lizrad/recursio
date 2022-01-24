@@ -323,7 +323,6 @@ func _on_ghost_hit_soft_lock(hit_data: HitData, ghost: PlayerGhost):
 	
 	add_post_process_exception(_bottom_element)
 	_bottom_element.show()
-	print(hit_data.to_string())
 	if hit_data.perpetrator_team_id == _player.team_id:
 		if hit_data.type == HitData.HitType.WALL:
 			_bottom_element.set_content("Oh no, you killed your past with a wall.\nAny previous timelines die on contact with them.\nMaybe use a melee attack instead.", TutorialUIBottomElement.Controls.None, true)
