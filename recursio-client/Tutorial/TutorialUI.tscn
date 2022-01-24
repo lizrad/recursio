@@ -228,7 +228,8 @@ __meta__ = {
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_top = -75.0
+margin_top = -156.0
+margin_bottom = -20.0
 grow_horizontal = 2
 grow_vertical = 2
 __meta__ = {
@@ -238,9 +239,9 @@ __meta__ = {
 [node name="Tween" type="Tween" parent="PostProcessAffected/BottomElementHandle/BottomElement"]
 
 [node name="ElementsList" type="HBoxContainer" parent="PostProcessAffected/BottomElementHandle/BottomElement"]
-margin_left = 223.0
-margin_right = 1696.0
-margin_bottom = 75.0
+margin_left = 141.0
+margin_right = 1778.0
+margin_bottom = 156.0
 grow_horizontal = 2
 grow_vertical = 2
 __meta__ = {
@@ -249,7 +250,7 @@ __meta__ = {
 
 [node name="ControlTexture" type="TextureRect" parent="PostProcessAffected/BottomElementHandle/BottomElement/ElementsList"]
 margin_right = 75.0
-margin_bottom = 75.0
+margin_bottom = 156.0
 rect_min_size = Vector2( 75, 75 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -263,18 +264,19 @@ __meta__ = {
 [node name="Space1" type="Control" parent="PostProcessAffected/BottomElementHandle/BottomElement/ElementsList"]
 margin_left = 79.0
 margin_right = 99.0
-margin_bottom = 75.0
+margin_bottom = 156.0
 rect_min_size = Vector2( 20, 0 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="ControlText" type="Label" parent="PostProcessAffected/BottomElementHandle/BottomElement/ElementsList"]
 margin_left = 103.0
-margin_top = 12.0
-margin_right = 1370.0
-margin_bottom = 62.0
+margin_right = 1534.0
+margin_bottom = 156.0
 custom_fonts/font = SubResource( 6 )
-text = "Welcome to the first Tutorial! This is awesome!"
+text = "If the previous timeline does not get hit, it repeats
+everything that was recorded within the round timer.
+Even dying and respawning!"
 valign = 1
 script = ExtResource( 11 )
 enable_this_after_font_is_unique = true
@@ -295,17 +297,17 @@ __meta__ = {
 }
 
 [node name="Space2" type="Control" parent="PostProcessAffected/BottomElementHandle/BottomElement/ElementsList"]
-margin_left = 1374.0
-margin_right = 1394.0
-margin_bottom = 75.0
+margin_left = 1538.0
+margin_right = 1558.0
+margin_bottom = 156.0
 rect_min_size = Vector2( 20, 0 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="ContinueTexture" type="TextureRect" parent="PostProcessAffected/BottomElementHandle/BottomElement/ElementsList"]
-margin_left = 1398.0
-margin_right = 1473.0
-margin_bottom = 75.0
+margin_left = 1562.0
+margin_right = 1637.0
+margin_bottom = 156.0
 rect_min_size = Vector2( 75, 75 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
