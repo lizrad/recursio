@@ -14,6 +14,7 @@ onready var _space_2: Control = get_node("BottomElement/ElementsList/Space2")
 onready var _continue_texture: TextureRect = get_node("BottomElement/ElementsList/ContinueTexture")
 onready var _tween: Tween = get_node("BottomElement/Tween")
 onready var _bottom_element: CenterContainer = get_node("BottomElement")
+onready var _background_panel: Panel = get_node("BackgroundPanel")
 
 enum Controls {
 	None,
@@ -106,8 +107,14 @@ func set_content(text: String, control = Controls.None, show_continue_texture: b
 	var y_start = - OS.window_size.y*0.5 + _bottom_element.rect_size.y
 	var y_end = -20
 	rect_position = Vector2(x, y_end)
+	_background_panel.hide()
 	if control != Controls.None:
+		var start_color = Color(0,0,0,0.75)
+		var end_color = Color(0,0,0,0)
+		_background_panel.show()
+		_background_panel.get("custom_styles/panel").set_bg_color(start_color)
 		_error = _tween.interpolate_property(self,"rect_position",Vector2(x, y_start), Vector2(x, y_end),1, Tween.TRANS_SINE, Tween.EASE_IN_OUT)
+		_error = _tween.interpolate_method(_background_panel.get("custom_styles/panel"),"set_bg_color",start_color, end_color,1, Tween.TRANS_SINE, Tween.EASE_IN_OUT)
 		rect_position = Vector2(x, y_start)
 		yield(get_tree().create_timer(0.5), "timeout")
 		_error = _tween.start()

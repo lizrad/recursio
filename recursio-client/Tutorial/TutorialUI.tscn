@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://UI/Default.tres" type="Theme" id=1]
 [ext_resource path="res://Resources/Fonts/FiraCode-Regular.ttf" type="DynamicFontData" id=2]
@@ -26,6 +26,9 @@ TextEdit/styles/focus = ExtResource( 3 )
 
 [sub_resource type="StyleBoxFlat" id=5]
 bg_color = Color( 0, 0, 0, 0.470588 )
+
+[sub_resource type="StyleBoxFlat" id=8]
+bg_color = Color( 0, 0, 0, 0.588235 )
 
 [sub_resource type="DynamicFont" id=6]
 size = 40
@@ -220,6 +223,18 @@ __meta__ = {
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 8 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="BackgroundPanel" type="Panel" parent="PostProcessAffected/BottomElementHandle"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -4816.0
+margin_top = -2356.0
+margin_right = 4331.0
+margin_bottom = 2573.0
+custom_styles/panel = SubResource( 8 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
