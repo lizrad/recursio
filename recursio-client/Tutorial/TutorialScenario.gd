@@ -5,7 +5,7 @@ class_name TutorialScenario
 signal scenario_completed()
 
 var show_ui: bool = true
-
+var _auto_skip_next_prep: bool = false
 # Number of rounds in this scenario
 var _rounds: int = 0
 # Currently active round in this scenario
@@ -31,7 +31,8 @@ onready var _post_process_tool = get_node("TutorialUI/PausePostProcessing")
 onready var _post_process_excepted = get_node("TutorialUI/PostProcessExcepted")
 onready var _goal_element_1 = get_node("TutorialUI/PostProcessAffected/GoalElement1")
 onready var _goal_element_2 = get_node("TutorialUI/PostProcessAffected/GoalElement2")
-onready var _bottom_element: TutorialUIBottomElement = get_node("TutorialUI/PostProcessAffected/BottomElement")
+onready var _goal_element_3 = get_node("TutorialUI/PostProcessAffected/GoalElement3")
+onready var _bottom_element: TutorialUIBottomElement = get_node("TutorialUI/PostProcessAffected/BottomElementHandle")
 onready var _pause_post_processing = get_node("TutorialUI/PausePostProcessing")
 onready var _character_manager: CharacterManager = get_node("TutorialWorld/CharacterManager")
 onready var _ghost_manager: ClientGhostManager = get_node("TutorialWorld/CharacterManager/GhostManager")
@@ -53,7 +54,7 @@ func _ready() -> void:
 	
 	# setup player
 	_character_manager._on_spawn_player(0, Vector3.ZERO, 0)
-	_character_manager.hide_player_button_overlay = true
+	_character_manager.hide_swap_button_overlay = true
 	_player = _character_manager.get_player()
 	_player.get_body().hide()
 	
@@ -74,17 +75,23 @@ func _ready() -> void:
 	# setup ui
 	_goal_element_1.init(_player.get_camera())
 	_goal_element_2.init(_player.get_camera())
+	_goal_element_3.init(_player.get_camera())
 	_goal_element_1.hide()
 	_goal_element_2.hide()
+	_goal_element_3.hide()
 	_bottom_element.hide()
 
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	if _paused:
 		return
-	# stop the timer from moving
-	if _character_manager._round_manager.get_current_phase() == RoundManager.Phases.GAME:
-		_character_manager._round_manager._phase_deadline += delta * 1000
+	
+	if _auto_skip_next_prep or (_character_manager._round_manager.get_current_phase() == RoundManager.Phases.PREPARATION and Input.is_action_pressed("ui_accept")):
+		_auto_skip_next_prep = false
+		var time_until_switch = 0.5
+		if _round_manager.get_current_phase_time_left()>time_until_switch:
+			var countdown_start_time = Server.get_server_time()+time_until_switch
+			_round_manager.future_switch_to_phase(RoundManager.Phases.COUNTDOWN,countdown_start_time)
 	
 	# check subconditions:
 	if _sub_conditions.size() > _current_sub_condition:
@@ -97,6 +104,11 @@ func _process(delta: float) -> void:
 	if not _round_conditions[_current_round].call_func():
 		return
 	
+	_switch_to_next_round()
+	
+
+
+func _switch_to_next_round():
 	_round_ends[_current_round].call_func()
 	_current_round += 1
 	
@@ -108,7 +120,6 @@ func _process(delta: float) -> void:
 	
 	# Call round start for new round
 	_round_starts[_current_round].call_func()
-
 
 func init() -> void:
 	_ghost_manager.init(_game_manager, _round_manager, _action_manager, _character_manager)
@@ -134,6 +145,7 @@ func unpause() -> void:
 		_enemyAI.start()
 
 func stop() -> void:
+	unpause()
 	queue_free()
 
 
@@ -198,6 +210,6 @@ func _completed() -> void:
 	pause()
 	yield(_bottom_element, "continue_pressed")
 	unpause()
-	PostProcess.chromatic_ab_strength = 0
+	PostProcess.reset_effects()
 	emit_signal("scenario_completed")
 	queue_free()

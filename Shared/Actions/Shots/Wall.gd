@@ -73,7 +73,7 @@ func handle_hit(collider):
 
 	if character is GhostBase and not character == placed_by_body \
 			and character.round_index < round_index:
-		character.hit(_create_hit_data(character, HitData.HitType.HITSCAN))
+		character.hit(_create_hit_data(character, HitData.HitType.WALL))
 
 # TODO: this function is duplicate among all damaging actions, a shared interface would be nice maybe
 func _create_hit_data(victim: CharacterBase, type) -> HitData:

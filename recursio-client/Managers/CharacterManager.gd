@@ -11,7 +11,8 @@ onready var _visibility_checker: VisibilityChecker = get_node("VisibilityChecker
 
 
 var enemy_is_server_driven: bool = true
-var hide_player_button_overlay: bool = false
+var hide_swap_button_overlay: bool = false
+var hide_ready_button_overlay: bool = false
 
 
 # Scenes for instanciating 
@@ -30,11 +31,15 @@ var _time_since_last_world_state_update = 0.0
 
 var _max_timelines = Constants.get_value("ghosts", "max_amount")
 
-var _input_paused: bool = false
+var _input_paused: int = 0
 # Stores active inputs before pausing
-var _pre_pause_trigger_toggle_values: Dictionary = {}
-var _pre_pause_movement_toggle_value: bool = false
-var _pre_pause_swapping_toggle_value: bool = false
+var _pre_pause_trigger_toggle_values: Dictionary = {
+	ActionManager.Trigger.FIRE_START: true,
+	ActionManager.Trigger.DEFAULT_ATTACK_START: true,
+	ActionManager.Trigger.SPECIAL_MOVEMENT_START: true
+}
+var _pre_pause_movement_toggle_value: bool = true
+var _pre_pause_swapping_toggle_value: bool = true
 
 func _ready():
 	var _error = Server.connect("phase_switch_received", self, "_on_phase_switch_received") 
@@ -95,7 +100,7 @@ func get_player_id() -> int:
 
 func toggle_swapping(value: bool) -> void:
 	_pre_pause_swapping_toggle_value = value
-	if not _input_paused:
+	if _input_paused == 0:
 		_player.toggle_swapping(value)
 
 
@@ -104,7 +109,7 @@ func get_swapping_toggle_value() -> bool:
 
 func toggle_movement(value: bool) -> void:
 	_pre_pause_movement_toggle_value = value
-	if not _input_paused:
+	if _input_paused == 0:
 		_player.toggle_movement(value)
 
 func get_movement_toggle_value() -> bool:
@@ -112,7 +117,7 @@ func get_movement_toggle_value() -> bool:
 
 func toggle_trigger(trigger, value: bool) -> void:
 	_pre_pause_trigger_toggle_values[trigger] = value
-	if not _input_paused:
+	if _input_paused == 0:
 		_player.toggle_trigger(trigger, value)
 	
 
@@ -121,14 +126,9 @@ func get_trigger_toggle_value(trigger) -> bool:
 
 
 func toggle_player_input_pause(value: bool) -> void:
-	_input_paused = value;
-	if value:
-		_pre_pause_trigger_toggle_values[ActionManager.Trigger.FIRE_START] = _player.get_trigger_toggle_value(ActionManager.Trigger.FIRE_START)
-		_pre_pause_trigger_toggle_values[ActionManager.Trigger.DEFAULT_ATTACK_START] = _player.get_trigger_toggle_value(ActionManager.Trigger.DEFAULT_ATTACK_START)
-		_pre_pause_trigger_toggle_values[ActionManager.Trigger.SPECIAL_MOVEMENT_START] = _player.get_trigger_toggle_value(ActionManager.Trigger.SPECIAL_MOVEMENT_START)
-	
-		_pre_pause_movement_toggle_value = _player.get_movement_toggle_value()
-		_pre_pause_swapping_toggle_value = _player.get_swapping_toggle_value()
+	_input_paused += 1 if value else -1;
+	_input_paused = int(max(0, _input_paused))
+	if _input_paused > 0:
 		_player.toggle_trigger(ActionManager.Trigger.FIRE_START, false)
 		_player.toggle_trigger(ActionManager.Trigger.DEFAULT_ATTACK_START, false)
 		_player.toggle_trigger(ActionManager.Trigger.SPECIAL_MOVEMENT_START, false)
@@ -166,7 +166,7 @@ func _on_phase_switch_received(round_index, next_phase, switch_time):
 	_round_manager.future_switch_to_phase(next_phase, switch_time)
 
 func _on_preparation_phase_started() -> void:
-	_player.toggle_movement(false)
+	toggle_movement(false)
 	_player.reset_aim_mode()
 	_player.clear_walls()
 	_player.clear_past_frames()
@@ -179,8 +179,10 @@ func _on_preparation_phase_started() -> void:
 
 	_toggle_visbility_lights(false)
 	_action_manager.clear_action_instances()
-	if not hide_player_button_overlay:
-		_player.show_button_overlay()
+	if not hide_swap_button_overlay:
+		_player.show_swap_button_overlay()
+	if not hide_ready_button_overlay:
+		_player.show_ready_button_overlay()
 	
 	_player.show_preparation_hud(_round_manager.round_index)
 	
@@ -209,7 +211,7 @@ func _on_countdown_phase_started() -> void:
 func _on_game_phase_started() -> void:
 	_player.set_record_data_timestamp(Server.get_server_time())
 	_enemy.set_record_data_timestamp(Server.get_server_time())
-	_player.toggle_movement(true)
+	toggle_movement(true)
 	_player.set_overview_light_enabled(false)
 	_toggle_visbility_lights(true)
 	_player.show_game_hud(_round_manager.round_index)
@@ -218,7 +220,7 @@ func _on_game_phase_started() -> void:
 func _on_game_phase_stopped() -> void:
 	_player.set_overview_light_enabled(false)
 	_game_manager.toggle_capture_points(false)
-
+	PostProcess.reset_effects()
 
 
 

@@ -1,4 +1,4 @@
-extends CenterContainer
+extends Control
 class_name TutorialUIBottomElement
 
 
@@ -7,12 +7,14 @@ signal continue_pressed
 var _continue_texture_scale_phase: float = 0.0
 var _current_control = Controls.None
 
-onready var _control_text: Label = get_node("ElementsList/ControlText")
-onready var _space_1: Control = get_node("ElementsList/Space1")
-onready var _control_texture: TextureRect = get_node("ElementsList/ControlTexture")
-onready var _space_2: Control = get_node("ElementsList/Space2")
-onready var _continue_texture: TextureRect = get_node("ElementsList/ContinueTexture")
-
+onready var _control_text: Label = get_node("BottomElement/ElementsList/ControlText")
+onready var _space_1: Control = get_node("BottomElement/ElementsList/Space1")
+onready var _control_texture: TextureRect = get_node("BottomElement/ElementsList/ControlTexture")
+onready var _space_2: Control = get_node("BottomElement/ElementsList/Space2")
+onready var _continue_texture: TextureRect = get_node("BottomElement/ElementsList/ContinueTexture")
+onready var _tween: Tween = get_node("BottomElement/Tween")
+onready var _bottom_element: CenterContainer = get_node("BottomElement")
+onready var _background_panel: Panel = get_node("BackgroundPanel")
 
 enum Controls {
 	None,
@@ -21,7 +23,8 @@ enum Controls {
 	Melee,
 	Shoot,
 	Dash,
-	Swap
+	Swap,
+	Ready
 	}
 
 
@@ -42,6 +45,7 @@ var _keyboard_textures_dictionary: Dictionary = {
 	Controls.Shoot : preload("res://Resources/Icons/keyboard/shoot.png"),
 	Controls.Dash : preload("res://Resources/Icons/keyboard/dash.png"),
 	Controls.Swap : preload("res://Resources/Icons/keyboard/swap.png"),
+	Controls.Ready : preload("res://Resources/Icons/keyboard/accept.png"),
 }
 var _ps_textures_dictionary: Dictionary = {
 	Controls.None : null,
@@ -51,6 +55,7 @@ var _ps_textures_dictionary: Dictionary = {
 	Controls.Shoot : preload("res://Resources/Icons/ps/shoot.png"),
 	Controls.Dash : preload("res://Resources/Icons/ps/dash.png"),
 	Controls.Swap : preload("res://Resources/Icons/ps/swap.png"),
+	Controls.Ready : preload("res://Resources/Icons/ps/accept.png"),
 }
 var _xbox_textures_dictionary: Dictionary = {
 	Controls.None : null,
@@ -60,6 +65,7 @@ var _xbox_textures_dictionary: Dictionary = {
 	Controls.Shoot : preload("res://Resources/Icons/xbox/shoot.png"),
 	Controls.Dash : preload("res://Resources/Icons/xbox/dash.png"),
 	Controls.Swap : preload("res://Resources/Icons/xbox/swap.png"),
+	Controls.Ready : preload("res://Resources/Icons/xbox/accept.png"),
 }
 
 func _ready() -> void:
@@ -84,6 +90,7 @@ func _process(delta):
 
 func set_content(text: String, control = Controls.None, show_continue_texture: bool = false) -> void:
 	assert(_control_textures_dictionary.has(control))
+	var _error = _tween.remove_all()
 	_current_control = control
 	_control_texture.texture = _control_textures_dictionary[control]
 	if control == Controls.None:
@@ -96,7 +103,21 @@ func set_content(text: String, control = Controls.None, show_continue_texture: b
 	_continue_texture.texture = _continue_control_texture
 	_continue_texture.visible = show_continue_texture
 	_space_2.visible = show_continue_texture
-
+	var x = 0
+	var y_start = - OS.window_size.y*0.5 + _bottom_element.rect_size.y
+	var y_end = -20
+	rect_position = Vector2(x, y_end)
+	_background_panel.hide()
+	if control != Controls.None:
+		var start_color = Color(0,0,0,0.75)
+		var end_color = Color(0,0,0,0)
+		_background_panel.show()
+		_background_panel.get("custom_styles/panel").set_bg_color(start_color)
+		_error = _tween.interpolate_property(self,"rect_position",Vector2(x, y_start), Vector2(x, y_end),1, Tween.TRANS_SINE, Tween.EASE_IN_OUT)
+		_error = _tween.interpolate_method(_background_panel.get("custom_styles/panel"),"set_bg_color",start_color, end_color,1, Tween.TRANS_SINE, Tween.EASE_IN_OUT)
+		rect_position = Vector2(x, y_start)
+		yield(get_tree().create_timer(0.5), "timeout")
+		_error = _tween.start()
 
 func _on_controller_changed(controller: String) -> void:
 	if controller == "ps":

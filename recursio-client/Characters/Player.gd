@@ -297,8 +297,11 @@ func show_preparation_hud(round_index) -> void:
 	_hud.prep_phase_start(round_index)
 
 
-func show_button_overlay() -> void:
-	_button_overlay_simple.set_active(true)
+func show_swap_button_overlay() -> void:
+	_button_overlay_simple.show_swap_overlay()
+	
+func show_ready_button_overlay() -> void:
+	_button_overlay_simple.show_ready_overlay()
 
 
 func show_countdown_hud() -> void:
@@ -309,7 +312,8 @@ func show_countdown_hud() -> void:
 		var pos = camera.unproject_position(active_spawn.global_transform.origin)
 		_hud.animate_weapon_selection(pos)
 	_hud.countdown_phase_start()
-	_button_overlay_simple.set_active(false)
+	_button_overlay_simple.hide_swap_overlay()
+	_button_overlay_simple.hide_ready_overlay()
 
 
 func show_game_hud(round_index) -> void:

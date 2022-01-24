@@ -5,9 +5,13 @@ var selected = false setget _set_selected
 var index = 0 setget _set_index
 
 
-func set_curve(curve):
+func set_curve(curve: Curve3D):
+	$PathMiddle.global_transform.origin = curve.get_point_position(int(floor(curve.get_point_count()*0.5)))
 	$Path.curve = curve
 
+
+func delete_curve():
+	$Path.curve = Curve3D.new()
 
 func _set_selected(new_selected:bool):
 	selected = new_selected

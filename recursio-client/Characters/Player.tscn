@@ -185,14 +185,9 @@ axis = 1
 texture = ExtResource( 12 )
 
 [node name="HUD" parent="KinematicBody" index="11" instance=ExtResource( 4 )]
-margin_left = 0.0
-margin_top = 0.0
-margin_right = 0.0
-margin_bottom = 0.0
 
 [node name="ButtonOverlaySimple" parent="KinematicBody" index="12" instance=ExtResource( 23 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00748944, 0, -5.43075 )
-visible = false
 
 [node name="AimVisuals" type="Spatial" parent="KinematicBody" index="13"]
 visible = false
@@ -211,7 +206,6 @@ visible = false
 material_override = SubResource( 6 )
 cast_shadow = 0
 mesh = ExtResource( 16 )
-material/0 = null
 
 [node name="Listener" type="Listener" parent="KinematicBody" index="14"]
 
@@ -222,7 +216,6 @@ transform = Transform( 0.01, 0, 0, 0, 0.01, 0, 0, 0, 0.01, 0, 0, 0 )
 material_override = ExtResource( 22 )
 cast_shadow = 0
 mesh = ExtResource( 21 )
-material/0 = null
 script = ExtResource( 18 )
 
 [node name="Tween" type="Tween" parent="KinematicBody/VisibilityVisualization" index="0"]
