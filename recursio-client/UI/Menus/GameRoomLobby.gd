@@ -50,7 +50,6 @@ func _ready():
 	for level_name in _level_names:
 		_level_list.add_item(level_name)
 	
-	
 	_error = _level_list.connect("item_selected", self, "_on_level_selected")
 	_error = _fog_of_war.connect("pressed", self, "_on_fog_of_war_pressed")
 

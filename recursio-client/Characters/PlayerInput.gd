@@ -71,6 +71,7 @@ func _physics_process(_delta):
 			_select_timeline(false)
 		elif Input.is_action_pressed("ui_accept"):
 			_player._button_overlay_simple.set_active(false)
+			_player.toggle_swapping(false)
 			Server.send_player_ready()
 
 
