@@ -323,8 +323,12 @@ func _on_ghost_hit_soft_lock(hit_data: HitData, ghost: PlayerGhost):
 	
 	add_post_process_exception(_bottom_element)
 	_bottom_element.show()
+	print(hit_data.to_string())
 	if hit_data.perpetrator_team_id == _player.team_id:
-		_bottom_element.set_content("Oh no, you killed your previous timeline!\nTry using a melee attack next time.", TutorialUIBottomElement.Controls.None, true)
+		if hit_data.type == HitData.HitType.WALL:
+			_bottom_element.set_content("Oh no, you killed your past with a wall.\nAny previous timelines die on contact with them.\nMaybe use a melee attack instead.", TutorialUIBottomElement.Controls.None, true)
+		else:
+			_bottom_element.set_content("Do not to hit your own past.\nYou need it to capture the first capture point.", TutorialUIBottomElement.Controls.None, true)
 	else:
 		_bottom_element.set_content("Oh no, you did not prevent the death of\nyour previous timeline!", TutorialUIBottomElement.Controls.None, true)
 	_goal_element_1.hide()
@@ -355,7 +359,7 @@ func _on_ghost_hit_soft_lock(hit_data: HitData, ghost: PlayerGhost):
 	_goal_element_1.show()
 	_goal_element_2.show()
 	_goal_element_2.set_content("Repeats", _ghost_manager._player_ghosts[0].get_body())
-	if hit_data.perpetrator_team_id == _player.team_id:
+	if hit_data.perpetrator_team_id == _player.team_id and hit_data.type == HitData.HitType.WALL:
 		_bottom_element.set_content("Melee!", TutorialUIBottomElement.Controls.Melee)
 		_goal_element_1.set_content("Kill", _ghost_manager._enemy_ghosts[0].get_body())
 	else:
