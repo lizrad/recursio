@@ -6,8 +6,8 @@ class_name TutorialScenario_1
 
 func _ready():
 	# Shorten game phase
-	_round_manager._game_phase_time = 10.0
-	_player._hud.add_custom_max_time("game_phase_time", 10.0)
+	_round_manager._game_phase_time = 20.0
+	_player._hud.add_custom_max_time("game_phase_time", 20.0)
 	_rounds = 2
 	add_round_start_function(funcref(self, "_started_round_1"))
 	add_round_condition_function(funcref(self, "_check_completed_round_1"))
