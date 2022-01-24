@@ -212,7 +212,6 @@ func _started_round_3_without_transition():
 	_character_manager._on_timeline_picked(0,1)
 	_character_manager._on_timeline_picked(1,1)
 	_level.get_spawn_point_node(0,1).set_active(true)
-	
 	_player.kb.visible = true
 	_enemy.kb.visible = false
 	_bottom_element.set_content("Start Round", TutorialUIBottomElement.Controls.Ready)
@@ -220,6 +219,8 @@ func _started_round_3_without_transition():
 	yield(_round_manager, "countdown_phase_started")
 	_bottom_element.hide()
 	yield(_round_manager, "game_phase_started")
+	
+	_enemy.set_position(Vector3(1200,0, 8))
 	_error = _round_manager.connect("preparation_phase_started",self,"_on_prep_phase_started_round_3")
 	_bottom_element.show()
 	_bottom_element.set_content("Spawn Wall!", TutorialUIBottomElement.Controls.Shoot)
@@ -354,6 +355,7 @@ func _on_ghost_hit_soft_lock(hit_data: HitData, ghost: PlayerGhost):
 	yield(_round_manager, "countdown_phase_started")
 	_bottom_element.hide()
 	yield(_round_manager, "game_phase_started")
+	_enemy.set_position(Vector3(1200,0, 8))
 	_bottom_element.show()
 	_goal_element_1.show()
 	_goal_element_2.show()
