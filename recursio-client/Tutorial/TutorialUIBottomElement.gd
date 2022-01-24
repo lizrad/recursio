@@ -107,7 +107,7 @@ func set_content(text: String, control = Controls.None, show_continue_texture: b
 	var y_end = -20
 	rect_position = Vector2(x, y_end)
 	if control != Controls.None:
-		_error = _tween.interpolate_property(self,"rect_position",Vector2(x, y_start), Vector2(x, y_end),1, Tween.TRANS_BOUNCE, Tween.EASE_OUT)
+		_error = _tween.interpolate_property(self,"rect_position",Vector2(x, y_start), Vector2(x, y_end),1, Tween.TRANS_SINE, Tween.EASE_IN_OUT)
 		rect_position = Vector2(x, y_start)
 		yield(get_tree().create_timer(0.5), "timeout")
 		_error = _tween.start()
