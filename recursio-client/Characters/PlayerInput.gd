@@ -29,6 +29,7 @@ func _ready():
 	_error = _player.connect("timeline_index_changed", self, "_swap_weapon_type")
 	
 	Input.set_mouse_mode(Input.MOUSE_MODE_CONFINED)
+	_error = UserSettings.connect("fullscreen_toggled", self, "_on_fullscreen_toggled")
 
 
 func _exit_tree():
@@ -128,3 +129,9 @@ func _get_buttons_pressed() -> int:
 				buttons |= _trigger_dic[trigger]
 
 	return buttons
+
+
+# This fixes the mouse confinement issue by toggling it off and on again
+func _on_fullscreen_toggled(_is_fullscreen):
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	Input.set_mouse_mode(Input.MOUSE_MODE_CONFINED)
