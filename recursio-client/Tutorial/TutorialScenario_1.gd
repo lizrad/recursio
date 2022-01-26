@@ -26,6 +26,7 @@ func _started_round_1():
 	_character_manager._round_manager._start_game(true)
 	_bottom_element.set_content("Start Round", TutorialUIBottomElement.Controls.Ready)
 	_bottom_element.show()
+	_character_manager.toggle_swapping(false)
 	yield(_round_manager, "countdown_phase_started")
 	_bottom_element.hide()
 	var first_point = _level.get_capture_points()[1]
@@ -133,6 +134,7 @@ func _started_round_2() -> void:
 	_bottom_element.set_content("Start Round", TutorialUIBottomElement.Controls.Ready)
 	_bottom_element.show()
 	
+	_character_manager.toggle_swapping(false)
 	
 	yield(_round_manager, "countdown_phase_started")
 	

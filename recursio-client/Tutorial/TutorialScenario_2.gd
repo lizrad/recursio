@@ -44,6 +44,7 @@ func _started_round_1():
 	_character_manager.toggle_trigger(ActionManager.Trigger.DEFAULT_ATTACK_START, false)
 	_character_manager.toggle_trigger(ActionManager.Trigger.FIRE_START, false)
 	_character_manager.toggle_trigger(ActionManager.Trigger.SPECIAL_MOVEMENT_START, false)
+	_character_manager.toggle_swapping(false)
 	yield(_round_manager, "countdown_phase_started")
 	_bottom_element.hide()
 	_goal_element_1.set_content("Capture!", _level.get_capture_points()[1])
@@ -153,6 +154,7 @@ func _started_round_2() -> void:
 	
 	_bottom_element.show()
 	_bottom_element.set_content("Watch what would happen with your previous timeline.")
+	_character_manager.toggle_swapping(false)
 	yield(_round_manager, "game_phase_started")
 	_character_manager.toggle_player_input_pause(true)
 	_goal_element_1.show()
@@ -216,6 +218,7 @@ func _started_round_3_without_transition():
 	_enemy.kb.visible = false
 	_bottom_element.set_content("Start Round", TutorialUIBottomElement.Controls.Ready)
 	_bottom_element.show()
+	_character_manager.toggle_swapping(false)
 	yield(_round_manager, "countdown_phase_started")
 	_bottom_element.hide()
 	yield(_round_manager, "game_phase_started")
@@ -352,6 +355,7 @@ func _on_ghost_hit_soft_lock(hit_data: HitData, ghost: PlayerGhost):
 	_character_manager._on_timeline_picked(1,1)
 	_bottom_element.set_content("Start Round", TutorialUIBottomElement.Controls.Ready)
 	_bottom_element.show()
+	_character_manager.toggle_swapping(false)
 	yield(_round_manager, "countdown_phase_started")
 	_bottom_element.hide()
 	yield(_round_manager, "game_phase_started")
