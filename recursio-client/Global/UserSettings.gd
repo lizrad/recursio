@@ -1,5 +1,6 @@
 extends Node
 
+signal fullscreen_toggled(is_fullscreen)
 signal setting_changed(setting_header, setting_name)
 
 export var always_apply_defaults_at_startup := false
@@ -28,6 +29,7 @@ func _input(_event: InputEvent) -> void:
 	if Input.is_action_just_pressed("toggle_fullscreen"):
 		OS.set_window_fullscreen(!OS.window_fullscreen)
 		set_setting("video", "fullscreen", OS.window_fullscreen)
+		emit_signal("fullscreen_toggled", OS.window_fullscreen)
 
 
 func get_setting(setting_header, setting_name, default = null):

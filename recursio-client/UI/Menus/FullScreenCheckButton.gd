@@ -11,6 +11,7 @@ func _ready():
 func _on_toggled(is_enabled):
 	OS.window_fullscreen = is_enabled
 	UserSettings.set_setting("video", "fullscreen", is_enabled)
+	UserSettings.emit_signal("fullscreen_toggled", is_enabled)
 
 
 func _on_fullscreen_changed(setting_header, setting_name, value):
