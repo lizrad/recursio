@@ -81,7 +81,7 @@ func create_action_duplicate(action_type) -> Action:
 func clear_action_instances():
 	for instance in _instanced_actions:
 		if instance.get_ref():
-			instance.get_ref().queue_free()
+			instance.get_ref().free()
 
 	_instanced_actions.clear()
 	for action in _actions:

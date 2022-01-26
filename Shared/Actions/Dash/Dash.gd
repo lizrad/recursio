@@ -23,4 +23,4 @@ func _physics_process(delta):
 	# Always finish after defined max time
 	_time += delta 
 	if _time >= _max_time:
-		queue_free()
+		free()

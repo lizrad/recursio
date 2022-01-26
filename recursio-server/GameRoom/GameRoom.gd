@@ -103,7 +103,7 @@ func spawn_world():
 func despawn_world():
 	_game_room_players_ready.clear()
 	if _game_room_world:
-		_game_room_world.queue_free()
+		_game_room_world.free()
 		# this fixes a race condition that appears when one player disconnects 
 		# while we are still waiting to start the game
 		_game_room_world = null

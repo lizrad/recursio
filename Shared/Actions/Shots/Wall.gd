@@ -39,7 +39,7 @@ func _process(delta):
 		if not confirmed:
 			if _time_since_spawn > _timer_confirmation_deadline:
 				_owning_player.wall_despawned(self)
-				queue_free()
+				free()
 
 func _ready():
 	var _error = $KillGhostArea.connect("body_entered", self, "handle_hit") 

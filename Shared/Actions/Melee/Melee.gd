@@ -12,7 +12,7 @@ func initialize(owning_player) -> void:
 func _process(delta):
 	_max_time -= delta
 	if _max_time <= 0:
-		queue_free()
+		free()
 		return
 
 func _hit_body(collider):

@@ -53,7 +53,7 @@ func initialize(owning_player) -> void:
 func _physics_process(delta):
 	_max_time -= delta
 	if _max_time <= 0:
-		queue_free()
+		free()
 		Logger.info("freeing action..." , "HitscanShot")
 		return
 

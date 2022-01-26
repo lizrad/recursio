@@ -219,8 +219,9 @@ func _on_leave_game_received(player_left_id):
 
 
 func _on_get_game_room_owner(client_id) -> void:
-	var game_room: GameRoom = _game_room_dic[_player_game_room_dic[client_id]]
-	_server.send_game_room_owner(client_id, game_room.get_owning_player_id())
+	if _game_room_dic.has(_player_game_room_dic[client_id]):
+		var game_room: GameRoom = _game_room_dic[_player_game_room_dic[client_id]]
+		_server.send_game_room_owner(client_id, game_room.get_owning_player_id())
 
 
 func _on_level_selected(player_id, level_index) -> void:
