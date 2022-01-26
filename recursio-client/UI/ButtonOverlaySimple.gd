@@ -14,8 +14,12 @@ func _on_controller_changed(controller) -> void:
 
 
 func set_active(val: bool) -> void:
-	set_process(val)
-	visible = val
+	if val:
+		show_swap_overlay()
+		show_ready_overlay()
+	else:
+		hide_swap_overlay()
+		hide_ready_overlay()
 
 func show_swap_overlay():
 	_swap_icon.show()
