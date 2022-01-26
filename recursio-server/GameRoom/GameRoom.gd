@@ -102,10 +102,11 @@ func spawn_world():
 
 func despawn_world():
 	_game_room_players_ready.clear()
-	_game_room_world.queue_free()
-	# this fixes a race condition that appears when one player disconnects 
-	# while we are still waiting to start the game
-	_game_room_world = null
+	if _game_room_world:
+		_game_room_world.queue_free()
+		# this fixes a race condition that appears when one player disconnects 
+		# while we are still waiting to start the game
+		_game_room_world = null
 	_player_levels_loaded.clear()
 	_game_room_world_exists = false
 
@@ -215,6 +216,4 @@ func _on_game_result(team_id):
 	var winning_player_id = _team_id_to_player_id[team_id]
 	for player_id in _player_id_user_name_dic:
 		_server.send_game_result(player_id, winning_player_id)
-	
-	yield(get_tree().create_timer(3), "timeout")
 	despawn_world()
