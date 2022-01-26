@@ -6,7 +6,10 @@ var index = 0 setget _set_index
 
 
 func set_curve(curve: Curve3D):
-	$PathMiddle.global_transform.origin = curve.get_point_position(int(floor(curve.get_point_count()*0.5)))
+	if curve.get_point_count() >=5:
+		$PathMiddle.global_transform.origin = curve.get_point_position(4)
+	elif curve.get_point_count() >=1:
+		$PathMiddle.global_transform.origin = curve.get_point_position(int(max(0,int(floor(curve.get_point_count()*0.5))-1)))
 	$Path.curve = curve
 
 
