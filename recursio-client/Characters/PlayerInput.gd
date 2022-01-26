@@ -30,11 +30,14 @@ func _ready():
 	
 	Input.set_mouse_mode(Input.MOUSE_MODE_CONFINED)
 	_error = UserSettings.connect("fullscreen_toggled", self, "_on_fullscreen_toggled")
-
+	_on_controller_changed("")
+	_error = InputManager.connect("controller_changed",self,"_on_controller_changed")
 
 func _exit_tree():
 	# Reverts mouse cursor to be visible but not confined
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	Input.set_custom_mouse_cursor(null, Input.CURSOR_ARROW, InputManager.cursor_size)
+
 
 func _physics_process(_delta):
 	if not _player_initialized:
@@ -135,3 +138,6 @@ func _get_buttons_pressed() -> int:
 func _on_fullscreen_toggled(_is_fullscreen):
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	Input.set_mouse_mode(Input.MOUSE_MODE_CONFINED)
+
+func _on_controller_changed(_controller):
+	Input.set_custom_mouse_cursor(InputManager.custom_cursor, Input.CURSOR_ARROW, InputManager.cursor_size)
