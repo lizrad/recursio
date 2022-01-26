@@ -19,6 +19,7 @@ func _ready():
 	_err = _btn_exit.connect("pressed", self, "_on_exit_pressed")
 	_err = self.connect("visibility_changed", self, "_on_visibility_changed")
 	_err = _settings.connect("visibility_changed", self, "_on_settings_visibility_changed")
+	_err = InputManager.connect("controller_changed",self,"_on_controller_changed")
 
 
 func _process(_delta: float) -> void:
@@ -30,8 +31,10 @@ func _process(_delta: float) -> void:
 func _on_visibility_changed() -> void:
 	if visible:
 		_btn_resume.grab_focus()
+		Input.set_custom_mouse_cursor(null, Input.CURSOR_ARROW, InputManager.cursor_size)
 	else:
 		_settings.hide()
+		Input.set_custom_mouse_cursor(InputManager.custom_cursor, Input.CURSOR_ARROW, InputManager.cursor_size)
 
 
 func _on_settings_visibility_changed() -> void:
@@ -55,3 +58,8 @@ func _on_leave_pressed() -> void:
 
 func _on_exit_pressed() -> void:
 	get_tree().quit()
+
+func _on_controller_changed(_controller):
+	if visible:
+		# override changing to cross hair when controller is plugged out while menu is open
+		Input.call_deferred("set_custom_mouse_cursor", null, Input.CURSOR_ARROW, InputManager.cursor_size)
